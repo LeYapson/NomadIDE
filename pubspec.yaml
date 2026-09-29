@@ -1,0 +1,11 @@
+# Workspace Dart (pub workspaces, Dart >= 3.6) : un seul `flutter pub get` à la racine
+# résout l'application et tous les packages internes.
+name: nomad_workspace
+publish_to: none
+
+environment:
+  sdk: ^3.6.0
+
+workspace:
+  - app
+  - packages/nomad_hal

@@ -1,0 +1,22 @@
+name: nomad_hal
+description: Couche d'abstraction matérielle (HAL) USB/série de NomadMCU — Android OTG et ports série desktop.
+version: 0.1.0
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.6.0
+  flutter: ">=3.27.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  # Android USB Host (OTG) : pilotes userland CDC-ACM, FTDI, CP210x, CH34x, PL2303.
+  usb_serial: ^0.5.2
+  # Windows / macOS / Linux : binding FFI de libserialport.
+  flutter_libserialport: ^0.4.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0

@@ -1,0 +1,20 @@
+{
+  "checkedAt": "2026-09-29T13:58:27.471Z",
+  "servers": [
+    {
+      "name": "claude.ai HubSpot",
+      "state": "needs-auth",
+      "detail": "Needs authentication"
+    },
+    {
+      "name": "claude.ai Microsoft 365",
+      "state": "needs-auth",
+      "detail": "Needs authentication"
+    },
+    {
+      "name": "claude.ai Datadog",
+      "state": "needs-auth",
+      "detail": "Needs authentication"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+name: nomad_mcu
+description: NomadMCU — IDE embarqué léger (MicroPython & C/C++) pour mobile et desktop.
+publish_to: none
+version: 0.1.0+1
+resolution: workspace
+
+environment:
+  sdk: ^3.6.0
+  flutter: ">=3.27.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_riverpod: ^3.0.0
+  nomad_hal:
+    path: ../packages/nomad_hal
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
