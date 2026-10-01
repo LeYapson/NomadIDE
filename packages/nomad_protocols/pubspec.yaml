@@ -1,0 +1,13 @@
+name: nomad_protocols
+description: Protocoles carte de NomadMCU (raw REPL MicroPython, puis esptool, UF2, AN3155) en Dart pur, sans dépendance à Flutter.
+version: 0.1.0
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.6.0
+
+# Aucune dépendance runtime : ce package ne connaît que l'interface ByteLink.
+dev_dependencies:
+  lints: ^5.0.0
+  test: ^1.25.0

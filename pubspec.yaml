@@ -9,3 +9,4 @@ environment:
 workspace:
   - app
   - packages/nomad_hal
+  - packages/nomad_protocols

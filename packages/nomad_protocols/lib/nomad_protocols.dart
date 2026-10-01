@@ -1,0 +1,11 @@
+/// NomadMCU — protocoles de communication avec les cartes, en Dart pur.
+///
+/// Ce package ne dépend ni de Flutter ni de `nomad_hal` : il ne connaît que
+/// [ByteLink]. L'application adapte une `SerialConnection` en [ByteLink],
+/// et les tests branchent une fausse carte.
+library;
+
+export 'src/io/byte_link.dart';
+export 'src/io/byte_reader.dart';
+export 'src/micropython/raw_repl.dart';
+export 'src/protocol_exceptions.dart';

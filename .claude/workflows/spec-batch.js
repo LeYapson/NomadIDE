@@ -94,6 +94,7 @@ export const meta = {
 // and the run behaves as an argument-less invocation: Preflight captures the inventory and the run
 // stops at the confirmation gate having written nothing. The one class of malformed argument that
 // aborts is a numeric one -- see numArg below -- because both numbers bound real concurrency.
+// @prose-args-parser-start
 const _args = (() => {
   if (args && typeof args === 'object') return args
   const s = String(args ?? '').trim()
@@ -101,9 +102,10 @@ const _args = (() => {
   try { return JSON.parse(s) } catch { /* not JSON - fall through to the prose path */ }
   const o = {}
   // Locate key positions, then take each value as everything up to the NEXT key. Matching
-  // key/value pairs directly would end a value at the first comma, which truncates a path or a
-  // comma-separated list silently.
-  const hits = [...s.matchAll(/(?:^|[,{\s])\s*([a-z_]+)\s*[=:]\s*/gi)]
+  // key/value pairs directly would end a value at the first comma, silently truncating a path
+  // or a comma-separated list. The leading [,{s] (or start-of-string) anchors a key to a
+  // token boundary; without it the scan would also match mid-key.
+  const hits = [...s.matchAll(/(?:^|[,{\s])\s*([a-z0-9_]+)\s*[=:]\s*/gi)]
   for (let i = 0; i < hits.length; i++) {
     const start = hits[i].index + hits[i][0].length
     const end = i + 1 < hits.length ? hits[i + 1].index : s.length
@@ -113,6 +115,7 @@ const _args = (() => {
   }
   return o
 })()
+// @prose-args-parser-end
 
 // Raw, straight off the argument object. The `_IN` names are deliberate: everything that reaches
 // a command line is re-declared below through shellArg(), and keeping the raw value under a

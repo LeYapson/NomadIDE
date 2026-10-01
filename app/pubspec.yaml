@@ -14,6 +14,8 @@ dependencies:
   flutter_riverpod: ^3.0.0
   nomad_hal:
     path: ../packages/nomad_hal
+  nomad_protocols:
+    path: ../packages/nomad_protocols
 
 dev_dependencies:
   flutter_test:
