@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../features/serial_monitor/presentation/serial_monitor_page.dart';
+import 'home_shell.dart';
 import 'theme.dart';
 
 class NomadApp extends StatelessWidget {
@@ -16,7 +16,7 @@ class NomadApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       // Étape 1 : le moniteur série est l'écran unique. Un shell (éditeur,
       // explorateur de carte, flasheur) viendra l'englober à l'étape 2.
-      home: const SerialMonitorPage(),
+      home: const HomeShell(),
     );
   }
 }
