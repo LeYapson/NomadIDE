@@ -99,9 +99,8 @@ enum RawReplState {
 /// ⚠️ Le [ByteLink] est partagé avec le moniteur série : pendant une session
 /// raw REPL, l'application doit suspendre l'affichage du flux brut.
 class RawRepl {
-  RawRepl(ByteLink link, {RawReplOptions options = const RawReplOptions()})
+  RawRepl(ByteLink link, {this.options = const RawReplOptions()})
       : _link = link,
-        options = options,
         _reader = ByteReader(link.input);
 
   final ByteLink _link;
@@ -208,7 +207,7 @@ class RawRepl {
 
       _state = RawReplState.ready;
       return ExecResult(out, err);
-    } on ProtocolTimeoutException catch (e) {
+    } on ProtocolTimeoutException {
       if (!running) {
         _state = RawReplState.broken;
         rethrow;
