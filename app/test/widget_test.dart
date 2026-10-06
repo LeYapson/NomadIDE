@@ -18,7 +18,27 @@ void main() {
 
     expect(find.text('NomadMCU · Moniteur série'), findsOneWidget);
     expect(find.text('Déconnecté'), findsOneWidget);
-    expect(find.widgetWithText(FilledButton, 'Connecter'), findsOneWidget);
+    expect(
+      find.ancestor(of: find.text('Connecter'), matching: find.bySubtype<FilledButton>()),
+      findsOneWidget,
+    );
     expect(find.textContaining('Carte simulée'), findsOneWidget);
+  });
+
+  testWidgets("l'onglet MicroPython liste la carte simulée et propose la connexion raw REPL", (tester) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [serialTransportProvider.overrideWithValue(FakeSerialTransport())],
+        child: const NomadApp(),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('MicroPython').last);
+    await tester.pumpAndSettle();
+
+    expect(find.text('NomadMCU · MicroPython'), findsOneWidget);
+    expect(find.text('Connecter (raw REPL)'), findsOneWidget);
+    expect(find.textContaining('Carte simulée'), findsWidgets);
   });
 }
