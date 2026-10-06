@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -326,25 +328,35 @@ class _FilesPanel extends ConsumerWidget {
     );
   }
 
+  static const _imageExtensions = {'png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp'};
+
   Future<void> _view(BuildContext context, MicroPythonController controller, RemoteEntry e) async {
-    final text = await controller.readText(e.name);
-    if (text == null || !context.mounted) return;
-    await showDialog<void>(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: Text(e.name),
-        content: SizedBox(
-          width: 600,
-          child: SingleChildScrollView(
-            child: SelectableText(
-              text.length > 20000 ? '${text.substring(0, 20000)}\n… (tronqué)' : text,
-              style: const TextStyle(fontFamily: 'Consolas', fontFamilyFallback: ['monospace']),
-            ),
-          ),
+    final bytes = await controller.readBytes(e.name);
+    if (bytes == null || !context.mounted) return;
+
+    final ext = e.name.contains('.') ? e.name.split('.').last.toLowerCase() : '';
+    if (_imageExtensions.contains(ext)) {
+      await showDialog<void>(context: context, builder: (_) => _ImageDialog(name: e.name, bytes: bytes));
+      return;
+    }
+
+    final String text;
+    try {
+      text = utf8.decode(bytes);
+    } on FormatException {
+      await showDialog<void>(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text(e.name),
+          content: Text('Fichier binaire (${bytes.length} octets) : aucun aperçu disponible.'),
+          actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('Fermer'))],
         ),
-        actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('Fermer'))],
-      ),
-    );
+      );
+      return;
+    }
+    if (!context.mounted) return;
+    final edited = await showDialog<String>(context: context, builder: (_) => _EditorDialog(name: e.name, text: text));
+    if (edited != null && edited != text) await controller.writeText(e.name, edited);
   }
 
   Future<void> _newFile(BuildContext context, MicroPythonController controller) async {
@@ -408,5 +420,76 @@ class _FilesPanel extends ConsumerWidget {
       ),
     );
     if (ok == true) await controller.delete(e);
+  }
+}
+
+class _EditorDialog extends StatefulWidget {
+  const _EditorDialog({required this.name, required this.text});
+
+  final String name;
+  final String text;
+
+  @override
+  State<_EditorDialog> createState() => _EditorDialogState();
+}
+
+class _EditorDialogState extends State<_EditorDialog> {
+  late final TextEditingController _controller = TextEditingController(text: widget.text);
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+    return AlertDialog(
+      title: Text(widget.name),
+      content: SizedBox(
+        width: (size.width * 0.8).clamp(300, 900),
+        height: size.height * 0.6,
+        child: TextField(
+          controller: _controller,
+          expands: true,
+          maxLines: null,
+          minLines: null,
+          textAlignVertical: TextAlignVertical.top,
+          style: const TextStyle(fontFamily: 'Consolas', fontFamilyFallback: ['monospace']),
+          decoration: const InputDecoration(border: OutlineInputBorder()),
+        ),
+      ),
+      actions: [
+        TextButton(onPressed: () => Navigator.pop(context), child: const Text('Fermer')),
+        FilledButton.icon(
+          onPressed: () => Navigator.pop(context, _controller.text),
+          icon: const Icon(Icons.save_outlined),
+          label: const Text('Enregistrer sur la carte'),
+        ),
+      ],
+    );
+  }
+}
+
+class _ImageDialog extends StatelessWidget {
+  const _ImageDialog({required this.name, required this.bytes});
+
+  final String name;
+  final Uint8List bytes;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text('$name (${bytes.length} octets)'),
+      content: InteractiveViewer(
+        child: Image.memory(
+          bytes,
+          filterQuality: FilterQuality.none,
+          errorBuilder: (_, __, ___) => const Text('Image illisible ou format non pris en charge.'),
+        ),
+      ),
+      actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('Fermer'))],
+    );
   }
 }

@@ -231,15 +231,14 @@ class MicroPythonController extends Notifier<MicroPythonState> {
         await _loadFiles();
       });
 
-  /// Contenu d'un fichier, décodé en UTF-8 ; null en cas d'échec (erreur signalée).
-  Future<String?> readText(String name) async {
-    String? text;
+  /// Octets d'un fichier ; null en cas d'échec (erreur signalée).
+  Future<Uint8List?> readBytes(String name) async {
+    Uint8List? bytes;
     await _guard(() async {
-      final bytes = await _fs!.read(_join(name));
-      _info('Lu ${_join(name)} (${bytes.length} octets)');
-      text = utf8.decode(bytes, allowMalformed: true);
+      bytes = await _fs!.read(_join(name));
+      _info('Lu ${_join(name)} (${bytes!.length} octets)');
     });
-    return text;
+    return bytes;
   }
 
   Future<void> writeText(String name, String content) => _guard(() async {
