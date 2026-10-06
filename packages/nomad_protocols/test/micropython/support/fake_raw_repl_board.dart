@@ -34,7 +34,6 @@ class FakeRawReplBoard implements ByteLink {
   final List<int> _code = [];
   _Mode _mode = _Mode.friendly;
 
-  _Mode get mode => _mode;
   bool get isRaw => _mode != _Mode.friendly;
 
   @override
