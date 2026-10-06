@@ -41,3 +41,17 @@ final class ProtocolDesyncException extends ProtocolException {
 
   final Uint8List? received;
 }
+
+/// La carte a exécuté la commande mais Python a levé une exception
+/// (fichier absent, répertoire non vide, …).
+final class ProtocolRemoteException extends ProtocolException {
+  const ProtocolRemoteException(super.message, {required this.stderr, this.errno});
+
+  /// Trace complète renvoyée par la carte.
+  final String stderr;
+
+  /// Code `OSError` si la trace en contient un (2 = ENOENT, 17 = EEXIST, …).
+  final int? errno;
+
+  bool get isNotFound => errno == 2;
+}
