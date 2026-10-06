@@ -7,5 +7,6 @@ library;
 
 export 'src/io/byte_link.dart';
 export 'src/io/byte_reader.dart';
+export 'src/micropython/micropython_fs.dart';
 export 'src/micropython/raw_repl.dart';
 export 'src/protocol_exceptions.dart';
