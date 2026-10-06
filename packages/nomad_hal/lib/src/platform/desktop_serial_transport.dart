@@ -220,8 +220,11 @@ class DesktopSerialConnection extends BaseSerialConnection {
 
   final SerialPort _port;
   final void Function() _onClosed;
-  SerialPortReader? _reader;
-  StreamSubscription<Uint8List>? _subscription;
+  Timer? _readTimer;
+
+  /// Intervalle de lecture et taille maximale par lecture.
+  static const Duration readInterval = Duration(milliseconds: 4);
+  static const int maxReadChunk = 4096;
 
   Future<void> _init({required bool dtr, required bool rts}) async {
     await applyConfigNative(config);
@@ -229,23 +232,35 @@ class DesktopSerialConnection extends BaseSerialConnection {
     await setDtr(dtr);
     await setRts(rts);
 
-    // Le reader libserialport lit dans un isolate dédié : l'UI n'est jamais bloquée.
-    final reader = SerialPortReader(_port, timeout: 20);
-    _reader = reader;
-    _subscription = reader.stream.listen(
-      emitData,
-      onError: (Object error) => reportLost(DisconnectReason.deviceLost, error),
-      onDone: () => reportLost(DisconnectReason.deviceLost),
-    );
+    // Lecture non bloquante sur l'isolate principal. Le SerialPortReader de
+    // libserialport lit en boucle dans un autre isolate que `Isolate.kill` ne
+    // peut pas interrompre : fermer ou débrancher le port pendant qu'il tourne
+    // libère un `sp_port` encore utilisé.
+    _readTimer = Timer.periodic(readInterval, (_) => _pollRead());
+  }
+
+  void _pollRead() {
+    try {
+      final available = _port.bytesAvailable;
+      if (available < 0) {
+        reportLost(DisconnectReason.deviceLost, SerialPort.lastError);
+        return;
+      }
+      if (available == 0) return;
+      emitData(_port.read(available < maxReadChunk ? available : maxReadChunk));
+    } catch (e) {
+      reportLost(DisconnectReason.deviceLost, e);
+    }
   }
 
   void _onDetached() => reportLost(DisconnectReason.deviceLost);
 
   @override
   Future<void> applyConfigNative(SerialConfig config) async {
+    // Le port devient propriétaire de la config affectée (il la libère à la
+    // prochaine affectation et à sa propre fermeture) : ne jamais la disposer ici.
     final native = SerialPortConfig();
-    try {
-      native
+    native
         ..baudRate = config.baudRate
         ..bits = config.dataBits
         ..stopBits = switch (config.stopBits) {
@@ -266,10 +281,7 @@ class DesktopSerialConnection extends BaseSerialConnection {
           FlowControl.rtsCts => SerialPortFlowControl.rtsCts,
           FlowControl.xonXoff => SerialPortFlowControl.xonXoff,
         });
-      _port.config = native;
-    } finally {
-      native.dispose();
-    }
+    _port.config = native;
   }
 
   @override
@@ -284,13 +296,9 @@ class DesktopSerialConnection extends BaseSerialConnection {
   /// seules les lignes renseignées sont appliquées.
   void _applyControlLines({int? dtr, int? rts}) {
     final native = SerialPortConfig();
-    try {
-      if (dtr != null) native.dtr = dtr;
-      if (rts != null) native.rts = rts;
-      _port.config = native;
-    } finally {
-      native.dispose();
-    }
+    if (dtr != null) native.dtr = dtr;
+    if (rts != null) native.rts = rts;
+    _port.config = native; // propriété transférée au port, voir applyConfigNative
   }
 
   /// Écriture non bloquante par morceaux : un `sp_blocking_write` figerait
@@ -314,10 +322,8 @@ class DesktopSerialConnection extends BaseSerialConnection {
 
   @override
   Future<void> closeNative() async {
-    await _subscription?.cancel();
-    _subscription = null;
-    _reader?.close();
-    _reader = null;
+    _readTimer?.cancel();
+    _readTimer = null;
     try {
       if (_port.isOpen) _port.close();
     } finally {
