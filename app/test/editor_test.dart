@@ -120,7 +120,7 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('Exécuter et Enregistrer sont désactivés sans carte connectée', (tester) async {
+    testWidgets('Exécuter et Envoyer sont désactivés sans carte, Enregistrer reste actif', (tester) async {
       final container = newContainer();
       container.read(editorProvider.notifier).newDocument();
       await tester.pumpWidget(app(container));
@@ -129,10 +129,12 @@ void main() {
       await tester.pumpAndSettle();
 
       final run = tester.widget<IconButton>(find.widgetWithIcon(IconButton, Icons.play_arrow));
+      final send = tester.widget<IconButton>(find.widgetWithIcon(IconButton, Icons.upload_file));
       final save = tester.widget<IconButton>(find.widgetWithIcon(IconButton, Icons.save_outlined));
 
       expect(run.onPressed, isNull);
-      expect(save.onPressed, isNull);
+      expect(send.onPressed, isNull);
+      expect(save.onPressed, isNotNull);
     });
 
     testWidgets('sur Android, la barre de symboles insère dans le fichier actif', (tester) async {

@@ -10,8 +10,9 @@ import 'code_language.dart';
 /// re_editor indente déjà entre `{` et `}` ; ce contrôleur ajoute le bloc Python
 /// (un niveau après une ligne qui finit par `:`).
 class NomadEditorController extends ChangeNotifier {
-  NomadEditorController({String text = '', this.language = CodeLanguage.plain})
-      : code = CodeLineEditingController.fromText(
+  NomadEditorController({String text = '', CodeLanguage language = CodeLanguage.plain})
+      : _language = language,
+        code = CodeLineEditingController.fromText(
           text,
           CodeLineOptions(indentSize: language.indentSize),
         ) {
@@ -21,7 +22,17 @@ class NomadEditorController extends ChangeNotifier {
   }
 
   final CodeLineEditingController code;
-  final CodeLanguage language;
+  CodeLanguage _language;
+
+  CodeLanguage get language => _language;
+
+  /// Change de langage (ex. fichier renommé de `.py` en `.c`) : coloration,
+  /// autocomplétion et règles d'indentation suivent.
+  set language(CodeLanguage value) {
+    if (value == _language) return;
+    _language = value;
+    notifyListeners();
+  }
 
   int _lineCount = 0;
   int _caretLine = 0;

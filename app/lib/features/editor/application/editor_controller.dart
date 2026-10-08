@@ -205,6 +205,7 @@ class EditorController extends Notifier<EditorState> {
       ..localPath = targetPath
       ..name = targetPath.split('/').last
       ..savedText = text;
+    document.controller.language = CodeLanguage.fromFileName(document.name);
     _draftTimers.remove(document.id)?.cancel();
     await _deleteDraft(document.id);
     state = state.copyWith(documents: [...state.documents]);

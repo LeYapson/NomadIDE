@@ -6,7 +6,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nomad_hal/nomad_hal.dart';
 import 'package:nomad_protocols/nomad_protocols.dart';
 
+import '../../../app/dialogs.dart';
 import '../../editor/application/editor_controller.dart';
+import '../../projects/application/projects_controller.dart';
+import '../../projects/presentation/project_dialogs.dart';
 import '../application/micropython_controller.dart';
 import 'widgets/console_panel.dart';
 
@@ -142,6 +145,30 @@ class _Toolbar extends ConsumerWidget {
 // Fichiers
 // -----------------------------------------------------------------------------
 
+enum _BoardAction { rename, download, delete }
+
+class _TransferBar extends StatelessWidget {
+  const _TransferBar({required this.transfer});
+
+  final TransferProgress transfer;
+
+  @override
+  Widget build(BuildContext context) {
+    final arrow = transfer.direction == TransferDirection.upload ? '↑' : '↓';
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('$arrow ${transfer.name} · ${transfer.done} / ${transfer.total} o', overflow: TextOverflow.ellipsis),
+          const SizedBox(height: 4),
+          LinearProgressIndicator(value: transfer.fraction),
+        ],
+      ),
+    );
+  }
+}
+
 class _FilesPanel extends ConsumerWidget {
   const _FilesPanel();
 
@@ -180,6 +207,11 @@ class _FilesPanel extends ConsumerWidget {
                 icon: const Icon(Icons.create_new_folder_outlined),
               ),
               IconButton(
+                tooltip: 'Envoyer sur la carte un fichier d\'un projet',
+                onPressed: enabled ? () => _upload(context, ref, state, controller) : null,
+                icon: const Icon(Icons.upload_file),
+              ),
+              IconButton(
                 tooltip: 'Test de transfert (débit et intégrité)',
                 onPressed: enabled ? controller.runTransferSelfTest : null,
                 icon: const Icon(Icons.speed),
@@ -188,6 +220,7 @@ class _FilesPanel extends ConsumerWidget {
           ),
         ),
         const Divider(height: 1),
+        if (state.transfer != null) _TransferBar(transfer: state.transfer!),
         Expanded(
           child: state.files.isEmpty
               ? Center(child: Text(state.isReady ? 'Dossier vide' : 'Non connecté'))
@@ -210,10 +243,16 @@ class _FilesPanel extends ConsumerWidget {
                                 icon: const Icon(Icons.play_arrow),
                                 onPressed: enabled ? () => controller.runFile(e.name) : null,
                               ),
-                            IconButton(
-                              tooltip: 'Supprimer',
-                              icon: const Icon(Icons.delete_outline),
-                              onPressed: enabled ? () => _confirmDelete(context, controller, e) : null,
+                            PopupMenuButton<_BoardAction>(
+                              tooltip: 'Actions',
+                              enabled: enabled,
+                              onSelected: (action) => _onAction(context, ref, controller, e, action),
+                              itemBuilder: (context) => [
+                                const PopupMenuItem(value: _BoardAction.rename, child: Text('Renommer…')),
+                                if (!e.isDirectory)
+                                  const PopupMenuItem(value: _BoardAction.download, child: Text('Télécharger vers un projet…')),
+                                const PopupMenuItem(value: _BoardAction.delete, child: Text('Supprimer…')),
+                              ],
                             ),
                           ],
                         ),
@@ -223,6 +262,64 @@ class _FilesPanel extends ConsumerWidget {
         ),
       ],
     );
+  }
+
+  Future<void> _onAction(
+    BuildContext context,
+    WidgetRef ref,
+    MicroPythonController controller,
+    RemoteEntry entry,
+    _BoardAction action,
+  ) async {
+    switch (action) {
+      case _BoardAction.rename:
+        final name = await showTextInputDialog(
+          context,
+          title: 'Renommer sur la carte',
+          label: 'Nouveau nom',
+          initialValue: entry.name,
+          confirmLabel: 'Renommer',
+        );
+        if (name != null && name != entry.name) await controller.renameEntry(entry, name);
+      case _BoardAction.download:
+        await _download(context, ref, controller, entry);
+      case _BoardAction.delete:
+        await _confirmDelete(context, controller, entry);
+    }
+  }
+
+  Future<void> _upload(BuildContext context, WidgetRef ref, MicroPythonState state, MicroPythonController controller) async {
+    final picked = await showProjectFilePicker(context);
+    if (picked == null || !context.mounted) return;
+    final name = picked.path.split('/').last;
+    if (state.files.any((f) => f.name == name)) {
+      final replace = await showConfirmDialog(
+        context,
+        title: 'Remplacer le fichier ?',
+        message: '« $name » existe déjà dans ${state.cwd} sur la carte. Il sera remplacé.',
+        confirmLabel: 'Remplacer',
+        destructive: true,
+      );
+      if (!replace) return;
+    }
+    await controller.uploadFromProject(picked.project, picked.path);
+  }
+
+  Future<void> _download(BuildContext context, WidgetRef ref, MicroPythonController controller, RemoteEntry entry) async {
+    final projects = ref.read(projectsProvider);
+    final target = await showSaveAsDialog(
+      context,
+      projects: projects.projects,
+      currentProject: projects.current,
+      initialPath: entry.name,
+      title: 'Télécharger vers un projet',
+      confirmLabel: 'Télécharger',
+    );
+    if (target == null) return;
+    final projectsController = ref.read(projectsProvider.notifier);
+    if (target.isNewProject && await projectsController.createProject(target.project) == null) return;
+    final saved = await controller.downloadToProject(entry, target.project, target.path);
+    if (saved) await projectsController.refresh();
   }
 
   static const _imageExtensions = {'png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp'};

@@ -7,6 +7,7 @@ import 'package:nomad_hal/nomad_hal.dart';
 import 'package:nomad_protocols/nomad_protocols.dart';
 
 import '../../../app/providers.dart';
+import '../../projects/data/storage_exception.dart';
 import '../data/serial_connection_link.dart';
 
 enum ReplLogKind { info, input, out, err }
@@ -21,6 +22,22 @@ class ReplLogEntry {
 
 enum ReplStatus { disconnected, connecting, ready }
 
+enum TransferDirection { upload, download }
+
+/// Transfert de fichier en cours entre l'appareil et la carte.
+@immutable
+class TransferProgress {
+  const TransferProgress({required this.name, required this.direction, required this.done, required this.total});
+
+  final String name;
+  final TransferDirection direction;
+  final int done;
+  final int total;
+
+  /// Avancement entre 0 et 1 ; null si la taille totale est inconnue.
+  double? get fraction => total <= 0 ? null : (done / total).clamp(0.0, 1.0);
+}
+
 const Object _unset = Object();
 
 @immutable
@@ -34,6 +51,7 @@ class MicroPythonState {
     this.cwd = '/',
     this.files = const [],
     this.errorMessage,
+    this.transfer,
   });
 
   final List<SerialDeviceInfo> devices;
@@ -47,6 +65,9 @@ class MicroPythonState {
   final List<RemoteEntry> files;
   final String? errorMessage;
 
+  /// Transfert de fichier en cours, pour afficher une progression.
+  final TransferProgress? transfer;
+
   bool get isReady => status == ReplStatus.ready;
 
   MicroPythonState copyWith({
@@ -58,6 +79,7 @@ class MicroPythonState {
     String? cwd,
     List<RemoteEntry>? files,
     Object? errorMessage = _unset,
+    Object? transfer = _unset,
   }) {
     return MicroPythonState(
       devices: devices ?? this.devices,
@@ -68,6 +90,7 @@ class MicroPythonState {
       cwd: cwd ?? this.cwd,
       files: files ?? this.files,
       errorMessage: identical(errorMessage, _unset) ? this.errorMessage : errorMessage as String?,
+      transfer: identical(transfer, _unset) ? this.transfer : transfer as TransferProgress?,
     );
   }
 }
@@ -338,16 +361,35 @@ class MicroPythonController extends Notifier<MicroPythonState> {
   Future<void> writeText(String name, String content) => writeFile(_join(name), content);
 
   /// Écrit [content] à [path] (CRC32 vérifié) ; faux en cas d'échec (erreur signalée).
-  Future<bool> writeFile(String path, String content) async {
+  Future<bool> writeFile(String path, String content) => writeBytes(path, Uint8List.fromList(utf8.encode(content)));
+
+  /// Écrit [data] à [path] avec progression et vérification CRC32 par la carte.
+  /// Faux en cas d'échec (erreur signalée) ; un fichier incomplet n'est jamais présenté comme réussi.
+  Future<bool> writeBytes(String path, Uint8List data) async {
     var written = false;
     await _guard(() async {
-      final data = Uint8List.fromList(utf8.encode(content));
-      await _fs!.write(path, data, verify: true);
+      final name = path.split('/').last;
+      _setTransfer(name, TransferDirection.upload, 0, data.length);
+      try {
+        await _fs!.write(
+          path,
+          data,
+          verify: true,
+          onProgress: (sent, total) => _setTransfer(name, TransferDirection.upload, sent, total),
+        );
+      } finally {
+        state = state.copyWith(transfer: null);
+      }
       _info('Écrit $path (${data.length} octets, CRC32 vérifié)');
       written = true;
       await _loadFiles();
     });
     return written;
+  }
+
+  void _setTransfer(String name, TransferDirection direction, int done, int total) {
+    if (!ref.mounted) return;
+    state = state.copyWith(transfer: TransferProgress(name: name, direction: direction, done: done, total: total));
   }
 
   Future<void> delete(RemoteEntry entry) => _guard(() async {
@@ -356,6 +398,60 @@ class MicroPythonController extends Notifier<MicroPythonState> {
         _info('Supprimé $path');
         await _loadFiles();
       });
+
+  Future<void> renameEntry(RemoteEntry entry, String newName) => _guard(() async {
+        final target = _join(newName.trim());
+        await _fs!.rename(_join(entry.name), target);
+        _info('Renommé ${_join(entry.name)} en $target');
+        await _loadFiles();
+      });
+
+  /// Envoie un fichier d'un projet local vers le dossier courant de la carte.
+  /// Faux si la lecture locale ou l'écriture échoue (erreur signalée).
+  Future<bool> uploadFromProject(String project, String path) async {
+    final Uint8List data;
+    try {
+      data = await (await ref.read(projectStoreProvider.future)).readBytes(project, path);
+    } on StorageException catch (e) {
+      _fail('Lecture locale impossible : « ${e.name ?? path} »');
+      return false;
+    }
+    return writeBytes(_join(path.split('/').last), data);
+  }
+
+  /// Télécharge [entry] vers [project]/[path], avec progression, puis vérifie le CRC32
+  /// calculé par la carte contre les octets reçus. Faux en cas d'échec.
+  Future<bool> downloadToProject(RemoteEntry entry, String project, String path) async {
+    var saved = false;
+    await _guard(() async {
+      final boardPath = _join(entry.name);
+      final total = entry.size ?? 0;
+      _setTransfer(entry.name, TransferDirection.download, 0, total);
+      final Uint8List data;
+      try {
+        data = await _fs!.read(boardPath, onProgress: (bytes) => _setTransfer(entry.name, TransferDirection.download, bytes, total));
+        final remote = await _fs!.checksum(boardPath);
+        if (remote.size != data.length || remote.crc32 != MicroPythonFs.crc32(data)) {
+          throw ProtocolIntegrityException(
+            'Téléchargement corrompu : ${data.length} octets reçus pour ${remote.size} attendus.',
+            expectedCrc: remote.crc32,
+            actualCrc: MicroPythonFs.crc32(data),
+          );
+        }
+      } finally {
+        state = state.copyWith(transfer: null);
+      }
+      try {
+        await (await ref.read(projectStoreProvider.future)).writeBytes(project, path, data);
+      } on StorageException catch (e) {
+        _fail('Enregistrement local impossible : « ${e.name ?? path} »');
+        return;
+      }
+      _info('Téléchargé $boardPath vers $project/$path (${data.length} octets, CRC32 vérifié)');
+      saved = true;
+    });
+    return saved;
+  }
 
   Future<void> makeDirectory(String name) => _guard(() async {
         await _fs!.mkdir(_join(name));
