@@ -81,9 +81,9 @@ NomadIDE/
 │   │       │   ├── application/         serial_monitor_controller.dart, serial_monitor_state.dart
 │   │       │   └── presentation/        serial_monitor_page.dart, widgets/
 │   │       ├── editor/                  🧪 Étape 2 — onglets, enregistrement local, envoi et exécution sur la carte
-│   │       ├── projects/                🧪 Étape 2 — projets locaux, brouillons automatiques
+│   │       ├── projects/                ✅ Étape 2 — projets locaux, brouillons automatiques
 │   │       ├── micropython/             ✅ Étape 2 — raw REPL, explorateur du FS de la carte, « Run », transferts vérifiés
-│   │       ├── settings/                🧪 Étape 2 — langue de l'interface (français / anglais)
+│   │       ├── settings/                ✅ Étape 2 — langue de l'interface (français / anglais)
 │   │       └── flasher/                 🔜 Étape 3 — choix .bin/.uf2/.hex, progression
 │   ├── android/app/src/main/            ✅ AndroidManifest.xml + res/xml/usb_device_filter.xml
 │   ├── macos/Runner/                    ✅ *.entitlements (com.apple.security.device.serial)
@@ -136,7 +136,8 @@ cd ../packages/nomad_hal && flutter test   # HAL
 2. **Éditeur + MicroPython** 🧪 : `nomad_editor`, raw REPL (`Ctrl-A` / `Ctrl-D`), transfert de fichiers
    par blocs encodés en base64 et vérifiés par CRC32, exécution de scripts, projets locaux, interface
    en français et en anglais. Validé sur un Pimoroni Badger 2040 (Windows et Android) ; reste à valider
-   sur matériel : projets, brouillons, autocomplétion, envoi/téléchargement, changement de langue.
+   sur matériel : fluidité à 5 000 lignes, auto-indentation, exécution de la sélection, lancement de
+   `main.py` au démarrage, délai d'arrêt d'un programme.
 3. **Flasheur** : ESP32 (esptool SLIP + stub, `enterEspBootloader` déjà prêt), puis RP2040
    (touch 1200 bauds → BOOTSEL → copie UF2), puis STM32 (AN3155). Compilateur cloud optionnel.
 4. **Distribution** : CI multi-OS, signature (Play Store, notarisation macOS, MSIX), mises à jour.
