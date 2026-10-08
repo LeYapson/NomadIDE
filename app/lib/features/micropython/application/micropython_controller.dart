@@ -217,6 +217,17 @@ class MicroPythonController extends Notifier<MicroPythonState> {
     }
   }
 
+  /// Ctrl-D : redémarre l'interpréteur (variables effacées, `boot.py` réexécuté).
+  Future<void> softReset() async {
+    final repl = _repl;
+    if (repl == null) return;
+    await _guard(() async {
+      _info('Redémarrage logiciel…');
+      await repl.softReset();
+      _info('Interpréteur redémarré.');
+    });
+  }
+
   void clearLog() => state = state.copyWith(log: const []);
 
   // ---------------------------------------------------------------------------
@@ -321,13 +332,23 @@ class MicroPythonController extends Notifier<MicroPythonState> {
     return bytes;
   }
 
-  Future<void> writeText(String name, String content) => _guard(() async {
-        final path = _join(name);
-        final data = Uint8List.fromList(utf8.encode(content));
-        await _fs!.write(path, data, verify: true);
-        _info('Écrit $path (${data.length} octets, CRC32 vérifié)');
-        await _loadFiles();
-      });
+  /// Chemin absolu de [name] dans le dossier courant.
+  String pathOf(String name) => _join(name);
+
+  Future<void> writeText(String name, String content) => writeFile(_join(name), content);
+
+  /// Écrit [content] à [path] (CRC32 vérifié) ; faux en cas d'échec (erreur signalée).
+  Future<bool> writeFile(String path, String content) async {
+    var written = false;
+    await _guard(() async {
+      final data = Uint8List.fromList(utf8.encode(content));
+      await _fs!.write(path, data, verify: true);
+      _info('Écrit $path (${data.length} octets, CRC32 vérifié)');
+      written = true;
+      await _loadFiles();
+    });
+    return written;
+  }
 
   Future<void> delete(RemoteEntry entry) => _guard(() async {
         final path = _join(entry.name);

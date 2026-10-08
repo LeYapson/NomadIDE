@@ -6,7 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nomad_hal/nomad_hal.dart';
 import 'package:nomad_protocols/nomad_protocols.dart';
 
+import '../../editor/application/editor_controller.dart';
 import '../application/micropython_controller.dart';
+import 'widgets/console_panel.dart';
 
 /// Page de validation du raw REPL et du système de fichiers MicroPython.
 class MicroPythonPage extends ConsumerWidget {
@@ -37,7 +39,7 @@ class MicroPythonPage extends ConsumerWidget {
                       children: [
                         SizedBox(width: 320, child: _FilesPanel()),
                         VerticalDivider(width: 1),
-                        Expanded(child: _ConsolePanel()),
+                        Expanded(child: ConsolePanel()),
                       ],
                     );
                   }
@@ -46,7 +48,7 @@ class MicroPythonPage extends ConsumerWidget {
                     child: Column(
                       children: [
                         TabBar(tabs: [Tab(text: 'Console'), Tab(text: 'Fichiers')]),
-                        Expanded(child: TabBarView(children: [_ConsolePanel(), _FilesPanel()])),
+                        Expanded(child: TabBarView(children: [ConsolePanel(), _FilesPanel()])),
                       ],
                     ),
                   );
@@ -136,135 +138,6 @@ class _Toolbar extends ConsumerWidget {
 // Console
 // -----------------------------------------------------------------------------
 
-class _ConsolePanel extends ConsumerStatefulWidget {
-  const _ConsolePanel();
-
-  @override
-  ConsumerState<_ConsolePanel> createState() => _ConsolePanelState();
-}
-
-class _ConsolePanelState extends ConsumerState<_ConsolePanel> {
-  final _scroll = ScrollController();
-  final _code = TextEditingController(text: 'print("Bonjour depuis NomadMCU")');
-
-  static const _snippets = {
-    'uname': 'import os\nprint(os.uname())',
-    'mémoire': 'import gc\nprint(gc.mem_free())',
-    'erreur': 'raise Exception("test")',
-    'boucle 3 s': 'import time\nfor i in range(3):\n    print(i)\n    time.sleep(1)',
-  };
-
-  @override
-  void dispose() {
-    _scroll.dispose();
-    _code.dispose();
-    super.dispose();
-  }
-
-  void _run() => ref.read(microPythonProvider.notifier).run(_code.text);
-
-  @override
-  Widget build(BuildContext context) {
-    final log = ref.watch(microPythonProvider.select((s) => s.log));
-    final ready = ref.watch(microPythonProvider.select((s) => s.isReady));
-    final busy = ref.watch(microPythonProvider.select((s) => s.busy));
-    final scheme = Theme.of(context).colorScheme;
-
-    ref.listen(microPythonProvider.select((s) => s.log), (_, __) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (_scroll.hasClients) _scroll.jumpTo(_scroll.position.maxScrollExtent);
-      });
-    });
-
-    Color colorOf(ReplLogKind kind) => switch (kind) {
-          ReplLogKind.info => scheme.outline,
-          ReplLogKind.input => scheme.primary,
-          ReplLogKind.out => scheme.onSurface,
-          ReplLogKind.err => scheme.error,
-        };
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Expanded(
-          child: SelectionArea(
-            child: ListView.builder(
-              controller: _scroll,
-              padding: const EdgeInsets.all(8),
-              itemCount: log.length,
-              itemBuilder: (context, i) {
-                final e = log[i];
-                final prefix = switch (e.kind) {
-                  ReplLogKind.info => '· ',
-                  ReplLogKind.input => '>>> ',
-                  _ => '',
-                };
-                return Text(
-                  '$prefix${e.text}',
-                  style: TextStyle(fontFamily: 'Consolas', fontFamilyFallback: const ['monospace'], color: colorOf(e.kind)),
-                );
-              },
-            ),
-          ),
-        ),
-        const Divider(height: 1),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-          child: Wrap(
-            spacing: 6,
-            children: [
-              for (final s in _snippets.entries)
-                ActionChip(label: Text(s.key), onPressed: () => _code.text = s.value),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Expanded(
-                child: CallbackShortcuts(
-                  bindings: {const SingleActivator(LogicalKeyboardKey.enter, control: true): _run},
-                  child: TextField(
-                    controller: _code,
-                    minLines: 3,
-                    maxLines: 8,
-                    style: const TextStyle(fontFamily: 'Consolas', fontFamilyFallback: ['monospace']),
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: 'Code MicroPython (Ctrl+Entrée pour exécuter)',
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Column(
-                children: [
-                  if (busy)
-                    FilledButton.icon(
-                      style: FilledButton.styleFrom(backgroundColor: scheme.error, foregroundColor: scheme.onError),
-                      onPressed: ref.read(microPythonProvider.notifier).stop,
-                      icon: const Icon(Icons.stop),
-                      label: const Text('Arrêter'),
-                    )
-                  else
-                    FilledButton.icon(
-                      onPressed: ready ? _run : null,
-                      icon: const Icon(Icons.play_arrow),
-                      label: const Text('Exécuter'),
-                    ),
-                  TextButton(onPressed: ref.read(microPythonProvider.notifier).clearLog, child: const Text('Effacer')),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 // -----------------------------------------------------------------------------
 // Fichiers
 // -----------------------------------------------------------------------------
@@ -327,7 +200,7 @@ class _FilesPanel extends ConsumerWidget {
                         leading: Icon(e.isDirectory ? Icons.folder_outlined : Icons.insert_drive_file_outlined),
                         title: Text(e.name),
                         subtitle: e.isDirectory || e.size == null ? null : Text('${e.size} o'),
-                        onTap: () => e.isDirectory ? controller.openDirectory(e.name) : _view(context, controller, e),
+                        onTap: () => e.isDirectory ? controller.openDirectory(e.name) : _view(context, ref, controller, e),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -354,7 +227,7 @@ class _FilesPanel extends ConsumerWidget {
 
   static const _imageExtensions = {'png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp'};
 
-  Future<void> _view(BuildContext context, MicroPythonController controller, RemoteEntry e) async {
+  Future<void> _view(BuildContext context, WidgetRef ref, MicroPythonController controller, RemoteEntry e) async {
     final bytes = await controller.readBytes(e.name);
     if (bytes == null || !context.mounted) return;
 
@@ -378,15 +251,7 @@ class _FilesPanel extends ConsumerWidget {
       );
       return;
     }
-    if (!context.mounted) return;
-    final edited =
-        await showDialog<_EditorResult>(context: context, builder: (_) => _EditorDialog(name: e.name, text: text));
-    if (edited == null) return;
-    if (edited.run) {
-      await controller.run(edited.text, label: 'run ${e.name} (non enregistré)');
-    } else if (edited.text != text) {
-      await controller.writeText(e.name, edited.text);
-    }
+    ref.read(editorProvider.notifier).openAndShow(controller.pathOf(e.name), text);
   }
 
   Future<void> _newFile(BuildContext context, MicroPythonController controller) async {
@@ -450,70 +315,6 @@ class _FilesPanel extends ConsumerWidget {
       ),
     );
     if (ok == true) await controller.delete(e);
-  }
-}
-
-class _EditorResult {
-  const _EditorResult(this.text, {this.run = false});
-
-  final String text;
-
-  /// Exécuter le texte tel quel, sans l'écrire sur la carte.
-  final bool run;
-}
-
-class _EditorDialog extends StatefulWidget {
-  const _EditorDialog({required this.name, required this.text});
-
-  final String name;
-  final String text;
-
-  @override
-  State<_EditorDialog> createState() => _EditorDialogState();
-}
-
-class _EditorDialogState extends State<_EditorDialog> {
-  late final TextEditingController _controller = TextEditingController(text: widget.text);
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.sizeOf(context);
-    return AlertDialog(
-      title: Text(widget.name),
-      content: SizedBox(
-        width: (size.width * 0.8).clamp(300, 900),
-        height: size.height * 0.6,
-        child: TextField(
-          controller: _controller,
-          expands: true,
-          maxLines: null,
-          minLines: null,
-          textAlignVertical: TextAlignVertical.top,
-          style: const TextStyle(fontFamily: 'Consolas', fontFamilyFallback: ['monospace']),
-          decoration: const InputDecoration(border: OutlineInputBorder()),
-        ),
-      ),
-      actions: [
-        TextButton(onPressed: () => Navigator.pop(context), child: const Text('Fermer')),
-        if (widget.name.endsWith('.py'))
-          OutlinedButton.icon(
-            onPressed: () => Navigator.pop(context, _EditorResult(_controller.text, run: true)),
-            icon: const Icon(Icons.play_arrow),
-            label: const Text('Exécuter sans enregistrer'),
-          ),
-        FilledButton.icon(
-          onPressed: () => Navigator.pop(context, _EditorResult(_controller.text)),
-          icon: const Icon(Icons.save_outlined),
-          label: const Text('Enregistrer sur la carte'),
-        ),
-      ],
-    );
   }
 }
 

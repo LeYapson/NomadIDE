@@ -16,6 +16,8 @@ dependencies:
     path: ../packages/nomad_hal
   nomad_protocols:
     path: ../packages/nomad_protocols
+  nomad_editor:
+    path: ../packages/nomad_editor
 
 dev_dependencies:
   flutter_test:
