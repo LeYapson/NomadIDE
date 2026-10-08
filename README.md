@@ -69,7 +69,7 @@ NomadIDE/
 │   │       ├── stm32/                   an3155.dart
 │   │       └── formats/                 intel_hex.dart, elf_to_bin.dart
 │   │
-│   └── nomad_editor/                 🧪 Étape 2 — re_editor : coloration Python/C/C++, autocomplétion, barre de symboles
+│   └── nomad_editor/                 ✅ Étape 2 — re_editor : coloration Python/C/C++, autocomplétion, barre de symboles
 │
 ├── app/                              ✅ application Flutter « nomad_mcu »
 │   ├── lib/
@@ -80,7 +80,7 @@ NomadIDE/
 │   │       │   ├── domain/              log_entry.dart, rx_line_assembler.dart
 │   │       │   ├── application/         serial_monitor_controller.dart, serial_monitor_state.dart
 │   │       │   └── presentation/        serial_monitor_page.dart, widgets/
-│   │       ├── editor/                  🧪 Étape 2 — onglets, enregistrement local, envoi et exécution sur la carte
+│   │       ├── editor/                  ✅ Étape 2 — onglets, enregistrement local, envoi et exécution sur la carte
 │   │       ├── projects/                ✅ Étape 2 — projets locaux, brouillons automatiques
 │   │       ├── micropython/             ✅ Étape 2 — raw REPL, explorateur du FS de la carte, « Run », transferts vérifiés
 │   │       ├── settings/                ✅ Étape 2 — langue de l'interface (français / anglais)
@@ -133,11 +133,9 @@ cd ../packages/nomad_hal && flutter test   # HAL
 ## Feuille de route
 
 1. **PoC USB/série + moniteur** ✅ : énumération, hotplug, connexion, DTR/RTS, reset, journal texte/hex, envoi.
-2. **Éditeur + MicroPython** 🧪 : `nomad_editor`, raw REPL (`Ctrl-A` / `Ctrl-D`), transfert de fichiers
+2. **Éditeur + MicroPython** ✅ : `nomad_editor`, raw REPL (`Ctrl-A` / `Ctrl-D`), transfert de fichiers
    par blocs encodés en base64 et vérifiés par CRC32, exécution de scripts, projets locaux, interface
-   en français et en anglais. Validé sur un Pimoroni Badger 2040 (Windows et Android) ; reste à valider
-   sur matériel : fluidité à 5 000 lignes, auto-indentation, exécution de la sélection, lancement de
-   `main.py` au démarrage, délai d'arrêt d'un programme.
+   en français et en anglais. Validé sur un Pimoroni Badger 2040 (Windows et Android).
 3. **Flasheur** : ESP32 (esptool SLIP + stub, `enterEspBootloader` déjà prêt), puis RP2040
    (touch 1200 bauds → BOOTSEL → copie UF2), puis STM32 (AN3155). Compilateur cloud optionnel.
 4. **Distribution** : CI multi-OS, signature (Play Store, notarisation macOS, MSIX), mises à jour.

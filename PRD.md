@@ -92,8 +92,8 @@ Format des critères : **Étant donné** / **Quand** / **Alors**. Chaque story e
 
 | ID | User story | Prio | Statut |
 |---|---|---|---|
-| B1 | Je veux éditer un fichier `.py`, `.c`, `.cpp`, `.h` avec coloration syntaxique et numéros de ligne. | M | 🧪 (coloration et numéros vus sur Windows et Android ; fluidité à 5 000 lignes à mesurer sur téléphone) |
-| B2 | Je veux une auto-indentation adaptée au langage (Python, C). | M | 🧪 |
+| B1 | Je veux éditer un fichier `.py`, `.c`, `.cpp`, `.h` avec coloration syntaxique et numéros de ligne. | M | ✅ (coloration et numéros de ligne validés sur Windows et Android ; fichier de 5 000 lignes fluide sur téléphone) |
+| B2 | Je veux une auto-indentation adaptée au langage (Python, C). | M | ✅ (validé sur Android) |
 | B3 | Je veux une autocomplétion de base (mots-clés, symboles du fichier ouvert). | S | ✅ (mots-clés Python/C/C++, noms MicroPython courants, identifiants du fichier ; validé sur Android) |
 | B4 | Je veux créer, ouvrir, renommer, supprimer des fichiers et des projets en local. | M | ✅ (validé sur Android ; Ctrl+S validé sur Windows) |
 | B5 | Je veux plusieurs fichiers ouverts en onglets, avec enregistrement automatique des brouillons. | S | ✅ (onglets et restauration des brouillons après fermeture de l'app validés sur Android) |
@@ -110,11 +110,11 @@ Format des critères : **Étant donné** / **Quand** / **Alors**. Chaque story e
 
 | ID | User story | Prio | Statut |
 |---|---|---|---|
-| C1 | Je veux ouvrir un REPL interactif sur ma carte MicroPython. | M | 🧪 (moniteur) |
-| C2 | Je veux exécuter le fichier ou la sélection courante sur la carte sans l'enregistrer dessus (« Run »). | M | ✅ (fichier validé sur Windows et Android avec un Badger 2040 ; sélection : 🧪) |
+| C1 | Je veux ouvrir un REPL interactif sur ma carte MicroPython. | M | ✅ (moniteur série validé à l'étape 1, avec Ctrl-C / Ctrl-D) |
+| C2 | Je veux exécuter le fichier ou la sélection courante sur la carte sans l'enregistrer dessus (« Run »). | M | ✅ (fichier et sélection validés sur Windows et Android avec un Badger 2040) |
 | C3 | Je veux voir les fichiers de la carte et en téléverser, télécharger, renommer, supprimer. | M | ✅ (liste, lecture, écriture vérifiée par CRC32, suppression, envoi depuis un projet, téléchargement et renommage validés sur Badger 2040 depuis un téléphone Android ; coupure de câble testée avec une fausse carte) |
-| C4 | Je veux enregistrer mon `main.py` sur la carte pour qu'il s'exécute au démarrage. | M | 🧪 |
-| C5 | Je veux interrompre un programme (Ctrl-C) et redémarrer la carte (soft reset). | M | 🧪 (soft reset validé sur Badger ; délai d'arrêt < 2 s à mesurer) |
+| C4 | Je veux enregistrer mon `main.py` sur la carte pour qu'il s'exécute au démarrage. | M | ✅ (validé sur Android avec un Badger 2040) |
+| C5 | Je veux interrompre un programme (Ctrl-C) et redémarrer la carte (soft reset). | M | ✅ (arrêt d'une boucle infinie et soft reset validés sur Badger 2040) |
 | C6 | Je veux installer ou mettre à jour le firmware MicroPython sur ma carte. | S | 🔜 (voir épopée D) |
 
 **Critères d'acceptation**
@@ -330,7 +330,7 @@ L'utilisateur ouvre l'app, voit un bandeau expliquant que l'USB-série n'est pas
 | Jalon | Contenu | Stories | Statut |
 |---|---|---|---|
 | **M1** — Étape 1 | HAL USB/série, moniteur série, carte simulée | A1–A7, E2, E3 | ✅ |
-| **M2** — Étape 2 | Éditeur, projets, raw REPL, explorateur de fichiers de la carte, « Run », internationalisation FR/EN | B1–B6, C1–C5, E6 | 🧪 (écrit, testé et validé sur Badger 2040 pour l'essentiel ; reste à valider : fluidité à 5 000 lignes sur téléphone (B1), auto-indentation (B2), exécution de la sélection (C2), lancement de `main.py` au démarrage (C4), arrêt d'un programme en moins de 2 s (C5)) |
+| **M2** — Étape 2 | Éditeur, projets, raw REPL, explorateur de fichiers de la carte, « Run », internationalisation FR/EN | B1–B6, C1–C5, E6 | ✅ (écrit, testé et validé sur Badger 2040 avec Windows et Android) |
 | **M3a** — Étape 3 | Flash ESP32/ESP32-S et RP2040, firmware MicroPython | D1, D2, D4, D6, D7, C6 | 🔜 |
 | **M3b** — Étape 3 | Service de compilation cloud, compte, quotas, abonnement | D5, F1–F4 | 🔜 |
 | Post-v1 | Flash STM32 (AN3155) | D3 | 🔜 |
@@ -348,3 +348,4 @@ La date de chaque jalon sera fixée après la décision sur R1 et le banc de tes
 | 0.2 | 2026-10-01 | Cartes v1 (ESP32, ESP32-S, RP2040/Badger 2040), compilation cloud dans le MVP, abonnement + offre gratuite limitée, FR/EN ; STM32 reporté ; ajout épopée F, D7, E6, R8 |
 | 0.3 | 2026-10-08 | Étape 2 : statuts de B1–B6, C2–C5 et E6 mis à jour après implémentation et validation sur Badger 2040 (Windows, Android) |
 | 0.4 | 2026-10-08 | Étape 2 : B3, B4, B5, C3 et E6 validés sur Android ; reste B1 (fluidité), B2, C2 (sélection), C4, C5 (délai d'arrêt) |
+| 0.5 | 2026-10-08 | Étape 2 terminée : B1, B2, C2, C4 et C5 validés sur Android et Windows ; jalon M2 ✅ |
