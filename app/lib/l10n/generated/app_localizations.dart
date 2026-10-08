@@ -1257,6 +1257,156 @@ abstract class AppLocalizations {
   /// **'Rien ici'**
   String get pfNothing;
 
+  /// No description provided for @navFlash.
+  ///
+  /// In fr, this message translates to:
+  /// **'Flasher'**
+  String get navFlash;
+
+  /// No description provided for @flashTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'NomadMCU · Flasher un programme'**
+  String get flashTitle;
+
+  /// No description provided for @flashUnsupported.
+  ///
+  /// In fr, this message translates to:
+  /// **'La copie d’un fichier .uf2 n’est pas encore possible sur ce système (Android : prévu via le protocole PICOBOOT).'**
+  String get flashUnsupported;
+
+  /// No description provided for @flashStepFile.
+  ///
+  /// In fr, this message translates to:
+  /// **'1. Fichier du programme'**
+  String get flashStepFile;
+
+  /// No description provided for @flashPickFile.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisir un fichier .uf2'**
+  String get flashPickFile;
+
+  /// No description provided for @flashNoFile.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun fichier choisi'**
+  String get flashNoFile;
+
+  /// No description provided for @flashFileInfo.
+  ///
+  /// In fr, this message translates to:
+  /// **'{family} · {amount} · {blocks} blocs'**
+  String flashFileInfo(String family, String amount, int blocks);
+
+  /// No description provided for @flashFamilyUnknown.
+  ///
+  /// In fr, this message translates to:
+  /// **'famille non précisée'**
+  String get flashFamilyUnknown;
+
+  /// No description provided for @flashStepBoard.
+  ///
+  /// In fr, this message translates to:
+  /// **'2. Carte'**
+  String get flashStepBoard;
+
+  /// No description provided for @flashBoardHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'La carte redémarre toute seule en mode BOOTSEL. Sinon : maintenez le bouton BOOTSEL, branchez le câble USB, puis relâchez.'**
+  String get flashBoardHint;
+
+  /// No description provided for @flashDriveFound.
+  ///
+  /// In fr, this message translates to:
+  /// **'Disque BOOTSEL détecté : {drive} ({board})'**
+  String flashDriveFound(String drive, String board);
+
+  /// No description provided for @flashDriveNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun disque BOOTSEL détecté pour l’instant.'**
+  String get flashDriveNone;
+
+  /// No description provided for @flashStepRun.
+  ///
+  /// In fr, this message translates to:
+  /// **'3. Écriture'**
+  String get flashStepRun;
+
+  /// No description provided for @flashRun.
+  ///
+  /// In fr, this message translates to:
+  /// **'Flasher'**
+  String get flashRun;
+
+  /// No description provided for @flashPhaseTouching.
+  ///
+  /// In fr, this message translates to:
+  /// **'Redémarrage de la carte en mode BOOTSEL…'**
+  String get flashPhaseTouching;
+
+  /// No description provided for @flashPhaseWaiting.
+  ///
+  /// In fr, this message translates to:
+  /// **'Attente du disque BOOTSEL…'**
+  String get flashPhaseWaiting;
+
+  /// No description provided for @flashPhaseCopying.
+  ///
+  /// In fr, this message translates to:
+  /// **'Copie vers la carte… {percent} %'**
+  String flashPhaseCopying(int percent);
+
+  /// No description provided for @flashPhaseRebooting.
+  ///
+  /// In fr, this message translates to:
+  /// **'Attente du redémarrage de la carte…'**
+  String get flashPhaseRebooting;
+
+  /// No description provided for @flashDone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Programme écrit ({amount}). La carte a redémarré et exécute le nouveau programme.'**
+  String flashDone(String amount);
+
+  /// No description provided for @flashNoReboot.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le fichier a été copié mais la carte n’a pas redémarré : elle a sans doute refusé le programme (mauvaise puce ?). Vérifiez que le fichier est prévu pour cette carte.'**
+  String get flashNoReboot;
+
+  /// No description provided for @flashNoDrive.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun disque BOOTSEL n’est apparu. Maintenez le bouton BOOTSEL, branchez le câble USB puis relâchez, et recommencez.'**
+  String get flashNoDrive;
+
+  /// No description provided for @flashCopyFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Copie interrompue à {done} sur {total} octets ({cause}). La carte peut contenir un programme incomplet : débranchez-la, maintenez BOOTSEL en la rebranchant, puis recommencez.'**
+  String flashCopyFailed(int done, int total, String cause);
+
+  /// No description provided for @flashBadFile.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fichier UF2 invalide : {reason}'**
+  String flashBadFile(String reason);
+
+  /// No description provided for @flashWrongFamily.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce fichier est prévu pour une autre puce ({family}) que cette carte Raspberry Pi RP2.'**
+  String flashWrongFamily(String family);
+
+  /// No description provided for @flashReadFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lecture du fichier impossible : {cause}'**
+  String flashReadFailed(String cause);
+
   /// No description provided for @errSerialUnsupportedIos.
   ///
   /// In fr, this message translates to:

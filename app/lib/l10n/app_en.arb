@@ -540,6 +540,102 @@
   "pfTitle": "Choose a file to send",
   "pfNoProject": "No projects",
   "pfNothing": "Nothing here",
+  "navFlash": "Flash",
+  "flashTitle": "NomadMCU · Flash a program",
+  "flashUnsupported": "Copying a .uf2 file is not yet possible on this system (Android: planned through the PICOBOOT protocol).",
+  "flashStepFile": "1. Program file",
+  "flashPickFile": "Choose a .uf2 file",
+  "flashNoFile": "No file chosen",
+  "flashFileInfo": "{family} · {amount} · {blocks} blocks",
+  "@flashFileInfo": {
+    "placeholders": {
+      "family": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      },
+      "blocks": {
+        "type": "int"
+      }
+    }
+  },
+  "flashFamilyUnknown": "family not specified",
+  "flashStepBoard": "2. Board",
+  "flashBoardHint": "The board restarts into BOOTSEL by itself. Otherwise: hold the BOOTSEL button, plug in the USB cable, then release.",
+  "flashDriveFound": "BOOTSEL drive found: {drive} ({board})",
+  "@flashDriveFound": {
+    "placeholders": {
+      "drive": {
+        "type": "String"
+      },
+      "board": {
+        "type": "String"
+      }
+    }
+  },
+  "flashDriveNone": "No BOOTSEL drive detected yet.",
+  "flashStepRun": "3. Writing",
+  "flashRun": "Flash",
+  "flashPhaseTouching": "Restarting the board into BOOTSEL mode…",
+  "flashPhaseWaiting": "Waiting for the BOOTSEL drive…",
+  "flashPhaseCopying": "Copying to the board… {percent}%",
+  "@flashPhaseCopying": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "flashPhaseRebooting": "Waiting for the board to restart…",
+  "flashDone": "Program written ({amount}). The board restarted and is running the new program.",
+  "@flashDone": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "flashNoReboot": "The file was copied but the board did not restart: it probably refused the program (wrong chip?). Check that the file is made for this board.",
+  "flashNoDrive": "No BOOTSEL drive appeared. Hold the BOOTSEL button, plug in the USB cable, then release, and try again.",
+  "flashCopyFailed": "Copy interrupted at {done} of {total} bytes ({cause}). The board may hold an incomplete program: unplug it, hold BOOTSEL while plugging it back in, then try again.",
+  "@flashCopyFailed": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "cause": {
+        "type": "String"
+      }
+    }
+  },
+  "flashBadFile": "Invalid UF2 file: {reason}",
+  "@flashBadFile": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "flashWrongFamily": "This file is made for a different chip ({family}) than this Raspberry Pi RP2 board.",
+  "@flashWrongFamily": {
+    "placeholders": {
+      "family": {
+        "type": "String"
+      }
+    }
+  },
+  "flashReadFailed": "Could not read the file: {cause}",
+  "@flashReadFailed": {
+    "placeholders": {
+      "cause": {
+        "type": "String"
+      }
+    }
+  },
   "errSerialUnsupportedIos": "iOS does not allow access to USB-serial adapters: there is no public USB Host API, only MFi-certified accessories are reachable. Use the simulated mode, and later the BLE or WebREPL transports.",
   "errSerialUnsupportedPlatform": "Unsupported platform: {platform}.",
   "@errSerialUnsupportedPlatform": {

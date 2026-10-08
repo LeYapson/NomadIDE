@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../features/editor/application/editor_controller.dart';
 import '../features/editor/presentation/editor_page.dart';
+import '../features/flash/presentation/flash_page.dart';
 import '../features/micropython/presentation/micropython_page.dart';
 import '../features/serial_monitor/presentation/serial_monitor_page.dart';
 import '../features/settings/presentation/settings_page.dart';
@@ -50,7 +51,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     return Scaffold(
       body: IndexedStack(
         index: tab.index,
-        children: const [SerialMonitorPage(), MicroPythonPage(), EditorPage(), SettingsPage()],
+        children: const [SerialMonitorPage(), MicroPythonPage(), EditorPage(), FlashPage(), SettingsPage()],
       ),
       bottomNavigationBar: keyboardOpen
           ? null
@@ -61,6 +62,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
                 NavigationDestination(icon: const Icon(Icons.terminal), label: context.l10n.navMonitor),
                 NavigationDestination(icon: const Icon(Icons.memory), label: context.l10n.navMicroPython),
                 NavigationDestination(icon: const Icon(Icons.code), label: context.l10n.navEditor),
+                NavigationDestination(icon: const Icon(Icons.bolt), label: context.l10n.navFlash),
                 NavigationDestination(icon: const Icon(Icons.settings_outlined), label: context.l10n.navSettings),
               ],
             ),
