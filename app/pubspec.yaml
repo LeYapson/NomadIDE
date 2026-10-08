@@ -18,6 +18,8 @@ dependencies:
     path: ../packages/nomad_protocols
   nomad_editor:
     path: ../packages/nomad_editor
+  path_provider: ^2.1.6
+  path: ^1.9.1
 
 dev_dependencies:
   flutter_test:
