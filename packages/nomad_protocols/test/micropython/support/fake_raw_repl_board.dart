@@ -27,6 +27,12 @@ class FakeRawReplBoard implements ByteLink {
   /// Nombre de Ctrl-A à ignorer (carte occupée à booter) avant de répondre.
   int silentEnterAttempts;
 
+  /// Nombre de redémarrages logiciels (Ctrl-D sans code) reçus.
+  int softResets = 0;
+
+  /// La carte annonce « soft reboot » mais ne revient jamais en raw REPL.
+  bool silentSoftReset = false;
+
   /// Tout ce que l'hôte a écrit, un élément par appel à [write].
   final List<Uint8List> writes = [];
 
@@ -69,7 +75,13 @@ class FakeRawReplBoard implements ByteLink {
       case _Mode.raw:
         switch (byte) {
           case 0x04:
-            if (_code.isEmpty) return; // soft reboot : hors périmètre
+            if (_code.isEmpty) {
+              // Redémarrage logiciel : la carte annonce, exécute boot.py puis ré-entre en raw REPL.
+              softResets++;
+              _emit('soft reboot\r\n');
+              if (!silentSoftReset) _emit('raw REPL; CTRL-B to exit\r\n>');
+              return;
+            }
             _execute(utf8.decode(_code));
             _code.clear();
           case 0x02:

@@ -12,3 +12,16 @@ final serialTransportProvider = Provider<SerialTransport>((ref) {
   ref.onDispose(transport.dispose);
   return transport;
 });
+
+enum HomeTab { monitor, micropython, editor }
+
+/// Onglet actif de la coque : les fonctionnalités s'y renvoient mutuellement
+/// (ex. ouvrir un fichier de la carte dans l'éditeur).
+final homeTabProvider = NotifierProvider<HomeTabController, HomeTab>(HomeTabController.new);
+
+class HomeTabController extends Notifier<HomeTab> {
+  @override
+  HomeTab build() => HomeTab.monitor;
+
+  void show(HomeTab tab) => state = tab;
+}

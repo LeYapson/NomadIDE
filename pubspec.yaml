@@ -10,3 +10,4 @@ workspace:
   - app
   - packages/nomad_hal
   - packages/nomad_protocols
+  - packages/nomad_editor
