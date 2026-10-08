@@ -229,7 +229,7 @@ class _EditorPageState extends ConsumerState<EditorPage> {
                       final output = _showOutput ? const ReplLogView() : null;
                       final surface = KeyedSubtree(
                         key: ValueKey(document.id),
-                        child: NomadCodeEditor(controller: document.controller),
+                        child: NomadCodeEditor(controller: document.controller, onSave: () => _save(document)),
                       );
                       // Écran large ou paysage : éditeur et sortie côte à côte.
                       if (constraints.maxWidth >= _wideBreakpoint - 280) {
