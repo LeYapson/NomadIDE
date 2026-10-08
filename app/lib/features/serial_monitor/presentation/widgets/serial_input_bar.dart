@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/theme.dart';
+import '../../../../l10n/l10n.dart';
 import '../../application/serial_monitor_controller.dart';
 import '../../application/serial_monitor_state.dart';
 
@@ -70,6 +71,7 @@ class _SerialInputBarState extends ConsumerState<SerialInputBar> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final connected = ref.watch(serialMonitorProvider.select((s) => s.isConnected));
     final lineEnding = ref.watch(serialMonitorProvider.select((s) => s.lineEnding));
     final controller = ref.read(serialMonitorProvider.notifier);
@@ -94,18 +96,21 @@ class _SerialInputBarState extends ConsumerState<SerialInputBar> {
               decoration: InputDecoration(
                 isDense: true,
                 border: const OutlineInputBorder(),
-                hintText: connected ? 'Commande… (Entrée pour envoyer, ↑/↓ historique)' : 'Connectez une carte',
+                hintText: connected ? l10n.monInputHintConnected : l10n.monInputHintDisconnected,
               ),
             ),
           ),
           const SizedBox(width: 8),
           Tooltip(
-            message: "Fin de ligne ajoutée à l'envoi",
+            message: l10n.monLineEndingTooltip,
             child: DropdownButton<LineEnding>(
               value: lineEnding,
               underline: const SizedBox.shrink(),
               items: [
-                for (final ending in LineEnding.values) DropdownMenuItem(value: ending, child: Text(ending.label)),
+                for (final ending in LineEnding.values) DropdownMenuItem(
+                  value: ending,
+                  child: Text(ending == LineEnding.none ? l10n.monLineEndingNone : ending.label),
+                ),
               ],
               onChanged: (ending) {
                 if (ending != null) controller.setLineEnding(ending);
@@ -114,7 +119,7 @@ class _SerialInputBarState extends ConsumerState<SerialInputBar> {
           ),
           const SizedBox(width: 4),
           IconButton.filled(
-            tooltip: 'Envoyer',
+            tooltip: l10n.monSend,
             onPressed: connected ? _submit : null,
             icon: const Icon(Icons.send),
           ),

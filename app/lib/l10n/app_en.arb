@@ -1,0 +1,774 @@
+{
+  "@@locale": "en",
+  "appTitle": "NomadMCU",
+  "navMonitor": "Serial monitor",
+  "navMicroPython": "MicroPython",
+  "navEditor": "Editor",
+  "navSettings": "Settings",
+  "settingsTitle": "NomadMCU · Settings",
+  "settingsLanguage": "Language",
+  "languageSystem": "System language",
+  "languageFrench": "Français",
+  "languageEnglish": "English",
+  "commonCancel": "Cancel",
+  "commonOk": "OK",
+  "commonCreate": "Create",
+  "commonRename": "Rename",
+  "commonDelete": "Delete",
+  "commonSave": "Save",
+  "commonClose": "Close",
+  "commonReplace": "Replace",
+  "bytesB": "{count} B",
+  "@bytesB": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bytesKb": "{value} KB",
+  "@bytesKb": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "bytesMb": "{value} MB",
+  "@bytesMb": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "monTitle": "NomadMCU · Serial monitor",
+  "monStatusConnected": "Connected",
+  "monStatusConnecting": "Connecting…",
+  "monStatusDisconnected": "Disconnected",
+  "monTransportTooltip": "Transport: {name}",
+  "@monTransportTooltip": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "transportDesktop": "Serial port (libserialport)",
+  "transportAndroidUsb": "USB OTG (Android)",
+  "transportSimulated": "Simulator",
+  "transportUnsupported": "Not supported",
+  "monBoardLabel": "Board",
+  "monNoBoardDetected": "No board detected",
+  "monChooseBoard": "Choose a board",
+  "monRefreshList": "Refresh the list",
+  "monBaudLabel": "Baud rate",
+  "monConnect": "Connect",
+  "monConnecting": "Connecting…",
+  "monDisconnect": "Disconnect",
+  "monDtrTooltip": "Data Terminal Ready",
+  "monRtsTooltip": "Request To Send",
+  "monResetTooltip": "Hardware reset via RTS (ESP32/ESP8266 boards with an auto-reset circuit)",
+  "monBootloader": "Bootloader",
+  "monBootloaderTooltip": "esptool sequence: restarts the ESP32 in download mode",
+  "monCtrlCTooltip": "Interrupt the program (MicroPython)",
+  "monCtrlDTooltip": "Soft reboot (MicroPython)",
+  "monHex": "HEX",
+  "monHexTooltip": "Show bytes in hexadecimal",
+  "monTimestamp": "Timestamps",
+  "monClear": "Clear",
+  "monByteCounters": "RX {rx} · TX {tx}",
+  "@monByteCounters": {
+    "placeholders": {
+      "rx": {
+        "type": "String"
+      },
+      "tx": {
+        "type": "String"
+      }
+    }
+  },
+  "monInputHintConnected": "Command… (Enter to send, ↑/↓ history)",
+  "monInputHintDisconnected": "Connect a board",
+  "monLineEndingTooltip": "Line ending added when sending",
+  "monLineEndingNone": "None",
+  "monSend": "Send",
+  "monEmptyLog": "Connect a board: the serial stream will appear here.",
+  "monLogEnumerationFailed": "Could not list the ports: {error}",
+  "@monLogEnumerationFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "monLogAttached": "Plugged in: {name}",
+  "@monLogAttached": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "monLogDetached": "Unplugged: {name}",
+  "@monLogDetached": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "monLogConnectedTo": "Connected to {name} ({config})",
+  "@monLogConnectedTo": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "config": {
+        "type": "String"
+      }
+    }
+  },
+  "monLogConnectFailed": "Could not connect: {error}",
+  "@monLogConnectFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "monLogDisconnected": "Disconnected.",
+  "monLogDeviceLost": "The board was unplugged.",
+  "monLogConnectionError": "Connection interrupted by an error.",
+  "monLogBaud": "Baud rate: {baud}",
+  "@monLogBaud": {
+    "placeholders": {
+      "baud": {
+        "type": "String"
+      }
+    }
+  },
+  "monLogReset": "Hardware reset (RTS → EN pulse)",
+  "monLogBootloader": "ESP bootloader sequence sent: the ROM is waiting for esptool",
+  "mpTitle": "NomadMCU · MicroPython",
+  "mpTabConsole": "Console",
+  "mpTabFiles": "Files",
+  "mpConnectRawRepl": "Connect (raw REPL)",
+  "mpTransferLine": "{arrow} {name} · {done} / {total} B",
+  "@mpTransferLine": {
+    "placeholders": {
+      "arrow": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      },
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "mpParentFolder": "Parent folder",
+  "mpRefresh": "Refresh",
+  "mpNewFile": "New file",
+  "mpNewFolder": "New folder",
+  "mpUploadFromProject": "Send a project file to the board",
+  "mpSelfTest": "Transfer test (speed and integrity)",
+  "mpFolderEmpty": "Empty folder",
+  "mpNotConnected": "Not connected",
+  "mpRunFile": "Run this file",
+  "mpActions": "Actions",
+  "mpMenuRename": "Rename…",
+  "mpMenuDownload": "Download to a project…",
+  "mpMenuDelete": "Delete…",
+  "mpRenameOnBoardTitle": "Rename on the board",
+  "mpNewName": "New name",
+  "mpReplaceFileTitle": "Replace the file?",
+  "mpReplaceFileMessage": "“{name}” already exists in {folder} on the board. It will be replaced.",
+  "@mpReplaceFileMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "folder": {
+        "type": "String"
+      }
+    }
+  },
+  "mpDownloadTitle": "Download to a project",
+  "mpDownload": "Download",
+  "mpBinaryFile": "Binary file ({bytes} bytes): no preview available.",
+  "@mpBinaryFile": {
+    "placeholders": {
+      "bytes": {
+        "type": "int"
+      }
+    }
+  },
+  "mpNameLabel": "Name",
+  "mpContentLabel": "Content",
+  "mpNewFileSample": "print(\"test file\")\n",
+  "mpWriteToBoard": "Write to the board",
+  "mpDeleteTitle": "Delete {name}?",
+  "@mpDeleteTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "mpDeleteWarning": "This cannot be undone.",
+  "mpImageTitle": "{name} ({bytes} bytes)",
+  "@mpImageTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "bytes": {
+        "type": "int"
+      }
+    }
+  },
+  "mpImageUnreadable": "Unreadable image or unsupported format.",
+  "mpConsoleHint": "MicroPython code (Ctrl+Enter to run)",
+  "mpStop": "Stop",
+  "mpRun": "Run",
+  "mpDefaultCode": "print(\"Hello from NomadMCU\")",
+  "snippetMemory": "memory",
+  "snippetError": "error",
+  "snippetLoop": "3 s loop",
+  "qkTabTooltip": "Insert an indentation",
+  "qkInsert": "Insert {symbol}",
+  "@qkInsert": {
+    "placeholders": {
+      "symbol": {
+        "type": "String"
+      }
+    }
+  },
+  "qkCtrlCTooltip": "Interrupt the running program",
+  "qkCtrlDTooltip": "Restart the interpreter (soft reset)",
+  "mpLogPortOpened": "Port opened: {name}",
+  "@mpLogPortOpened": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "mpLogRawActive": "Raw REPL active.",
+  "mpLogDone": "Done.",
+  "mpLogDoneWithError": "Done with an error.",
+  "mpLogSoftResetting": "Soft reset…",
+  "mpLogSoftReset": "Interpreter restarted.",
+  "mpLogSelfTestStart": "Transfer test: {kb} KB, CRC32 checked by the board.",
+  "@mpLogSelfTestStart": {
+    "placeholders": {
+      "kb": {
+        "type": "String"
+      }
+    }
+  },
+  "mpLogSelfTestRow": "· {chunk}-byte chunks: write {write}, read {read}, {verdict}",
+  "@mpLogSelfTestRow": {
+    "placeholders": {
+      "chunk": {
+        "type": "String"
+      },
+      "write": {
+        "type": "String"
+      },
+      "read": {
+        "type": "String"
+      },
+      "verdict": {
+        "type": "String"
+      }
+    }
+  },
+  "mpSelfTestSame": "readback identical ✓",
+  "mpSelfTestDiff": "READBACK DIFFERENT ✗",
+  "mpLogSelfTestFail": "· {chunk}-byte chunks: FAILED ✗ {error}",
+  "@mpLogSelfTestFail": {
+    "placeholders": {
+      "chunk": {
+        "type": "String"
+      },
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "mpLogSelfTestDone": "Transfer test finished.",
+  "mpRate": "{kbps} KB/s ({secs} s)",
+  "@mpRate": {
+    "placeholders": {
+      "kbps": {
+        "type": "String"
+      },
+      "secs": {
+        "type": "String"
+      }
+    }
+  },
+  "mpLogRead": "Read {path} ({bytes} bytes)",
+  "@mpLogRead": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      },
+      "bytes": {
+        "type": "int"
+      }
+    }
+  },
+  "mpLogWritten": "Written {path} ({bytes} bytes, CRC32 checked)",
+  "@mpLogWritten": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      },
+      "bytes": {
+        "type": "int"
+      }
+    }
+  },
+  "mpLogDeleted": "Deleted {path}",
+  "@mpLogDeleted": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "mpLogRenamed": "Renamed {from} to {to}",
+  "@mpLogRenamed": {
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "mpLogLocalReadFailed": "Could not read the local file: “{name}”",
+  "@mpLogLocalReadFailed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "mpLogDownloadCorrupt": "Corrupted download: {received} bytes received, {expected} expected.",
+  "@mpLogDownloadCorrupt": {
+    "placeholders": {
+      "received": {
+        "type": "String"
+      },
+      "expected": {
+        "type": "String"
+      }
+    }
+  },
+  "mpLogLocalSaveFailed": "Could not save locally: “{name}”",
+  "@mpLogLocalSaveFailed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "mpLogDownloaded": "Downloaded {from} to {to} ({bytes} bytes, CRC32 checked)",
+  "@mpLogDownloaded": {
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "bytes": {
+        "type": "int"
+      }
+    }
+  },
+  "mpLogFolderCreated": "Folder created {path}",
+  "@mpLogFolderCreated": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "mpLogResync": "Session out of sync, retrying…",
+  "mpLogResynced": "Session restored.",
+  "mpLogResyncFailed": "Could not resynchronize: {error}",
+  "@mpLogResyncFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "edTitle": "NomadMCU · Editor",
+  "edDraftsTitle": "Resume your unsaved work?",
+  "edDraftsIntro": "The app closed before these files were saved:",
+  "edDraftItem": "• {name}",
+  "@edDraftItem": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "edDraftItemProject": "• {name}  ({project})",
+  "@edDraftItemProject": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "project": {
+        "type": "String"
+      }
+    }
+  },
+  "edDraftsDiscard": "Discard",
+  "edDraftsRestore": "Restore",
+  "edReplaceFileMessage": "“{path}” already exists in the project “{project}”. Its content will be replaced.",
+  "@edReplaceFileMessage": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      },
+      "project": {
+        "type": "String"
+      }
+    }
+  },
+  "edSendTitle": "Send to the board",
+  "edSendPathLabel": "Path on the board",
+  "edSendHelper": "E.g. /main.py (runs when the board starts)",
+  "edSend": "Send",
+  "edSentSnack": "Sent to the board: {path} (CRC32 checked)",
+  "@edSentSnack": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "edCloseTitle": "Save “{name}”?",
+  "@edCloseTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "edCloseBody": "This file has unsaved changes.",
+  "edDontSave": "Don’t save",
+  "edSaveTooltip": "Save on this device (Ctrl+S)",
+  "edSendTooltip": "Send to the board",
+  "edConnectBoardHint": "Connect a board (MicroPython tab)",
+  "edRunTooltip": "Run the selection or the file on the board (without saving)",
+  "edHideOutput": "Hide the output",
+  "edShowOutput": "Show the output",
+  "edEmptyTitle": "No file open.",
+  "edEmptyBody": "Create a file, open one from your projects (menu at the top left), or tap a file on the board in the MicroPython tab.",
+  "edRunLabelSelection": "run {name} (selection)",
+  "@edRunLabelSelection": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "prNoProjects": "No projects.",
+  "prLoading": "Loading…",
+  "prNewProject": "New project",
+  "prProjectEmpty": "Empty project",
+  "prProjectNameLabel": "Project name",
+  "prDefaultProjectName": "My project",
+  "prProjects": "Projects",
+  "prProjectActions": "Project actions",
+  "prMenuNewProject": "New project…",
+  "prMenuRenameProject": "Rename the project…",
+  "prMenuDeleteProject": "Delete the project…",
+  "prRenameProjectTitle": "Rename the project",
+  "prDeleteProjectTitle": "Delete the project?",
+  "prDeleteProjectMessage": "The project “{name}” and all its files will be deleted from this device. This cannot be undone.",
+  "@prDeleteProjectMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "prFileNameLabel": "File name",
+  "prFolderNameLabel": "Folder name",
+  "prMenuUpload": "Send to the board",
+  "prMenuUploadDisconnected": "Send to the board (no board connected)",
+  "prDeleteFolderTitle": "Delete the folder?",
+  "prDeleteFileTitle": "Delete the file?",
+  "prDeleteFolderMessage": "“{name}” and all its content will be deleted from this device.",
+  "@prDeleteFolderMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "prDeleteFileMessage": "“{name}” will be deleted from this device.",
+  "@prDeleteFileMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "sdSaveTitle": "Save on this device",
+  "sdProject": "Project",
+  "sdNewProjectItem": "New project…",
+  "sdNewProjectName": "New project name",
+  "sdFileLabel": "File",
+  "sdFileHelper": "E.g. main.py or lib/sensor.py",
+  "pfTitle": "Choose a file to send",
+  "pfNoProject": "No projects",
+  "pfNothing": "Nothing here",
+  "errSerialUnsupportedIos": "iOS does not allow access to USB-serial adapters: there is no public USB Host API, only MFi-certified accessories are reachable. Use the simulated mode, and later the BLE or WebREPL transports.",
+  "errSerialUnsupportedPlatform": "Unsupported platform: {platform}.",
+  "@errSerialUnsupportedPlatform": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "errDeviceNotFound": "{device} is no longer connected.",
+  "@errDeviceNotFound": {
+    "placeholders": {
+      "device": {
+        "type": "String"
+      }
+    }
+  },
+  "errPortNotFound": "Port {path} not found.",
+  "@errPortNotFound": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "errUsbPermissionDenied": "USB permission denied, or USB-serial chip not supported.",
+  "errPortPermissionDenied": "Could not open {path}: {os}. Add your user to the “dialout” group (Debian/Ubuntu) or “uucp” (Arch), then log in again.",
+  "@errPortPermissionDenied": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      },
+      "os": {
+        "type": "String"
+      }
+    }
+  },
+  "errOpenFailedPath": "Could not open {path}: {os}. The port may be in use by another application (Arduino IDE, Thonny…).",
+  "@errOpenFailedPath": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      },
+      "os": {
+        "type": "String"
+      }
+    }
+  },
+  "errOpenFailedDevice": "Could not open {device}.",
+  "@errOpenFailedDevice": {
+    "placeholders": {
+      "device": {
+        "type": "String"
+      }
+    }
+  },
+  "errUnknownOsError": "unknown error",
+  "errUsbPortCreateFailed": "Could not create the USB port.",
+  "errUsbStreamUnavailable": "USB receive stream unavailable.",
+  "errAlreadyOpen": "{device} is already open.",
+  "@errAlreadyOpen": {
+    "placeholders": {
+      "device": {
+        "type": "String"
+      }
+    }
+  },
+  "errConnectionClosed": "The connection is closed.",
+  "errClosedDuringRead": "The port was closed while reading.",
+  "errReadFailed": "Serial port read error.",
+  "errNoResponse": "No response from the board after {timeoutMs} ms.",
+  "@errNoResponse": {
+    "placeholders": {
+      "timeoutMs": {
+        "type": "int"
+      }
+    }
+  },
+  "errOperationWrite": "Could not write to {device}.",
+  "@errOperationWrite": {
+    "placeholders": {
+      "device": {
+        "type": "String"
+      }
+    }
+  },
+  "errOperationConfigure": "Could not configure {device}.",
+  "@errOperationConfigure": {
+    "placeholders": {
+      "device": {
+        "type": "String"
+      }
+    }
+  },
+  "errOperationDtr": "Could not drive DTR on {device}.",
+  "@errOperationDtr": {
+    "placeholders": {
+      "device": {
+        "type": "String"
+      }
+    }
+  },
+  "errOperationRts": "Could not drive RTS on {device}.",
+  "@errOperationRts": {
+    "placeholders": {
+      "device": {
+        "type": "String"
+      }
+    }
+  },
+  "errUnsupportedStopBits": "1.5 stop bits are not supported by libserialport.",
+  "errWriteTimeout": "Write interrupted: {remaining} bytes not sent after {seconds} s.",
+  "@errWriteTimeout": {
+    "placeholders": {
+      "remaining": {
+        "type": "int"
+      },
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "errSerialOther": "Serial error: {message}",
+  "@errSerialOther": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "errLinkReadFailed": "Link read error.",
+  "errLinkClosed": "The link was closed.",
+  "errRawReplNotEntered": "The board does not enter raw REPL after {attempts} attempts. Check that it is a MicroPython board and that the port is not in use elsewhere.",
+  "@errRawReplNotEntered": {
+    "placeholders": {
+      "attempts": {
+        "type": "int"
+      }
+    }
+  },
+  "errProgramTimeout": "The program exceeded {timeoutMs} ms and was interrupted.",
+  "@errProgramTimeout": {
+    "placeholders": {
+      "timeoutMs": {
+        "type": "int"
+      }
+    }
+  },
+  "errBusy": "A run is already in progress.",
+  "errNotActive": "Raw REPL inactive: connect first.",
+  "errSessionBroken": "Session out of sync: reconnect to restore it.",
+  "errUnexpectedAck": "Unexpected reply instead of “OK”: {hex}.",
+  "@errUnexpectedAck": {
+    "placeholders": {
+      "hex": {
+        "type": "String"
+      }
+    }
+  },
+  "errUnexpectedCrcReply": "Unexpected reply to the CRC computation: “{reply}”.",
+  "@errUnexpectedCrcReply": {
+    "placeholders": {
+      "reply": {
+        "type": "String"
+      }
+    }
+  },
+  "errIntegrity": "Corrupted transfer on {path}: expected {expectedSize} bytes, got {actualSize}.",
+  "@errIntegrity": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      },
+      "expectedSize": {
+        "type": "int"
+      },
+      "actualSize": {
+        "type": "int"
+      }
+    }
+  },
+  "errProtocolOther": "Protocol error: {message}",
+  "@errProtocolOther": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "errStorageInvalidName": "Invalid name {name}. Avoid the characters / \\ : * ? \" < > | and reserved names (CON, NUL…).",
+  "@errStorageInvalidName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "errStorageAlreadyExists": "{name} already exists.",
+  "@errStorageAlreadyExists": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "errStorageNotFound": "{name} was not found.",
+  "@errStorageNotFound": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "errStorageOutsideProject": "Path refused {name}: it would leave the project.",
+  "@errStorageOutsideProject": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "errStorageIo": "Storage error {name}: {cause}.",
+  "@errStorageIo": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "cause": {
+        "type": "String"
+      }
+    }
+  }
+}

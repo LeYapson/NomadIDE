@@ -92,12 +92,12 @@ Format des critères : **Étant donné** / **Quand** / **Alors**. Chaque story e
 
 | ID | User story | Prio | Statut |
 |---|---|---|---|
-| B1 | Je veux éditer un fichier `.py`, `.c`, `.cpp`, `.h` avec coloration syntaxique et numéros de ligne. | M | 🔜 |
-| B2 | Je veux une auto-indentation adaptée au langage (Python, C). | M | 🔜 |
-| B3 | Je veux une autocomplétion de base (mots-clés, symboles du fichier ouvert). | S | 🔜 |
-| B4 | Je veux créer, ouvrir, renommer, supprimer des fichiers et des projets en local. | M | 🔜 |
-| B5 | Je veux plusieurs fichiers ouverts en onglets, avec enregistrement automatique des brouillons. | S | 🔜 |
-| B6 | Je veux un clavier mobile adapté au code (barre de symboles `: ( ) [ ] { } " _ Tab`). | M | 🔜 |
+| B1 | Je veux éditer un fichier `.py`, `.c`, `.cpp`, `.h` avec coloration syntaxique et numéros de ligne. | M | 🧪 (coloration et numéros vus sur Windows et Android ; fluidité à 5 000 lignes à mesurer sur téléphone) |
+| B2 | Je veux une auto-indentation adaptée au langage (Python, C). | M | 🧪 |
+| B3 | Je veux une autocomplétion de base (mots-clés, symboles du fichier ouvert). | S | 🧪 (mots-clés Python/C/C++, noms MicroPython courants, identifiants du fichier) |
+| B4 | Je veux créer, ouvrir, renommer, supprimer des fichiers et des projets en local. | M | 🧪 |
+| B5 | Je veux plusieurs fichiers ouverts en onglets, avec enregistrement automatique des brouillons. | S | 🧪 (onglets vus sur appareil ; brouillons testés par simulation de plantage) |
+| B6 | Je veux un clavier mobile adapté au code (barre de symboles `: ( ) [ ] { } " _ Tab`). | M | ✅ (validé sur Android avec le clavier virtuel) |
 
 **Critères d'acceptation**
 
@@ -111,10 +111,10 @@ Format des critères : **Étant donné** / **Quand** / **Alors**. Chaque story e
 | ID | User story | Prio | Statut |
 |---|---|---|---|
 | C1 | Je veux ouvrir un REPL interactif sur ma carte MicroPython. | M | 🧪 (moniteur) |
-| C2 | Je veux exécuter le fichier ou la sélection courante sur la carte sans l'enregistrer dessus (« Run »). | M | 🧪 (protocole `RawRepl` écrit) |
-| C3 | Je veux voir les fichiers de la carte et en téléverser, télécharger, renommer, supprimer. | M | 🔜 |
-| C4 | Je veux enregistrer mon `main.py` sur la carte pour qu'il s'exécute au démarrage. | M | 🔜 |
-| C5 | Je veux interrompre un programme (Ctrl-C) et redémarrer la carte (soft reset). | M | 🧪 |
+| C2 | Je veux exécuter le fichier ou la sélection courante sur la carte sans l'enregistrer dessus (« Run »). | M | ✅ (fichier validé sur Windows et Android avec un Badger 2040 ; sélection : 🧪) |
+| C3 | Je veux voir les fichiers de la carte et en téléverser, télécharger, renommer, supprimer. | M | 🧪 (liste, lecture, écriture vérifiée par CRC32 et suppression validées sur Badger ; envoi depuis un projet, téléchargement et renommage testés avec une fausse carte) |
+| C4 | Je veux enregistrer mon `main.py` sur la carte pour qu'il s'exécute au démarrage. | M | 🧪 |
+| C5 | Je veux interrompre un programme (Ctrl-C) et redémarrer la carte (soft reset). | M | 🧪 (soft reset validé sur Badger ; délai d'arrêt < 2 s à mesurer) |
 | C6 | Je veux installer ou mettre à jour le firmware MicroPython sur ma carte. | S | 🔜 (voir épopée D) |
 
 **Critères d'acceptation**
@@ -171,7 +171,7 @@ Le compte n'est exigé **que** pour la compilation cloud. Éditeur, moniteur, Mi
 | E3 | Je veux utiliser l'app en thème clair ou sombre, selon le système. | S | ✅ |
 | E4 | Je veux être informé clairement des limites de ma plateforme (iOS notamment). | M | 🧪 |
 | E5 | Je veux recevoir les mises à jour de l'app facilement. | C | 🔜 |
-| E6 | Je veux utiliser l'app en français ou en anglais, selon la langue du système ou mon choix. | M | 🔜 |
+| E6 | Je veux utiliser l'app en français ou en anglais, selon la langue du système ou mon choix. | M | 🧪 |
 
 ---
 
@@ -330,7 +330,7 @@ L'utilisateur ouvre l'app, voit un bandeau expliquant que l'USB-série n'est pas
 | Jalon | Contenu | Stories | Statut |
 |---|---|---|---|
 | **M1** — Étape 1 | HAL USB/série, moniteur série, carte simulée | A1–A7, E2, E3 | ✅ |
-| **M2** — Étape 2 | Éditeur, projets, raw REPL, explorateur de fichiers de la carte, « Run », internationalisation FR/EN | B1–B6, C1–C5, E6 | 🔜 (protocole `RawRepl` écrit 🧪) |
+| **M2** — Étape 2 | Éditeur, projets, raw REPL, explorateur de fichiers de la carte, « Run », internationalisation FR/EN | B1–B6, C1–C5, E6 | 🧪 (tout est écrit et testé ; reste à valider sur matériel : projets, brouillons, autocomplétion, envoi/téléchargement, langue) |
 | **M3a** — Étape 3 | Flash ESP32/ESP32-S et RP2040, firmware MicroPython | D1, D2, D4, D6, D7, C6 | 🔜 |
 | **M3b** — Étape 3 | Service de compilation cloud, compte, quotas, abonnement | D5, F1–F4 | 🔜 |
 | Post-v1 | Flash STM32 (AN3155) | D3 | 🔜 |
@@ -346,3 +346,4 @@ La date de chaque jalon sera fixée après la décision sur R1 et le banc de tes
 |---|---|---|
 | 0.1 | 2026-10-01 | Première version |
 | 0.2 | 2026-10-01 | Cartes v1 (ESP32, ESP32-S, RP2040/Badger 2040), compilation cloud dans le MVP, abonnement + offre gratuite limitée, FR/EN ; STM32 reporté ; ajout épopée F, D7, E6, R8 |
+| 0.3 | 2026-10-08 | Étape 2 : statuts de B1–B6, C2–C5 et E6 mis à jour après implémentation et validation sur Badger 2040 (Windows, Android) |

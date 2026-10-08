@@ -89,22 +89,22 @@ abstract class BaseSerialConnection implements SerialConnection {
 
   @override
   Future<void> write(Uint8List data) =>
-      data.isEmpty ? Future<void>.value() : _guard('Écriture', () => writeNative(data));
+      data.isEmpty ? Future<void>.value() : _guard(SerialOperation.write, () => writeNative(data));
 
   @override
-  Future<void> setConfig(SerialConfig config) => _guard('Configuration', () async {
+  Future<void> setConfig(SerialConfig config) => _guard(SerialOperation.configure, () async {
         await applyConfigNative(config);
         _config = config;
       });
 
   @override
-  Future<void> setDtr(bool value) => _guard('Pilotage DTR', () async {
+  Future<void> setDtr(bool value) => _guard(SerialOperation.dtr, () async {
         await setDtrNative(value);
         _dtr = value;
       });
 
   @override
-  Future<void> setRts(bool value) => _guard('Pilotage RTS', () async {
+  Future<void> setRts(bool value) => _guard(SerialOperation.rts, () async {
         await setRtsNative(value);
         _rts = value;
       });
@@ -112,14 +112,19 @@ abstract class BaseSerialConnection implements SerialConnection {
   @override
   Future<void> close() => _finish(DisconnectReason.closedByUser);
 
-  Future<void> _guard(String operation, Future<void> Function() action) async {
-    if (_closing) throw const SerialClosedException('La connexion est fermée.');
+  Future<void> _guard(SerialOperation operation, Future<void> Function() action) async {
+    if (_closing) throw const SerialClosedException('La connexion est fermée.', code: SerialErrorCode.connectionClosed);
     try {
       await action();
     } on SerialException {
       rethrow;
     } catch (e) {
-      throw SerialIoException('$operation impossible sur ${device.displayName}.', cause: e);
+      throw SerialIoException(
+        '${operation.name} impossible sur ${device.displayName}.',
+        cause: e,
+        code: SerialErrorCode.operationFailed,
+        params: {'operation': operation, 'device': device.displayName},
+      );
     }
   }
 

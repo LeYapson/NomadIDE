@@ -6,6 +6,7 @@ import 'package:re_highlight/languages/python.dart';
 import 'package:re_highlight/styles/atom-one-dark.dart';
 import 'package:re_highlight/styles/atom-one-light.dart';
 
+import 'autocomplete.dart';
 import 'code_language.dart';
 import 'nomad_editor_controller.dart';
 
@@ -18,6 +19,7 @@ class NomadCodeEditor extends StatelessWidget {
     this.readOnly = false,
     this.fontSize = 14,
     this.wordWrap = false,
+    this.autocomplete = true,
     this.focusNode,
     this.onChanged,
   });
@@ -26,6 +28,9 @@ class NomadCodeEditor extends StatelessWidget {
   final bool readOnly;
   final double fontSize;
   final bool wordWrap;
+
+  /// Suggestions de mots-clés et de symboles du fichier pendant la saisie.
+  final bool autocomplete;
   final FocusNode? focusNode;
   final ValueChanged<String>? onChanged;
 
@@ -49,7 +54,7 @@ class NomadCodeEditor extends StatelessWidget {
     final background = highlight.theme['root']?.backgroundColor ?? scheme.surface;
     final foreground = highlight.theme['root']?.color ?? scheme.onSurface;
 
-    return CodeEditor(
+    final editor = CodeEditor(
       controller: controller.code,
       focusNode: focusNode,
       readOnly: readOnly,
@@ -74,6 +79,12 @@ class NomadCodeEditor extends StatelessWidget {
           DefaultCodeChunkIndicator(width: 20, controller: chunkController, notifier: notifier),
         ],
       ),
+    );
+    if (!autocomplete || controller.language == CodeLanguage.plain || readOnly) return editor;
+    return CodeAutocomplete(
+      viewBuilder: (context, notifier, onSelected) => PromptListView(notifier: notifier, onSelected: onSelected),
+      promptsBuilder: NomadPromptsBuilder(controller),
+      child: editor,
     );
   }
 }

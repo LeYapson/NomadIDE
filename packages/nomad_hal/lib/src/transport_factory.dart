@@ -18,7 +18,11 @@ SerialTransport createPlatformTransport({bool simulate = false}) {
       "iOS n'autorise pas l'accès aux adaptateurs USB-série : pas d'API USB Host publique, "
       'seuls les accessoires certifiés MFi sont accessibles. Utilisez le mode simulé, '
       'et plus tard les transports BLE ou WebREPL.',
+      platform: 'ios',
     );
   }
-  return UnsupportedSerialTransport('Plateforme non prise en charge : ${Platform.operatingSystem}.');
+  return UnsupportedSerialTransport(
+    'Plateforme non prise en charge : ${Platform.operatingSystem}.',
+    platform: Platform.operatingSystem,
+  );
 }

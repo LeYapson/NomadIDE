@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:nomad_protocols/nomad_protocols.dart';
+import '../micropython/micropython_fs.dart';
 
 import 'fake_raw_repl_board.dart';
 

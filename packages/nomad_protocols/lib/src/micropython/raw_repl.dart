@@ -119,7 +119,7 @@ class RawRepl {
   /// Utilisable depuis n'importe quel état : sert aussi à se resynchroniser.
   Future<void> enter() async {
     if (_state == RawReplState.busy) {
-      throw const ProtocolStateException('Une exécution est en cours.');
+      throw const ProtocolStateException('Une exécution est en cours.', code: ProtocolErrorCode.busy);
     }
     try {
       for (var attempt = 1; attempt <= options.enterAttempts; attempt++) {
@@ -139,6 +139,8 @@ class RawRepl {
       throw ProtocolTimeoutException(
         'La carte ne passe pas en raw REPL après ${options.enterAttempts} tentatives. '
         "Vérifiez qu'il s'agit bien d'une carte MicroPython et que le port n'est pas utilisé ailleurs.",
+        code: ProtocolErrorCode.rawReplNotEntered,
+        params: {'attempts': options.enterAttempts},
       );
     } on ProtocolClosedException {
       _state = RawReplState.inactive;
@@ -161,11 +163,14 @@ class RawRepl {
   }) async {
     switch (_state) {
       case RawReplState.inactive:
-        throw const ProtocolStateException('Raw REPL inactif : appelez enter() d\'abord.');
+        throw const ProtocolStateException('Raw REPL inactif : appelez enter() d\'abord.', code: ProtocolErrorCode.notActive);
       case RawReplState.busy:
-        throw const ProtocolStateException('Une exécution est déjà en cours.');
+        throw const ProtocolStateException('Une exécution est déjà en cours.', code: ProtocolErrorCode.busy);
       case RawReplState.broken:
-        throw const ProtocolStateException('Session désynchronisée : appelez enter() pour la rétablir.');
+        throw const ProtocolStateException(
+          'Session désynchronisée : appelez enter() pour la rétablir.',
+          code: ProtocolErrorCode.sessionBroken,
+        );
       case RawReplState.ready:
         break;
     }
@@ -181,7 +186,12 @@ class RawRepl {
       if (ack[0] != 0x4F || ack[1] != 0x4B) {
         // 'O', 'K'
         _state = RawReplState.broken;
-        throw ProtocolDesyncException('Réponse inattendue au lieu de « OK » : ${_hex(ack)}.', received: ack);
+        throw ProtocolDesyncException(
+          'Réponse inattendue au lieu de « OK » : ${_hex(ack)}.',
+          received: ack,
+          code: ProtocolErrorCode.unexpectedAck,
+          params: {'hex': _hex(ack)},
+        );
       }
 
       running = true;
@@ -217,6 +227,8 @@ class RawRepl {
       throw ProtocolTimeoutException(
         'Le programme a dépassé ${timeout!.inMilliseconds} ms et a été interrompu.',
         partialOutput: stdoutSoFar.takeBytes(),
+        code: ProtocolErrorCode.programTimeout,
+        params: {'timeoutMs': timeout.inMilliseconds},
       );
     } on ProtocolClosedException {
       _state = RawReplState.inactive;
@@ -240,11 +252,14 @@ class RawRepl {
   Future<void> softReset({Duration timeout = const Duration(seconds: 10)}) async {
     switch (_state) {
       case RawReplState.inactive:
-        throw const ProtocolStateException('Raw REPL inactif : appelez enter() d\'abord.');
+        throw const ProtocolStateException('Raw REPL inactif : appelez enter() d\'abord.', code: ProtocolErrorCode.notActive);
       case RawReplState.busy:
-        throw const ProtocolStateException('Une exécution est en cours.');
+        throw const ProtocolStateException('Une exécution est en cours.', code: ProtocolErrorCode.busy);
       case RawReplState.broken:
-        throw const ProtocolStateException('Session désynchronisée : appelez enter() pour la rétablir.');
+        throw const ProtocolStateException(
+          'Session désynchronisée : appelez enter() pour la rétablir.',
+          code: ProtocolErrorCode.sessionBroken,
+        );
       case RawReplState.ready:
         break;
     }
@@ -268,7 +283,7 @@ class RawRepl {
   Future<void> exit() async {
     if (_state == RawReplState.inactive) return;
     if (_state == RawReplState.busy) {
-      throw const ProtocolStateException('Une exécution est en cours.');
+      throw const ProtocolStateException('Une exécution est en cours.', code: ProtocolErrorCode.busy);
     }
     try {
       _reader.discard();

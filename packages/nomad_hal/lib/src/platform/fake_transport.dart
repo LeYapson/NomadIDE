@@ -33,6 +33,9 @@ class FakeSerialTransport implements SerialTransport {
   final StreamController<DeviceEvent> _events = StreamController<DeviceEvent>.broadcast();
 
   @override
+  TransportKind get kind => TransportKind.simulated;
+
+  @override
   String get name => 'Simulateur';
 
   @override
@@ -52,10 +55,18 @@ class FakeSerialTransport implements SerialTransport {
     bool rts = true,
   }) async {
     if (!_devices.contains(device)) {
-      throw SerialDeviceNotFoundException('${device.displayName} introuvable.');
+      throw SerialDeviceNotFoundException(
+        '${device.displayName} introuvable.',
+        code: SerialErrorCode.deviceNotFound,
+        params: {'device': device.displayName},
+      );
     }
     if (_open.containsKey(device.id)) {
-      throw SerialOpenException('${device.displayName} est déjà ouvert.');
+      throw SerialOpenException(
+        '${device.displayName} est déjà ouvert.',
+        code: SerialErrorCode.alreadyOpen,
+        params: {'device': device.displayName},
+      );
     }
     final connection = FakeReplConnection._(
       device: device,

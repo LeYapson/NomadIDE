@@ -114,7 +114,11 @@ class ByteReader {
   }
 
   static ProtocolTimeoutException _timeout(Duration timeout) =>
-      ProtocolTimeoutException('Aucune réponse de la carte après ${timeout.inMilliseconds} ms.');
+      ProtocolTimeoutException(
+        'Aucune réponse de la carte après ${timeout.inMilliseconds} ms.',
+        code: ProtocolErrorCode.noResponse,
+        params: {'timeoutMs': timeout.inMilliseconds},
+      );
 
   Uint8List _take(int count) {
     final out = Uint8List.fromList(_buffer.sublist(0, count));

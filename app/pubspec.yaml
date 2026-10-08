@@ -18,6 +18,11 @@ dependencies:
     path: ../packages/nomad_protocols
   nomad_editor:
     path: ../packages/nomad_editor
+  path_provider: ^2.1.6
+  path: ^1.9.1
+  flutter_localizations:
+    sdk: flutter
+  intl: any
 
 dev_dependencies:
   flutter_test:
@@ -26,3 +31,4 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  generate: true

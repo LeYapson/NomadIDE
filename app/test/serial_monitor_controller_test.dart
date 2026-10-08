@@ -5,6 +5,7 @@ import 'package:nomad_mcu/app/providers.dart';
 import 'package:nomad_mcu/features/serial_monitor/application/serial_monitor_controller.dart';
 import 'package:nomad_mcu/features/serial_monitor/application/serial_monitor_state.dart';
 import 'package:nomad_mcu/features/serial_monitor/domain/log_entry.dart';
+import 'support/locale.dart';
 
 void main() {
   late FakeSerialTransport transport;
@@ -12,7 +13,7 @@ void main() {
 
   setUp(() {
     transport = FakeSerialTransport();
-    container = ProviderContainer(overrides: [serialTransportProvider.overrideWithValue(transport)]);
+    container = ProviderContainer(overrides: [frenchLocale, serialTransportProvider.overrideWithValue(transport)]);
     container.listen(serialMonitorProvider, (previous, next) {}); // garde le provider actif
   });
 

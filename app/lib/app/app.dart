@@ -1,21 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../l10n/l10n.dart';
 import 'home_shell.dart';
+import 'settings.dart';
 import 'theme.dart';
 
-class NomadApp extends StatelessWidget {
+class NomadApp extends ConsumerWidget {
   const NomadApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final locale = ref.watch(localeProvider);
     return MaterialApp(
-      title: 'NomadMCU',
+      onGenerateTitle: (context) => context.l10n.appTitle,
       debugShowCheckedModeBanner: false,
       theme: buildTheme(Brightness.light),
       darkTheme: buildTheme(Brightness.dark),
       themeMode: ThemeMode.system,
-      // Étape 1 : le moniteur série est l'écran unique. Un shell (éditeur,
-      // explorateur de carte, flasheur) viendra l'englober à l'étape 2.
+      locale: locale,
+      supportedLocales: appLocales,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      // Français si le système est en français, anglais sinon.
+      localeResolutionCallback: (system, supported) => resolveAppLocale(null, system ?? const Locale('en')),
       home: const HomeShell(),
     );
   }

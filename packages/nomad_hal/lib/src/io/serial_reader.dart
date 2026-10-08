@@ -94,20 +94,28 @@ class SerialReader {
   Future<void> _waitForData(Stopwatch clock, Duration timeout) async {
     final error = _error;
     if (error != null) {
-      throw SerialIoException('Erreur de lecture sur le port série.', cause: error);
+      throw SerialIoException('Erreur de lecture sur le port série.', cause: error, code: SerialErrorCode.readFailed);
     }
     if (_done) {
-      throw const SerialClosedException('Le port a été fermé pendant la lecture.');
+      throw const SerialClosedException('Le port a été fermé pendant la lecture.', code: SerialErrorCode.closedDuringRead);
     }
     final remaining = timeout - clock.elapsed;
     if (remaining <= Duration.zero) {
-      throw SerialTimeoutException('Aucune réponse de la carte après ${timeout.inMilliseconds} ms.');
+      throw SerialTimeoutException(
+        'Aucune réponse de la carte après ${timeout.inMilliseconds} ms.',
+        code: SerialErrorCode.noResponse,
+        params: {'timeoutMs': timeout.inMilliseconds},
+      );
     }
     final signal = _signal ??= Completer<void>();
     try {
       await signal.future.timeout(remaining);
     } on TimeoutException {
-      throw SerialTimeoutException('Aucune réponse de la carte après ${timeout.inMilliseconds} ms.');
+      throw SerialTimeoutException(
+        'Aucune réponse de la carte après ${timeout.inMilliseconds} ms.',
+        code: SerialErrorCode.noResponse,
+        params: {'timeoutMs': timeout.inMilliseconds},
+      );
     }
   }
 

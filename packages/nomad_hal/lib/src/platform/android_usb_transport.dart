@@ -24,6 +24,9 @@ class AndroidUsbSerialTransport implements SerialTransport {
   StreamSubscription<DeviceEvent>? _detachWatcher;
 
   @override
+  TransportKind get kind => TransportKind.androidUsb;
+
+  @override
   String get name => 'USB OTG (Android)';
 
   @override
@@ -51,7 +54,11 @@ class AndroidUsbSerialTransport implements SerialTransport {
   }) async {
     final usbDevice = await _find(device.id);
     if (usbDevice == null) {
-      throw SerialDeviceNotFoundException("${device.displayName} n'est plus connecté.");
+      throw SerialDeviceNotFoundException(
+        "${device.displayName} n'est plus connecté.",
+        code: SerialErrorCode.deviceNotFound,
+        params: {'device': device.displayName},
+      );
     }
 
     // create() affiche la demande de permission Android si nécessaire
@@ -65,11 +72,12 @@ class AndroidUsbSerialTransport implements SerialTransport {
         port = await usbDevice.create(UsbSerial.CDC);
       }
     } catch (e) {
-      throw SerialOpenException('Création du port USB impossible.', cause: e);
+      throw SerialOpenException('Création du port USB impossible.', cause: e, code: SerialErrorCode.usbPortCreateFailed);
     }
     if (port == null) {
       throw const SerialPermissionException(
         'Permission USB refusée, ou puce USB-série non prise en charge.',
+        code: SerialErrorCode.usbPermissionDenied,
       );
     }
 
@@ -77,10 +85,19 @@ class AndroidUsbSerialTransport implements SerialTransport {
     try {
       opened = await port.open();
     } catch (e) {
-      throw SerialOpenException("Ouverture de ${device.displayName} impossible.", cause: e);
+      throw SerialOpenException(
+        "Ouverture de ${device.displayName} impossible.",
+        cause: e,
+        code: SerialErrorCode.openFailed,
+        params: {'device': device.displayName},
+      );
     }
     if (!opened) {
-      throw SerialOpenException("Ouverture de ${device.displayName} impossible.");
+      throw SerialOpenException(
+        "Ouverture de ${device.displayName} impossible.",
+        code: SerialErrorCode.openFailed,
+        params: {'device': device.displayName},
+      );
     }
 
     final connection = AndroidUsbSerialConnection._(
@@ -186,7 +203,7 @@ class AndroidUsbSerialConnection extends BaseSerialConnection {
 
     final stream = _port.inputStream;
     if (stream == null) {
-      throw const SerialOpenException('Flux de réception USB indisponible.');
+      throw const SerialOpenException('Flux de réception USB indisponible.', code: SerialErrorCode.usbStreamUnavailable);
     }
     _subscription = stream.listen(
       emitData,
