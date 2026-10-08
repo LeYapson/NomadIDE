@@ -369,6 +369,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get snippetLoop => 'boucle 3 s';
 
   @override
+  String get snippetInfinite => 'boucle infinie';
+
+  @override
   String get qkTabTooltip => 'Insérer une indentation';
 
   @override

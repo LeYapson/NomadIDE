@@ -740,6 +740,12 @@ abstract class AppLocalizations {
   /// **'boucle 3 s'**
   String get snippetLoop;
 
+  /// No description provided for @snippetInfinite.
+  ///
+  /// In fr, this message translates to:
+  /// **'boucle infinie'**
+  String get snippetInfinite;
+
   /// No description provided for @qkTabTooltip.
   ///
   /// In fr, this message translates to:

@@ -240,6 +240,7 @@
   "snippetMemory": "mémoire",
   "snippetError": "erreur",
   "snippetLoop": "boucle 3 s",
+  "snippetInfinite": "boucle infinie",
   "qkTabTooltip": "Insérer une indentation",
   "qkInsert": "Insérer {symbol}",
   "@qkInsert": {
