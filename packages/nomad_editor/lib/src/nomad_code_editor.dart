@@ -20,6 +20,7 @@ class NomadCodeEditor extends StatelessWidget {
     this.fontSize = 14,
     this.wordWrap = false,
     this.autocomplete = true,
+    this.onSave,
     this.focusNode,
     this.onChanged,
   });
@@ -31,6 +32,9 @@ class NomadCodeEditor extends StatelessWidget {
 
   /// Suggestions de mots-clés et de symboles du fichier pendant la saisie.
   final bool autocomplete;
+
+  /// Appelé par Ctrl+S (Cmd+S sur macOS). Sans lui, re_editor avale la touche sans rien faire.
+  final VoidCallback? onSave;
   final FocusNode? focusNode;
   final ValueChanged<String>? onChanged;
 
@@ -59,6 +63,16 @@ class NomadCodeEditor extends StatelessWidget {
       focusNode: focusNode,
       readOnly: readOnly,
       wordWrap: wordWrap,
+      shortcutOverrideActions: onSave == null
+          ? null
+          : {
+              CodeShortcutSaveIntent: CallbackAction<CodeShortcutSaveIntent>(
+                onInvoke: (_) {
+                  onSave!();
+                  return null;
+                },
+              ),
+            },
       onChanged: onChanged == null ? null : (_) => onChanged!(controller.text),
       style: CodeEditorStyle(
         fontSize: fontSize,
