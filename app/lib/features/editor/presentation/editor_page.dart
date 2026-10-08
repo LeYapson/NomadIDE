@@ -163,7 +163,11 @@ class _EditorPageState extends ConsumerState<EditorPage> {
 
   Future<void> _run(EditorDocument document) async {
     setState(() => _showOutput = true);
-    await ref.read(editorProvider.notifier).run(document);
+    // Le texte à envoyer (sélection ou fichier) est lu tout de suite ; on referme ensuite le
+    // clavier pour que la sortie reste visible.
+    final running = ref.read(editorProvider.notifier).run(document);
+    FocusManager.instance.primaryFocus?.unfocus();
+    await running;
   }
 
   Future<void> _close(EditorDocument document) async {
@@ -274,44 +278,53 @@ class _EditorPageState extends ConsumerState<EditorPage> {
         key: _scaffoldKey,
         appBar: AppBar(
           title: Text(context.l10n.edTitle),
+          // Les boutons d'action font partie de la zone de l'éditeur : y toucher ne lui retire
+          // ni le focus ni la sélection (sinon « Exécuter » partirait avec tout le fichier).
           actions: [
-            IconButton(
-              tooltip: context.l10n.mpNewFile,
-              onPressed: controller.newDocument,
-              icon: const Icon(Icons.note_add_outlined),
-            ),
-            if (document != null) ...[
-              ListenableBuilder(
-                listenable: document.controller,
-                builder: (context, _) => IconButton(
-                  tooltip: context.l10n.edSaveTooltip,
-                  onPressed: () => _save(document),
-                  icon: Icon(document.dirty ? Icons.save : Icons.save_outlined),
-                ),
-              ),
-              IconButton(
-                tooltip: micro.isReady ? context.l10n.edSendTooltip : context.l10n.edConnectBoardHint,
-                onPressed: micro.isReady && !micro.busy ? () => _sendToBoard(document) : null,
-                icon: const Icon(Icons.upload_file),
-              ),
-              if (micro.busy)
+            CodeEditorTapRegion(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
                 IconButton(
-                  tooltip: context.l10n.mpStop,
-                  color: Theme.of(context).colorScheme.error,
-                  onPressed: ref.read(microPythonProvider.notifier).stop,
-                  icon: const Icon(Icons.stop_circle_outlined),
-                )
-              else
-                IconButton(
-                  tooltip: micro.isReady ? context.l10n.edRunTooltip : context.l10n.edConnectBoardHint,
-                  onPressed: micro.isReady ? () => _run(document) : null,
-                  icon: const Icon(Icons.play_arrow),
+                  tooltip: context.l10n.mpNewFile,
+                  onPressed: controller.newDocument,
+                  icon: const Icon(Icons.note_add_outlined),
                 ),
-            ],
-            IconButton(
-              tooltip: _showOutput ? context.l10n.edHideOutput : context.l10n.edShowOutput,
-              onPressed: () => setState(() => _showOutput = !_showOutput),
-              icon: Icon(_showOutput ? Icons.terminal : Icons.terminal_outlined),
+                if (document != null) ...[
+                  ListenableBuilder(
+                    listenable: document.controller,
+                    builder: (context, _) => IconButton(
+                      tooltip: context.l10n.edSaveTooltip,
+                      onPressed: () => _save(document),
+                      icon: Icon(document.dirty ? Icons.save : Icons.save_outlined),
+                    ),
+                  ),
+                  IconButton(
+                    tooltip: micro.isReady ? context.l10n.edSendTooltip : context.l10n.edConnectBoardHint,
+                    onPressed: micro.isReady && !micro.busy ? () => _sendToBoard(document) : null,
+                    icon: const Icon(Icons.upload_file),
+                  ),
+                  if (micro.busy)
+                    IconButton(
+                      tooltip: context.l10n.mpStop,
+                      color: Theme.of(context).colorScheme.error,
+                      onPressed: ref.read(microPythonProvider.notifier).stop,
+                      icon: const Icon(Icons.stop_circle_outlined),
+                    )
+                  else
+                    IconButton(
+                      tooltip: micro.isReady ? context.l10n.edRunTooltip : context.l10n.edConnectBoardHint,
+                      onPressed: micro.isReady ? () => _run(document) : null,
+                      icon: const Icon(Icons.play_arrow),
+                    ),
+                ],
+                IconButton(
+                  tooltip: _showOutput ? context.l10n.edHideOutput : context.l10n.edShowOutput,
+                  onPressed: () => setState(() => _showOutput = !_showOutput),
+                  icon: Icon(_showOutput ? Icons.terminal : Icons.terminal_outlined),
+                ),
+                ],
+              ),
             ),
           ],
         ),

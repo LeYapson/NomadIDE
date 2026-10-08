@@ -25,6 +25,7 @@ class _ConsolePanelState extends ConsumerState<ConsolePanel> {
         l10n.snippetMemory: 'import gc\nprint(gc.mem_free())',
         l10n.snippetError: 'raise Exception("test")',
         l10n.snippetLoop: 'import time\nfor i in range(3):\n    print(i)\n    time.sleep(1)',
+        l10n.snippetInfinite: 'import time\nn = 0\nwhile True:\n    print(n)\n    n += 1\n    time.sleep(0.5)',
       };
 
   @override
@@ -71,11 +72,19 @@ class _ConsolePanelState extends ConsumerState<ConsolePanel> {
         const Divider(height: 1),
         Padding(
           padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-          child: Wrap(
-            spacing: 6,
-            children: [
-              for (final s in _snippets(l10n).entries) ActionChip(label: Text(s.key), onPressed: () => _code.text = s.value),
-            ],
+          // Une seule ligne qui défile : sur un petit écran, des pastilles sur plusieurs lignes
+          // écraseraient le journal.
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                for (final s in _snippets(l10n).entries)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 6),
+                    child: ActionChip(label: Text(s.key), onPressed: () => _code.text = s.value),
+                  ),
+              ],
+            ),
           ),
         ),
         Padding(

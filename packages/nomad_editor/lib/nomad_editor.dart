@@ -7,4 +7,4 @@ export 'src/nomad_editor_controller.dart';
 export 'src/quick_key_bar.dart';
 
 // Types de re_editor nécessaires pour piloter le curseur sans dépendre du package.
-export 'package:re_editor/re_editor.dart' show CodeEditor, CodeLineSelection;
+export 'package:re_editor/re_editor.dart' show CodeEditor, CodeEditorTapRegion, CodeLineSelection;
