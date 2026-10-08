@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -8,10 +10,17 @@ import 'package:nomad_mcu/app/providers.dart';
 import 'package:nomad_mcu/features/editor/application/editor_controller.dart';
 
 ProviderContainer newContainer() {
+  final storage = Directory.systemTemp.createTempSync('nomad_editor_test');
   final container = ProviderContainer(
-    overrides: [serialTransportProvider.overrideWithValue(FakeSerialTransport())],
+    overrides: [
+      serialTransportProvider.overrideWithValue(FakeSerialTransport()),
+      storageRootProvider.overrideWith((ref) => storage),
+    ],
   );
-  addTearDown(container.dispose);
+  addTearDown(() {
+    container.dispose();
+    storage.deleteSync(recursive: true);
+  });
   return container;
 }
 
@@ -143,6 +152,8 @@ void main() {
       expect(doc.controller.text, 'if x:');
       expect(doc.dirty, isTrue);
       expect(find.text('● main.py'), findsOneWidget);
+      // Le brouillon automatique est programmé : on l'écrit pour ne laisser aucun minuteur.
+      await tester.runAsync(() => container.read(editorProvider.notifier).flushDrafts());
     }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 
     testWidgets('sur desktop, pas de barre de symboles', (tester) async {
