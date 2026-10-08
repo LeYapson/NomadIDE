@@ -173,6 +173,35 @@ void main() {
     });
   });
 
+  group('softReset', () {
+    test('Ctrl-D redémarre la carte et la session reste utilisable', () async {
+      await repl.enter();
+      board.writes.clear();
+
+      await repl.softReset();
+
+      expect(board.writes.single, [0x04]);
+      expect(board.softResets, 1);
+      expect(repl.state, RawReplState.ready);
+      expect((await repl.execute('print("revenu")')).stdoutText, 'revenu\r\n');
+    });
+
+    test('lève un timeout et marque la session cassée si la carte ne revient pas en raw REPL', () async {
+      await repl.enter();
+      board.silentSoftReset = true;
+
+      await expectLater(
+        repl.softReset(timeout: const Duration(milliseconds: 100)),
+        throwsA(isA<ProtocolTimeoutException>()),
+      );
+      expect(repl.state, RawReplState.broken);
+    });
+
+    test('exige une session raw REPL active', () async {
+      await expectLater(repl.softReset(), throwsA(isA<ProtocolStateException>()));
+    });
+  });
+
   group('états', () {
     test('execute avant enter lève ProtocolStateException', () async {
       await expectLater(repl.execute('print("x")'), throwsA(isA<ProtocolStateException>()));

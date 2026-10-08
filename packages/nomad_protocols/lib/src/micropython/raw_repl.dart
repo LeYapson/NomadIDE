@@ -15,6 +15,7 @@ const int _cr = 0x0D;
 
 final List<int> _banner = utf8.encode('raw REPL; CTRL-B to exit\r\n>');
 final List<int> _friendlyPrompt = utf8.encode('>>> ');
+final List<int> _softRebootNotice = utf8.encode('soft reboot\r\n');
 const List<int> _eot = [_ctrlD];
 const List<int> _prompt = [0x3E]; // '>'
 
@@ -231,6 +232,36 @@ class RawRepl {
   Future<void> interrupt() async {
     if (_state != RawReplState.busy) return;
     await _link.write(_bytes([_ctrlC]));
+  }
+
+  /// Redémarre l'interpréteur (Ctrl-D en raw REPL) : variables effacées, `boot.py`
+  /// réexécuté, puis la carte ré-entre d'elle-même en raw REPL (`main.py` ne se
+  /// lance pas). [timeout] borne l'attente du retour, `boot.py` pouvant être long.
+  Future<void> softReset({Duration timeout = const Duration(seconds: 10)}) async {
+    switch (_state) {
+      case RawReplState.inactive:
+        throw const ProtocolStateException('Raw REPL inactif : appelez enter() d\'abord.');
+      case RawReplState.busy:
+        throw const ProtocolStateException('Une exécution est en cours.');
+      case RawReplState.broken:
+        throw const ProtocolStateException('Session désynchronisée : appelez enter() pour la rétablir.');
+      case RawReplState.ready:
+        break;
+    }
+    _state = RawReplState.busy;
+    try {
+      _reader.discard();
+      await _link.write(_bytes(_eot));
+      await _reader.readUntil(_softRebootNotice, timeout: options.ackTimeout);
+      await _reader.readUntil(_banner, timeout: timeout);
+      _state = RawReplState.ready;
+    } on ProtocolClosedException {
+      _state = RawReplState.inactive;
+      rethrow;
+    } catch (_) {
+      _state = RawReplState.broken;
+      rethrow;
+    }
   }
 
   /// Quitte le raw REPL (Ctrl-B) et attend l'invite interactive `>>> `.
