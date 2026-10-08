@@ -14,7 +14,7 @@ dependencies:
   # Android USB Host (OTG) : pilotes userland CDC-ACM, FTDI, CP210x, CH34x, PL2303.
   usb_serial: ^0.5.2
   # Windows / macOS / Linux : binding FFI de libserialport.
-  flutter_libserialport: ^0.4.0
+  flutter_libserialport: ^0.6.0
 
 dev_dependencies:
   flutter_test:

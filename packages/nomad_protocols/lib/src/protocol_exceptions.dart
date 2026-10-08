@@ -42,6 +42,15 @@ final class ProtocolDesyncException extends ProtocolException {
   final Uint8List? received;
 }
 
+/// Le fichier relu sur la carte ne correspond pas à ce qui a été envoyé
+/// (octets perdus ou altérés sur le lien).
+final class ProtocolIntegrityException extends ProtocolException {
+  const ProtocolIntegrityException(super.message, {required this.expectedCrc, required this.actualCrc});
+
+  final int expectedCrc;
+  final int actualCrc;
+}
+
 /// La carte a exécuté la commande mais Python a levé une exception
 /// (fichier absent, répertoire non vide, …).
 final class ProtocolRemoteException extends ProtocolException {

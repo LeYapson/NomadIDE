@@ -184,14 +184,16 @@ class MicroPythonController extends Notifier<MicroPythonState> {
   // Exécution
   // ---------------------------------------------------------------------------
 
-  Future<void> run(String code) async {
+  /// Exécute [code] sans l'écrire sur la carte (script temporaire envoyé par le
+  /// raw REPL). Pas de délai : l'utilisateur arrête avec [stop].
+  Future<void> run(String code, {String? label}) async {
     final repl = _repl;
     if (repl == null || code.trim().isEmpty) return;
     await _guard(() async {
-      _append(ReplLogKind.input, code.trimRight());
+      _append(ReplLogKind.input, label ?? code.trimRight());
       final result = await repl.execute(
         code,
-        timeout: runTimeout,
+        timeout: null,
         onStdout: (d) => _append(ReplLogKind.out, utf8.decode(d, allowMalformed: true)),
         onStderr: (d) => _append(ReplLogKind.err, utf8.decode(d, allowMalformed: true)),
       );
@@ -199,7 +201,85 @@ class MicroPythonController extends Notifier<MicroPythonState> {
     });
   }
 
+  /// Exécute un fichier de la carte (lu puis envoyé comme script temporaire).
+  Future<void> runFile(String name) async {
+    final bytes = await readBytes(name);
+    if (bytes == null) return;
+    await run(utf8.decode(bytes, allowMalformed: true), label: 'run ${_join(name)}');
+  }
+
+  /// Ctrl-C sur le programme en cours.
+  Future<void> stop() async {
+    try {
+      await _repl?.interrupt();
+    } on ProtocolException catch (e) {
+      _fail(e.message);
+    }
+  }
+
   void clearLog() => state = state.copyWith(log: const []);
+
+  // ---------------------------------------------------------------------------
+  // Test de transfert (validation du lien, notamment USB OTG Android)
+  // ---------------------------------------------------------------------------
+
+  static const _selfTestPath = '/_nomad_selftest.bin';
+  static const selfTestBytes = 8 * 1024;
+  static const selfTestChunkSizes = [128, 256, 384, 512];
+
+  /// Écrit puis relit [selfTestBytes] octets pseudo-aléatoires pour chaque taille
+  /// de morceau, avec vérification CRC32 côté carte, et consigne débit et erreurs.
+  Future<void> runTransferSelfTest() async {
+    final repl = _repl;
+    if (repl == null) return;
+    await _guard(() async {
+      var seed = 0x2545F491;
+      final data = Uint8List.fromList(List.generate(selfTestBytes, (_) {
+        seed = (seed * 1103515245 + 12345) & 0x7FFFFFFF;
+        return (seed >> 16) & 0xFF;
+      }));
+      _info('Test de transfert : ${selfTestBytes ~/ 1024} Ko, CRC32 vérifié par la carte.');
+
+      for (final chunk in selfTestChunkSizes) {
+        final fs = MicroPythonFs(repl, chunkSize: chunk);
+        final clock = Stopwatch()..start();
+        try {
+          await fs.write(_selfTestPath, data, verify: true, retries: 0);
+          final writeMs = clock.elapsedMilliseconds;
+          clock.reset();
+          final back = await fs.read(_selfTestPath);
+          final readMs = clock.elapsedMilliseconds;
+          final same = back.length == data.length && _equal(back, data);
+          _info(
+            '· morceaux de $chunk o : écriture ${_rate(data.length, writeMs)}, '
+            'lecture ${_rate(data.length, readMs)}, '
+            '${same ? 'relecture identique ✓' : 'RELECTURE DIFFÉRENTE ✗'}',
+          );
+        } on ProtocolException catch (e) {
+          _info('· morceaux de $chunk o : ÉCHEC ✗ ${e.message}');
+          // Une désynchronisation rend la suite impossible : _guard resynchronise.
+          if (repl.state != RawReplState.ready) break;
+        }
+      }
+      try {
+        await MicroPythonFs(repl).remove(_selfTestPath);
+      } on ProtocolException {
+        // Fichier absent si tous les essais ont échoué.
+      }
+      _info('Test de transfert terminé.');
+      await _loadFiles();
+    });
+  }
+
+  static bool _equal(Uint8List a, Uint8List b) {
+    for (var i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
+  }
+
+  static String _rate(int bytes, int ms) =>
+      '${(bytes / 1024 / (ms == 0 ? 1 : ms / 1000)).toStringAsFixed(1)} Ko/s (${(ms / 1000).toStringAsFixed(1)} s)';
 
   // ---------------------------------------------------------------------------
   // Fichiers
@@ -244,8 +324,8 @@ class MicroPythonController extends Notifier<MicroPythonState> {
   Future<void> writeText(String name, String content) => _guard(() async {
         final path = _join(name);
         final data = Uint8List.fromList(utf8.encode(content));
-        await _fs!.write(path, data);
-        _info('Écrit $path (${data.length} octets)');
+        await _fs!.write(path, data, verify: true);
+        _info('Écrit $path (${data.length} octets, CRC32 vérifié)');
         await _loadFiles();
       });
 

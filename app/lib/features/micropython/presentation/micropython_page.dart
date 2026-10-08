@@ -77,7 +77,7 @@ class _Toolbar extends ConsumerWidget {
         crossAxisAlignment: WrapCrossAlignment.center,
         children: [
           SizedBox(
-            width: 380,
+            width: (MediaQuery.sizeOf(context).width - 32).clamp(200.0, 380.0).toDouble(),
             child: InputDecorator(
               decoration: const InputDecoration(
                 labelText: 'Carte',
@@ -241,11 +241,19 @@ class _ConsolePanelState extends ConsumerState<_ConsolePanel> {
               const SizedBox(width: 8),
               Column(
                 children: [
-                  FilledButton.icon(
-                    onPressed: ready && !busy ? _run : null,
-                    icon: const Icon(Icons.play_arrow),
-                    label: const Text('Exécuter'),
-                  ),
+                  if (busy)
+                    FilledButton.icon(
+                      style: FilledButton.styleFrom(backgroundColor: scheme.error, foregroundColor: scheme.onError),
+                      onPressed: ref.read(microPythonProvider.notifier).stop,
+                      icon: const Icon(Icons.stop),
+                      label: const Text('Arrêter'),
+                    )
+                  else
+                    FilledButton.icon(
+                      onPressed: ready ? _run : null,
+                      icon: const Icon(Icons.play_arrow),
+                      label: const Text('Exécuter'),
+                    ),
                   TextButton(onPressed: ref.read(microPythonProvider.notifier).clearLog, child: const Text('Effacer')),
                 ],
               ),
@@ -298,6 +306,11 @@ class _FilesPanel extends ConsumerWidget {
                 onPressed: enabled ? () => _newFolder(context, controller) : null,
                 icon: const Icon(Icons.create_new_folder_outlined),
               ),
+              IconButton(
+                tooltip: 'Test de transfert (débit et intégrité)',
+                onPressed: enabled ? controller.runTransferSelfTest : null,
+                icon: const Icon(Icons.speed),
+              ),
             ],
           ),
         ),
@@ -315,10 +328,21 @@ class _FilesPanel extends ConsumerWidget {
                         title: Text(e.name),
                         subtitle: e.isDirectory || e.size == null ? null : Text('${e.size} o'),
                         onTap: () => e.isDirectory ? controller.openDirectory(e.name) : _view(context, controller, e),
-                        trailing: IconButton(
-                          tooltip: 'Supprimer',
-                          icon: const Icon(Icons.delete_outline),
-                          onPressed: enabled ? () => _confirmDelete(context, controller, e) : null,
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (!e.isDirectory && e.name.endsWith('.py'))
+                              IconButton(
+                                tooltip: 'Exécuter ce fichier',
+                                icon: const Icon(Icons.play_arrow),
+                                onPressed: enabled ? () => controller.runFile(e.name) : null,
+                              ),
+                            IconButton(
+                              tooltip: 'Supprimer',
+                              icon: const Icon(Icons.delete_outline),
+                              onPressed: enabled ? () => _confirmDelete(context, controller, e) : null,
+                            ),
+                          ],
                         ),
                       ),
                   ],
@@ -355,8 +379,14 @@ class _FilesPanel extends ConsumerWidget {
       return;
     }
     if (!context.mounted) return;
-    final edited = await showDialog<String>(context: context, builder: (_) => _EditorDialog(name: e.name, text: text));
-    if (edited != null && edited != text) await controller.writeText(e.name, edited);
+    final edited =
+        await showDialog<_EditorResult>(context: context, builder: (_) => _EditorDialog(name: e.name, text: text));
+    if (edited == null) return;
+    if (edited.run) {
+      await controller.run(edited.text, label: 'run ${e.name} (non enregistré)');
+    } else if (edited.text != text) {
+      await controller.writeText(e.name, edited.text);
+    }
   }
 
   Future<void> _newFile(BuildContext context, MicroPythonController controller) async {
@@ -423,6 +453,15 @@ class _FilesPanel extends ConsumerWidget {
   }
 }
 
+class _EditorResult {
+  const _EditorResult(this.text, {this.run = false});
+
+  final String text;
+
+  /// Exécuter le texte tel quel, sans l'écrire sur la carte.
+  final bool run;
+}
+
 class _EditorDialog extends StatefulWidget {
   const _EditorDialog({required this.name, required this.text});
 
@@ -462,8 +501,14 @@ class _EditorDialogState extends State<_EditorDialog> {
       ),
       actions: [
         TextButton(onPressed: () => Navigator.pop(context), child: const Text('Fermer')),
+        if (widget.name.endsWith('.py'))
+          OutlinedButton.icon(
+            onPressed: () => Navigator.pop(context, _EditorResult(_controller.text, run: true)),
+            icon: const Icon(Icons.play_arrow),
+            label: const Text('Exécuter sans enregistrer'),
+          ),
         FilledButton.icon(
-          onPressed: () => Navigator.pop(context, _controller.text),
+          onPressed: () => Navigator.pop(context, _EditorResult(_controller.text)),
           icon: const Icon(Icons.save_outlined),
           label: const Text('Enregistrer sur la carte'),
         ),

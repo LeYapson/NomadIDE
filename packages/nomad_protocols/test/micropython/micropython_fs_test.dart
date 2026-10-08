@@ -132,4 +132,77 @@ void main() {
     expect(disk.files.keys, [path]);
     expect(await fs.read(path), data);
   });
+
+  group('intégrité', () {
+    test('crc32 correspond au vecteur de référence de binascii.crc32', () {
+      expect(MicroPythonFs.crc32(utf8.encode('123456789')), 0xCBF43926);
+      expect(MicroPythonFs.crc32(const []), 0);
+    });
+
+    test('checksum renvoie la taille et le CRC calculés par la carte', () async {
+      disk.files['/f'] = binary(700);
+
+      final sum = await fs.checksum('/f');
+
+      expect(sum.size, 700);
+      expect(sum.crc32, MicroPythonFs.crc32(binary(700)));
+    });
+
+    test('write avec verify réussit sur un lien sain', () async {
+      await fs.write('/ok.bin', binary(450), verify: true, retries: 0);
+
+      expect(disk.files['/ok.bin'], binary(450));
+    });
+
+    test('un octet altéré est détecté, puis corrigé par une nouvelle tentative', () async {
+      disk.corruptWrites = 1;
+
+      await fs.write('/retry.bin', binary(450), verify: true, retries: 1);
+
+      expect(disk.files['/retry.bin'], binary(450));
+    });
+
+    test('sans tentative restante, ProtocolIntegrityException est levée', () async {
+      disk.corruptWrites = 1;
+
+      await expectLater(
+        fs.write('/bad.bin', binary(450), verify: true, retries: 0),
+        throwsA(isA<ProtocolIntegrityException>()
+            .having((e) => e.expectedCrc, 'expectedCrc', MicroPythonFs.crc32(binary(450)))),
+      );
+    });
+
+    test('sans verify, la corruption passe inaperçue (comportement de base)', () async {
+      disk.corruptWrites = 1;
+
+      await fs.write('/silent.bin', binary(450));
+
+      expect(disk.files['/silent.bin'], isNot(binary(450)));
+    });
+
+    test('une erreur Python sans errno (base64 altéré) est retentée', () async {
+      disk.garbledWrites = 1;
+
+      await fs.write('/g.bin', binary(450), retries: 1);
+
+      expect(disk.files['/g.bin'], binary(450));
+    });
+
+    test("une erreur d'OS (errno) n'est pas retentée", () async {
+      var calls = 0;
+      final failing = FakeRawReplBoard(run: (code) {
+        calls++;
+        return (stdout: '', stderr: 'Traceback\r\nOSError: [Errno 28] ENOSPC\r\n', hang: false);
+      });
+      final r = RawRepl(failing, options: fast);
+      await r.enter();
+
+      await expectLater(
+        MicroPythonFs(r).write('/x', binary(10), retries: 3),
+        throwsA(isA<ProtocolRemoteException>().having((e) => e.errno, 'errno', 28)),
+      );
+      expect(calls, 1);
+      await r.dispose();
+    });
+  });
 }
