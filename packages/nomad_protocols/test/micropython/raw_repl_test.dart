@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:nomad_protocols/nomad_protocols.dart';
 import 'package:test/test.dart';
 
-import 'support/fake_raw_repl_board.dart';
+import 'package:nomad_protocols/testing.dart';
 
 /// Délais réduits : les tests ne doivent pas dormir.
 const fast = RawReplOptions(

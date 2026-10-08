@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:nomad_protocols/nomad_protocols.dart';
+import '../io/byte_link.dart';
 
 /// Ce que « fait » un programme sur la fausse carte.
 typedef BoardProgram = ({String stdout, String stderr, bool hang});
