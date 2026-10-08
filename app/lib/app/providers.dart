@@ -20,7 +20,7 @@ final serialTransportProvider = Provider<SerialTransport>((ref) {
   return transport;
 });
 
-enum HomeTab { monitor, micropython, editor }
+enum HomeTab { monitor, micropython, editor, settings }
 
 /// Onglet actif de la coque : les fonctionnalités s'y renvoient mutuellement
 /// (ex. ouvrir un fichier de la carte dans l'éditeur).

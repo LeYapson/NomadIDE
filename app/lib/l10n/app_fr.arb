@@ -1,0 +1,774 @@
+{
+  "@@locale": "fr",
+  "appTitle": "NomadMCU",
+  "navMonitor": "Moniteur série",
+  "navMicroPython": "MicroPython",
+  "navEditor": "Éditeur",
+  "navSettings": "Réglages",
+  "settingsTitle": "NomadMCU · Réglages",
+  "settingsLanguage": "Langue",
+  "languageSystem": "Langue du système",
+  "languageFrench": "Français",
+  "languageEnglish": "English",
+  "commonCancel": "Annuler",
+  "commonOk": "OK",
+  "commonCreate": "Créer",
+  "commonRename": "Renommer",
+  "commonDelete": "Supprimer",
+  "commonSave": "Enregistrer",
+  "commonClose": "Fermer",
+  "commonReplace": "Remplacer",
+  "bytesB": "{count} o",
+  "@bytesB": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bytesKb": "{value} Ko",
+  "@bytesKb": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "bytesMb": "{value} Mo",
+  "@bytesMb": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "monTitle": "NomadMCU · Moniteur série",
+  "monStatusConnected": "Connecté",
+  "monStatusConnecting": "Connexion…",
+  "monStatusDisconnected": "Déconnecté",
+  "monTransportTooltip": "Transport : {name}",
+  "@monTransportTooltip": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "transportDesktop": "Port série (libserialport)",
+  "transportAndroidUsb": "USB OTG (Android)",
+  "transportSimulated": "Simulateur",
+  "transportUnsupported": "Non pris en charge",
+  "monBoardLabel": "Carte",
+  "monNoBoardDetected": "Aucune carte détectée",
+  "monChooseBoard": "Choisir une carte",
+  "monRefreshList": "Actualiser la liste",
+  "monBaudLabel": "Débit (bauds)",
+  "monConnect": "Connecter",
+  "monConnecting": "Connexion…",
+  "monDisconnect": "Déconnecter",
+  "monDtrTooltip": "Data Terminal Ready",
+  "monRtsTooltip": "Request To Send",
+  "monResetTooltip": "Reset matériel via RTS (cartes ESP32/ESP8266 à circuit auto-reset)",
+  "monBootloader": "Bootloader",
+  "monBootloaderTooltip": "Séquence esptool : redémarre l’ESP32 en mode téléchargement",
+  "monCtrlCTooltip": "Interrompre le programme (MicroPython)",
+  "monCtrlDTooltip": "Soft reboot (MicroPython)",
+  "monHex": "HEX",
+  "monHexTooltip": "Afficher les octets en hexadécimal",
+  "monTimestamp": "Horodatage",
+  "monClear": "Effacer",
+  "monByteCounters": "RX {rx} · TX {tx}",
+  "@monByteCounters": {
+    "placeholders": {
+      "rx": {
+        "type": "String"
+      },
+      "tx": {
+        "type": "String"
+      }
+    }
+  },
+  "monInputHintConnected": "Commande… (Entrée pour envoyer, ↑/↓ historique)",
+  "monInputHintDisconnected": "Connectez une carte",
+  "monLineEndingTooltip": "Fin de ligne ajoutée à l’envoi",
+  "monLineEndingNone": "Aucune",
+  "monSend": "Envoyer",
+  "monEmptyLog": "Connectez une carte : le flux série s’affichera ici.",
+  "monLogEnumerationFailed": "Énumération des ports impossible : {error}",
+  "@monLogEnumerationFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "monLogAttached": "Branché : {name}",
+  "@monLogAttached": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "monLogDetached": "Débranché : {name}",
+  "@monLogDetached": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "monLogConnectedTo": "Connecté à {name} ({config})",
+  "@monLogConnectedTo": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "config": {
+        "type": "String"
+      }
+    }
+  },
+  "monLogConnectFailed": "Connexion impossible : {error}",
+  "@monLogConnectFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "monLogDisconnected": "Déconnecté.",
+  "monLogDeviceLost": "La carte a été débranchée.",
+  "monLogConnectionError": "Connexion interrompue par une erreur.",
+  "monLogBaud": "Débit : {baud} bauds",
+  "@monLogBaud": {
+    "placeholders": {
+      "baud": {
+        "type": "String"
+      }
+    }
+  },
+  "monLogReset": "Reset matériel (impulsion RTS → EN)",
+  "monLogBootloader": "Séquence bootloader ESP envoyée : la ROM attend esptool",
+  "mpTitle": "NomadMCU · MicroPython",
+  "mpTabConsole": "Console",
+  "mpTabFiles": "Fichiers",
+  "mpConnectRawRepl": "Connecter (raw REPL)",
+  "mpTransferLine": "{arrow} {name} · {done} / {total} o",
+  "@mpTransferLine": {
+    "placeholders": {
+      "arrow": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      },
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "mpParentFolder": "Dossier parent",
+  "mpRefresh": "Actualiser",
+  "mpNewFile": "Nouveau fichier",
+  "mpNewFolder": "Nouveau dossier",
+  "mpUploadFromProject": "Envoyer sur la carte un fichier d’un projet",
+  "mpSelfTest": "Test de transfert (débit et intégrité)",
+  "mpFolderEmpty": "Dossier vide",
+  "mpNotConnected": "Non connecté",
+  "mpRunFile": "Exécuter ce fichier",
+  "mpActions": "Actions",
+  "mpMenuRename": "Renommer…",
+  "mpMenuDownload": "Télécharger vers un projet…",
+  "mpMenuDelete": "Supprimer…",
+  "mpRenameOnBoardTitle": "Renommer sur la carte",
+  "mpNewName": "Nouveau nom",
+  "mpReplaceFileTitle": "Remplacer le fichier ?",
+  "mpReplaceFileMessage": "« {name} » existe déjà dans {folder} sur la carte. Il sera remplacé.",
+  "@mpReplaceFileMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "folder": {
+        "type": "String"
+      }
+    }
+  },
+  "mpDownloadTitle": "Télécharger vers un projet",
+  "mpDownload": "Télécharger",
+  "mpBinaryFile": "Fichier binaire ({bytes} octets) : aucun aperçu disponible.",
+  "@mpBinaryFile": {
+    "placeholders": {
+      "bytes": {
+        "type": "int"
+      }
+    }
+  },
+  "mpNameLabel": "Nom",
+  "mpContentLabel": "Contenu",
+  "mpNewFileSample": "print(\"fichier de test\")\n",
+  "mpWriteToBoard": "Écrire sur la carte",
+  "mpDeleteTitle": "Supprimer {name} ?",
+  "@mpDeleteTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "mpDeleteWarning": "Cette action est définitive.",
+  "mpImageTitle": "{name} ({bytes} octets)",
+  "@mpImageTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "bytes": {
+        "type": "int"
+      }
+    }
+  },
+  "mpImageUnreadable": "Image illisible ou format non pris en charge.",
+  "mpConsoleHint": "Code MicroPython (Ctrl+Entrée pour exécuter)",
+  "mpStop": "Arrêter",
+  "mpRun": "Exécuter",
+  "mpDefaultCode": "print(\"Bonjour depuis NomadMCU\")",
+  "snippetMemory": "mémoire",
+  "snippetError": "erreur",
+  "snippetLoop": "boucle 3 s",
+  "qkTabTooltip": "Insérer une indentation",
+  "qkInsert": "Insérer {symbol}",
+  "@qkInsert": {
+    "placeholders": {
+      "symbol": {
+        "type": "String"
+      }
+    }
+  },
+  "qkCtrlCTooltip": "Interrompre le programme en cours",
+  "qkCtrlDTooltip": "Redémarrer l’interpréteur (soft reset)",
+  "mpLogPortOpened": "Port ouvert : {name}",
+  "@mpLogPortOpened": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "mpLogRawActive": "Raw REPL actif.",
+  "mpLogDone": "Terminé.",
+  "mpLogDoneWithError": "Terminé avec erreur.",
+  "mpLogSoftResetting": "Redémarrage logiciel…",
+  "mpLogSoftReset": "Interpréteur redémarré.",
+  "mpLogSelfTestStart": "Test de transfert : {kb} Ko, CRC32 vérifié par la carte.",
+  "@mpLogSelfTestStart": {
+    "placeholders": {
+      "kb": {
+        "type": "String"
+      }
+    }
+  },
+  "mpLogSelfTestRow": "· morceaux de {chunk} o : écriture {write}, lecture {read}, {verdict}",
+  "@mpLogSelfTestRow": {
+    "placeholders": {
+      "chunk": {
+        "type": "String"
+      },
+      "write": {
+        "type": "String"
+      },
+      "read": {
+        "type": "String"
+      },
+      "verdict": {
+        "type": "String"
+      }
+    }
+  },
+  "mpSelfTestSame": "relecture identique ✓",
+  "mpSelfTestDiff": "RELECTURE DIFFÉRENTE ✗",
+  "mpLogSelfTestFail": "· morceaux de {chunk} o : ÉCHEC ✗ {error}",
+  "@mpLogSelfTestFail": {
+    "placeholders": {
+      "chunk": {
+        "type": "String"
+      },
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "mpLogSelfTestDone": "Test de transfert terminé.",
+  "mpRate": "{kbps} Ko/s ({secs} s)",
+  "@mpRate": {
+    "placeholders": {
+      "kbps": {
+        "type": "String"
+      },
+      "secs": {
+        "type": "String"
+      }
+    }
+  },
+  "mpLogRead": "Lu {path} ({bytes} octets)",
+  "@mpLogRead": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      },
+      "bytes": {
+        "type": "int"
+      }
+    }
+  },
+  "mpLogWritten": "Écrit {path} ({bytes} octets, CRC32 vérifié)",
+  "@mpLogWritten": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      },
+      "bytes": {
+        "type": "int"
+      }
+    }
+  },
+  "mpLogDeleted": "Supprimé {path}",
+  "@mpLogDeleted": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "mpLogRenamed": "Renommé {from} en {to}",
+  "@mpLogRenamed": {
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "mpLogLocalReadFailed": "Lecture locale impossible : « {name} »",
+  "@mpLogLocalReadFailed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "mpLogDownloadCorrupt": "Téléchargement corrompu : {received} octets reçus pour {expected} attendus.",
+  "@mpLogDownloadCorrupt": {
+    "placeholders": {
+      "received": {
+        "type": "String"
+      },
+      "expected": {
+        "type": "String"
+      }
+    }
+  },
+  "mpLogLocalSaveFailed": "Enregistrement local impossible : « {name} »",
+  "@mpLogLocalSaveFailed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "mpLogDownloaded": "Téléchargé {from} vers {to} ({bytes} octets, CRC32 vérifié)",
+  "@mpLogDownloaded": {
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "bytes": {
+        "type": "int"
+      }
+    }
+  },
+  "mpLogFolderCreated": "Dossier créé {path}",
+  "@mpLogFolderCreated": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "mpLogResync": "Session désynchronisée, nouvelle tentative…",
+  "mpLogResynced": "Session rétablie.",
+  "mpLogResyncFailed": "Resynchronisation impossible : {error}",
+  "@mpLogResyncFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "edTitle": "NomadMCU · Éditeur",
+  "edDraftsTitle": "Reprendre le travail non enregistré ?",
+  "edDraftsIntro": "L’application s’est fermée avant l’enregistrement de ces fichiers :",
+  "edDraftItem": "• {name}",
+  "@edDraftItem": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "edDraftItemProject": "• {name}  ({project})",
+  "@edDraftItemProject": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "project": {
+        "type": "String"
+      }
+    }
+  },
+  "edDraftsDiscard": "Abandonner",
+  "edDraftsRestore": "Restaurer",
+  "edReplaceFileMessage": "« {path} » existe déjà dans le projet « {project} ». Son contenu sera remplacé.",
+  "@edReplaceFileMessage": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      },
+      "project": {
+        "type": "String"
+      }
+    }
+  },
+  "edSendTitle": "Envoyer sur la carte",
+  "edSendPathLabel": "Chemin sur la carte",
+  "edSendHelper": "Ex. /main.py (lancé au démarrage de la carte)",
+  "edSend": "Envoyer",
+  "edSentSnack": "Envoyé sur la carte : {path} (CRC32 vérifié)",
+  "@edSentSnack": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "edCloseTitle": "Enregistrer « {name} » ?",
+  "@edCloseTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "edCloseBody": "Ce fichier a des modifications non enregistrées.",
+  "edDontSave": "Ne pas enregistrer",
+  "edSaveTooltip": "Enregistrer sur l’appareil (Ctrl+S)",
+  "edSendTooltip": "Envoyer sur la carte",
+  "edConnectBoardHint": "Connectez une carte (onglet MicroPython)",
+  "edRunTooltip": "Exécuter la sélection ou le fichier sur la carte (sans enregistrer)",
+  "edHideOutput": "Masquer la sortie",
+  "edShowOutput": "Afficher la sortie",
+  "edEmptyTitle": "Aucun fichier ouvert.",
+  "edEmptyBody": "Créez un fichier, ouvrez-en un depuis vos projets (menu en haut à gauche), ou touchez un fichier de la carte dans l’onglet MicroPython.",
+  "edRunLabelSelection": "run {name} (sélection)",
+  "@edRunLabelSelection": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "prNoProjects": "Aucun projet.",
+  "prLoading": "Chargement…",
+  "prNewProject": "Nouveau projet",
+  "prProjectEmpty": "Projet vide",
+  "prProjectNameLabel": "Nom du projet",
+  "prDefaultProjectName": "Mon projet",
+  "prProjects": "Projets",
+  "prProjectActions": "Actions du projet",
+  "prMenuNewProject": "Nouveau projet…",
+  "prMenuRenameProject": "Renommer le projet…",
+  "prMenuDeleteProject": "Supprimer le projet…",
+  "prRenameProjectTitle": "Renommer le projet",
+  "prDeleteProjectTitle": "Supprimer le projet ?",
+  "prDeleteProjectMessage": "Le projet « {name} » et tous ses fichiers seront supprimés de cet appareil. Cette action est définitive.",
+  "@prDeleteProjectMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "prFileNameLabel": "Nom du fichier",
+  "prFolderNameLabel": "Nom du dossier",
+  "prMenuUpload": "Envoyer sur la carte",
+  "prMenuUploadDisconnected": "Envoyer sur la carte (carte non connectée)",
+  "prDeleteFolderTitle": "Supprimer le dossier ?",
+  "prDeleteFileTitle": "Supprimer le fichier ?",
+  "prDeleteFolderMessage": "« {name} » et tout son contenu seront supprimés de cet appareil.",
+  "@prDeleteFolderMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "prDeleteFileMessage": "« {name} » sera supprimé de cet appareil.",
+  "@prDeleteFileMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "sdSaveTitle": "Enregistrer sur cet appareil",
+  "sdProject": "Projet",
+  "sdNewProjectItem": "Nouveau projet…",
+  "sdNewProjectName": "Nom du nouveau projet",
+  "sdFileLabel": "Fichier",
+  "sdFileHelper": "Ex. main.py ou lib/capteur.py",
+  "pfTitle": "Choisir un fichier à envoyer",
+  "pfNoProject": "Aucun projet",
+  "pfNothing": "Rien ici",
+  "errSerialUnsupportedIos": "iOS n’autorise pas l’accès aux adaptateurs USB-série : pas d’API USB Host publique, seuls les accessoires certifiés MFi sont accessibles. Utilisez le mode simulé, et plus tard les transports BLE ou WebREPL.",
+  "errSerialUnsupportedPlatform": "Plateforme non prise en charge : {platform}.",
+  "@errSerialUnsupportedPlatform": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "errDeviceNotFound": "{device} n’est plus connecté.",
+  "@errDeviceNotFound": {
+    "placeholders": {
+      "device": {
+        "type": "String"
+      }
+    }
+  },
+  "errPortNotFound": "Port {path} introuvable.",
+  "@errPortNotFound": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "errUsbPermissionDenied": "Permission USB refusée, ou puce USB-série non prise en charge.",
+  "errPortPermissionDenied": "Impossible d’ouvrir {path} : {os}. Ajoutez votre utilisateur au groupe « dialout » (Debian/Ubuntu) ou « uucp » (Arch), puis rouvrez votre session.",
+  "@errPortPermissionDenied": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      },
+      "os": {
+        "type": "String"
+      }
+    }
+  },
+  "errOpenFailedPath": "Impossible d’ouvrir {path} : {os}. Le port est peut-être utilisé par une autre application (Arduino IDE, Thonny…).",
+  "@errOpenFailedPath": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      },
+      "os": {
+        "type": "String"
+      }
+    }
+  },
+  "errOpenFailedDevice": "Ouverture de {device} impossible.",
+  "@errOpenFailedDevice": {
+    "placeholders": {
+      "device": {
+        "type": "String"
+      }
+    }
+  },
+  "errUnknownOsError": "erreur inconnue",
+  "errUsbPortCreateFailed": "Création du port USB impossible.",
+  "errUsbStreamUnavailable": "Flux de réception USB indisponible.",
+  "errAlreadyOpen": "{device} est déjà ouvert.",
+  "@errAlreadyOpen": {
+    "placeholders": {
+      "device": {
+        "type": "String"
+      }
+    }
+  },
+  "errConnectionClosed": "La connexion est fermée.",
+  "errClosedDuringRead": "Le port a été fermé pendant la lecture.",
+  "errReadFailed": "Erreur de lecture sur le port série.",
+  "errNoResponse": "Aucune réponse de la carte après {timeoutMs} ms.",
+  "@errNoResponse": {
+    "placeholders": {
+      "timeoutMs": {
+        "type": "int"
+      }
+    }
+  },
+  "errOperationWrite": "Écriture impossible sur {device}.",
+  "@errOperationWrite": {
+    "placeholders": {
+      "device": {
+        "type": "String"
+      }
+    }
+  },
+  "errOperationConfigure": "Configuration impossible sur {device}.",
+  "@errOperationConfigure": {
+    "placeholders": {
+      "device": {
+        "type": "String"
+      }
+    }
+  },
+  "errOperationDtr": "Pilotage DTR impossible sur {device}.",
+  "@errOperationDtr": {
+    "placeholders": {
+      "device": {
+        "type": "String"
+      }
+    }
+  },
+  "errOperationRts": "Pilotage RTS impossible sur {device}.",
+  "@errOperationRts": {
+    "placeholders": {
+      "device": {
+        "type": "String"
+      }
+    }
+  },
+  "errUnsupportedStopBits": "1,5 bit de stop non pris en charge par libserialport.",
+  "errWriteTimeout": "Écriture interrompue : {remaining} octets non envoyés après {seconds} s.",
+  "@errWriteTimeout": {
+    "placeholders": {
+      "remaining": {
+        "type": "int"
+      },
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "errSerialOther": "Erreur série : {message}",
+  "@errSerialOther": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "errLinkReadFailed": "Erreur de lecture sur le lien.",
+  "errLinkClosed": "Le lien a été fermé.",
+  "errRawReplNotEntered": "La carte ne passe pas en raw REPL après {attempts} tentatives. Vérifiez qu’il s’agit bien d’une carte MicroPython et que le port n’est pas utilisé ailleurs.",
+  "@errRawReplNotEntered": {
+    "placeholders": {
+      "attempts": {
+        "type": "int"
+      }
+    }
+  },
+  "errProgramTimeout": "Le programme a dépassé {timeoutMs} ms et a été interrompu.",
+  "@errProgramTimeout": {
+    "placeholders": {
+      "timeoutMs": {
+        "type": "int"
+      }
+    }
+  },
+  "errBusy": "Une exécution est en cours.",
+  "errNotActive": "Raw REPL inactif : connectez-vous d’abord.",
+  "errSessionBroken": "Session désynchronisée : reconnectez-vous pour la rétablir.",
+  "errUnexpectedAck": "Réponse inattendue au lieu de « OK » : {hex}.",
+  "@errUnexpectedAck": {
+    "placeholders": {
+      "hex": {
+        "type": "String"
+      }
+    }
+  },
+  "errUnexpectedCrcReply": "Réponse inattendue au calcul du CRC : « {reply} ».",
+  "@errUnexpectedCrcReply": {
+    "placeholders": {
+      "reply": {
+        "type": "String"
+      }
+    }
+  },
+  "errIntegrity": "Transfert corrompu sur {path} : {expectedSize} octets attendus, {actualSize} reçus.",
+  "@errIntegrity": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      },
+      "expectedSize": {
+        "type": "int"
+      },
+      "actualSize": {
+        "type": "int"
+      }
+    }
+  },
+  "errProtocolOther": "Erreur de protocole : {message}",
+  "@errProtocolOther": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "errStorageInvalidName": "Nom invalide {name}. Évitez les caractères / \\ : * ? \" < > | et les noms réservés (CON, NUL…).",
+  "@errStorageInvalidName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "errStorageAlreadyExists": "{name} existe déjà.",
+  "@errStorageAlreadyExists": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "errStorageNotFound": "{name} est introuvable.",
+  "@errStorageNotFound": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "errStorageOutsideProject": "Chemin refusé {name} : il sortirait du projet.",
+  "@errStorageOutsideProject": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "errStorageIo": "Erreur de stockage {name}: {cause}.",
+  "@errStorageIo": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "cause": {
+        "type": "String"
+      }
+    }
+  }
+}

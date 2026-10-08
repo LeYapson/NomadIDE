@@ -12,7 +12,8 @@ import '../../projects/application/projects_controller.dart';
 import '../../projects/data/storage_exception.dart';
 import '../../projects/presentation/project_dialogs.dart';
 import '../../projects/presentation/projects_panel.dart';
-import '../../projects/presentation/storage_messages.dart';
+import '../../../l10n/error_messages.dart';
+import '../../../l10n/l10n.dart';
 import '../application/editor_controller.dart';
 
 enum _CloseChoice { save, discard, cancel }
@@ -56,23 +57,28 @@ class _EditorPageState extends ConsumerState<EditorPage> {
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        title: const Text('Reprendre le travail non enregistré ?'),
+        title: Text(context.l10n.edDraftsTitle),
         content: SizedBox(
           width: double.maxFinite,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('L\'application s\'est fermée avant l\'enregistrement de ces fichiers :'),
+              Text(context.l10n.edDraftsIntro),
               const SizedBox(height: 8),
               for (final draft in drafts)
-                Text('• ${draft.name}${draft.project != null ? '  (${draft.project})' : ''}', overflow: TextOverflow.ellipsis),
+                Text(
+                  draft.project != null
+                      ? context.l10n.edDraftItemProject(draft.name, draft.project!)
+                      : context.l10n.edDraftItem(draft.name),
+                  overflow: TextOverflow.ellipsis,
+                ),
             ],
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Abandonner')),
-          FilledButton(onPressed: () => Navigator.pop(context, true), child: const Text('Restaurer')),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(context.l10n.edDraftsDiscard)),
+          FilledButton(onPressed: () => Navigator.pop(context, true), child: Text(context.l10n.edDraftsRestore)),
         ],
       ),
     );
@@ -116,9 +122,9 @@ class _EditorPageState extends ConsumerState<EditorPage> {
           if (!mounted) return false;
           final replace = await showConfirmDialog(
             context,
-            title: 'Remplacer le fichier ?',
-            message: '« ${target.path} » existe déjà dans le projet « ${target.project} ». Son contenu sera remplacé.',
-            confirmLabel: 'Remplacer',
+            title: context.l10n.mpReplaceFileTitle,
+            message: context.l10n.edReplaceFileMessage(target.path, target.project),
+            confirmLabel: context.l10n.commonReplace,
             destructive: true,
           );
           if (!replace) return false;
@@ -137,11 +143,11 @@ class _EditorPageState extends ConsumerState<EditorPage> {
       final suggestion = ref.read(microPythonProvider.notifier).pathOf(document.name);
       path = await showTextInputDialog(
         context,
-        title: 'Envoyer sur la carte',
-        label: 'Chemin sur la carte',
+        title: context.l10n.edSendTitle,
+        label: context.l10n.edSendPathLabel,
         initialValue: suggestion,
-        confirmLabel: 'Envoyer',
-        helper: 'Ex. /main.py (lancé au démarrage de la carte)',
+        confirmLabel: context.l10n.edSend,
+        helper: context.l10n.edSendHelper,
       );
       if (path == null) return;
       if (!path.startsWith('/')) path = '/$path';
@@ -151,7 +157,7 @@ class _EditorPageState extends ConsumerState<EditorPage> {
     if (sent && mounted) {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
-        ..showSnackBar(SnackBar(content: Text('Envoyé sur la carte : $path (CRC32 vérifié)')));
+        ..showSnackBar(SnackBar(content: Text(context.l10n.edSentSnack(path!))));
     }
   }
 
@@ -169,12 +175,12 @@ class _EditorPageState extends ConsumerState<EditorPage> {
     final choice = await showDialog<_CloseChoice>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Enregistrer « ${document.name} » ?'),
-        content: const Text('Ce fichier a des modifications non enregistrées.'),
+        title: Text(context.l10n.edCloseTitle(document.name)),
+        content: Text(context.l10n.edCloseBody),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, _CloseChoice.cancel), child: const Text('Annuler')),
-          TextButton(onPressed: () => Navigator.pop(context, _CloseChoice.discard), child: const Text('Ne pas enregistrer')),
-          FilledButton(onPressed: () => Navigator.pop(context, _CloseChoice.save), child: const Text('Enregistrer')),
+          TextButton(onPressed: () => Navigator.pop(context, _CloseChoice.cancel), child: Text(context.l10n.commonCancel)),
+          TextButton(onPressed: () => Navigator.pop(context, _CloseChoice.discard), child: Text(context.l10n.edDontSave)),
+          FilledButton(onPressed: () => Navigator.pop(context, _CloseChoice.save), child: Text(context.l10n.commonSave)),
         ],
       ),
     );
@@ -206,7 +212,7 @@ class _EditorPageState extends ConsumerState<EditorPage> {
       if (error == null) return;
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
-        ..showSnackBar(SnackBar(content: Text(storageErrorMessage(error))));
+        ..showSnackBar(SnackBar(content: Text(storageErrorMessage(context.l10n, error))));
       ref.read(projectsProvider.notifier).clearError();
     });
 
@@ -267,10 +273,10 @@ class _EditorPageState extends ConsumerState<EditorPage> {
       child: Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
-          title: const Text('NomadMCU · Éditeur'),
+          title: Text(context.l10n.edTitle),
           actions: [
             IconButton(
-              tooltip: 'Nouveau fichier',
+              tooltip: context.l10n.mpNewFile,
               onPressed: controller.newDocument,
               icon: const Icon(Icons.note_add_outlined),
             ),
@@ -278,34 +284,32 @@ class _EditorPageState extends ConsumerState<EditorPage> {
               ListenableBuilder(
                 listenable: document.controller,
                 builder: (context, _) => IconButton(
-                  tooltip: 'Enregistrer sur l\'appareil (Ctrl+S)',
+                  tooltip: context.l10n.edSaveTooltip,
                   onPressed: () => _save(document),
                   icon: Icon(document.dirty ? Icons.save : Icons.save_outlined),
                 ),
               ),
               IconButton(
-                tooltip: micro.isReady ? 'Envoyer sur la carte' : 'Connectez une carte (onglet MicroPython)',
+                tooltip: micro.isReady ? context.l10n.edSendTooltip : context.l10n.edConnectBoardHint,
                 onPressed: micro.isReady && !micro.busy ? () => _sendToBoard(document) : null,
                 icon: const Icon(Icons.upload_file),
               ),
               if (micro.busy)
                 IconButton(
-                  tooltip: 'Arrêter',
+                  tooltip: context.l10n.mpStop,
                   color: Theme.of(context).colorScheme.error,
                   onPressed: ref.read(microPythonProvider.notifier).stop,
                   icon: const Icon(Icons.stop_circle_outlined),
                 )
               else
                 IconButton(
-                  tooltip: micro.isReady
-                      ? 'Exécuter la sélection ou le fichier sur la carte (sans enregistrer)'
-                      : 'Connectez une carte (onglet MicroPython)',
+                  tooltip: micro.isReady ? context.l10n.edRunTooltip : context.l10n.edConnectBoardHint,
                   onPressed: micro.isReady ? () => _run(document) : null,
                   icon: const Icon(Icons.play_arrow),
                 ),
             ],
             IconButton(
-              tooltip: _showOutput ? 'Masquer la sortie' : 'Afficher la sortie',
+              tooltip: _showOutput ? context.l10n.edHideOutput : context.l10n.edShowOutput,
               onPressed: () => setState(() => _showOutput = !_showOutput),
               icon: Icon(_showOutput ? Icons.terminal : Icons.terminal_outlined),
             ),
@@ -345,15 +349,15 @@ class _EmptyState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Aucun fichier ouvert.', textAlign: TextAlign.center),
+            Text(context.l10n.edEmptyTitle, textAlign: TextAlign.center),
             const SizedBox(height: 8),
-            const Text(
-              'Créez un fichier, ouvrez-en un depuis vos projets (menu en haut à gauche), '
-              'ou touchez un fichier de la carte dans l\'onglet MicroPython.',
-              textAlign: TextAlign.center,
-            ),
+            Text(context.l10n.edEmptyBody, textAlign: TextAlign.center),
             const SizedBox(height: 16),
-            FilledButton.icon(onPressed: onNew, icon: const Icon(Icons.note_add_outlined), label: const Text('Nouveau fichier')),
+            FilledButton.icon(
+              onPressed: onNew,
+              icon: const Icon(Icons.note_add_outlined),
+              label: Text(context.l10n.mpNewFile),
+            ),
           ],
         ),
       ),
@@ -395,7 +399,7 @@ class _DocumentTabs extends ConsumerWidget {
                       style: TextStyle(fontWeight: selected ? FontWeight.w600 : FontWeight.normal),
                     ),
                     IconButton(
-                      tooltip: 'Fermer',
+                      tooltip: context.l10n.commonClose,
                       iconSize: 16,
                       visualDensity: VisualDensity.compact,
                       onPressed: () => onClose(document),

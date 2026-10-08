@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nomad_hal/nomad_hal.dart';
 
+import '../../../../l10n/l10n.dart';
 import '../../application/serial_monitor_controller.dart';
 import '../../application/serial_monitor_state.dart';
 
@@ -18,6 +19,7 @@ class ConnectionToolbar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final state = ref.watch(serialMonitorProvider);
     final controller = ref.read(serialMonitorProvider.notifier);
     final idle = state.status == ConnectionStatus.disconnected;
@@ -33,14 +35,14 @@ class ConnectionToolbar extends ConsumerWidget {
           SizedBox(
             width: deviceFieldWidth,
             child: InputDecorator(
-              decoration: _fieldDecoration.copyWith(labelText: 'Carte'),
+              decoration: _fieldDecoration.copyWith(labelText: l10n.monBoardLabel),
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<SerialDeviceInfo>(
                   isDense: true,
                   isExpanded: true,
                   // DropdownButton exige que la valeur figure dans la liste.
                   value: state.devices.contains(state.selectedDevice) ? state.selectedDevice : null,
-                  hint: Text(state.devices.isEmpty ? 'Aucune carte détectée' : 'Choisir une carte'),
+                  hint: Text(state.devices.isEmpty ? l10n.monNoBoardDetected : l10n.monChooseBoard),
                   items: [
                     for (final device in state.devices)
                       DropdownMenuItem(value: device, child: _DeviceLabel(device: device)),
@@ -55,14 +57,14 @@ class ConnectionToolbar extends ConsumerWidget {
             ),
           ),
           IconButton(
-            tooltip: 'Actualiser la liste',
+            tooltip: l10n.monRefreshList,
             onPressed: idle ? controller.refreshDevices : null,
             icon: const Icon(Icons.refresh),
           ),
           SizedBox(
             width: 150,
             child: InputDecorator(
-              decoration: _fieldDecoration.copyWith(labelText: 'Débit (bauds)'),
+              decoration: _fieldDecoration.copyWith(labelText: l10n.monBaudLabel),
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<int>(
                   isDense: true,
@@ -85,17 +87,17 @@ class ConnectionToolbar extends ConsumerWidget {
             ConnectionStatus.disconnected => FilledButton.icon(
                 onPressed: state.selectedDevice == null ? null : controller.connect,
                 icon: const Icon(Icons.usb),
-                label: const Text('Connecter'),
+                label: Text(l10n.monConnect),
               ),
             ConnectionStatus.connecting => FilledButton.icon(
                 onPressed: null,
                 icon: const SizedBox.square(dimension: 16, child: CircularProgressIndicator(strokeWidth: 2)),
-                label: const Text('Connexion…'),
+                label: Text(l10n.monConnecting),
               ),
             ConnectionStatus.connected => FilledButton.tonalIcon(
                 onPressed: controller.disconnect,
                 icon: const Icon(Icons.usb_off),
-                label: const Text('Déconnecter'),
+                label: Text(l10n.monDisconnect),
               ),
           },
         ],

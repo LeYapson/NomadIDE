@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nomad_editor/nomad_editor.dart';
 
 import '../../../app/providers.dart';
+import '../../../app/settings.dart';
 import '../../micropython/application/micropython_controller.dart';
 import '../../projects/application/projects_controller.dart';
 import '../../projects/data/draft_store.dart';
@@ -238,7 +239,7 @@ class EditorController extends Notifier<EditorState> {
     final selection = !document.controller.code.selection.isCollapsed;
     return ref.read(microPythonProvider.notifier).run(
           document.controller.runnableText,
-          label: selection ? 'run ${document.name} (sélection)' : 'run ${document.name}',
+          label: selection ? ref.read(l10nProvider).edRunLabelSelection(document.name) : 'run ${document.name}',
         );
   }
 

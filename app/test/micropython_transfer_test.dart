@@ -11,6 +11,7 @@ import 'package:nomad_protocols/nomad_protocols.dart' show RemoteEntry;
 import 'package:nomad_protocols/testing.dart';
 
 import 'support/board_transport.dart';
+import 'support/locale.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +29,7 @@ void main() {
     disk = FakeDisk();
     board = FakeRawReplBoard(run: disk.run, outputChunkSize: 64);
     store = ProjectStore(storage);
-    container = ProviderContainer(overrides: [
+    container = ProviderContainer(overrides: [frenchLocale, 
       serialTransportProvider.overrideWithValue(BoardTransport(board)),
       storageRootProvider.overrideWith((ref) => storage),
     ]);

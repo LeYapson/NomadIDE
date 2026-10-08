@@ -7,6 +7,9 @@ import 'package:nomad_hal/nomad_hal.dart';
 import 'package:nomad_protocols/nomad_protocols.dart';
 
 import '../../../app/providers.dart';
+import '../../../app/settings.dart';
+import '../../../l10n/error_messages.dart';
+import '../../../l10n/l10n.dart';
 import '../../projects/data/storage_exception.dart';
 import '../data/serial_connection_link.dart';
 
@@ -106,6 +109,8 @@ class MicroPythonController extends Notifier<MicroPythonState> {
   static const runTimeout = Duration(seconds: 30);
 
   late SerialTransport _transport;
+
+  AppLocalizations get _l10n => ref.read(l10nProvider);
   SerialConnection? _connection;
   RawRepl? _repl;
   MicroPythonFs? _fs;
@@ -132,7 +137,7 @@ class MicroPythonController extends Notifier<MicroPythonState> {
         selectedDevice: keep ? current : (devices.where((d) => d.isUsb).firstOrNull ?? devices.firstOrNull),
       );
     } catch (e) {
-      _fail('Énumération des ports impossible : $e');
+      _fail(_l10n.monLogEnumerationFailed(errorMessage(_l10n, e)));
     }
   }
 
@@ -148,24 +153,24 @@ class MicroPythonController extends Notifier<MicroPythonState> {
       final connection = await _transport.open(device);
       _connection = connection;
       unawaited(connection.done.then((reason) => _onDone(connection, reason)));
-      _info('Port ouvert : ${device.displayName}');
+      _info(_l10n.mpLogPortOpened(device.displayName));
 
       final repl = RawRepl(SerialConnectionLink(connection));
       _repl = repl;
       _fs = MicroPythonFs(repl);
       await repl.enter();
       state = state.copyWith(status: ReplStatus.ready);
-      _info('Raw REPL actif.');
+      _info(_l10n.mpLogRawActive);
       await refreshFiles();
     } on ProtocolException catch (e) {
       await _teardown();
-      _fail(e.message);
+      _fail(errorMessage(_l10n, e));
     } on SerialException catch (e) {
       await _teardown();
-      _fail(e.message);
+      _fail(errorMessage(_l10n, e));
     } catch (e) {
       await _teardown();
-      _fail('Connexion impossible : $e');
+      _fail(_l10n.monLogConnectFailed('$e'));
     }
   }
 
@@ -179,7 +184,7 @@ class MicroPythonController extends Notifier<MicroPythonState> {
       }
     }
     await _teardown();
-    _info('Déconnecté.');
+    _info(_l10n.monLogDisconnected);
   }
 
   void _onDone(SerialConnection connection, DisconnectReason reason) {
@@ -189,7 +194,7 @@ class MicroPythonController extends Notifier<MicroPythonState> {
     _repl = null;
     _fs = null;
     state = state.copyWith(status: ReplStatus.disconnected, busy: false, files: const []);
-    if (reason != DisconnectReason.closedByUser) _fail('La carte a été débranchée.');
+    if (reason != DisconnectReason.closedByUser) _fail(_l10n.monLogDeviceLost);
     refreshDevices();
   }
 
@@ -220,7 +225,7 @@ class MicroPythonController extends Notifier<MicroPythonState> {
         onStdout: (d) => _append(ReplLogKind.out, utf8.decode(d, allowMalformed: true)),
         onStderr: (d) => _append(ReplLogKind.err, utf8.decode(d, allowMalformed: true)),
       );
-      _info(result.ok ? 'Terminé.' : 'Terminé avec erreur.');
+      _info(result.ok ? _l10n.mpLogDone : _l10n.mpLogDoneWithError);
     });
   }
 
@@ -236,7 +241,7 @@ class MicroPythonController extends Notifier<MicroPythonState> {
     try {
       await _repl?.interrupt();
     } on ProtocolException catch (e) {
-      _fail(e.message);
+      _fail(errorMessage(_l10n, e));
     }
   }
 
@@ -245,9 +250,9 @@ class MicroPythonController extends Notifier<MicroPythonState> {
     final repl = _repl;
     if (repl == null) return;
     await _guard(() async {
-      _info('Redémarrage logiciel…');
+      _info(_l10n.mpLogSoftResetting);
       await repl.softReset();
-      _info('Interpréteur redémarré.');
+      _info(_l10n.mpLogSoftReset);
     });
   }
 
@@ -272,7 +277,7 @@ class MicroPythonController extends Notifier<MicroPythonState> {
         seed = (seed * 1103515245 + 12345) & 0x7FFFFFFF;
         return (seed >> 16) & 0xFF;
       }));
-      _info('Test de transfert : ${selfTestBytes ~/ 1024} Ko, CRC32 vérifié par la carte.');
+      _info(_l10n.mpLogSelfTestStart('${selfTestBytes ~/ 1024}'));
 
       for (final chunk in selfTestChunkSizes) {
         final fs = MicroPythonFs(repl, chunkSize: chunk);
@@ -284,13 +289,14 @@ class MicroPythonController extends Notifier<MicroPythonState> {
           final back = await fs.read(_selfTestPath);
           final readMs = clock.elapsedMilliseconds;
           final same = back.length == data.length && _equal(back, data);
-          _info(
-            '· morceaux de $chunk o : écriture ${_rate(data.length, writeMs)}, '
-            'lecture ${_rate(data.length, readMs)}, '
-            '${same ? 'relecture identique ✓' : 'RELECTURE DIFFÉRENTE ✗'}',
-          );
+          _info(_l10n.mpLogSelfTestRow(
+            '$chunk',
+            _rate(data.length, writeMs),
+            _rate(data.length, readMs),
+            same ? _l10n.mpSelfTestSame : _l10n.mpSelfTestDiff,
+          ));
         } on ProtocolException catch (e) {
-          _info('· morceaux de $chunk o : ÉCHEC ✗ ${e.message}');
+          _info(_l10n.mpLogSelfTestFail('$chunk', errorMessage(_l10n, e)));
           // Une désynchronisation rend la suite impossible : _guard resynchronise.
           if (repl.state != RawReplState.ready) break;
         }
@@ -300,7 +306,7 @@ class MicroPythonController extends Notifier<MicroPythonState> {
       } on ProtocolException {
         // Fichier absent si tous les essais ont échoué.
       }
-      _info('Test de transfert terminé.');
+      _info(_l10n.mpLogSelfTestDone);
       await _loadFiles();
     });
   }
@@ -312,8 +318,8 @@ class MicroPythonController extends Notifier<MicroPythonState> {
     return true;
   }
 
-  static String _rate(int bytes, int ms) =>
-      '${(bytes / 1024 / (ms == 0 ? 1 : ms / 1000)).toStringAsFixed(1)} Ko/s (${(ms / 1000).toStringAsFixed(1)} s)';
+  String _rate(int bytes, int ms) =>
+      _l10n.mpRate((bytes / 1024 / (ms == 0 ? 1 : ms / 1000)).toStringAsFixed(1), (ms / 1000).toStringAsFixed(1));
 
   // ---------------------------------------------------------------------------
   // Fichiers
@@ -350,7 +356,7 @@ class MicroPythonController extends Notifier<MicroPythonState> {
     Uint8List? bytes;
     await _guard(() async {
       bytes = await _fs!.read(_join(name));
-      _info('Lu ${_join(name)} (${bytes!.length} octets)');
+      _info(_l10n.mpLogRead(_join(name), bytes!.length));
     });
     return bytes;
   }
@@ -380,7 +386,7 @@ class MicroPythonController extends Notifier<MicroPythonState> {
       } finally {
         state = state.copyWith(transfer: null);
       }
-      _info('Écrit $path (${data.length} octets, CRC32 vérifié)');
+      _info(_l10n.mpLogWritten(path, data.length));
       written = true;
       await _loadFiles();
     });
@@ -395,14 +401,14 @@ class MicroPythonController extends Notifier<MicroPythonState> {
   Future<void> delete(RemoteEntry entry) => _guard(() async {
         final path = _join(entry.name);
         entry.isDirectory ? await _fs!.rmdir(path) : await _fs!.remove(path);
-        _info('Supprimé $path');
+        _info(_l10n.mpLogDeleted(path));
         await _loadFiles();
       });
 
   Future<void> renameEntry(RemoteEntry entry, String newName) => _guard(() async {
         final target = _join(newName.trim());
         await _fs!.rename(_join(entry.name), target);
-        _info('Renommé ${_join(entry.name)} en $target');
+        _info(_l10n.mpLogRenamed(_join(entry.name), target));
         await _loadFiles();
       });
 
@@ -413,7 +419,7 @@ class MicroPythonController extends Notifier<MicroPythonState> {
     try {
       data = await (await ref.read(projectStoreProvider.future)).readBytes(project, path);
     } on StorageException catch (e) {
-      _fail('Lecture locale impossible : « ${e.name ?? path} »');
+      _fail(_l10n.mpLogLocalReadFailed(e.name ?? path));
       return false;
     }
     return writeBytes(_join(path.split('/').last), data);
@@ -433,9 +439,10 @@ class MicroPythonController extends Notifier<MicroPythonState> {
         final remote = await _fs!.checksum(boardPath);
         if (remote.size != data.length || remote.crc32 != MicroPythonFs.crc32(data)) {
           throw ProtocolIntegrityException(
-            'Téléchargement corrompu : ${data.length} octets reçus pour ${remote.size} attendus.',
+            _l10n.mpLogDownloadCorrupt('${data.length}', '${remote.size}'),
             expectedCrc: remote.crc32,
             actualCrc: MicroPythonFs.crc32(data),
+            params: {'path': boardPath, 'expectedSize': remote.size, 'actualSize': data.length},
           );
         }
       } finally {
@@ -444,10 +451,10 @@ class MicroPythonController extends Notifier<MicroPythonState> {
       try {
         await (await ref.read(projectStoreProvider.future)).writeBytes(project, path, data);
       } on StorageException catch (e) {
-        _fail('Enregistrement local impossible : « ${e.name ?? path} »');
+        _fail(_l10n.mpLogLocalSaveFailed(e.name ?? path));
         return;
       }
-      _info('Téléchargé $boardPath vers $project/$path (${data.length} octets, CRC32 vérifié)');
+      _info(_l10n.mpLogDownloaded(boardPath, '$project/$path', data.length));
       saved = true;
     });
     return saved;
@@ -455,7 +462,7 @@ class MicroPythonController extends Notifier<MicroPythonState> {
 
   Future<void> makeDirectory(String name) => _guard(() async {
         await _fs!.mkdir(_join(name));
-        _info('Dossier créé ${_join(name)}');
+        _info(_l10n.mpLogFolderCreated(_join(name)));
         await _loadFiles();
       });
 
@@ -471,11 +478,11 @@ class MicroPythonController extends Notifier<MicroPythonState> {
       await action();
     } on ProtocolRemoteException catch (e) {
       _append(ReplLogKind.err, '${e.stderr}\n');
-      _fail(e.message);
+      _fail(errorMessage(_l10n, e));
     } on ProtocolTimeoutException catch (e) {
-      _fail(e.message);
+      _fail(errorMessage(_l10n, e));
     } on ProtocolException catch (e) {
-      _fail(e.message);
+      _fail(errorMessage(_l10n, e));
     } finally {
       if (_repl != null) state = state.copyWith(busy: false);
       // Une désynchronisation (timeout, réponse inattendue) rend la session inutilisable.
@@ -484,12 +491,12 @@ class MicroPythonController extends Notifier<MicroPythonState> {
   }
 
   Future<void> _resync() async {
-    _info('Session désynchronisée, nouvelle tentative…');
+    _info(_l10n.mpLogResync);
     try {
       await _repl!.enter();
-      _info('Session rétablie.');
+      _info(_l10n.mpLogResynced);
     } on ProtocolException catch (e) {
-      _fail('Resynchronisation impossible : ${e.message}');
+      _fail(_l10n.mpLogResyncFailed(errorMessage(_l10n, e)));
     }
   }
 

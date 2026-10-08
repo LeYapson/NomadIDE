@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/theme.dart';
+import '../../../../l10n/l10n.dart';
 import '../../application/serial_monitor_controller.dart';
 import '../../domain/log_entry.dart';
 
@@ -63,7 +64,7 @@ class _SerialLogViewState extends ConsumerState<SerialLogView> {
       child: count == 0
           ? Center(
               child: Text(
-                "Connectez une carte : le flux série s'affichera ici.",
+                context.l10n.monEmptyLog,
                 style: TextStyle(color: scheme.outline),
               ),
             )

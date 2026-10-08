@@ -1,0 +1,7 @@
+# Source de vérité : app_fr.arb (le PRD est rédigé en français) ; app_en.arb en est la traduction.
+arb-dir: lib/l10n
+template-arb-file: app_fr.arb
+output-dir: lib/l10n/generated
+output-localization-file: app_localizations.dart
+output-class: AppLocalizations
+nullable-getter: false

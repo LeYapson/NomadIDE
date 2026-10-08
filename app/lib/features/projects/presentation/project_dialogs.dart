@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/providers.dart';
+import '../../../l10n/l10n.dart';
 import '../application/projects_controller.dart';
 import '../data/project_store.dart';
 
@@ -22,8 +23,8 @@ Future<SaveTarget?> showSaveAsDialog(
   required List<String> projects,
   required String? currentProject,
   required String initialPath,
-  String title = 'Enregistrer sur cet appareil',
-  String confirmLabel = 'Enregistrer',
+  String? title,
+  String? confirmLabel,
 }) {
   return showDialog<SaveTarget>(
     context: context,
@@ -31,8 +32,8 @@ Future<SaveTarget?> showSaveAsDialog(
       projects: projects,
       currentProject: currentProject,
       initialPath: initialPath,
-      title: title,
-      confirmLabel: confirmLabel,
+      title: title ?? context.l10n.sdSaveTitle,
+      confirmLabel: confirmLabel ?? context.l10n.commonSave,
     ),
   );
 }
@@ -62,7 +63,17 @@ class _SaveAsDialogState extends State<_SaveAsDialog> {
   late String _selected =
       widget.projects.contains(widget.currentProject) ? widget.currentProject! : (widget.projects.firstOrNull ?? _newProject);
   late final TextEditingController _path = TextEditingController(text: widget.initialPath);
-  final TextEditingController _newName = TextEditingController(text: 'Mon projet');
+  final TextEditingController _newName = TextEditingController();
+  bool _seeded = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_seeded) {
+      _seeded = true;
+      _newName.text = context.l10n.prDefaultProjectName;
+    }
+  }
 
   @override
   void dispose() {
@@ -89,25 +100,25 @@ class _SaveAsDialogState extends State<_SaveAsDialog> {
         children: [
           DropdownButtonFormField<String>(
             initialValue: _selected,
-            decoration: const InputDecoration(labelText: 'Projet'),
+            decoration: InputDecoration(labelText: context.l10n.sdProject),
             items: [
               for (final name in widget.projects) DropdownMenuItem(value: name, child: Text(name, overflow: TextOverflow.ellipsis)),
-              const DropdownMenuItem(value: _newProject, child: Text('Nouveau projet…')),
+              DropdownMenuItem(value: _newProject, child: Text(context.l10n.sdNewProjectItem)),
             ],
             onChanged: (value) => setState(() => _selected = value ?? _selected),
           ),
-          if (_selected == _newProject) TextField(controller: _newName, decoration: const InputDecoration(labelText: 'Nom du nouveau projet')),
+          if (_selected == _newProject) TextField(controller: _newName, decoration: InputDecoration(labelText: context.l10n.sdNewProjectName)),
           const SizedBox(height: 8),
           TextField(
             controller: _path,
             autofocus: true,
-            decoration: const InputDecoration(labelText: 'Fichier', helperText: 'Ex. main.py ou lib/capteur.py'),
+            decoration: InputDecoration(labelText: context.l10n.sdFileLabel, helperText: context.l10n.sdFileHelper),
             onSubmitted: (_) => _confirm(),
           ),
         ],
       ),
       actions: [
-        TextButton(onPressed: () => Navigator.pop(context), child: const Text('Annuler')),
+        TextButton(onPressed: () => Navigator.pop(context), child: Text(context.l10n.commonCancel)),
         FilledButton(onPressed: _confirm, child: Text(widget.confirmLabel)),
       ],
     );
@@ -174,7 +185,7 @@ class _ProjectFilePickerState extends ConsumerState<_ProjectFilePicker> {
   Widget build(BuildContext context) {
     final projects = ref.watch(projectsProvider).projects;
     return AlertDialog(
-      title: const Text('Choisir un fichier à envoyer'),
+      title: Text(context.l10n.pfTitle),
       content: SizedBox(
         width: double.maxFinite,
         height: 360,
@@ -183,8 +194,8 @@ class _ProjectFilePickerState extends ConsumerState<_ProjectFilePicker> {
           children: [
             DropdownButtonFormField<String>(
               initialValue: projects.contains(_project) ? _project : null,
-              decoration: const InputDecoration(labelText: 'Projet'),
-              hint: const Text('Aucun projet'),
+              decoration: InputDecoration(labelText: context.l10n.sdProject),
+              hint: Text(context.l10n.pfNoProject),
               items: [for (final name in projects) DropdownMenuItem(value: name, child: Text(name, overflow: TextOverflow.ellipsis))],
               onChanged: (name) {
                 setState(() {
@@ -198,7 +209,7 @@ class _ProjectFilePickerState extends ConsumerState<_ProjectFilePicker> {
             Row(
               children: [
                 IconButton(
-                  tooltip: 'Dossier parent',
+                  tooltip: context.l10n.mpParentFolder,
                   onPressed: _directory.isEmpty
                       ? null
                       : () {
@@ -217,7 +228,7 @@ class _ProjectFilePickerState extends ConsumerState<_ProjectFilePicker> {
               child: _loading
                   ? const Center(child: CircularProgressIndicator())
                   : _entries.isEmpty
-                      ? const Center(child: Text('Rien ici'))
+                      ? Center(child: Text(context.l10n.pfNothing))
                       : ListView(
                           children: [
                             for (final entry in _entries)
@@ -243,7 +254,7 @@ class _ProjectFilePickerState extends ConsumerState<_ProjectFilePicker> {
           ],
         ),
       ),
-      actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('Annuler'))],
+      actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text(context.l10n.commonCancel))],
     );
   }
 }

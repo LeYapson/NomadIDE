@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/l10n.dart';
+
 /// Demande une ligne de texte. Renvoie null si l'utilisateur annule ou ne saisit rien.
 Future<String?> showTextInputDialog(
   BuildContext context, {
   required String title,
   required String label,
   String initialValue = '',
-  String confirmLabel = 'OK',
-  String cancelLabel = 'Annuler',
+  String? confirmLabel,
+  String? cancelLabel,
   String? helper,
 }) {
   return showDialog<String>(
@@ -16,8 +18,8 @@ Future<String?> showTextInputDialog(
       title: title,
       label: label,
       initialValue: initialValue,
-      confirmLabel: confirmLabel,
-      cancelLabel: cancelLabel,
+      confirmLabel: confirmLabel ?? context.l10n.commonOk,
+      cancelLabel: cancelLabel ?? context.l10n.commonCancel,
       helper: helper,
     ),
   );
@@ -91,8 +93,8 @@ Future<bool> showConfirmDialog(
   BuildContext context, {
   required String title,
   required String message,
-  String confirmLabel = 'OK',
-  String cancelLabel = 'Annuler',
+  String? confirmLabel,
+  String? cancelLabel,
   bool destructive = false,
 }) async {
   final scheme = Theme.of(context).colorScheme;
@@ -102,11 +104,11 @@ Future<bool> showConfirmDialog(
       title: Text(title),
       content: Text(message),
       actions: [
-        TextButton(onPressed: () => Navigator.pop(context, false), child: Text(cancelLabel)),
+        TextButton(onPressed: () => Navigator.pop(context, false), child: Text(cancelLabel ?? context.l10n.commonCancel)),
         FilledButton(
           style: destructive ? FilledButton.styleFrom(backgroundColor: scheme.error, foregroundColor: scheme.onError) : null,
           onPressed: () => Navigator.pop(context, true),
-          child: Text(confirmLabel),
+          child: Text(confirmLabel ?? context.l10n.commonOk),
         ),
       ],
     ),

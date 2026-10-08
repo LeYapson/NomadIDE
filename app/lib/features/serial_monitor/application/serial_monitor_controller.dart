@@ -6,6 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nomad_hal/nomad_hal.dart';
 
 import '../../../app/providers.dart';
+import '../../../app/settings.dart';
+import '../../../l10n/error_messages.dart';
+import '../../../l10n/l10n.dart';
 import '../domain/log_entry.dart';
 import '../domain/rx_line_assembler.dart';
 import 'serial_monitor_state.dart';
@@ -28,6 +31,8 @@ class SerialMonitorController extends Notifier<SerialMonitorState> {
   static const Duration flushInterval = Duration(milliseconds: 50);
 
   late SerialTransport _transport;
+
+  AppLocalizations get _l10n => ref.read(l10nProvider);
   SerialConnection? _connection;
   StreamSubscription<Uint8List>? _rxSubscription;
   StreamSubscription<DeviceEvent>? _hotplugSubscription;
@@ -43,12 +48,17 @@ class SerialMonitorController extends Notifier<SerialMonitorState> {
 
     final transport = _transport;
     if (transport is UnsupportedSerialTransport) {
-      return SerialMonitorState(transportName: transport.name, entries: [LogEntry.error(transport.reason)]);
+      final reason = SerialUnsupportedException(
+        transport.reason,
+        code: SerialErrorCode.unsupportedPlatform,
+        params: {'platform': transport.platform},
+      );
+      return SerialMonitorState(transportKind: transport.kind, entries: [LogEntry.error(serialErrorMessage(_l10n, reason))]);
     }
 
     _hotplugSubscription = transport.deviceEvents.listen(_onDeviceEvent);
     Future.microtask(refreshDevices);
-    return SerialMonitorState(transportName: transport.name);
+    return SerialMonitorState(transportKind: transport.kind);
   }
 
   // ---------------------------------------------------------------------------
@@ -60,7 +70,7 @@ class SerialMonitorController extends Notifier<SerialMonitorState> {
       final devices = await _transport.listDevices();
       state = state.copyWith(devices: devices, selectedDevice: _pickSelection(devices));
     } catch (e) {
-      _log(LogEntry.error('Énumération des ports impossible : $e'));
+      _log(LogEntry.error(_l10n.monLogEnumerationFailed(errorMessage(_l10n, e))));
     }
   }
 
@@ -79,7 +89,9 @@ class SerialMonitorController extends Notifier<SerialMonitorState> {
 
   void _onDeviceEvent(DeviceEvent event) {
     final label = event.device?.displayName ?? event.deviceId;
-    _log(LogEntry.system(event.type == DeviceEventType.attached ? 'Branché : $label' : 'Débranché : $label'));
+    _log(LogEntry.system(
+      event.type == DeviceEventType.attached ? _l10n.monLogAttached(label) : _l10n.monLogDetached(label),
+    ));
     // Si c'est la carte connectée, le transport signale déjà la perte via `done`.
     refreshDevices();
   }
@@ -107,11 +119,11 @@ class SerialMonitorController extends Notifier<SerialMonitorState> {
         rxBytes: 0,
         txBytes: 0,
       );
-      _log(LogEntry.system('Connecté à ${device.displayName} (${state.config})'));
+      _log(LogEntry.system(_l10n.monLogConnectedTo(device.displayName, '${state.config}')));
     } on SerialException catch (e) {
-      _fail(e.message);
+      _fail(serialErrorMessage(_l10n, e));
     } catch (e) {
-      _fail('Connexion impossible : $e');
+      _fail(_l10n.monLogConnectFailed('$e'));
     }
   }
 
@@ -131,9 +143,9 @@ class SerialMonitorController extends Notifier<SerialMonitorState> {
     _connection = null;
 
     final message = switch (reason) {
-      DisconnectReason.closedByUser => 'Déconnecté.',
-      DisconnectReason.deviceLost => 'La carte a été débranchée.',
-      DisconnectReason.error => 'Connexion interrompue par une erreur.',
+      DisconnectReason.closedByUser => _l10n.monLogDisconnected,
+      DisconnectReason.deviceLost => _l10n.monLogDeviceLost,
+      DisconnectReason.error => _l10n.monLogConnectionError,
     };
     final byUser = reason == DisconnectReason.closedByUser;
     state = state.copyWith(
@@ -162,9 +174,9 @@ class SerialMonitorController extends Notifier<SerialMonitorState> {
     if (connection != null) {
       try {
         await connection.setConfig(config);
-        _log(LogEntry.system('Débit : $baudRate bauds'));
+        _log(LogEntry.system(_l10n.monLogBaud('$baudRate')));
       } on SerialException catch (e) {
-        _log(LogEntry.error(e.message));
+        _log(LogEntry.error(serialErrorMessage(_l10n, e)));
         return;
       }
     }
@@ -177,12 +189,12 @@ class SerialMonitorController extends Notifier<SerialMonitorState> {
 
   Future<void> resetBoard() => _withConnection((c) async {
         await c.hardReset();
-        _log(LogEntry.system('Reset matériel (impulsion RTS → EN)'));
+        _log(LogEntry.system(_l10n.monLogReset));
       });
 
   Future<void> enterBootloader() => _withConnection((c) async {
         await c.enterEspBootloader();
-        _log(LogEntry.system('Séquence bootloader ESP envoyée : la ROM attend esptool'));
+        _log(LogEntry.system(_l10n.monLogBootloader));
       });
 
   Future<void> _withConnection(Future<void> Function(SerialConnection c) action) async {
@@ -191,7 +203,7 @@ class SerialMonitorController extends Notifier<SerialMonitorState> {
     try {
       await action(connection);
     } on SerialException catch (e) {
-      _log(LogEntry.error(e.message));
+      _log(LogEntry.error(serialErrorMessage(_l10n, e)));
     }
     state = state.copyWith(dtr: connection.dtr, rts: connection.rts);
   }
@@ -225,7 +237,7 @@ class SerialMonitorController extends Notifier<SerialMonitorState> {
         txBytes: state.txBytes + data.length,
       );
     } on SerialException catch (e) {
-      _log(LogEntry.error(e.message));
+      _log(LogEntry.error(serialErrorMessage(_l10n, e)));
     }
   }
 

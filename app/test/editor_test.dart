@@ -8,11 +8,12 @@ import 'package:nomad_hal/nomad_hal.dart';
 import 'package:nomad_mcu/app/app.dart';
 import 'package:nomad_mcu/app/providers.dart';
 import 'package:nomad_mcu/features/editor/application/editor_controller.dart';
+import 'support/locale.dart';
 
 ProviderContainer newContainer() {
   final storage = Directory.systemTemp.createTempSync('nomad_editor_test');
   final container = ProviderContainer(
-    overrides: [
+    overrides: [frenchLocale, 
       serialTransportProvider.overrideWithValue(FakeSerialTransport()),
       storageRootProvider.overrideWith((ref) => storage),
     ],

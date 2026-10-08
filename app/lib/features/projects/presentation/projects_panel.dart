@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/dialogs.dart';
+import '../../../l10n/l10n.dart';
 import '../../editor/application/editor_controller.dart';
 import '../../micropython/application/micropython_controller.dart';
 import '../application/projects_controller.dart';
@@ -21,6 +22,7 @@ class ProjectsPanel extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final state = ref.watch(projectsProvider);
     final controller = ref.read(projectsProvider.notifier);
 
@@ -33,7 +35,7 @@ class ProjectsPanel extends ConsumerWidget {
           const Divider(height: 1),
           Expanded(
             child: state.entries.isEmpty
-                ? Center(child: Text(state.directory.isEmpty ? 'Projet vide' : 'Dossier vide'))
+                ? Center(child: Text(state.directory.isEmpty ? l10n.prProjectEmpty : l10n.mpFolderEmpty))
                 : ListView(
                     children: [
                       for (final entry in state.entries)
@@ -50,7 +52,7 @@ class ProjectsPanel extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      state.loaded ? 'Aucun projet.' : 'Chargement…',
+                      state.loaded ? l10n.prNoProjects : l10n.prLoading,
                       textAlign: TextAlign.center,
                     ),
                     if (state.loaded) ...[
@@ -58,7 +60,7 @@ class ProjectsPanel extends ConsumerWidget {
                       FilledButton.icon(
                         onPressed: () => _createProject(context, controller),
                         icon: const Icon(Icons.create_new_folder_outlined),
-                        label: const Text('Nouveau projet'),
+                        label: Text(l10n.prNewProject),
                       ),
                     ],
                   ],
@@ -72,12 +74,13 @@ class ProjectsPanel extends ConsumerWidget {
 }
 
 Future<void> _createProject(BuildContext context, ProjectsController controller) async {
+  final l10n = context.l10n;
   final name = await showTextInputDialog(
     context,
-    title: 'Nouveau projet',
-    label: 'Nom du projet',
-    initialValue: 'Mon projet',
-    confirmLabel: 'Créer',
+    title: l10n.prNewProject,
+    label: l10n.prProjectNameLabel,
+    initialValue: l10n.prDefaultProjectName,
+    confirmLabel: l10n.commonCreate,
   );
   if (name != null) await controller.createProject(name);
 }
@@ -89,6 +92,7 @@ class _ProjectHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final controller = ref.read(projectsProvider.notifier);
     return Padding(
       padding: const EdgeInsets.fromLTRB(12, 8, 4, 0),
@@ -99,7 +103,7 @@ class _ProjectHeader extends ConsumerWidget {
               child: DropdownButton<String>(
                 isExpanded: true,
                 value: state.projects.contains(state.current) ? state.current : null,
-                hint: const Text('Projets'),
+                hint: Text(l10n.prProjects),
                 items: [for (final name in state.projects) DropdownMenuItem(value: name, child: Text(name, overflow: TextOverflow.ellipsis))],
                 onChanged: (name) {
                   if (name != null) controller.selectProject(name);
@@ -108,7 +112,7 @@ class _ProjectHeader extends ConsumerWidget {
             ),
           ),
           PopupMenuButton<_ProjectAction>(
-            tooltip: 'Actions du projet',
+            tooltip: l10n.prProjectActions,
             onSelected: (action) async {
               switch (action) {
                 case _ProjectAction.create:
@@ -118,10 +122,10 @@ class _ProjectHeader extends ConsumerWidget {
                   if (current == null) return;
                   final name = await showTextInputDialog(
                     context,
-                    title: 'Renommer le projet',
-                    label: 'Nouveau nom',
+                    title: l10n.prRenameProjectTitle,
+                    label: l10n.mpNewName,
                     initialValue: current,
-                    confirmLabel: 'Renommer',
+                    confirmLabel: l10n.commonRename,
                   );
                   if (name != null && name != current) await controller.renameProject(current, name);
                 case _ProjectAction.delete:
@@ -129,18 +133,18 @@ class _ProjectHeader extends ConsumerWidget {
                   if (current == null) return;
                   final confirmed = await showConfirmDialog(
                     context,
-                    title: 'Supprimer le projet ?',
-                    message: 'Le projet « $current » et tous ses fichiers seront supprimés de cet appareil. Cette action est définitive.',
-                    confirmLabel: 'Supprimer',
+                    title: l10n.prDeleteProjectTitle,
+                    message: l10n.prDeleteProjectMessage(current),
+                    confirmLabel: l10n.commonDelete,
                     destructive: true,
                   );
                   if (confirmed) await controller.deleteProject(current);
               }
             },
             itemBuilder: (context) => [
-              const PopupMenuItem(value: _ProjectAction.create, child: Text('Nouveau projet…')),
-              PopupMenuItem(value: _ProjectAction.rename, enabled: state.current != null, child: const Text('Renommer le projet…')),
-              PopupMenuItem(value: _ProjectAction.delete, enabled: state.current != null, child: const Text('Supprimer le projet…')),
+              PopupMenuItem(value: _ProjectAction.create, child: Text(l10n.prMenuNewProject)),
+              PopupMenuItem(value: _ProjectAction.rename, enabled: state.current != null, child: Text(l10n.prMenuRenameProject)),
+              PopupMenuItem(value: _ProjectAction.delete, enabled: state.current != null, child: Text(l10n.prMenuDeleteProject)),
             ],
           ),
         ],
@@ -156,26 +160,27 @@ class _PathBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final controller = ref.read(projectsProvider.notifier);
     return Padding(
       padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
       child: Row(
         children: [
           IconButton(
-            tooltip: 'Dossier parent',
+            tooltip: l10n.mpParentFolder,
             onPressed: state.directory.isEmpty ? null : controller.goUp,
             icon: const Icon(Icons.arrow_upward),
           ),
           Expanded(child: Text('/${state.directory}', overflow: TextOverflow.ellipsis)),
           IconButton(
-            tooltip: 'Nouveau fichier',
+            tooltip: l10n.mpNewFile,
             onPressed: () async {
               final name = await showTextInputDialog(
                 context,
-                title: 'Nouveau fichier',
-                label: 'Nom du fichier',
+                title: l10n.mpNewFile,
+                label: l10n.prFileNameLabel,
                 initialValue: 'main.py',
-                confirmLabel: 'Créer',
+                confirmLabel: l10n.commonCreate,
               );
               if (name == null) return;
               final path = await controller.createFile(name);
@@ -186,9 +191,14 @@ class _PathBar extends ConsumerWidget {
             icon: const Icon(Icons.note_add_outlined),
           ),
           IconButton(
-            tooltip: 'Nouveau dossier',
+            tooltip: l10n.mpNewFolder,
             onPressed: () async {
-              final name = await showTextInputDialog(context, title: 'Nouveau dossier', label: 'Nom du dossier', confirmLabel: 'Créer');
+              final name = await showTextInputDialog(
+                context,
+                title: l10n.mpNewFolder,
+                label: l10n.prFolderNameLabel,
+                confirmLabel: l10n.commonCreate,
+              );
               if (name != null) await controller.createFolder(name);
             },
             icon: const Icon(Icons.create_new_folder_outlined),
@@ -208,6 +218,7 @@ class _EntryTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final controller = ref.read(projectsProvider.notifier);
     final board = ref.watch(microPythonProvider);
     final canUpload = !entry.isDirectory && board.isReady && !board.busy;
@@ -216,7 +227,7 @@ class _EntryTile extends ConsumerWidget {
       dense: true,
       leading: Icon(entry.isDirectory ? Icons.folder_outlined : Icons.insert_drive_file_outlined),
       title: Text(entry.name, overflow: TextOverflow.ellipsis),
-      subtitle: entry.isDirectory ? null : Text(_size(entry.size)),
+      subtitle: entry.isDirectory ? null : Text(_size(l10n, entry.size)),
       onTap: () async {
         if (entry.isDirectory) {
           await controller.openDirectory(entry.path);
@@ -225,26 +236,24 @@ class _EntryTile extends ConsumerWidget {
         }
       },
       trailing: PopupMenuButton<_EntryAction>(
-        tooltip: 'Actions',
+        tooltip: l10n.mpActions,
         onSelected: (action) async {
           switch (action) {
             case _EntryAction.rename:
               final name = await showTextInputDialog(
                 context,
-                title: 'Renommer',
-                label: 'Nouveau nom',
+                title: l10n.commonRename,
+                label: l10n.mpNewName,
                 initialValue: entry.name,
-                confirmLabel: 'Renommer',
+                confirmLabel: l10n.commonRename,
               );
               if (name != null && name != entry.name) await controller.renameEntry(entry, name);
             case _EntryAction.delete:
               final confirmed = await showConfirmDialog(
                 context,
-                title: entry.isDirectory ? 'Supprimer le dossier ?' : 'Supprimer le fichier ?',
-                message: entry.isDirectory
-                    ? '« ${entry.name} » et tout son contenu seront supprimés de cet appareil.'
-                    : '« ${entry.name} » sera supprimé de cet appareil.',
-                confirmLabel: 'Supprimer',
+                title: entry.isDirectory ? l10n.prDeleteFolderTitle : l10n.prDeleteFileTitle,
+                message: entry.isDirectory ? l10n.prDeleteFolderMessage(entry.name) : l10n.prDeleteFileMessage(entry.name),
+                confirmLabel: l10n.commonDelete,
                 destructive: true,
               );
               if (confirmed) await controller.deleteEntry(entry);
@@ -253,22 +262,22 @@ class _EntryTile extends ConsumerWidget {
           }
         },
         itemBuilder: (context) => [
-          const PopupMenuItem(value: _EntryAction.rename, child: Text('Renommer…')),
+          PopupMenuItem(value: _EntryAction.rename, child: Text(l10n.mpMenuRename)),
           if (!entry.isDirectory)
             PopupMenuItem(
               value: _EntryAction.upload,
               enabled: canUpload,
-              child: Text(board.isReady ? 'Envoyer sur la carte' : 'Envoyer sur la carte (carte non connectée)'),
+              child: Text(board.isReady ? l10n.prMenuUpload : l10n.prMenuUploadDisconnected),
             ),
-          const PopupMenuItem(value: _EntryAction.delete, child: Text('Supprimer…')),
+          PopupMenuItem(value: _EntryAction.delete, child: Text(l10n.mpMenuDelete)),
         ],
       ),
     );
   }
 
-  static String _size(int bytes) {
-    if (bytes < 1024) return '$bytes o';
-    if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} Ko';
-    return '${(bytes / 1024 / 1024).toStringAsFixed(1)} Mo';
+  static String _size(AppLocalizations l10n, int bytes) {
+    if (bytes < 1024) return l10n.bytesB(bytes);
+    if (bytes < 1024 * 1024) return l10n.bytesKb((bytes / 1024).toStringAsFixed(1));
+    return l10n.bytesMb((bytes / 1024 / 1024).toStringAsFixed(1));
   }
 }

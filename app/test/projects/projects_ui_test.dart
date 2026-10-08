@@ -10,6 +10,7 @@ import 'package:nomad_mcu/features/editor/application/editor_controller.dart';
 import 'package:nomad_mcu/features/projects/application/projects_controller.dart';
 import 'package:nomad_mcu/features/projects/data/draft_store.dart';
 import 'package:nomad_mcu/features/projects/data/project_store.dart';
+import '../support/locale.dart';
 
 void main() {
   late Directory storage;
@@ -17,7 +18,7 @@ void main() {
 
   setUp(() {
     storage = Directory.systemTemp.createTempSync('nomad_ui_test');
-    container = ProviderContainer(overrides: [
+    container = ProviderContainer(overrides: [frenchLocale, 
       serialTransportProvider.overrideWithValue(FakeSerialTransport()),
       storageRootProvider.overrideWith((ref) => storage),
     ]);
@@ -91,7 +92,7 @@ void main() {
     container.read(editorProvider.notifier).newDocument(text: 'print("salut")');
     await pumpEditor(tester);
 
-    await tester.tap(find.byTooltip('Enregistrer sur l\'appareil (Ctrl+S)'));
+    await tester.tap(find.byTooltip('Enregistrer sur l’appareil (Ctrl+S)'));
     await tester.pumpAndSettle();
     expect(find.text('Enregistrer sur cet appareil'), findsOneWidget);
     await tester.enterText(find.widgetWithText(TextField, 'main.py'), 'blink.py');
@@ -112,7 +113,7 @@ void main() {
     container.read(editorProvider.notifier).newDocument(text: 'nouveau contenu');
     await pumpEditor(tester);
 
-    await tester.tap(find.byTooltip('Enregistrer sur l\'appareil (Ctrl+S)'));
+    await tester.tap(find.byTooltip('Enregistrer sur l’appareil (Ctrl+S)'));
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(FilledButton, 'Enregistrer'));
     await settle(tester);

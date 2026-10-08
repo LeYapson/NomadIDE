@@ -6,6 +6,7 @@ import 'package:nomad_mcu/app/providers.dart';
 import 'package:nomad_mcu/features/editor/application/editor_controller.dart';
 import 'package:nomad_mcu/features/projects/application/projects_controller.dart';
 import 'package:nomad_mcu/features/projects/data/storage_exception.dart';
+import '../support/locale.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -16,7 +17,7 @@ void main() {
   tearDown(() => storage.deleteSync(recursive: true));
 
   ProviderContainer newContainer({Duration draftDelay = const Duration(hours: 1)}) {
-    final container = ProviderContainer(overrides: [
+    final container = ProviderContainer(overrides: [frenchLocale, 
       storageRootProvider.overrideWith((ref) => storage),
       draftDelayProvider.overrideWithValue(draftDelay),
     ]);
@@ -163,7 +164,7 @@ void main() {
     });
 
     test('un stockage indisponible ne plante pas : l\'erreur est signalée', () async {
-      final container = ProviderContainer(overrides: [
+      final container = ProviderContainer(overrides: [frenchLocale, 
         storageRootProvider.overrideWith((ref) => throw StateError('plugin absent')),
       ]);
       addTearDown(container.dispose);

@@ -24,7 +24,7 @@ const Object _unset = Object();
 @immutable
 class SerialMonitorState {
   const SerialMonitorState({
-    this.transportName = '',
+    this.transportKind,
     this.devices = const [],
     this.selectedDevice,
     this.config = const SerialConfig(),
@@ -42,7 +42,7 @@ class SerialMonitorState {
     this.txBytes = 0,
   });
 
-  final String transportName;
+  final TransportKind? transportKind;
   final List<SerialDeviceInfo> devices;
   final SerialDeviceInfo? selectedDevice;
   final SerialConfig config;
@@ -68,7 +68,7 @@ class SerialMonitorState {
   bool get isConnected => status == ConnectionStatus.connected;
 
   SerialMonitorState copyWith({
-    String? transportName,
+    TransportKind? transportKind,
     List<SerialDeviceInfo>? devices,
     Object? selectedDevice = _unset,
     SerialConfig? config,
@@ -85,7 +85,7 @@ class SerialMonitorState {
     int? txBytes,
   }) {
     return SerialMonitorState(
-      transportName: transportName ?? this.transportName,
+      transportKind: transportKind ?? this.transportKind,
       devices: devices ?? this.devices,
       selectedDevice: identical(selectedDevice, _unset) ? this.selectedDevice : selectedDevice as SerialDeviceInfo?,
       config: config ?? this.config,
