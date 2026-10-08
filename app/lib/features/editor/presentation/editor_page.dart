@@ -102,7 +102,7 @@ class _EditorPageState extends ConsumerState<EditorPage> {
               )
             else
               IconButton(
-                tooltip: micro.isReady ? 'Exécuter sur la carte (sans enregistrer)' : 'Connectez une carte (onglet MicroPython)',
+                tooltip: micro.isReady ? 'Exécuter la sélection ou le fichier sur la carte (sans enregistrer)' : 'Connectez une carte (onglet MicroPython)',
                 onPressed: micro.isReady ? () => _run(document) : null,
                 icon: const Icon(Icons.play_arrow),
               ),

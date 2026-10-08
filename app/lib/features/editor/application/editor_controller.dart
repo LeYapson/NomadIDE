@@ -117,7 +117,13 @@ class EditorController extends Notifier<EditorState> {
     return true;
   }
 
-  /// Envoie le contenu tel quel à la carte, sans l'enregistrer (script temporaire).
-  Future<void> run(EditorDocument document) =>
-      ref.read(microPythonProvider.notifier).run(document.controller.text, label: 'run ${document.name}');
+  /// Envoie à la carte la sélection (lignes entières) ou, sans sélection, tout le
+  /// fichier, sans rien enregistrer (script temporaire).
+  Future<void> run(EditorDocument document) {
+    final selection = !document.controller.code.selection.isCollapsed;
+    return ref.read(microPythonProvider.notifier).run(
+          document.controller.runnableText,
+          label: selection ? 'run ${document.name} (sélection)' : 'run ${document.name}',
+        );
+  }
 }
