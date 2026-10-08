@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:nomad_protocols/nomad_protocols.dart';
+
 import 'fake_raw_repl_board.dart';
 
 String _unq(String s) => s.replaceAll(r"\'", "'").replaceAll(r'\\', r'\');
@@ -14,6 +16,12 @@ const _lit = r"((?:[^'\\]|\\.)*)";
 class FakeDisk {
   final Map<String, Uint8List> files = {};
   final Set<String> dirs = {'/'};
+
+  /// Nombre de prochains morceaux écrits dont un octet sera altéré (lien défaillant).
+  int corruptWrites = 0;
+
+  /// Nombre de prochains morceaux écrits qui lèvent une erreur Python sans errno.
+  int garbledWrites = 0;
 
   BoardProgram run(String code) {
     BoardProgram ok(String out) => (stdout: out, stderr: '', hang: false);
@@ -37,6 +45,13 @@ class FakeDisk {
       return ok(lines.values.map((l) => '$l\r\n').join());
     }
 
+    if (code.contains('crc32(')) {
+      final crcPath = arg("open\\('$_lit','rb'\\)");
+      final data = crcPath == null ? null : files[_unq(crcPath)];
+      if (data == null) return fail(2, 'ENOENT');
+      return ok('${data.length} ${MicroPythonFs.crc32(data)}\r\n');
+    }
+
     final statPath = arg("os\\.stat\\('$_lit'\\)");
     if (statPath != null) {
       final p = _unq(statPath);
@@ -57,8 +72,20 @@ class FakeDisk {
 
     final write = RegExp("open\\('$_lit','(wb|ab)'\\)[\\s\\S]*a2b_base64\\('([^']*)'\\)").firstMatch(code);
     if (write != null) {
+      if (garbledWrites > 0) {
+        garbledWrites--;
+        return (
+          stdout: '',
+          stderr: 'Traceback (most recent call last):\r\n  File "<stdin>", line 6, in <module>\r\nValueError: invalid base64\r\n',
+          hang: false,
+        );
+      }
       final path = _unq(write.group(1)!);
       final chunk = base64Decode(write.group(3)!);
+      if (corruptWrites > 0 && chunk.isNotEmpty) {
+        corruptWrites--;
+        chunk[0] ^= 0xFF;
+      }
       final previous = write.group(2) == 'ab' ? (files[path] ?? Uint8List(0)) : Uint8List(0);
       files[path] = Uint8List.fromList([...previous, ...chunk]);
       return ok('');

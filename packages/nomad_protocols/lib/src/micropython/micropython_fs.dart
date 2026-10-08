@@ -96,7 +96,33 @@ class MicroPythonFs {
   }
 
   /// Écrit (crée ou remplace) un fichier, par morceaux de [chunkSize] octets.
-  Future<void> write(String path, Uint8List data, {void Function(int sent, int total)? onProgress}) async {
+  ///
+  /// Avec [verify], la carte recalcule la taille et le CRC32 du fichier écrit :
+  /// en cas d'écart (octets perdus sur le lien USB, par exemple) l'écriture est
+  /// recommencée jusqu'à [retries] fois, puis [ProtocolIntegrityException] est levée.
+  Future<void> write(
+    String path,
+    Uint8List data, {
+    void Function(int sent, int total)? onProgress,
+    bool verify = false,
+    int retries = 1,
+  }) async {
+    for (var attempt = 0;; attempt++) {
+      try {
+        await _writeOnce(path, data, onProgress);
+        if (verify) await _verify(path, data);
+        return;
+      } on ProtocolIntegrityException {
+        if (attempt >= retries) rethrow;
+      } on ProtocolRemoteException catch (e) {
+        // Une erreur sans errno (base64 altéré, SyntaxError…) vient du lien ; une
+        // erreur d'OS (dossier absent, disque plein) se reproduirait à l'identique.
+        if (e.errno != null || attempt >= retries) rethrow;
+      }
+    }
+  }
+
+  Future<void> _writeOnce(String path, Uint8List data, void Function(int sent, int total)? onProgress) async {
     var offset = 0;
     do {
       final end = offset + chunkSize < data.length ? offset + chunkSize : data.length;
@@ -110,6 +136,57 @@ class MicroPythonFs {
       onProgress?.call(offset, data.length);
     } while (offset < data.length);
   }
+
+  Future<void> _verify(String path, Uint8List data) async {
+    final remote = await checksum(path);
+    final expected = crc32(data);
+    if (remote.size != data.length || remote.crc32 != expected) {
+      throw ProtocolIntegrityException(
+        'Écriture corrompue sur $path : attendu ${data.length} o / CRC ${expected.toRadixString(16)}, '
+        'reçu ${remote.size} o / CRC ${remote.crc32.toRadixString(16)}.',
+        expectedCrc: expected,
+        actualCrc: remote.crc32,
+      );
+    }
+  }
+
+  /// Taille et CRC32 d'un fichier, calculés par la carte (rien ne transite par le lien).
+  Future<({int size, int crc32})> checksum(String path) async {
+    final out = await _run(
+      'import os\n$_b64Import'
+      'c=0\n'
+      "with open(${_py(path)},'rb') as f:\n"
+      ' while True:\n'
+      '  d=f.read(512)\n'
+      '  if not d:break\n'
+      '  c=b.crc32(d,c)\n'
+      "print(os.stat(${_py(path)})[6],c)\n",
+    );
+    final parts = out.trim().split(RegExp(r'\s+'));
+    final size = parts.length == 2 ? int.tryParse(parts[0]) : null;
+    final crc = parts.length == 2 ? int.tryParse(parts[1]) : null;
+    if (size == null || crc == null) {
+      throw ProtocolDesyncException('Réponse inattendue au calcul du CRC : « ${out.trim()} ».');
+    }
+    return (size: size, crc32: crc & 0xFFFFFFFF);
+  }
+
+  /// CRC32 (polynôme IEEE 802.3), identique à `binascii.crc32` de MicroPython et CPython.
+  static int crc32(List<int> data, [int crc = 0]) {
+    var c = crc ^ 0xFFFFFFFF;
+    for (final byte in data) {
+      c = _crcTable[(c ^ byte) & 0xFF] ^ (c >>> 8);
+    }
+    return (c ^ 0xFFFFFFFF) & 0xFFFFFFFF;
+  }
+
+  static final List<int> _crcTable = List<int>.generate(256, (n) {
+    var c = n;
+    for (var k = 0; k < 8; k++) {
+      c = (c & 1) != 0 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1;
+    }
+    return c;
+  });
 
   Future<void> remove(String path) => _run('import os\nos.remove(${_py(path)})\n');
 

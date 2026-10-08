@@ -148,6 +148,31 @@ void main() {
     });
   });
 
+  group('interrupt', () {
+    setUp(() => repl.enter());
+
+    test('Ctrl-C termine un programme sans fin avec une trace KeyboardInterrupt', () async {
+      final pending = repl.execute('while True: pass', timeout: null);
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+
+      await repl.interrupt();
+      final result = await pending;
+
+      expect(result.ok, isFalse);
+      expect(result.stderrText, contains('KeyboardInterrupt'));
+      expect(repl.state, RawReplState.ready);
+      expect((await repl.execute('print("après")')).stdoutText, 'après\r\n');
+    });
+
+    test('interrupt sans exécution en cours ne fait rien', () async {
+      board.writes.clear();
+
+      await repl.interrupt();
+
+      expect(board.writes, isEmpty);
+    });
+  });
+
   group('états', () {
     test('execute avant enter lève ProtocolStateException', () async {
       await expectLater(repl.execute('print("x")'), throwsA(isA<ProtocolStateException>()));

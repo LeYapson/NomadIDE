@@ -226,6 +226,13 @@ class RawRepl {
     }
   }
 
+  /// Envoie Ctrl-C au programme en cours : [execute] se termine alors normalement,
+  /// avec une trace `KeyboardInterrupt` dans stderr. Sans effet hors exécution.
+  Future<void> interrupt() async {
+    if (_state != RawReplState.busy) return;
+    await _link.write(_bytes([_ctrlC]));
+  }
+
   /// Quitte le raw REPL (Ctrl-B) et attend l'invite interactive `>>> `.
   Future<void> exit() async {
     if (_state == RawReplState.inactive) return;
