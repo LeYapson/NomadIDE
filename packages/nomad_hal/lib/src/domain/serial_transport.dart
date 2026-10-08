@@ -37,7 +37,12 @@ enum DisconnectReason {
 /// Implémentations : Android (USB Host/OTG), desktop (libserialport),
 /// simulateur (tests, UI sans matériel), non supporté (iOS).
 /// À venir : BLE (Nordic UART), WebREPL (WebSocket).
+/// Famille de transport, pour que l'interface en affiche le nom dans la langue de l'utilisateur.
+enum TransportKind { desktop, androidUsb, simulated, unsupported }
+
 abstract interface class SerialTransport {
+  TransportKind get kind;
+
   /// Nom lisible du transport, affiché dans l'UI.
   String get name;
 

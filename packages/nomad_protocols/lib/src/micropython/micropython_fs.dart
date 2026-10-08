@@ -146,6 +146,7 @@ class MicroPythonFs {
         'reçu ${remote.size} o / CRC ${remote.crc32.toRadixString(16)}.',
         expectedCrc: expected,
         actualCrc: remote.crc32,
+        params: {'path': path, 'expectedSize': data.length, 'actualSize': remote.size},
       );
     }
   }
@@ -166,7 +167,11 @@ class MicroPythonFs {
     final size = parts.length == 2 ? int.tryParse(parts[0]) : null;
     final crc = parts.length == 2 ? int.tryParse(parts[1]) : null;
     if (size == null || crc == null) {
-      throw ProtocolDesyncException('Réponse inattendue au calcul du CRC : « ${out.trim()} ».');
+      throw ProtocolDesyncException(
+        'Réponse inattendue au calcul du CRC : « ${out.trim()} ».',
+        code: ProtocolErrorCode.unexpectedCrcReply,
+        params: {'reply': out.trim()},
+      );
     }
     return (size: size, crc32: crc & 0xFFFFFFFF);
   }

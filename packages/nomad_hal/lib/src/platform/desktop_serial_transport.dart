@@ -28,6 +28,9 @@ class DesktopSerialTransport implements SerialTransport {
   Map<String, SerialDeviceInfo> _known = const {};
 
   @override
+  TransportKind get kind => TransportKind.desktop;
+
+  @override
   String get name => 'Port série (libserialport)';
 
   @override
@@ -48,7 +51,13 @@ class DesktopSerialTransport implements SerialTransport {
   }) async {
     final path = device.systemPath ?? device.id;
     final port = _portHandle(path);
-    if (port == null) throw SerialDeviceNotFoundException('Port $path introuvable.');
+    if (port == null) {
+      throw SerialDeviceNotFoundException(
+        'Port $path introuvable.',
+        code: SerialErrorCode.portNotFound,
+        params: {'path': path},
+      );
+    }
 
     var opened = false;
     try {
@@ -66,10 +75,14 @@ class DesktopSerialTransport implements SerialTransport {
               '$message Ajoutez votre utilisateur au groupe « dialout » (Debian/Ubuntu) '
               'ou « uucp » (Arch), puis rouvrez votre session.',
               cause: error,
+              code: SerialErrorCode.portPermissionDenied,
+              params: {'path': path, 'os': error?.message},
             )
           : SerialOpenException(
               '$message Le port est peut-être utilisé par une autre application (Arduino IDE, Thonny…).',
               cause: error,
+              code: SerialErrorCode.openFailed,
+              params: {'path': path, 'os': error?.message},
             );
     }
 
@@ -267,7 +280,10 @@ class DesktopSerialConnection extends BaseSerialConnection {
           StopBits.one => 1,
           StopBits.two => 2,
           StopBits.onePointFive =>
-            throw const SerialUnsupportedException('1,5 bit de stop non pris en charge par libserialport.'),
+            throw const SerialUnsupportedException(
+              '1,5 bit de stop non pris en charge par libserialport.',
+              code: SerialErrorCode.unsupportedStopBits,
+            ),
         }
         ..parity = switch (config.parity) {
           Parity.none => SerialPortParity.none,
@@ -313,6 +329,8 @@ class DesktopSerialConnection extends BaseSerialConnection {
         if (clock.elapsed > writeTimeout) {
           throw SerialTimeoutException(
             'Écriture interrompue : ${data.length - offset} octets non envoyés après ${writeTimeout.inSeconds} s.',
+            code: SerialErrorCode.writeTimeout,
+            params: {'remaining': data.length - offset, 'seconds': writeTimeout.inSeconds},
           );
         }
         await Future<void>.delayed(const Duration(milliseconds: 2));

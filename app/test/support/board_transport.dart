@@ -12,6 +12,9 @@ class BoardTransport implements SerialTransport {
 
   final FakeRawReplBoard board;
 
+  @override
+  TransportKind get kind => TransportKind.simulated;
+
   static const device = SerialDeviceInfo(
     id: 'fake:board',
     displayName: 'Carte de test',
