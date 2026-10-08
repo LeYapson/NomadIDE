@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nomad_editor/nomad_editor.dart';
-import 'package:re_editor/re_editor.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -200,6 +199,57 @@ void main() {
       await tester.tap(find.text('^C'));
 
       expect(interrupts, 1);
+    });
+
+    testWidgets('toucher une touche ne retire pas le focus à l\'éditeur : le clavier reste ouvert', (tester) async {
+      final controller = NomadEditorController(text: 'if x', language: CodeLanguage.python);
+      addTearDown(controller.dispose);
+      final focus = FocusNode();
+      addTearDown(focus.dispose);
+      await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: [
+              Expanded(child: NomadCodeEditor(controller: controller, focusNode: focus)),
+              SymbolBar(controller: controller),
+            ],
+          ),
+        ),
+      ));
+      focus.requestFocus();
+      await tester.pumpAndSettle();
+      expect(focus.hasFocus, isTrue);
+
+      await tester.tap(find.text(':'));
+      await tester.pumpAndSettle();
+
+      expect(controller.text, contains(':'));
+      expect(focus.hasFocus, isTrue, reason: 'le clavier virtuel se fermerait');
+    });
+
+    testWidgets('toucher en dehors de l\'éditeur et de la barre retire toujours le focus', (tester) async {
+      final controller = NomadEditorController(text: '', language: CodeLanguage.python);
+      addTearDown(controller.dispose);
+      final focus = FocusNode();
+      addTearDown(focus.dispose);
+      await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: [
+              Expanded(child: NomadCodeEditor(controller: controller, focusNode: focus)),
+              SymbolBar(controller: controller),
+              const SizedBox(height: 60, width: double.infinity, child: Text('ailleurs')),
+            ],
+          ),
+        ),
+      ));
+      focus.requestFocus();
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('ailleurs'));
+      await tester.pumpAndSettle();
+
+      expect(focus.hasFocus, isFalse);
     });
   });
 }

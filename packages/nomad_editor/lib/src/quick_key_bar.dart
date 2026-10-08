@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:re_editor/re_editor.dart' show CodeEditorTapRegion;
 
 import 'nomad_editor_controller.dart';
 
@@ -25,30 +26,37 @@ class QuickKeyBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    return Material(
-      color: scheme.surfaceContainerHigh,
-      child: SizedBox(
-        height: 44,
-        child: ListView.separated(
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-          itemCount: keys.length,
-          separatorBuilder: (_, __) => const SizedBox(width: 4),
-          itemBuilder: (context, i) {
-            final key = keys[i];
-            return Tooltip(
-              message: key.tooltip,
-              child: OutlinedButton(
-                onPressed: key.onPressed,
-                style: OutlinedButton.styleFrom(
-                  minimumSize: const Size(44, 36),
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  textStyle: const TextStyle(fontFamily: 'Consolas', fontFamilyFallback: ['monospace'], fontSize: 16),
-                ),
-                child: key.icon != null ? Icon(key.icon, size: 20) : Text(key.label!),
-              ),
-            );
-          },
+    // re_editor retire le focus (donc ferme le clavier virtuel) à tout toucher hors de
+    // lui : la barre doit compter comme une partie de l'éditeur, et du groupe des champs
+    // de texte pour la saisie de code de la console.
+    return TextFieldTapRegion(
+      child: CodeEditorTapRegion(
+        child: Material(
+          color: scheme.surfaceContainerHigh,
+          child: SizedBox(
+            height: 44,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+              itemCount: keys.length,
+              separatorBuilder: (_, __) => const SizedBox(width: 4),
+              itemBuilder: (context, i) {
+                final key = keys[i];
+                return Tooltip(
+                  message: key.tooltip,
+                  child: OutlinedButton(
+                    onPressed: key.onPressed,
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: const Size(44, 36),
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      textStyle: const TextStyle(fontFamily: 'Consolas', fontFamilyFallback: ['monospace'], fontSize: 16),
+                    ),
+                    child: key.icon != null ? Icon(key.icon, size: 20) : Text(key.label!),
+                  ),
+                );
+              },
+            ),
+          ),
         ),
       ),
     );
