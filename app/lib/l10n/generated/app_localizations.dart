@@ -107,7 +107,7 @@ abstract class AppLocalizations {
   /// No description provided for @navMonitor.
   ///
   /// In fr, this message translates to:
-  /// **'Moniteur série'**
+  /// **'Moniteur'**
   String get navMonitor;
 
   /// No description provided for @navMicroPython.
@@ -1406,6 +1406,108 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Lecture du fichier impossible : {cause}'**
   String flashReadFailed(String cause);
+
+  /// No description provided for @flashTargetRp2.
+  ///
+  /// In fr, this message translates to:
+  /// **'RP2040 (.uf2)'**
+  String get flashTargetRp2;
+
+  /// No description provided for @flashTargetEsp.
+  ///
+  /// In fr, this message translates to:
+  /// **'ESP (.bin)'**
+  String get flashTargetEsp;
+
+  /// No description provided for @espPickFile.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisir un fichier .bin'**
+  String get espPickFile;
+
+  /// No description provided for @espFileInfo.
+  ///
+  /// In fr, this message translates to:
+  /// **'{amount}'**
+  String espFileInfo(String amount);
+
+  /// No description provided for @espOffsetLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Adresse d’écriture (hexadécimal)'**
+  String get espOffsetLabel;
+
+  /// No description provided for @espOffsetHelper.
+  ///
+  /// In fr, this message translates to:
+  /// **'Application seule : 0x10000. Image complète avec bootloader : 0x0.'**
+  String get espOffsetHelper;
+
+  /// No description provided for @espBaudLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Débit d’écriture'**
+  String get espBaudLabel;
+
+  /// No description provided for @espBoardHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'La carte est mise en mode téléchargement par les lignes DTR/RTS. Si elle ne répond pas : maintenez BOOT, appuyez brièvement sur EN (RESET), relâchez BOOT, puis recommencez.'**
+  String get espBoardHint;
+
+  /// No description provided for @espNoBoard.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune carte série détectée.'**
+  String get espNoBoard;
+
+  /// No description provided for @espPhaseConnecting.
+  ///
+  /// In fr, this message translates to:
+  /// **'Connexion au bootloader de la puce…'**
+  String get espPhaseConnecting;
+
+  /// No description provided for @espPhaseWriting.
+  ///
+  /// In fr, this message translates to:
+  /// **'Écriture… {percent} %'**
+  String espPhaseWriting(int percent);
+
+  /// No description provided for @espPhaseVerifying.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vérification de la flash (MD5)…'**
+  String get espPhaseVerifying;
+
+  /// No description provided for @espPhaseRestarting.
+  ///
+  /// In fr, this message translates to:
+  /// **'Redémarrage de la carte…'**
+  String get espPhaseRestarting;
+
+  /// No description provided for @espDone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Programme écrit sur {chip} ({amount}) et vérifié. La carte a redémarré.'**
+  String espDone(String chip, String amount);
+
+  /// No description provided for @espDoneUnverified.
+  ///
+  /// In fr, this message translates to:
+  /// **'Programme écrit sur {chip} ({amount}). Cette puce ne permet pas la vérification ; la carte a redémarré.'**
+  String espDoneUnverified(String chip, String amount);
+
+  /// No description provided for @espBadOffset.
+  ///
+  /// In fr, this message translates to:
+  /// **'Adresse invalide : « {value} ». Exemple : 0x10000.'**
+  String espBadOffset(String value);
+
+  /// No description provided for @espInterrupted.
+  ///
+  /// In fr, this message translates to:
+  /// **'{cause} L’écriture a été interrompue : la carte peut contenir un programme incomplet. Remettez-la en mode téléchargement (BOOT + EN) et recommencez.'**
+  String espInterrupted(String cause);
 
   /// No description provided for @errSerialUnsupportedIos.
   ///

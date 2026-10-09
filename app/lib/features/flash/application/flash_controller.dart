@@ -10,7 +10,7 @@ import '../../../app/providers.dart';
 import '../../../app/settings.dart';
 import '../../../l10n/error_messages.dart';
 import '../../../l10n/l10n.dart';
-import '../data/uf2_picker.dart';
+import '../data/file_pickers.dart';
 
 /// Fichier choisi par l'utilisateur : nom et contenu.
 typedef PickedFile = ({String name, Uint8List bytes});

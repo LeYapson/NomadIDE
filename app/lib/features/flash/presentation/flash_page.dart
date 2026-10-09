@@ -5,10 +5,51 @@ import 'package:nomad_protocols/nomad_protocols.dart';
 
 import '../../../l10n/l10n.dart';
 import '../application/flash_controller.dart';
+import 'esp_flash_view.dart';
+import 'flash_widgets.dart';
+
+enum _FlashTarget { rp2, esp }
+
+/// Onglet « Flasher » : un fichier `.uf2` pour les RP2040 / RP2350, un `.bin` pour les ESP.
+class FlashPage extends StatefulWidget {
+  const FlashPage({super.key});
+
+  @override
+  State<FlashPage> createState() => _FlashPageState();
+}
+
+class _FlashPageState extends State<FlashPage> {
+  _FlashTarget _target = _FlashTarget.rp2;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return Scaffold(
+      appBar: AppBar(title: Text(l10n.flashTitle)),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+            child: SegmentedButton<_FlashTarget>(
+              segments: [
+                ButtonSegment(value: _FlashTarget.rp2, label: Text(l10n.flashTargetRp2)),
+                ButtonSegment(value: _FlashTarget.esp, label: Text(l10n.flashTargetEsp)),
+              ],
+              showSelectedIcon: false,
+              selected: {_target},
+              onSelectionChanged: (s) => setState(() => _target = s.first),
+            ),
+          ),
+          Expanded(child: _target == _FlashTarget.rp2 ? const Uf2FlashView() : const EspFlashView()),
+        ],
+      ),
+    );
+  }
+}
 
 /// Flashage d'un fichier `.uf2` sur une carte RP2040 / RP2350 (Pico, Badger 2040…).
-class FlashPage extends ConsumerWidget {
-  const FlashPage({super.key});
+class Uf2FlashView extends ConsumerWidget {
+  const Uf2FlashView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -18,9 +59,7 @@ class FlashPage extends ConsumerWidget {
     final supported = ref.watch(uf2SupportedProvider);
     final scheme = Theme.of(context).colorScheme;
 
-    return Scaffold(
-      appBar: AppBar(title: Text(l10n.flashTitle)),
-      body: SafeArea(
+    return SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
@@ -38,10 +77,10 @@ class FlashPage extends ConsumerWidget {
                   ),
                 ),
               ),
-            _Step(
+            FlashStep(
               title: l10n.flashStepFile,
               children: [
-                Row(
+                Wrap(
                   children: [
                     OutlinedButton.icon(
                       onPressed: state.working ? null : controller.pickFile,
@@ -63,7 +102,7 @@ class FlashPage extends ConsumerWidget {
                 ],
               ],
             ),
-            _Step(
+            FlashStep(
               title: l10n.flashStepBoard,
               children: [
                 if (state.drive != null)
@@ -94,10 +133,10 @@ class FlashPage extends ConsumerWidget {
                 Text(l10n.flashBoardHint, style: Theme.of(context).textTheme.bodySmall),
               ],
             ),
-            _Step(
+            FlashStep(
               title: l10n.flashStepRun,
               children: [
-                Row(
+                Wrap(
                   children: [
                     FilledButton.icon(
                       onPressed: supported && state.canFlash ? controller.flash : null,
@@ -114,13 +153,12 @@ class FlashPage extends ConsumerWidget {
                 ],
                 if (state.message != null) ...[
                   const SizedBox(height: 12),
-                  _Banner(message: state.message!, success: state.succeeded),
+                  FlashBanner(message: state.message!, success: state.succeeded),
                 ],
               ],
             ),
           ],
         ),
-      ),
     );
   }
 
@@ -133,52 +171,4 @@ class FlashPage extends ConsumerWidget {
         FlashPhase.rebooting => l10n.flashPhaseRebooting,
         _ => '',
       };
-}
-
-class _Step extends StatelessWidget {
-  const _Step({required this.title, required this.children});
-
-  final String title;
-  final List<Widget> children;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(title, style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: 8),
-          ...children,
-        ],
-      ),
-    );
-  }
-}
-
-class _Banner extends StatelessWidget {
-  const _Banner({required this.message, required this.success});
-
-  final String message;
-  final bool success;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final background = success ? scheme.primaryContainer : scheme.errorContainer;
-    final foreground = success ? scheme.onPrimaryContainer : scheme.onErrorContainer;
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(color: background, borderRadius: BorderRadius.circular(8)),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(success ? Icons.check_circle : Icons.error_outline, color: foreground),
-          const SizedBox(width: 12),
-          Expanded(child: SelectableText(message, style: TextStyle(color: foreground))),
-        ],
-      ),
-    );
-  }
 }

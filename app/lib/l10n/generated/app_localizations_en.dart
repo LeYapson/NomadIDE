@@ -12,7 +12,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'NomadMCU';
 
   @override
-  String get navMonitor => 'Serial monitor';
+  String get navMonitor => 'Monitor';
 
   @override
   String get navMicroPython => 'MicroPython';
@@ -770,6 +770,71 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String flashReadFailed(String cause) {
     return 'Could not read the file: $cause';
+  }
+
+  @override
+  String get flashTargetRp2 => 'RP2040 (.uf2)';
+
+  @override
+  String get flashTargetEsp => 'ESP (.bin)';
+
+  @override
+  String get espPickFile => 'Choose a .bin file';
+
+  @override
+  String espFileInfo(String amount) {
+    return '$amount';
+  }
+
+  @override
+  String get espOffsetLabel => 'Write address (hexadecimal)';
+
+  @override
+  String get espOffsetHelper =>
+      'Application only: 0x10000. Full image with bootloader: 0x0.';
+
+  @override
+  String get espBaudLabel => 'Write speed';
+
+  @override
+  String get espBoardHint =>
+      'The board is put in download mode through the DTR/RTS lines. If it does not answer: hold BOOT, briefly press EN (RESET), release BOOT, then try again.';
+
+  @override
+  String get espNoBoard => 'No serial board detected.';
+
+  @override
+  String get espPhaseConnecting => 'Connecting to the chip bootloader…';
+
+  @override
+  String espPhaseWriting(int percent) {
+    return 'Writing… $percent%';
+  }
+
+  @override
+  String get espPhaseVerifying => 'Checking the flash (MD5)…';
+
+  @override
+  String get espPhaseRestarting => 'Restarting the board…';
+
+  @override
+  String espDone(String chip, String amount) {
+    return 'Program written to $chip ($amount) and verified. The board restarted.';
+  }
+
+  @override
+  String espDoneUnverified(String chip, String amount) {
+    return 'Program written to $chip ($amount). This chip cannot verify the flash; the board restarted.';
+  }
+
+  @override
+  String espBadOffset(String value) {
+    return 'Invalid address: “$value”. Example: 0x10000.';
+  }
+
+  @override
+  String espInterrupted(String cause) {
+    return '$cause The write was interrupted: the board may hold an incomplete program. Put it back in download mode (BOOT + EN) and try again.';
   }
 
   @override

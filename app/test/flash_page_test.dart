@@ -38,8 +38,51 @@ Widget _app({required bool supported}) => ProviderScope(
 
 final _flashButton = find.descendant(of: find.byType(FlashPage), matching: find.bySubtype<FilledButton>());
 
+/// La liste ne construit que ce qui est visible : un écran haut montre les trois étapes.
+void _tallScreen(WidgetTester tester) {
+  tester.view.physicalSize = const Size(1000, 1600);
+  tester.view.devicePixelRatio = 1;
+  addTearDown(tester.view.reset);
+}
+
 void main() {
+  testWidgets("l'onglet Flasher s'affiche sans débordement sur un écran de téléphone", (tester) async {
+    tester.view.physicalSize = const Size(1080, 2200); // ≈ 360 × 733 dp
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(_app(supported: true));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Flasher').last);
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+
+    await tester.tap(find.text('ESP (.bin)'));
+    await tester.pumpAndSettle();
+    expect(find.text('Choisir un fichier .bin'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets("le sélecteur de cible bascule entre l'UF2 (RP2040) et le .bin (ESP)", (tester) async {
+    _tallScreen(tester);
+    await tester.pumpWidget(_app(supported: true));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Flasher').last);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Choisir un fichier .uf2'), findsOneWidget);
+    expect(find.text('Choisir un fichier .bin'), findsNothing);
+
+    await tester.tap(find.text('ESP (.bin)'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Choisir un fichier .bin'), findsOneWidget);
+    expect(find.text('Choisir un fichier .uf2'), findsNothing);
+    expect(find.text('Adresse d’écriture (hexadécimal)'), findsOneWidget);
+    expect(tester.widget<FilledButton>(_flashButton).onPressed, isNull);
+  });
+
   testWidgets("l'onglet Flasher guide les trois étapes et active le bouton après le choix du fichier", (tester) async {
+    _tallScreen(tester);
     await tester.pumpWidget(_app(supported: true));
     await tester.pumpAndSettle();
 
@@ -56,11 +99,12 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('blink.uf2'), findsOneWidget);
-    expect(find.textContaining('RP2040'), findsOneWidget);
+    expect(find.textContaining('RP2040 ·'), findsOneWidget);
     expect(flashButton().onPressed, isNotNull);
   });
 
   testWidgets("sur un système sans copie UF2 (Android), la page l'explique et bloque le bouton", (tester) async {
+    _tallScreen(tester);
     await tester.pumpWidget(_app(supported: false));
     await tester.pumpAndSettle();
 
