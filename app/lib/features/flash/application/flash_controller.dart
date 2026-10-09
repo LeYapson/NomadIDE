@@ -31,8 +31,8 @@ final uf2SupportedProvider = Provider<bool>((ref) => Platform.isWindows || Platf
 final uf2DrivePollProvider = Provider<Duration?>((ref) => const Duration(seconds: 1));
 
 /// Délais d'attente : apparition du disque BOOTSEL après le touch, puis redémarrage après la copie.
-final uf2TimeoutsProvider = Provider<({Duration drive, Duration reboot})>(
-  (ref) => (drive: const Duration(seconds: 10), reboot: const Duration(seconds: 15)),
+final uf2TimeoutsProvider = Provider<({Duration touch, Duration drive, Duration reboot})>(
+  (ref) => (touch: const Duration(seconds: 2), drive: const Duration(seconds: 10), reboot: const Duration(seconds: 15)),
 );
 
 enum FlashPhase { idle, touching, waitingDrive, copying, rebooting, done, failed }
@@ -214,11 +214,19 @@ class FlashController extends Notifier<FlashState> {
           _fail(l10n.flashNoDrive);
           return;
         }
+        // 1. Touch 1200 bauds (Arduino, SDK Pico) ; 2. à défaut, `machine.bootloader()` (MicroPython,
+        // qui ne connaît pas le touch).
         await _touch(device);
         if (!ref.mounted) return;
         state = state.copyWith(phase: FlashPhase.waitingDrive);
-        drive = await _flasher.waitForDrive(timeout: timeouts.drive, where: (d) => d.isRaspberryPi);
+        drive = await _flasher.waitForDrive(timeout: timeouts.touch, where: (d) => d.isRaspberryPi);
         if (!ref.mounted) return;
+        if (drive == null) {
+          await _bootloaderFromRepl(device);
+          if (!ref.mounted) return;
+          drive = await _flasher.waitForDrive(timeout: timeouts.drive, where: (d) => d.isRaspberryPi);
+          if (!ref.mounted) return;
+        }
         if (drive == null) {
           _fail(l10n.flashNoDrive);
           return;
@@ -261,6 +269,26 @@ class FlashController extends Notifier<FlashState> {
   Future<void> _touch(SerialDeviceInfo device) async {
     final connection = await _transport.open(device);
     await connection.touch1200Baud();
+  }
+
+  /// Ctrl-C deux fois, puis la commande, saisie comme dans le REPL.
+  static const _enterBootloaderCommand = '\x03\x03import machine\r\nmachine.bootloader()\r\n';
+
+  /// Demande à MicroPython de redémarrer en BOOTSEL : Ctrl-C pour reprendre la main sur le programme
+  /// en cours, puis `machine.bootloader()`. La carte disparaît aussitôt : une erreur à la fermeture est normale.
+  Future<void> _bootloaderFromRepl(SerialDeviceInfo device) async {
+    SerialConnection? connection;
+    try {
+      connection = await _transport.open(device);
+      await connection.write(Uint8List.fromList(_enterBootloaderCommand.codeUnits));
+      await Future<void>.delayed(const Duration(milliseconds: 300));
+    } finally {
+      try {
+        await connection?.close();
+      } catch (_) {
+        // carte déjà repartie
+      }
+    }
   }
 
   void _fail(String message) {

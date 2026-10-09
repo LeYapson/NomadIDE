@@ -75,7 +75,7 @@ void main() {
       frenchLocale,
       serialTransportProvider.overrideWithValue(transport),
       uf2DrivePollProvider.overrideWithValue(null),
-      uf2TimeoutsProvider.overrideWithValue((drive: const Duration(milliseconds: 600), reboot: const Duration(milliseconds: 300))),
+      uf2TimeoutsProvider.overrideWithValue((touch: const Duration(milliseconds: 300), drive: const Duration(milliseconds: 600), reboot: const Duration(milliseconds: 300))),
       uf2PickerProvider.overrideWithValue(() async => nextPick),
       uf2FlasherProvider.overrideWithValue(Uf2Flasher(roots: () async => [pico.path], chunkSize: 1024)),
     ]);
@@ -146,7 +146,7 @@ void main() {
   test('carte en fonctionnement : touch 1200 bauds, attente du disque, copie', () async {
     await controller().pickFile();
     // Le disque n'apparaît qu'une fois le port fermé, comme sur une vraie carte.
-    unawaited(Future<void>.delayed(const Duration(milliseconds: 400), () async {
+    unawaited(Future<void>.delayed(const Duration(milliseconds: 150), () async {
       expect(transport.opened.single.isOpen, isFalse);
       await File('${pico.path}/INFO_UF2.TXT').writeAsString(_info);
       await bootloaderReboots(_uf2().length);
@@ -175,7 +175,7 @@ void main() {
       frenchLocale,
       serialTransportProvider.overrideWithValue(transport),
       uf2DrivePollProvider.overrideWithValue(null),
-      uf2TimeoutsProvider.overrideWithValue((drive: const Duration(milliseconds: 600), reboot: const Duration(milliseconds: 300))),
+      uf2TimeoutsProvider.overrideWithValue((touch: const Duration(milliseconds: 300), drive: const Duration(milliseconds: 600), reboot: const Duration(milliseconds: 300))),
       uf2PickerProvider.overrideWithValue(() async => nextPick),
       uf2FlasherProvider.overrideWithValue(Uf2Flasher(roots: () async => [pico.path], chunkSize: 1024)),
     ]);
@@ -193,7 +193,9 @@ void main() {
     await controller().flash();
     expect(state().phase, FlashPhase.failed);
     expect(state().message, contains('BOOTSEL'));
-    expect(transport.opened.single.config.baudRate, 1200);
+    // Touch 1200 bauds, puis machine.bootloader() par le REPL : deux ouvertures.
+    expect(transport.opened, hasLength(2));
+    expect(transport.opened.first.config.baudRate, 1200);
   });
 
   test('disque retiré en pleine copie : on prévient que la carte peut être incomplète', () async {
