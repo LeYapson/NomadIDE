@@ -4,3 +4,4 @@ library;
 
 export 'src/testing/fake_disk.dart';
 export 'src/testing/fake_raw_repl_board.dart';
+export 'src/testing/fake_esp_rom.dart';

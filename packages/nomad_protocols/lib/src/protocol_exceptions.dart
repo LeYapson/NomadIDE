@@ -41,6 +41,18 @@ enum ProtocolErrorCode {
 
   /// La carte a levé une exception Python.
   remoteError,
+
+  /// Le bootloader ESP ne répond pas à la synchronisation. Paramètre : `attempts`.
+  espSyncFailed,
+
+  /// Le bootloader ESP a refusé une commande. Paramètres : `command` et `error` (hexadécimal).
+  espRomError,
+
+  /// Paquet du bootloader ESP illisible ou inattendu. Paramètre : `hex`.
+  espBadPacket,
+
+  /// Le contenu de la flash ne correspond pas au fichier. Paramètres : `expected`, `actual` (MD5).
+  espVerifyFailed,
 }
 
 /// Erreurs communes aux protocoles carte.
@@ -108,6 +120,35 @@ final class ProtocolIntegrityException extends ProtocolException {
 
   final int expectedCrc;
   final int actualCrc;
+}
+
+/// Le bootloader (ROM) de l'ESP a répondu à une commande par un code d'erreur.
+final class ProtocolRomException extends ProtocolException {
+  ProtocolRomException(this.command, this.error)
+      : super(
+          'Le bootloader a refusé la commande 0x${command.toRadixString(16)} (erreur 0x${error.toRadixString(16)}).',
+          code: ProtocolErrorCode.espRomError,
+          params: {'command': command.toRadixString(16), 'error': error.toRadixString(16)},
+        );
+
+  final int command;
+
+  /// Code d'erreur de la ROM : 0x05 message invalide, 0x06 échec, 0x07 CRC invalide,
+  /// 0x08 écriture flash, 0x09 lecture flash, 0x0a longueur de lecture, 0x0b décompression.
+  final int error;
+}
+
+/// Le contenu relu dans la flash n'est pas celui qu'on vient d'écrire.
+final class ProtocolFlashVerifyException extends ProtocolException {
+  ProtocolFlashVerifyException({required this.expectedMd5, required this.actualMd5})
+      : super(
+          'La flash ne correspond pas au fichier (MD5 attendu $expectedMd5, lu $actualMd5).',
+          code: ProtocolErrorCode.espVerifyFailed,
+          params: {'expected': expectedMd5, 'actual': actualMd5},
+        );
+
+  final String expectedMd5;
+  final String actualMd5;
 }
 
 /// La carte a exécuté la commande mais Python a levé une exception

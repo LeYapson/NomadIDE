@@ -867,5 +867,43 @@
         "type": "String"
       }
     }
+  },
+  "errEspSyncFailed": "The ESP bootloader does not answer ({attempts} attempts). Check the cable, then hold the BOOT button while briefly pressing EN (RESET).",
+  "@errEspSyncFailed": {
+    "placeholders": {
+      "attempts": {
+        "type": "int"
+      }
+    }
+  },
+  "errEspRom": "The ESP bootloader refused command 0x{command} (error 0x{error}).",
+  "@errEspRom": {
+    "placeholders": {
+      "command": {
+        "type": "String"
+      },
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errEspBadPacket": "Unreadable answer from the ESP bootloader: {hex}",
+  "@errEspBadPacket": {
+    "placeholders": {
+      "hex": {
+        "type": "String"
+      }
+    }
+  },
+  "errEspVerifyFailed": "The flash does not match the file that was sent (expected MD5 {expected}, read {actual}). Try again; if it happens again, check the cable.",
+  "@errEspVerifyFailed": {
+    "placeholders": {
+      "expected": {
+        "type": "String"
+      },
+      "actual": {
+        "type": "String"
+      }
+    }
   }
 }

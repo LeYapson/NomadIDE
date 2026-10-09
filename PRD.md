@@ -128,7 +128,7 @@ Format des critères : **Étant donné** / **Quand** / **Alors**. Chaque story e
 
 | ID | User story | Prio | Statut |
 |---|---|---|---|
-| D1 | Je veux flasher un binaire `.bin` sur un ESP32. | M | 🔜 |
+| D1 | Je veux flasher un binaire `.bin` sur un ESP32. | M | 🧪 protocole esptool (SLIP, écriture brute et compressée, MD5) écrit et testé avec une fausse ROM ; interface et essai sur carte à venir |
 | D2 | Je veux flasher un fichier `.uf2` sur un RP2040/RP2350. | M | ✅ sur Windows avec un Badger 2040, en BOOTSEL manuel et en bascule automatique (Android : 🔜 ⚠️ PICOBOOT) |
 | D3 | Je veux flasher un `.bin`/`.hex` sur un STM32 via son bootloader série. | C (post-v1) | 🔜 |
 | D4 | Je veux que l'app mette la carte en mode bootloader quand c'est possible (DTR/RTS, 1200 bauds, ou `machine.bootloader()` depuis MicroPython). | M | ✅ RP2040 : bascule automatique validée sur Badger 2040 (MicroPython : `machine.bootloader()` ; touch 1200 bauds pour Arduino/SDK, non testé) ; 🧪 DTR/RTS ESP32 |

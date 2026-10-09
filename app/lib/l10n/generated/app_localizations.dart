@@ -1640,6 +1640,30 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Erreur de stockage {name}: {cause}.'**
   String errStorageIo(String name, String cause);
+
+  /// No description provided for @errEspSyncFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le bootloader de l’ESP ne répond pas ({attempts} essais). Vérifiez le câble, puis maintenez le bouton BOOT en appuyant brièvement sur EN (RESET).'**
+  String errEspSyncFailed(int attempts);
+
+  /// No description provided for @errEspRom.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le bootloader de l’ESP a refusé la commande 0x{command} (erreur 0x{error}).'**
+  String errEspRom(String command, String error);
+
+  /// No description provided for @errEspBadPacket.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réponse illisible du bootloader de l’ESP : {hex}'**
+  String errEspBadPacket(String hex);
+
+  /// No description provided for @errEspVerifyFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'La flash ne correspond pas au fichier envoyé (MD5 attendu {expected}, lu {actual}). Recommencez ; si cela se reproduit, vérifiez le câble.'**
+  String errEspVerifyFailed(String expected, String actual);
 }
 
 class _AppLocalizationsDelegate

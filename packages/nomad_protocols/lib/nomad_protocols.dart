@@ -12,3 +12,6 @@ export 'src/micropython/raw_repl.dart';
 export 'src/protocol_exceptions.dart';
 export 'src/uf2/uf2_drive.dart';
 export 'src/uf2/uf2_file.dart';
+export 'src/esp/esp_loader.dart';
+export 'src/esp/md5.dart';
+export 'src/esp/slip.dart';

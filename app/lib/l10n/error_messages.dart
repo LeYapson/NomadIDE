@@ -65,6 +65,10 @@ String protocolErrorMessage(AppLocalizations l, ProtocolException e) {
       l.errIntegrity(text('path'), number('expectedSize'), number('actualSize')),
     // Dernière ligne de la trace Python : c'est la carte qui parle, ce texte n'est pas traduit.
     ProtocolErrorCode.remoteError => e.message,
+    ProtocolErrorCode.espSyncFailed => l.errEspSyncFailed(number('attempts')),
+    ProtocolErrorCode.espRomError => l.errEspRom(text('command'), text('error')),
+    ProtocolErrorCode.espBadPacket => l.errEspBadPacket(text('hex')),
+    ProtocolErrorCode.espVerifyFailed => l.errEspVerifyFailed(text('expected'), text('actual')),
     ProtocolErrorCode.other => l.errProtocolOther(e.message),
   };
 }

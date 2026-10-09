@@ -942,4 +942,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String errStorageIo(String name, String cause) {
     return 'Storage error $name: $cause.';
   }
+
+  @override
+  String errEspSyncFailed(int attempts) {
+    return 'The ESP bootloader does not answer ($attempts attempts). Check the cable, then hold the BOOT button while briefly pressing EN (RESET).';
+  }
+
+  @override
+  String errEspRom(String command, String error) {
+    return 'The ESP bootloader refused command 0x$command (error 0x$error).';
+  }
+
+  @override
+  String errEspBadPacket(String hex) {
+    return 'Unreadable answer from the ESP bootloader: $hex';
+  }
+
+  @override
+  String errEspVerifyFailed(String expected, String actual) {
+    return 'The flash does not match the file that was sent (expected MD5 $expected, read $actual). Try again; if it happens again, check the cable.';
+  }
 }

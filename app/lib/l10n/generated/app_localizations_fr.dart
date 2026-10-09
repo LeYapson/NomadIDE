@@ -946,4 +946,24 @@ class AppLocalizationsFr extends AppLocalizations {
   String errStorageIo(String name, String cause) {
     return 'Erreur de stockage $name: $cause.';
   }
+
+  @override
+  String errEspSyncFailed(int attempts) {
+    return 'Le bootloader de l’ESP ne répond pas ($attempts essais). Vérifiez le câble, puis maintenez le bouton BOOT en appuyant brièvement sur EN (RESET).';
+  }
+
+  @override
+  String errEspRom(String command, String error) {
+    return 'Le bootloader de l’ESP a refusé la commande 0x$command (erreur 0x$error).';
+  }
+
+  @override
+  String errEspBadPacket(String hex) {
+    return 'Réponse illisible du bootloader de l’ESP : $hex';
+  }
+
+  @override
+  String errEspVerifyFailed(String expected, String actual) {
+    return 'La flash ne correspond pas au fichier envoyé (MD5 attendu $expected, lu $actual). Recommencez ; si cela se reproduit, vérifiez le câble.';
+  }
 }
