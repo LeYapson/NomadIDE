@@ -129,9 +129,9 @@ Format des critères : **Étant donné** / **Quand** / **Alors**. Chaque story e
 | ID | User story | Prio | Statut |
 |---|---|---|---|
 | D1 | Je veux flasher un binaire `.bin` sur un ESP32. | M | 🔜 |
-| D2 | Je veux flasher un fichier `.uf2` sur un RP2040/RP2350. | M | ✅ sur Windows avec un Badger 2040, BOOTSEL manuel ; 🧪 bascule automatique par touch 1200 bauds non testée (Android : 🔜 ⚠️ PICOBOOT) |
+| D2 | Je veux flasher un fichier `.uf2` sur un RP2040/RP2350. | M | ✅ sur Windows avec un Badger 2040, en BOOTSEL manuel et en bascule automatique (Android : 🔜 ⚠️ PICOBOOT) |
 | D3 | Je veux flasher un `.bin`/`.hex` sur un STM32 via son bootloader série. | C (post-v1) | 🔜 |
-| D4 | Je veux que l'app mette la carte en mode bootloader quand c'est possible (DTR/RTS, 1200 bauds, ou `machine.bootloader()` depuis MicroPython). | M | 🧪 (séquences DTR/RTS et 1200 bauds écrites) |
+| D4 | Je veux que l'app mette la carte en mode bootloader quand c'est possible (DTR/RTS, 1200 bauds, ou `machine.bootloader()` depuis MicroPython). | M | ✅ RP2040 : bascule automatique validée sur Badger 2040 (MicroPython : `machine.bootloader()` ; touch 1200 bauds pour Arduino/SDK, non testé) ; 🧪 DTR/RTS ESP32 |
 | D5 | Je veux compiler mon code C/C++ via un service cloud et flasher le résultat directement. | M | 🔜 |
 | D6 | Je veux voir une progression fiable et une vérification du flash. | M | 🔜 |
 | D7 | Je veux installer le firmware MicroPython adapté à ma carte (ex. firmware Pimoroni pour la Badger 2040). | S | 🔜 |
