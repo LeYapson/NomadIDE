@@ -1,7 +1,7 @@
 {
   "@@locale": "fr",
   "appTitle": "NomadMCU",
-  "navMonitor": "Moniteur série",
+  "navMonitor": "Moniteur",
   "navMicroPython": "MicroPython",
   "navEditor": "Éditeur",
   "navSettings": "Réglages",
@@ -630,6 +630,71 @@
   },
   "flashReadFailed": "Lecture du fichier impossible : {cause}",
   "@flashReadFailed": {
+    "placeholders": {
+      "cause": {
+        "type": "String"
+      }
+    }
+  },
+  "flashTargetRp2": "RP2040 (.uf2)",
+  "flashTargetEsp": "ESP (.bin)",
+  "espPickFile": "Choisir un fichier .bin",
+  "espFileInfo": "{amount}",
+  "@espFileInfo": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "espOffsetLabel": "Adresse d’écriture (hexadécimal)",
+  "espOffsetHelper": "Application seule : 0x10000. Image complète avec bootloader : 0x0.",
+  "espBaudLabel": "Débit d’écriture",
+  "espBoardHint": "La carte est mise en mode téléchargement par les lignes DTR/RTS. Si elle ne répond pas : maintenez BOOT, appuyez brièvement sur EN (RESET), relâchez BOOT, puis recommencez.",
+  "espNoBoard": "Aucune carte série détectée.",
+  "espPhaseConnecting": "Connexion au bootloader de la puce…",
+  "espPhaseWriting": "Écriture… {percent} %",
+  "@espPhaseWriting": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "espPhaseVerifying": "Vérification de la flash (MD5)…",
+  "espPhaseRestarting": "Redémarrage de la carte…",
+  "espDone": "Programme écrit sur {chip} ({amount}) et vérifié. La carte a redémarré.",
+  "@espDone": {
+    "placeholders": {
+      "chip": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "espDoneUnverified": "Programme écrit sur {chip} ({amount}). Cette puce ne permet pas la vérification ; la carte a redémarré.",
+  "@espDoneUnverified": {
+    "placeholders": {
+      "chip": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "espBadOffset": "Adresse invalide : « {value} ». Exemple : 0x10000.",
+  "@espBadOffset": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "espInterrupted": "{cause} L’écriture a été interrompue : la carte peut contenir un programme incomplet. Remettez-la en mode téléchargement (BOOT + EN) et recommencez.",
+  "@espInterrupted": {
     "placeholders": {
       "cause": {
         "type": "String"

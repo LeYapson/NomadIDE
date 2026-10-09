@@ -12,7 +12,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get appTitle => 'NomadMCU';
 
   @override
-  String get navMonitor => 'Moniteur série';
+  String get navMonitor => 'Moniteur';
 
   @override
   String get navMicroPython => 'MicroPython';
@@ -774,6 +774,71 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String flashReadFailed(String cause) {
     return 'Lecture du fichier impossible : $cause';
+  }
+
+  @override
+  String get flashTargetRp2 => 'RP2040 (.uf2)';
+
+  @override
+  String get flashTargetEsp => 'ESP (.bin)';
+
+  @override
+  String get espPickFile => 'Choisir un fichier .bin';
+
+  @override
+  String espFileInfo(String amount) {
+    return '$amount';
+  }
+
+  @override
+  String get espOffsetLabel => 'Adresse d’écriture (hexadécimal)';
+
+  @override
+  String get espOffsetHelper =>
+      'Application seule : 0x10000. Image complète avec bootloader : 0x0.';
+
+  @override
+  String get espBaudLabel => 'Débit d’écriture';
+
+  @override
+  String get espBoardHint =>
+      'La carte est mise en mode téléchargement par les lignes DTR/RTS. Si elle ne répond pas : maintenez BOOT, appuyez brièvement sur EN (RESET), relâchez BOOT, puis recommencez.';
+
+  @override
+  String get espNoBoard => 'Aucune carte série détectée.';
+
+  @override
+  String get espPhaseConnecting => 'Connexion au bootloader de la puce…';
+
+  @override
+  String espPhaseWriting(int percent) {
+    return 'Écriture… $percent %';
+  }
+
+  @override
+  String get espPhaseVerifying => 'Vérification de la flash (MD5)…';
+
+  @override
+  String get espPhaseRestarting => 'Redémarrage de la carte…';
+
+  @override
+  String espDone(String chip, String amount) {
+    return 'Programme écrit sur $chip ($amount) et vérifié. La carte a redémarré.';
+  }
+
+  @override
+  String espDoneUnverified(String chip, String amount) {
+    return 'Programme écrit sur $chip ($amount). Cette puce ne permet pas la vérification ; la carte a redémarré.';
+  }
+
+  @override
+  String espBadOffset(String value) {
+    return 'Adresse invalide : « $value ». Exemple : 0x10000.';
+  }
+
+  @override
+  String espInterrupted(String cause) {
+    return '$cause L’écriture a été interrompue : la carte peut contenir un programme incomplet. Remettez-la en mode téléchargement (BOOT + EN) et recommencez.';
   }
 
   @override

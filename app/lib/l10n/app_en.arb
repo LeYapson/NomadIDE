@@ -1,7 +1,7 @@
 {
   "@@locale": "en",
   "appTitle": "NomadMCU",
-  "navMonitor": "Serial monitor",
+  "navMonitor": "Monitor",
   "navMicroPython": "MicroPython",
   "navEditor": "Editor",
   "navSettings": "Settings",
@@ -630,6 +630,71 @@
   },
   "flashReadFailed": "Could not read the file: {cause}",
   "@flashReadFailed": {
+    "placeholders": {
+      "cause": {
+        "type": "String"
+      }
+    }
+  },
+  "flashTargetRp2": "RP2040 (.uf2)",
+  "flashTargetEsp": "ESP (.bin)",
+  "espPickFile": "Choose a .bin file",
+  "espFileInfo": "{amount}",
+  "@espFileInfo": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "espOffsetLabel": "Write address (hexadecimal)",
+  "espOffsetHelper": "Application only: 0x10000. Full image with bootloader: 0x0.",
+  "espBaudLabel": "Write speed",
+  "espBoardHint": "The board is put in download mode through the DTR/RTS lines. If it does not answer: hold BOOT, briefly press EN (RESET), release BOOT, then try again.",
+  "espNoBoard": "No serial board detected.",
+  "espPhaseConnecting": "Connecting to the chip bootloader…",
+  "espPhaseWriting": "Writing… {percent}%",
+  "@espPhaseWriting": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "espPhaseVerifying": "Checking the flash (MD5)…",
+  "espPhaseRestarting": "Restarting the board…",
+  "espDone": "Program written to {chip} ({amount}) and verified. The board restarted.",
+  "@espDone": {
+    "placeholders": {
+      "chip": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "espDoneUnverified": "Program written to {chip} ({amount}). This chip cannot verify the flash; the board restarted.",
+  "@espDoneUnverified": {
+    "placeholders": {
+      "chip": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "espBadOffset": "Invalid address: “{value}”. Example: 0x10000.",
+  "@espBadOffset": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "espInterrupted": "{cause} The write was interrupted: the board may hold an incomplete program. Put it back in download mode (BOOT + EN) and try again.",
+  "@espInterrupted": {
     "placeholders": {
       "cause": {
         "type": "String"

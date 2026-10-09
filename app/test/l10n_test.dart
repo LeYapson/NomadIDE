@@ -235,7 +235,7 @@ void main() {
       await pumpApp(tester, newContainer());
 
       expect(find.text('NomadMCU · Serial monitor'), findsOneWidget);
-      expect(find.text('Serial monitor'), findsOneWidget); // barre de navigation
+      expect(find.text('Monitor'), findsOneWidget); // barre de navigation
       expect(find.text('Editor'), findsOneWidget);
       expect(find.text('Settings'), findsOneWidget);
       expect(find.text('Disconnected'), findsOneWidget);
