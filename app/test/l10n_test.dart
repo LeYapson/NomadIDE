@@ -108,6 +108,10 @@ void main() {
           expectedCrc: 1, actualCrc: 2, params: {'path': '/a.py', 'expectedSize': 10, 'actualSize': 9}),
       const ProtocolRemoteException('OSError: [Errno 2] ENOENT', stderr: 'Traceback…', errno: 2),
       const ProtocolStateException('message technique'),
+      const ProtocolTimeoutException('x', code: ProtocolErrorCode.espSyncFailed, params: {'attempts': 7}),
+      ProtocolRomException(0x03, 0x07),
+      const ProtocolDesyncException('x', code: ProtocolErrorCode.espBadPacket, params: {'hex': '01 08'}),
+      ProtocolFlashVerifyException(expectedMd5: 'aa', actualMd5: 'bb'),
     ];
 
     final storageErrors = [
