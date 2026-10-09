@@ -540,6 +540,102 @@
   "pfTitle": "Choisir un fichier à envoyer",
   "pfNoProject": "Aucun projet",
   "pfNothing": "Rien ici",
+  "navFlash": "Flasher",
+  "flashTitle": "NomadMCU · Flasher un programme",
+  "flashUnsupported": "La copie d’un fichier .uf2 n’est pas encore possible sur ce système (Android : prévu via le protocole PICOBOOT).",
+  "flashStepFile": "1. Fichier du programme",
+  "flashPickFile": "Choisir un fichier .uf2",
+  "flashNoFile": "Aucun fichier choisi",
+  "flashFileInfo": "{family} · {amount} · {blocks} blocs",
+  "@flashFileInfo": {
+    "placeholders": {
+      "family": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      },
+      "blocks": {
+        "type": "int"
+      }
+    }
+  },
+  "flashFamilyUnknown": "famille non précisée",
+  "flashStepBoard": "2. Carte",
+  "flashBoardHint": "La carte redémarre toute seule en mode BOOTSEL. Sinon : maintenez le bouton BOOTSEL, branchez le câble USB, puis relâchez.",
+  "flashDriveFound": "Disque BOOTSEL détecté : {drive} ({board})",
+  "@flashDriveFound": {
+    "placeholders": {
+      "drive": {
+        "type": "String"
+      },
+      "board": {
+        "type": "String"
+      }
+    }
+  },
+  "flashDriveNone": "Aucun disque BOOTSEL détecté pour l’instant.",
+  "flashStepRun": "3. Écriture",
+  "flashRun": "Flasher",
+  "flashPhaseTouching": "Redémarrage de la carte en mode BOOTSEL…",
+  "flashPhaseWaiting": "Attente du disque BOOTSEL…",
+  "flashPhaseCopying": "Copie vers la carte… {percent} %",
+  "@flashPhaseCopying": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "flashPhaseRebooting": "Attente du redémarrage de la carte…",
+  "flashDone": "Programme écrit ({amount}). La carte a redémarré et exécute le nouveau programme.",
+  "@flashDone": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "flashNoReboot": "Le fichier a été copié mais la carte n’a pas redémarré : elle a sans doute refusé le programme (mauvaise puce ?). Vérifiez que le fichier est prévu pour cette carte.",
+  "flashNoDrive": "Aucun disque BOOTSEL n’est apparu. Maintenez le bouton BOOTSEL, branchez le câble USB puis relâchez, et recommencez.",
+  "flashCopyFailed": "Copie interrompue à {done} sur {total} octets ({cause}). La carte peut contenir un programme incomplet : débranchez-la, maintenez BOOTSEL en la rebranchant, puis recommencez.",
+  "@flashCopyFailed": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "cause": {
+        "type": "String"
+      }
+    }
+  },
+  "flashBadFile": "Fichier UF2 invalide : {reason}",
+  "@flashBadFile": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "flashWrongFamily": "Ce fichier est prévu pour une autre puce ({family}) que cette carte Raspberry Pi RP2.",
+  "@flashWrongFamily": {
+    "placeholders": {
+      "family": {
+        "type": "String"
+      }
+    }
+  },
+  "flashReadFailed": "Lecture du fichier impossible : {cause}",
+  "@flashReadFailed": {
+    "placeholders": {
+      "cause": {
+        "type": "String"
+      }
+    }
+  },
   "errSerialUnsupportedIos": "iOS n’autorise pas l’accès aux adaptateurs USB-série : pas d’API USB Host publique, seuls les accessoires certifiés MFi sont accessibles. Utilisez le mode simulé, et plus tard les transports BLE ou WebREPL.",
   "errSerialUnsupportedPlatform": "Plateforme non prise en charge : {platform}.",
   "@errSerialUnsupportedPlatform": {

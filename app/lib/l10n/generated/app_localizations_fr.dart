@@ -682,6 +682,101 @@ class AppLocalizationsFr extends AppLocalizations {
   String get pfNothing => 'Rien ici';
 
   @override
+  String get navFlash => 'Flasher';
+
+  @override
+  String get flashTitle => 'NomadMCU · Flasher un programme';
+
+  @override
+  String get flashUnsupported =>
+      'La copie d’un fichier .uf2 n’est pas encore possible sur ce système (Android : prévu via le protocole PICOBOOT).';
+
+  @override
+  String get flashStepFile => '1. Fichier du programme';
+
+  @override
+  String get flashPickFile => 'Choisir un fichier .uf2';
+
+  @override
+  String get flashNoFile => 'Aucun fichier choisi';
+
+  @override
+  String flashFileInfo(String family, String amount, int blocks) {
+    return '$family · $amount · $blocks blocs';
+  }
+
+  @override
+  String get flashFamilyUnknown => 'famille non précisée';
+
+  @override
+  String get flashStepBoard => '2. Carte';
+
+  @override
+  String get flashBoardHint =>
+      'La carte redémarre toute seule en mode BOOTSEL. Sinon : maintenez le bouton BOOTSEL, branchez le câble USB, puis relâchez.';
+
+  @override
+  String flashDriveFound(String drive, String board) {
+    return 'Disque BOOTSEL détecté : $drive ($board)';
+  }
+
+  @override
+  String get flashDriveNone => 'Aucun disque BOOTSEL détecté pour l’instant.';
+
+  @override
+  String get flashStepRun => '3. Écriture';
+
+  @override
+  String get flashRun => 'Flasher';
+
+  @override
+  String get flashPhaseTouching => 'Redémarrage de la carte en mode BOOTSEL…';
+
+  @override
+  String get flashPhaseWaiting => 'Attente du disque BOOTSEL…';
+
+  @override
+  String flashPhaseCopying(int percent) {
+    return 'Copie vers la carte… $percent %';
+  }
+
+  @override
+  String get flashPhaseRebooting => 'Attente du redémarrage de la carte…';
+
+  @override
+  String flashDone(String amount) {
+    return 'Programme écrit ($amount). La carte a redémarré et exécute le nouveau programme.';
+  }
+
+  @override
+  String get flashNoReboot =>
+      'Le fichier a été copié mais la carte n’a pas redémarré : elle a sans doute refusé le programme (mauvaise puce ?). Vérifiez que le fichier est prévu pour cette carte.';
+
+  @override
+  String get flashNoDrive =>
+      'Aucun disque BOOTSEL n’est apparu. Maintenez le bouton BOOTSEL, branchez le câble USB puis relâchez, et recommencez.';
+
+  @override
+  String flashCopyFailed(int done, int total, String cause) {
+    return 'Copie interrompue à $done sur $total octets ($cause). La carte peut contenir un programme incomplet : débranchez-la, maintenez BOOTSEL en la rebranchant, puis recommencez.';
+  }
+
+  @override
+  String flashBadFile(String reason) {
+    return 'Fichier UF2 invalide : $reason';
+  }
+
+  @override
+  String flashWrongFamily(String family) {
+    return 'Ce fichier est prévu pour une autre puce ($family) que cette carte Raspberry Pi RP2.';
+  }
+
+  @override
+  String flashReadFailed(String cause) {
+    return 'Lecture du fichier impossible : $cause';
+  }
+
+  @override
   String get errSerialUnsupportedIos =>
       'iOS n’autorise pas l’accès aux adaptateurs USB-série : pas d’API USB Host publique, seuls les accessoires certifiés MFi sont accessibles. Utilisez le mode simulé, et plus tard les transports BLE ou WebREPL.';
 

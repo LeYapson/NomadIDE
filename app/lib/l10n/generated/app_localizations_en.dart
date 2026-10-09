@@ -678,6 +678,101 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pfNothing => 'Nothing here';
 
   @override
+  String get navFlash => 'Flash';
+
+  @override
+  String get flashTitle => 'NomadMCU · Flash a program';
+
+  @override
+  String get flashUnsupported =>
+      'Copying a .uf2 file is not yet possible on this system (Android: planned through the PICOBOOT protocol).';
+
+  @override
+  String get flashStepFile => '1. Program file';
+
+  @override
+  String get flashPickFile => 'Choose a .uf2 file';
+
+  @override
+  String get flashNoFile => 'No file chosen';
+
+  @override
+  String flashFileInfo(String family, String amount, int blocks) {
+    return '$family · $amount · $blocks blocks';
+  }
+
+  @override
+  String get flashFamilyUnknown => 'family not specified';
+
+  @override
+  String get flashStepBoard => '2. Board';
+
+  @override
+  String get flashBoardHint =>
+      'The board restarts into BOOTSEL by itself. Otherwise: hold the BOOTSEL button, plug in the USB cable, then release.';
+
+  @override
+  String flashDriveFound(String drive, String board) {
+    return 'BOOTSEL drive found: $drive ($board)';
+  }
+
+  @override
+  String get flashDriveNone => 'No BOOTSEL drive detected yet.';
+
+  @override
+  String get flashStepRun => '3. Writing';
+
+  @override
+  String get flashRun => 'Flash';
+
+  @override
+  String get flashPhaseTouching => 'Restarting the board into BOOTSEL mode…';
+
+  @override
+  String get flashPhaseWaiting => 'Waiting for the BOOTSEL drive…';
+
+  @override
+  String flashPhaseCopying(int percent) {
+    return 'Copying to the board… $percent%';
+  }
+
+  @override
+  String get flashPhaseRebooting => 'Waiting for the board to restart…';
+
+  @override
+  String flashDone(String amount) {
+    return 'Program written ($amount). The board restarted and is running the new program.';
+  }
+
+  @override
+  String get flashNoReboot =>
+      'The file was copied but the board did not restart: it probably refused the program (wrong chip?). Check that the file is made for this board.';
+
+  @override
+  String get flashNoDrive =>
+      'No BOOTSEL drive appeared. Hold the BOOTSEL button, plug in the USB cable, then release, and try again.';
+
+  @override
+  String flashCopyFailed(int done, int total, String cause) {
+    return 'Copy interrupted at $done of $total bytes ($cause). The board may hold an incomplete program: unplug it, hold BOOTSEL while plugging it back in, then try again.';
+  }
+
+  @override
+  String flashBadFile(String reason) {
+    return 'Invalid UF2 file: $reason';
+  }
+
+  @override
+  String flashWrongFamily(String family) {
+    return 'This file is made for a different chip ($family) than this Raspberry Pi RP2 board.';
+  }
+
+  @override
+  String flashReadFailed(String cause) {
+    return 'Could not read the file: $cause';
+  }
+
+  @override
   String get errSerialUnsupportedIos =>
       'iOS does not allow access to USB-serial adapters: there is no public USB Host API, only MFi-certified accessories are reachable. Use the simulated mode, and later the BLE or WebREPL transports.';
 
