@@ -9,6 +9,7 @@ import '../domain/serial_device_info.dart';
 import '../domain/serial_exceptions.dart';
 import '../domain/serial_transport.dart';
 import 'base_serial_connection.dart';
+import 'windows_control_lines.dart';
 
 /// Transport desktop (Windows / macOS / Linux) basé sur libserialport (FFI).
 ///
@@ -234,12 +235,14 @@ class DesktopSerialConnection extends BaseSerialConnection {
   final SerialPort _port;
   final void Function() _onClosed;
   Timer? _readTimer;
+  WindowsControlLines? _fastLines;
 
   /// Intervalle de lecture et taille maximale par lecture.
   static const Duration readInterval = Duration(milliseconds: 4);
   static const int maxReadChunk = 4096;
 
   Future<void> _init({required bool dtr, required bool rts}) async {
+    if (Platform.isWindows) _fastLines = WindowsControlLines.tryCreate(_port);
     await applyConfigNative(config);
     // DTR avant RTS : voir AndroidUsbSerialConnection._init.
     await setDtr(dtr);
@@ -298,15 +301,24 @@ class DesktopSerialConnection extends BaseSerialConnection {
           FlowControl.xonXoff => SerialPortFlowControl.xonXoff,
         });
     _port.config = native;
+    // SetCommState réaffirme DTR/RTS d'après le DCB : on remet l'état voulu.
+    if (_fastLines case final lines?) {
+      lines.setDtr(dtr);
+      lines.setRts(rts);
+    }
   }
 
   @override
-  Future<void> setDtrNative(bool value) async =>
-      _applyControlLines(dtr: value ? SerialPortDtr.on : SerialPortDtr.off);
+  Future<void> setDtrNative(bool value) async {
+    if (_fastLines?.setDtr(value) ?? false) return;
+    _applyControlLines(dtr: value ? SerialPortDtr.on : SerialPortDtr.off);
+  }
 
   @override
-  Future<void> setRtsNative(bool value) async =>
-      _applyControlLines(rts: value ? SerialPortRts.on : SerialPortRts.off);
+  Future<void> setRtsNative(bool value) async {
+    if (_fastLines?.setRts(value) ?? false) return;
+    _applyControlLines(rts: value ? SerialPortRts.on : SerialPortRts.off);
+  }
 
   /// Une config neuve a tous ses champs à -1 (« ne pas modifier ») :
   /// seules les lignes renseignées sont appliquées.

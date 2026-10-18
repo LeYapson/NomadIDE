@@ -378,7 +378,16 @@ class EspFlashController extends Notifier<EspFlashState> {
       }
 
       state = state.copyWith(phase: EspFlashPhase.restarting);
-      await connection.hardReset();
+      final usbNative = connection.device.vendorId == 0x303A && connection.device.productId == 0x1001;
+      var restarted = false;
+      if (usbNative) {
+        try {
+          restarted = await loader.watchdogReset();
+        } on ProtocolException {
+          // le lien peut tomber pendant le reset : on retente par RTS
+        }
+      }
+      if (!restarted) await connection.hardReset();
       if (!ref.mounted) return;
       final size = flashSizeLabel(l10n, total);
       final amount = plan.length > 1 ? l10n.espPartsSummary(plan.length, size) : size;
