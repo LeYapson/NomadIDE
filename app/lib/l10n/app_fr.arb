@@ -1017,5 +1017,107 @@
         "type": "String"
       }
     }
+  },
+  "fwTitle": "Firmware MicroPython officiel",
+  "fwHint": "Pour installer MicroPython sur une carte vierge ou revenir à un firmware propre. Le fichier vient directement du site officiel et n’est écrit sur la carte que lorsque vous cliquez sur « Flasher ».",
+  "fwBoardLabel": "Carte",
+  "fwFind": "Chercher la dernière version",
+  "fwSearching": "Recherche de la dernière version…",
+  "fwFound": "MicroPython {version} pour {board}",
+  "@fwFound": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      },
+      "board": {
+        "type": "String"
+      }
+    }
+  },
+  "fwDate": "Publiée le {date}",
+  "@fwDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "fwSource": "Sera téléchargé depuis {host} :",
+  "@fwSource": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "fwDownload": "Télécharger et utiliser",
+  "fwDownloading": "Téléchargement… {percent} %",
+  "@fwDownloading": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "fwDownloadingUnknown": "Téléchargement…",
+  "fwDownloaded": "{name} téléchargé ({amount}) : il est choisi comme fichier à écrire, cliquez sur « Flasher ».",
+  "@fwDownloaded": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "fwNoNetwork": "Impossible de joindre {host} : vérifiez la connexion Internet. ({cause})",
+  "@fwNoNetwork": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      },
+      "cause": {
+        "type": "String"
+      }
+    }
+  },
+  "fwNotFound": "Aucune version stable trouvée pour {board} sur {host}.",
+  "@fwNotFound": {
+    "placeholders": {
+      "board": {
+        "type": "String"
+      },
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "fwBadStatus": "Le serveur {host} a répondu {status}.",
+  "@fwBadStatus": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "fwTooLarge": "Fichier trop volumineux ({amount}) : téléchargement refusé.",
+  "@fwTooLarge": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "fwUntrusted": "Adresse refusée : {host} n’est pas une source officielle.",
+  "@fwUntrusted": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
   }
 }

@@ -1017,5 +1017,107 @@
         "type": "String"
       }
     }
+  },
+  "fwTitle": "Official MicroPython firmware",
+  "fwHint": "To install MicroPython on a blank board or go back to a clean firmware. The file comes straight from the official site and is only written to the board when you press “Flash”.",
+  "fwBoardLabel": "Board",
+  "fwFind": "Find the latest version",
+  "fwSearching": "Looking for the latest version…",
+  "fwFound": "MicroPython {version} for {board}",
+  "@fwFound": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      },
+      "board": {
+        "type": "String"
+      }
+    }
+  },
+  "fwDate": "Released on {date}",
+  "@fwDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "fwSource": "Will be downloaded from {host}:",
+  "@fwSource": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "fwDownload": "Download and use",
+  "fwDownloading": "Downloading… {percent}%",
+  "@fwDownloading": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "fwDownloadingUnknown": "Downloading…",
+  "fwDownloaded": "{name} downloaded ({amount}): it is now the file to write, press “Flash”.",
+  "@fwDownloaded": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "fwNoNetwork": "Cannot reach {host}: check your Internet connection. ({cause})",
+  "@fwNoNetwork": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      },
+      "cause": {
+        "type": "String"
+      }
+    }
+  },
+  "fwNotFound": "No stable version found for {board} on {host}.",
+  "@fwNotFound": {
+    "placeholders": {
+      "board": {
+        "type": "String"
+      },
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "fwBadStatus": "The server {host} answered {status}.",
+  "@fwBadStatus": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "fwTooLarge": "File too large ({amount}): download refused.",
+  "@fwTooLarge": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "fwUntrusted": "Address refused: {host} is not an official source.",
+  "@fwUntrusted": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
   }
 }

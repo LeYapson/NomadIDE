@@ -1051,4 +1051,76 @@ class AppLocalizationsFr extends AppLocalizations {
   String espWrongChip(String expected, String actual) {
     return 'Ce fichier est prévu pour $expected, mais la carte connectée est de type $actual. Rien n’a été écrit.';
   }
+
+  @override
+  String get fwTitle => 'Firmware MicroPython officiel';
+
+  @override
+  String get fwHint =>
+      'Pour installer MicroPython sur une carte vierge ou revenir à un firmware propre. Le fichier vient directement du site officiel et n’est écrit sur la carte que lorsque vous cliquez sur « Flasher ».';
+
+  @override
+  String get fwBoardLabel => 'Carte';
+
+  @override
+  String get fwFind => 'Chercher la dernière version';
+
+  @override
+  String get fwSearching => 'Recherche de la dernière version…';
+
+  @override
+  String fwFound(String version, String board) {
+    return 'MicroPython $version pour $board';
+  }
+
+  @override
+  String fwDate(String date) {
+    return 'Publiée le $date';
+  }
+
+  @override
+  String fwSource(String host) {
+    return 'Sera téléchargé depuis $host :';
+  }
+
+  @override
+  String get fwDownload => 'Télécharger et utiliser';
+
+  @override
+  String fwDownloading(int percent) {
+    return 'Téléchargement… $percent %';
+  }
+
+  @override
+  String get fwDownloadingUnknown => 'Téléchargement…';
+
+  @override
+  String fwDownloaded(String name, String amount) {
+    return '$name téléchargé ($amount) : il est choisi comme fichier à écrire, cliquez sur « Flasher ».';
+  }
+
+  @override
+  String fwNoNetwork(String host, String cause) {
+    return 'Impossible de joindre $host : vérifiez la connexion Internet. ($cause)';
+  }
+
+  @override
+  String fwNotFound(String board, String host) {
+    return 'Aucune version stable trouvée pour $board sur $host.';
+  }
+
+  @override
+  String fwBadStatus(String host, String status) {
+    return 'Le serveur $host a répondu $status.';
+  }
+
+  @override
+  String fwTooLarge(String amount) {
+    return 'Fichier trop volumineux ($amount) : téléchargement refusé.';
+  }
+
+  @override
+  String fwUntrusted(String host) {
+    return 'Adresse refusée : $host n’est pas une source officielle.';
+  }
 }

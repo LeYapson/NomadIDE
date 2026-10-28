@@ -158,8 +158,11 @@ class EspFlashController extends Notifier<EspFlashState> {
       state = state.copyWith(phase: EspFlashPhase.failed, message: _l10n.flashReadFailed(errorMessage(_l10n, e)));
       return;
     }
-    if (picked == null) return;
+    if (picked != null) useFile(picked);
+  }
 
+  /// Retient [picked] comme fichier à écrire (choisi à la main ou téléchargé).
+  void useFile(PickedFile picked) {
     // L'en-tête du fichier dit pour quelle puce il est fait et s'il contient le bootloader : on en
     // déduit l'adresse d'écriture, que personne ne devrait avoir à connaître par cœur.
     final l10n = _l10n;

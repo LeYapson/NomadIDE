@@ -1790,6 +1790,108 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Ce fichier est prévu pour {expected}, mais la carte connectée est de type {actual}. Rien n’a été écrit.'**
   String espWrongChip(String expected, String actual);
+
+  /// No description provided for @fwTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Firmware MicroPython officiel'**
+  String get fwTitle;
+
+  /// No description provided for @fwHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pour installer MicroPython sur une carte vierge ou revenir à un firmware propre. Le fichier vient directement du site officiel et n’est écrit sur la carte que lorsque vous cliquez sur « Flasher ».'**
+  String get fwHint;
+
+  /// No description provided for @fwBoardLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Carte'**
+  String get fwBoardLabel;
+
+  /// No description provided for @fwFind.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chercher la dernière version'**
+  String get fwFind;
+
+  /// No description provided for @fwSearching.
+  ///
+  /// In fr, this message translates to:
+  /// **'Recherche de la dernière version…'**
+  String get fwSearching;
+
+  /// No description provided for @fwFound.
+  ///
+  /// In fr, this message translates to:
+  /// **'MicroPython {version} pour {board}'**
+  String fwFound(String version, String board);
+
+  /// No description provided for @fwDate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Publiée le {date}'**
+  String fwDate(String date);
+
+  /// No description provided for @fwSource.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sera téléchargé depuis {host} :'**
+  String fwSource(String host);
+
+  /// No description provided for @fwDownload.
+  ///
+  /// In fr, this message translates to:
+  /// **'Télécharger et utiliser'**
+  String get fwDownload;
+
+  /// No description provided for @fwDownloading.
+  ///
+  /// In fr, this message translates to:
+  /// **'Téléchargement… {percent} %'**
+  String fwDownloading(int percent);
+
+  /// No description provided for @fwDownloadingUnknown.
+  ///
+  /// In fr, this message translates to:
+  /// **'Téléchargement…'**
+  String get fwDownloadingUnknown;
+
+  /// No description provided for @fwDownloaded.
+  ///
+  /// In fr, this message translates to:
+  /// **'{name} téléchargé ({amount}) : il est choisi comme fichier à écrire, cliquez sur « Flasher ».'**
+  String fwDownloaded(String name, String amount);
+
+  /// No description provided for @fwNoNetwork.
+  ///
+  /// In fr, this message translates to:
+  /// **'Impossible de joindre {host} : vérifiez la connexion Internet. ({cause})'**
+  String fwNoNetwork(String host, String cause);
+
+  /// No description provided for @fwNotFound.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune version stable trouvée pour {board} sur {host}.'**
+  String fwNotFound(String board, String host);
+
+  /// No description provided for @fwBadStatus.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le serveur {host} a répondu {status}.'**
+  String fwBadStatus(String host, String status);
+
+  /// No description provided for @fwTooLarge.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fichier trop volumineux ({amount}) : téléchargement refusé.'**
+  String fwTooLarge(String amount);
+
+  /// No description provided for @fwUntrusted.
+  ///
+  /// In fr, this message translates to:
+  /// **'Adresse refusée : {host} n’est pas une source officielle.'**
+  String fwUntrusted(String host);
 }
 
 class _AppLocalizationsDelegate
