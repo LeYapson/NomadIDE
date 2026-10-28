@@ -1031,4 +1031,24 @@ class AppLocalizationsFr extends AppLocalizations {
   String errEspVerifyFailed(String expected, String actual) {
     return 'La flash ne correspond pas au fichier envoyé (MD5 attendu $expected, lu $actual). Recommencez ; si cela se reproduit, vérifiez le câble.';
   }
+
+  @override
+  String espImageFull(String chip, String offset) {
+    return 'Image complète pour $chip (bootloader inclus) : adresse réglée sur $offset.';
+  }
+
+  @override
+  String espImageApp(String chip, String offset) {
+    return 'Application pour $chip : adresse réglée sur $offset.';
+  }
+
+  @override
+  String espWrongOffset(String chip, String expected, String given) {
+    return 'Ce fichier est une image complète pour $chip : il doit être écrit à l’adresse $expected, pas à $given. Corrigez l’adresse.';
+  }
+
+  @override
+  String espWrongChip(String expected, String actual) {
+    return 'Ce fichier est prévu pour $expected, mais la carte connectée est de type $actual. Rien n’a été écrit.';
+  }
 }

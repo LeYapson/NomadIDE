@@ -130,4 +130,102 @@ void main() {
     expect(EspFlashController.parseOffset(''), isNull);
     expect(EspFlashController.parseOffset('0xZZ'), isNull);
   });
+
+  group('adresse choisie d\'après l\'en-tête du fichier', () {
+    test('image complète d\'ESP32 (firmware MicroPython) : 0x1000, sans que l\'utilisateur ait à le savoir', () async {
+      final full = _espImage(chipId: 0x00, fullImage: true);
+      nextPick = (name: 'ESP32_GENERIC-v1.29.0.bin', bytes: full);
+      await controller().pickFile();
+
+      expect(state().offsetText, '0x1000');
+      expect(state().offsetNote, contains('Image complète pour ESP32'));
+      expect(state().offsetNote, contains('0x1000'));
+
+      await controller().flash();
+      expect(state().phase, EspFlashPhase.done, reason: state().message);
+      expect(rom.flash.sublist(0x1000, 0x1000 + full.length), full);
+      // Rien n'a été écrit là où une application aurait été.
+      expect(rom.flash[0x10000], 0xFF);
+    });
+
+    test('image complète d\'ESP32-S3 : 0x0', () async {
+      setUpBoard(FakeEspRom(chip: EspChip.esp32s3));
+      await controller().refreshDevices();
+      final full = _espImage(chipId: 0x09, fullImage: true);
+      nextPick = (name: 'ESP32_GENERIC_S3.bin', bytes: full);
+      await controller().pickFile();
+      expect(state().offsetText, '0x0');
+      await controller().flash();
+      expect(state().phase, EspFlashPhase.done, reason: state().message);
+      expect(rom.flash.sublist(0, full.length), full);
+    });
+
+    test('application seule : 0x10000', () async {
+      nextPick = (name: 'app.bin', bytes: _espImage(chipId: 0x00, fullImage: false));
+      await controller().pickFile();
+      expect(state().offsetText, '0x10000');
+      expect(state().offsetNote, contains('Application pour ESP32'));
+    });
+
+    test('fichier qui n\'est pas une image ESP32 : l\'adresse n\'est pas touchée, pas de note', () async {
+      controller().setOffset('0x3000');
+      await controller().pickFile(); // _image(5000) : données quelconques
+      expect(state().offsetText, '0x3000');
+      expect(state().offsetNote, isNull);
+      expect(state().image, isNull);
+    });
+
+    test('image complète à une mauvaise adresse : refusée avant de toucher à la carte', () async {
+      nextPick = (name: 'ESP32_GENERIC.bin', bytes: _espImage(chipId: 0x00, fullImage: true));
+      await controller().pickFile();
+      controller().setOffset('0x10000');
+      await controller().flash();
+
+      expect(state().phase, EspFlashPhase.failed);
+      expect(state().message, contains('0x1000'));
+      expect(state().message, contains('0x10000'));
+      expect(transport.opened, isEmpty);
+    });
+
+    test('fichier d\'une autre puce : refusé après détection, rien n\'est écrit', () async {
+      // La carte de test est un ESP32 ; le fichier est un firmware d'ESP32-S3.
+      nextPick = (name: 'ESP32_GENERIC_S3.bin', bytes: _espImage(chipId: 0x09, fullImage: true));
+      await controller().pickFile();
+      await controller().flash();
+
+      expect(state().phase, EspFlashPhase.failed);
+      expect(state().message, contains('ESP32-S3'));
+      expect(state().message, contains('Rien n’a été écrit'));
+      expect(rom.commands, isNot(contains(EspLoader.opFlashDeflBegin)));
+      expect(rom.commands, isNot(contains(EspLoader.opFlashBegin)));
+      expect(transport.opened.single.isOpen, isFalse);
+    });
+  });
+}
+
+/// Image ESP32 minimale : en-tête étendu, puis (si [fullImage]) la table de partitions là où elle
+/// se retrouve dans la flash, comme dans le firmware officiel de MicroPython.
+Uint8List _espImage({required int chipId, required bool fullImage}) {
+  final out = Uint8List(fullImage ? 0x8200 : 0x2000);
+  out[0] = 0xE9;
+  out[1] = 3;
+  ByteData.sublistView(out)
+    ..setUint16(12, chipId, Endian.little)
+    ..setUint16(17, 0x018F, Endian.little);
+  out[23] = 1;
+  if (fullImage) {
+    final tableAt = (chipId == 0x00 || chipId == 0x02) ? 0x7000 : 0x8000;
+    out[tableAt] = 0xAA;
+    out[tableAt + 1] = 0x50;
+  }
+  for (var i = 24; i < out.length; i++) {
+    if (out[i] == 0) out[i] = (i * 7) & 0xFF | 1;
+  }
+  // Les octets de la marque ont pu être écrasés par le remplissage : on les remet.
+  if (fullImage) {
+    final tableAt = (chipId == 0x00 || chipId == 0x02) ? 0x7000 : 0x8000;
+    out[tableAt] = 0xAA;
+    out[tableAt + 1] = 0x50;
+  }
+  return out;
 }

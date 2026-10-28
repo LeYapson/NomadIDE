@@ -34,7 +34,9 @@ class EspFlashState {
     this.selectedDevice,
     this.fileName,
     this.bytes,
+    this.image,
     this.offsetText = '0x10000',
+    this.offsetNote,
     this.baudRate = 115200,
     this.phase = EspFlashPhase.idle,
     this.done = 0,
@@ -46,7 +48,13 @@ class EspFlashState {
   final SerialDeviceInfo? selectedDevice;
   final String? fileName;
   final Uint8List? bytes;
+
+  /// Ce que l'en-tête du fichier dit de lui-même ; null si ce n'est pas une image ESP32 reconnue.
+  final EspImageInfo? image;
   final String offsetText;
+
+  /// Explication de l'adresse choisie automatiquement (« Image complète pour ESP32… »).
+  final String? offsetNote;
   final int baudRate;
   final EspFlashPhase phase;
   final int done;
@@ -71,7 +79,9 @@ class EspFlashState {
     Object? selectedDevice = _unset,
     Object? fileName = _unset,
     Object? bytes = _unset,
+    Object? image = _unset,
     String? offsetText,
+    Object? offsetNote = _unset,
     int? baudRate,
     EspFlashPhase? phase,
     int? done,
@@ -83,7 +93,9 @@ class EspFlashState {
       selectedDevice: identical(selectedDevice, _unset) ? this.selectedDevice : selectedDevice as SerialDeviceInfo?,
       fileName: identical(fileName, _unset) ? this.fileName : fileName as String?,
       bytes: identical(bytes, _unset) ? this.bytes : bytes as Uint8List?,
+      image: identical(image, _unset) ? this.image : image as EspImageInfo?,
       offsetText: offsetText ?? this.offsetText,
+      offsetNote: identical(offsetNote, _unset) ? this.offsetNote : offsetNote as String?,
       baudRate: baudRate ?? this.baudRate,
       phase: phase ?? this.phase,
       done: done ?? this.done,
@@ -147,7 +159,37 @@ class EspFlashController extends Notifier<EspFlashState> {
       return;
     }
     if (picked == null) return;
-    state = state.copyWith(fileName: picked.name, bytes: picked.bytes, phase: EspFlashPhase.idle, message: null, done: 0, total: 0);
+
+    // L'en-tête du fichier dit pour quelle puce il est fait et s'il contient le bootloader : on en
+    // déduit l'adresse d'écriture, que personne ne devrait avoir à connaître par cœur.
+    final l10n = _l10n;
+    final image = analyzeEspImage(picked.bytes);
+    String? note;
+    var offsetText = state.offsetText;
+    if (image != null) {
+      offsetText = _hex(image.suggestedOffset);
+      note = image.isFullImage
+          ? l10n.espImageFull(image.chip.label, offsetText)
+          : l10n.espImageApp(image.chip.label, offsetText);
+    }
+    state = state.copyWith(
+      fileName: picked.name,
+      bytes: picked.bytes,
+      image: image,
+      offsetText: offsetText,
+      offsetNote: note,
+      phase: EspFlashPhase.idle,
+      message: null,
+      done: 0,
+      total: 0,
+    );
+  }
+
+  static String _hex(int value) => '0x${value.toRadixString(16)}';
+
+  void _fail(String message) {
+    if (!ref.mounted) return;
+    state = state.copyWith(phase: EspFlashPhase.failed, message: message);
   }
 
   /// Adresse saisie : « 0x10000 », « 10000h » ou décimal.
@@ -170,6 +212,17 @@ class EspFlashController extends Notifier<EspFlashState> {
       return;
     }
 
+    // Une image complète écrite ailleurs qu'à l'adresse du bootloader donne une carte qui redémarre
+    // en boucle : on refuse avant de toucher à la carte.
+    final image = state.image;
+    if (image != null && image.isFullImage && offset != image.suggestedOffset) {
+      state = state.copyWith(
+        phase: EspFlashPhase.failed,
+        message: l10n.espWrongOffset(image.chip.label, _hex(image.suggestedOffset), state.offsetText.trim()),
+      );
+      return;
+    }
+
     state = state.copyWith(phase: EspFlashPhase.connecting, done: 0, total: bytes.length, message: null);
     SerialConnection? connection;
     EspLoader? loader;
@@ -179,6 +232,13 @@ class EspFlashController extends Notifier<EspFlashState> {
       await _enterBootloader(connection, loader);
       if (!ref.mounted) return;
       final chip = await loader.detectChip();
+
+      // Un fichier fait pour une autre puce ne démarrera pas : on s'arrête avant d'écrire.
+      // (Puce non identifiée : on laisse faire, la détection de certaines puces reste à confirmer.)
+      if (image != null && chip != EspChip.unknown && image.chip != chip) {
+        _fail(l10n.espWrongChip(image.chip.label, chip.label));
+        return;
+      }
 
       if (state.baudRate != connection.config.baudRate) {
         final active = connection;

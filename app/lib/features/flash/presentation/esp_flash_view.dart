@@ -30,6 +30,11 @@ class _EspFlashViewState extends ConsumerState<EspFlashView> {
     final state = ref.watch(espFlashProvider);
     final controller = ref.read(espFlashProvider.notifier);
 
+    // L'adresse peut être choisie par le contrôleur (d'après l'en-tête du fichier) : le champ la suit.
+    ref.listen(espFlashProvider.select((s) => s.offsetText), (_, text) {
+      if (_offset.text != text) _offset.text = text;
+    });
+
     return SafeArea(
       child: ListView(
         padding: const EdgeInsets.all(16),
@@ -52,6 +57,18 @@ class _EspFlashViewState extends ConsumerState<EspFlashView> {
               else ...[
                 Text(state.fileName ?? '', style: Theme.of(context).textTheme.titleSmall),
                 Text(l10n.espFileInfo(flashSizeLabel(l10n, state.bytes!.length))),
+                if (state.offsetNote != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(Icons.auto_fix_high, size: 18, color: Theme.of(context).colorScheme.primary),
+                        const SizedBox(width: 8),
+                        Expanded(child: Text(state.offsetNote!, style: Theme.of(context).textTheme.bodySmall)),
+                      ],
+                    ),
+                  ),
               ],
               const SizedBox(height: 12),
               TextField(

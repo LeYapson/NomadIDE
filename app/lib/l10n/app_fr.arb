@@ -970,5 +970,52 @@
         "type": "String"
       }
     }
+  },
+  "espImageFull": "Image complète pour {chip} (bootloader inclus) : adresse réglée sur {offset}.",
+  "@espImageFull": {
+    "placeholders": {
+      "chip": {
+        "type": "String"
+      },
+      "offset": {
+        "type": "String"
+      }
+    }
+  },
+  "espImageApp": "Application pour {chip} : adresse réglée sur {offset}.",
+  "@espImageApp": {
+    "placeholders": {
+      "chip": {
+        "type": "String"
+      },
+      "offset": {
+        "type": "String"
+      }
+    }
+  },
+  "espWrongOffset": "Ce fichier est une image complète pour {chip} : il doit être écrit à l’adresse {expected}, pas à {given}. Corrigez l’adresse.",
+  "@espWrongOffset": {
+    "placeholders": {
+      "chip": {
+        "type": "String"
+      },
+      "expected": {
+        "type": "String"
+      },
+      "given": {
+        "type": "String"
+      }
+    }
+  },
+  "espWrongChip": "Ce fichier est prévu pour {expected}, mais la carte connectée est de type {actual}. Rien n’a été écrit.",
+  "@espWrongChip": {
+    "placeholders": {
+      "expected": {
+        "type": "String"
+      },
+      "actual": {
+        "type": "String"
+      }
+    }
   }
 }

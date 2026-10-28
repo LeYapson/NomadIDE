@@ -15,3 +15,4 @@ export 'src/uf2/uf2_file.dart';
 export 'src/esp/esp_loader.dart';
 export 'src/esp/md5.dart';
 export 'src/esp/slip.dart';
+export 'src/esp/esp_image.dart';
