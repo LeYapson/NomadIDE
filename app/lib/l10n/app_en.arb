@@ -970,5 +970,52 @@
         "type": "String"
       }
     }
+  },
+  "espImageFull": "Full image for {chip} (bootloader included): address set to {offset}.",
+  "@espImageFull": {
+    "placeholders": {
+      "chip": {
+        "type": "String"
+      },
+      "offset": {
+        "type": "String"
+      }
+    }
+  },
+  "espImageApp": "Application for {chip}: address set to {offset}.",
+  "@espImageApp": {
+    "placeholders": {
+      "chip": {
+        "type": "String"
+      },
+      "offset": {
+        "type": "String"
+      }
+    }
+  },
+  "espWrongOffset": "This file is a full image for {chip}: it must be written at address {expected}, not {given}. Fix the address.",
+  "@espWrongOffset": {
+    "placeholders": {
+      "chip": {
+        "type": "String"
+      },
+      "expected": {
+        "type": "String"
+      },
+      "given": {
+        "type": "String"
+      }
+    }
+  },
+  "espWrongChip": "This file is made for {expected}, but the connected board is a {actual}. Nothing was written.",
+  "@espWrongChip": {
+    "placeholders": {
+      "expected": {
+        "type": "String"
+      },
+      "actual": {
+        "type": "String"
+      }
+    }
   }
 }
