@@ -1,5 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Réseau : uniquement pour télécharger un firmware officiel quand l'utilisateur le demande. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <!-- L'app reste installable sur les appareils sans USB Host (mode éditeur seul). -->
     <uses-feature android:name="android.hardware.usb.host" android:required="false" />
 

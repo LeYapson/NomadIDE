@@ -134,7 +134,7 @@ Format des critères : **Étant donné** / **Quand** / **Alors**. Chaque story e
 | D4 | Je veux que l'app mette la carte en mode bootloader quand c'est possible (DTR/RTS, 1200 bauds, ou `machine.bootloader()` depuis MicroPython). | M | ✅ RP2040 : bascule automatique validée sur Badger 2040 (MicroPython : `machine.bootloader()` ; touch 1200 bauds pour Arduino/SDK, non testé) ; 🧪 DTR/RTS ESP32 |
 | D5 | Je veux compiler mon code C/C++ via un service cloud et flasher le résultat directement. | M | 🔜 |
 | D6 | Je veux voir une progression fiable et une vérification du flash. | M | 🧪 progression et vérification (MD5 pour l'ESP, redémarrage de la carte pour l'UF2) validées sur matériel ; débranchement en pleine écriture couvert par les tests seulement |
-| D7 | Je veux installer le firmware MicroPython adapté à ma carte (ex. firmware Pimoroni pour la Badger 2040). | S | 🔜 |
+| D7 | Je veux installer le firmware MicroPython adapté à ma carte (ex. firmware Pimoroni pour la Badger 2040). | S | 🧪 recherche de la dernière version et téléchargement validés contre micropython.org et GitHub (9 cartes) ; reste à essayer sur Android et à flasher de bout en bout un firmware téléchargé depuis l'app |
 
 **Critères d'acceptation**
 

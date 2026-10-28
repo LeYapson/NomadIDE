@@ -1047,4 +1047,76 @@ class AppLocalizationsEn extends AppLocalizations {
   String espWrongChip(String expected, String actual) {
     return 'This file is made for $expected, but the connected board is a $actual. Nothing was written.';
   }
+
+  @override
+  String get fwTitle => 'Official MicroPython firmware';
+
+  @override
+  String get fwHint =>
+      'To install MicroPython on a blank board or go back to a clean firmware. The file comes straight from the official site and is only written to the board when you press “Flash”.';
+
+  @override
+  String get fwBoardLabel => 'Board';
+
+  @override
+  String get fwFind => 'Find the latest version';
+
+  @override
+  String get fwSearching => 'Looking for the latest version…';
+
+  @override
+  String fwFound(String version, String board) {
+    return 'MicroPython $version for $board';
+  }
+
+  @override
+  String fwDate(String date) {
+    return 'Released on $date';
+  }
+
+  @override
+  String fwSource(String host) {
+    return 'Will be downloaded from $host:';
+  }
+
+  @override
+  String get fwDownload => 'Download and use';
+
+  @override
+  String fwDownloading(int percent) {
+    return 'Downloading… $percent%';
+  }
+
+  @override
+  String get fwDownloadingUnknown => 'Downloading…';
+
+  @override
+  String fwDownloaded(String name, String amount) {
+    return '$name downloaded ($amount): it is now the file to write, press “Flash”.';
+  }
+
+  @override
+  String fwNoNetwork(String host, String cause) {
+    return 'Cannot reach $host: check your Internet connection. ($cause)';
+  }
+
+  @override
+  String fwNotFound(String board, String host) {
+    return 'No stable version found for $board on $host.';
+  }
+
+  @override
+  String fwBadStatus(String host, String status) {
+    return 'The server $host answered $status.';
+  }
+
+  @override
+  String fwTooLarge(String amount) {
+    return 'File too large ($amount): download refused.';
+  }
+
+  @override
+  String fwUntrusted(String host) {
+    return 'Address refused: $host is not an official source.';
+  }
 }

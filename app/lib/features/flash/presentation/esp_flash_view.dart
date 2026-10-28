@@ -5,6 +5,8 @@ import 'package:nomad_hal/nomad_hal.dart';
 import '../../../l10n/l10n.dart';
 import '../application/esp_flash_controller.dart';
 import '../application/flash_controller.dart' show flashSizeLabel;
+import '../data/firmware_catalog.dart';
+import 'firmware_card.dart';
 import 'flash_widgets.dart';
 
 /// Flashage d'un fichier `.bin` sur un ESP32 / ESP8266, par le bootloader de la ROM.
@@ -83,6 +85,17 @@ class _EspFlashViewState extends ConsumerState<EspFlashView> {
                 ),
               ),
             ],
+          ),
+          FirmwareCard(
+            boards: const [
+              FirmwareBoard.esp32,
+              FirmwareBoard.esp32s3,
+              FirmwareBoard.esp32c3,
+              FirmwareBoard.esp32s2,
+              FirmwareBoard.esp32c6,
+            ],
+            onFile: controller.useFile,
+            enabled: !state.working,
           ),
           FlashStep(
             title: l10n.flashStepBoard,

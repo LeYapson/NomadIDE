@@ -185,7 +185,11 @@ class FlashController extends Notifier<FlashState> {
       state = state.copyWith(phase: FlashPhase.failed, message: _l10n.flashReadFailed(errorMessage(_l10n, e)));
       return;
     }
-    if (picked == null) return;
+    if (picked != null) useFile(picked);
+  }
+
+  /// Retient [picked] comme fichier à écrire (choisi à la main ou téléchargé) après l'avoir vérifié.
+  void useFile(PickedFile picked) {
     try {
       final file = Uf2File.parse(picked.bytes);
       state = state.copyWith(fileName: picked.name, file: file, phase: FlashPhase.idle, message: null, done: 0, total: 0);

@@ -5,7 +5,9 @@ import 'package:nomad_protocols/nomad_protocols.dart';
 
 import '../../../l10n/l10n.dart';
 import '../application/flash_controller.dart';
+import '../data/firmware_catalog.dart';
 import 'esp_flash_view.dart';
+import 'firmware_card.dart';
 import 'flash_widgets.dart';
 
 enum _FlashTarget { rp2, esp }
@@ -102,6 +104,17 @@ class Uf2FlashView extends ConsumerWidget {
                 ],
               ],
             ),
+            if (supported)
+              FirmwareCard(
+                boards: const [
+                  FirmwareBoard.badger2040,
+                  FirmwareBoard.badger2040w,
+                  FirmwareBoard.pico,
+                  FirmwareBoard.picoW,
+                ],
+                onFile: controller.useFile,
+                enabled: !state.working,
+              ),
             FlashStep(
               title: l10n.flashStepBoard,
               children: [
