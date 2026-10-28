@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Produit** | NomadMCU (dépôt : NomadIDE) |
-| **Version du document** | 0.6 — étape 3 : flash RP2040 et ESP32 / ESP32-S3 validés sur Windows |
+| **Version du document** | 0.7 — étape 3 : flash et firmware MicroPython validés sur ESP32 / ESP32-S3 (Windows et Android) |
 | **Date** | 2026-10-01 |
 | **Statut du produit** | Étape 1 terminée (HAL USB/série + moniteur série) ; étape 2 en cours |
 | **Documents liés** | [README.md](README.md) · [ADR 0001 — Flutter](docs/adr/0001-stack-flutter.md) |
@@ -128,13 +128,13 @@ Format des critères : **Étant donné** / **Quand** / **Alors**. Chaque story e
 
 | ID | User story | Prio | Statut |
 |---|---|---|---|
-| D1 | Je veux flasher un binaire `.bin` sur un ESP32. | M | ✅ sur ESP32 et ESP32-S3 avec l'app Windows (Android : non testé) |
+| D1 | Je veux flasher un binaire `.bin` sur un ESP32. | M | ✅ sur ESP32 et ESP32-S3, avec l'app Windows et avec l'app Android |
 | D2 | Je veux flasher un fichier `.uf2` sur un RP2040/RP2350. | M | ✅ sur Windows avec un Badger 2040, en BOOTSEL manuel et en bascule automatique (Android : 🔜 ⚠️ PICOBOOT) |
 | D3 | Je veux flasher un `.bin`/`.hex` sur un STM32 via son bootloader série. | C (post-v1) | 🔜 |
 | D4 | Je veux que l'app mette la carte en mode bootloader quand c'est possible (DTR/RTS, 1200 bauds, ou `machine.bootloader()` depuis MicroPython). | M | ✅ RP2040 : bascule automatique validée sur Badger 2040 (MicroPython : `machine.bootloader()` ; touch 1200 bauds pour Arduino/SDK, non testé) ; 🧪 DTR/RTS ESP32 |
 | D5 | Je veux compiler mon code C/C++ via un service cloud et flasher le résultat directement. | M | 🔜 |
 | D6 | Je veux voir une progression fiable et une vérification du flash. | M | 🧪 progression et vérification (MD5 pour l'ESP, redémarrage de la carte pour l'UF2) validées sur matériel ; débranchement en pleine écriture couvert par les tests seulement |
-| D7 | Je veux installer le firmware MicroPython adapté à ma carte (ex. firmware Pimoroni pour la Badger 2040). | S | 🧪 recherche de la dernière version et téléchargement validés contre micropython.org et GitHub (9 cartes) ; reste à essayer sur Android et à flasher de bout en bout un firmware téléchargé depuis l'app |
+| D7 | Je veux installer le firmware MicroPython adapté à ma carte (ex. firmware Pimoroni pour la Badger 2040). | S | ✅ ESP32 et ESP32-S3 : recherche, téléchargement et flash du firmware officiel validés sur Windows et Android ; 🧪 Pico et Badger 2040 (version et téléchargement validés contre micropython.org et GitHub, flash depuis l'app non essayé) |
 
 **Critères d'acceptation**
 
@@ -181,7 +181,7 @@ Le compte n'est exigé **que** pour la compilation cloud. Éditeur, moniteur, Mi
 
 | Plateforme | Transport série | Éditeur | MicroPython | Flashage | Statut |
 |---|---|---|---|---|---|
-| Android 8+ (OTG requis) | API USB Host (pilotes userland) | 🔜 | 🧪 | 🔜 ⚠️ UF2 | Moniteur ✅ |
+| Android 8+ (OTG requis) | API USB Host (pilotes userland) | 🔜 | 🧪 | ✅ ESP32 et ESP32-S3 ; 🔜 ⚠️ UF2 | Moniteur ✅ |
 | Windows 10/11 | libserialport (COMx) | 🔜 | 🧪 | ✅ UF2 (Badger 2040), ✅ ESP32 et ESP32-S3 | Moniteur ✅ |
 | macOS 12+ | libserialport (`/dev/cu.*`) | 🔜 | 🧪 | 🔜 | 🧪 |
 | Linux (glibc) | libserialport (`/dev/ttyUSB*`, `ttyACM*`) | 🔜 | 🧪 | 🔜 | 🧪 |
@@ -331,7 +331,7 @@ L'utilisateur ouvre l'app, voit un bandeau expliquant que l'USB-série n'est pas
 |---|---|---|---|
 | **M1** — Étape 1 | HAL USB/série, moniteur série, carte simulée | A1–A7, E2, E3 | ✅ |
 | **M2** — Étape 2 | Éditeur, projets, raw REPL, explorateur de fichiers de la carte, « Run », internationalisation FR/EN | B1–B6, C1–C5, E6 | ✅ (écrit, testé et validé sur Badger 2040 avec Windows et Android) |
-| **M3a** — Étape 3 | Flash ESP32/ESP32-S et RP2040, firmware MicroPython | D1, D2, D4, D6, D7, C6 | 🧪 D1, D2 et D6 validés sur Windows ; restent D7, C6, Android |
+| **M3a** — Étape 3 | Flash ESP32/ESP32-S et RP2040, firmware MicroPython | D1, D2, D4, D6, D7, C6 | 🧪 D1, D2 (Windows), D7 (ESP) validés ; restent l'UF2 sur Android (PICOBOOT), D6 et D4 (reset ESP) à confirmer, C6 |
 | **M3b** — Étape 3 | Service de compilation cloud, compte, quotas, abonnement | D5, F1–F4 | 🔜 |
 | Post-v1 | Flash STM32 (AN3155) | D3 | 🔜 |
 | **M4** — Étape 4 | CI/CD, signature et distribution (Play Store, MSIX, notarisation macOS), mises à jour | E1, E4, E5 | 🔜 |
@@ -350,3 +350,4 @@ La date de chaque jalon sera fixée après la décision sur R1 et le banc de tes
 | 0.4 | 2026-10-08 | Étape 2 : B3, B4, B5, C3 et E6 validés sur Android ; reste B1 (fluidité), B2, C2 (sélection), C4, C5 (délai d'arrêt) |
 | 0.5 | 2026-10-08 | Étape 2 terminée : B1, B2, C2, C4 et C5 validés sur Android et Windows ; jalon M2 ✅ |
 | 0.6 | 2026-10-26 | Étape 3 : flash UF2 (Badger 2040), flash ESP32 et ESP32-S3 validés sur Windows ; restent D7, C6, Android (PICOBOOT), compilation cloud |
+| 0.7 | 2026-10-28 | Étape 3 : D1 et D7 validés sur ESP32 et ESP32-S3 avec l'app Windows et l'app Android ; adresse d'écriture déduite de l'en-tête du fichier ; restent l'UF2 sur Android, Pico/Badger depuis D7, compilation cloud |
