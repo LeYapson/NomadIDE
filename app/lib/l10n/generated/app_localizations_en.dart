@@ -1135,4 +1135,30 @@ class AppLocalizationsEn extends AppLocalizations {
   String errPicobootVerify(String address) {
     return 'The flash read back at address 0x$address does not match the file. Try again; if it happens again, change the cable.';
   }
+
+  @override
+  String get flashBootselUsbFound => 'Board in BOOTSEL mode detected over USB.';
+
+  @override
+  String get flashPhasePermission =>
+      'Allow NomadMCU to access the board in the window that appears…';
+
+  @override
+  String flashPhaseErasing(int percent) {
+    return 'Erasing the flash… $percent%';
+  }
+
+  @override
+  String flashPhaseVerifying(int percent) {
+    return 'Checking the flash… $percent%';
+  }
+
+  @override
+  String get flashUsbDenied =>
+      'USB access denied. Try again and accept the permission request that appears.';
+
+  @override
+  String flashUsbInterrupted(String cause) {
+    return '$cause The write was interrupted: the board may hold an incomplete program. Unplug it, hold BOOTSEL while plugging it back in, then try again.';
+  }
 }

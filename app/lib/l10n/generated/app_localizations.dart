@@ -1910,6 +1910,42 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'La flash relue à l’adresse 0x{address} ne correspond pas au fichier. Recommencez ; si cela se reproduit, changez de câble.'**
   String errPicobootVerify(String address);
+
+  /// No description provided for @flashBootselUsbFound.
+  ///
+  /// In fr, this message translates to:
+  /// **'Carte en BOOTSEL détectée par USB.'**
+  String get flashBootselUsbFound;
+
+  /// No description provided for @flashPhasePermission.
+  ///
+  /// In fr, this message translates to:
+  /// **'Autorisez NomadMCU à accéder à la carte dans la fenêtre qui s’affiche…'**
+  String get flashPhasePermission;
+
+  /// No description provided for @flashPhaseErasing.
+  ///
+  /// In fr, this message translates to:
+  /// **'Effacement de la flash… {percent} %'**
+  String flashPhaseErasing(int percent);
+
+  /// No description provided for @flashPhaseVerifying.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vérification de la flash… {percent} %'**
+  String flashPhaseVerifying(int percent);
+
+  /// No description provided for @flashUsbDenied.
+  ///
+  /// In fr, this message translates to:
+  /// **'Accès USB refusé. Recommencez et acceptez la demande d’autorisation qui s’affiche.'**
+  String get flashUsbDenied;
+
+  /// No description provided for @flashUsbInterrupted.
+  ///
+  /// In fr, this message translates to:
+  /// **'{cause} L’écriture a été interrompue : la carte peut contenir un programme incomplet. Débranchez-la, maintenez BOOTSEL en la rebranchant, puis recommencez.'**
+  String flashUsbInterrupted(String cause);
 }
 
 class _AppLocalizationsDelegate

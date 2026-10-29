@@ -11,6 +11,7 @@ import '../../../app/settings.dart';
 import '../../../l10n/error_messages.dart';
 import '../../../l10n/l10n.dart';
 import '../data/file_pickers.dart';
+import '../data/picoboot_gateway.dart';
 
 /// Fichier choisi par l'utilisateur : nom et contenu.
 typedef PickedFile = ({String name, Uint8List bytes});
@@ -23,9 +24,14 @@ final uf2PickerProvider = Provider<Uf2Picker>((ref) => pickUf2WithSystemDialog);
 /// Détection et copie vers les disques UF2. Dans les tests : des dossiers temporaires.
 final uf2FlasherProvider = Provider<Uf2Flasher>((ref) => Uf2Flasher());
 
-/// Vrai si l'appareil sait copier un fichier sur un disque UF2 (Windows, macOS, Linux).
-/// Android n'écrit pas sur le disque BOOTSEL (risque R1 du PRD).
-final uf2SupportedProvider = Provider<bool>((ref) => Platform.isWindows || Platform.isMacOS || Platform.isLinux);
+/// Accès PICOBOOT (écriture de la flash par USB). Seulement sur Android : les téléphones n'écrivent pas sur
+/// le disque BOOTSEL (risque R1 du PRD), alors que les ordinateurs le font. Dans les tests : une fausse carte.
+final picobootGatewayProvider = Provider<PicobootGateway?>((ref) => Platform.isAndroid ? AndroidPicobootGateway() : null);
+
+/// Vrai si l'appareil sait écrire un fichier UF2 : copie sur le disque BOOTSEL (Windows, macOS, Linux)
+/// ou PICOBOOT (Android).
+final uf2SupportedProvider =
+    Provider<bool>((ref) => Platform.isWindows || Platform.isMacOS || Platform.isLinux || Platform.isAndroid);
 
 /// Intervalle de recherche du disque BOOTSEL ; `null` désactive l'interrogation (tests).
 final uf2DrivePollProvider = Provider<Duration?>((ref) => const Duration(seconds: 1));
@@ -35,7 +41,7 @@ final uf2TimeoutsProvider = Provider<({Duration touch, Duration drive, Duration 
   (ref) => (touch: const Duration(seconds: 2), drive: const Duration(seconds: 10), reboot: const Duration(seconds: 15)),
 );
 
-enum FlashPhase { idle, touching, waitingDrive, copying, rebooting, done, failed }
+enum FlashPhase { idle, touching, waitingDrive, permission, erasing, copying, verifying, rebooting, done, failed }
 
 @immutable
 class FlashState {
@@ -45,6 +51,7 @@ class FlashState {
     this.fileName,
     this.file,
     this.drive,
+    this.bootselUsb = false,
     this.phase = FlashPhase.idle,
     this.done = 0,
     this.total = 0,
@@ -58,6 +65,9 @@ class FlashState {
 
   /// Disque BOOTSEL actuellement branché, s'il y en a un.
   final Uf2Drive? drive;
+
+  /// Carte en BOOTSEL vue par USB (PICOBOOT, Android).
+  final bool bootselUsb;
   final FlashPhase phase;
   final int done;
   final int total;
@@ -66,13 +76,13 @@ class FlashState {
   final String? message;
 
   bool get working => switch (phase) {
-        FlashPhase.touching || FlashPhase.waitingDrive || FlashPhase.copying || FlashPhase.rebooting => true,
-        _ => false,
+        FlashPhase.idle || FlashPhase.done || FlashPhase.failed => false,
+        _ => true,
       };
 
   bool get succeeded => phase == FlashPhase.done;
 
-  bool get canFlash => file != null && !working && (drive != null || selectedDevice != null);
+  bool get canFlash => file != null && !working && (drive != null || bootselUsb || selectedDevice != null);
 
   FlashState copyWith({
     List<SerialDeviceInfo>? devices,
@@ -80,6 +90,7 @@ class FlashState {
     Object? fileName = _unset,
     Object? file = _unset,
     Object? drive = _unset,
+    bool? bootselUsb,
     FlashPhase? phase,
     int? done,
     int? total,
@@ -91,6 +102,7 @@ class FlashState {
       fileName: identical(fileName, _unset) ? this.fileName : fileName as String?,
       file: identical(file, _unset) ? this.file : file as Uf2File?,
       drive: identical(drive, _unset) ? this.drive : drive as Uf2Drive?,
+      bootselUsb: bootselUsb ?? this.bootselUsb,
       phase: phase ?? this.phase,
       done: done ?? this.done,
       total: total ?? this.total,
@@ -166,6 +178,16 @@ class FlashController extends Notifier<FlashState> {
   Future<void> _refreshDrive() async {
     // Pendant l'écriture le disque est suivi par le flasheur lui-même.
     if (state.working) return;
+    final gateway = ref.read(picobootGatewayProvider);
+    if (gateway != null) {
+      try {
+        final present = (await gateway.list()).isNotEmpty;
+        if (ref.mounted && !state.working && present != state.bootselUsb) state = state.copyWith(bootselUsb: present);
+      } catch (_) {
+        // USB illisible : on garde l'état précédent.
+      }
+      return;
+    }
     try {
       final drive = (await _flasher.findDrives()).where((d) => d.isRaspberryPi).firstOrNull;
       if (!ref.mounted || state.working) return;
@@ -207,6 +229,8 @@ class FlashController extends Notifier<FlashState> {
     final file = state.file;
     if (file == null || state.working) return;
     final l10n = _l10n;
+    final gateway = ref.read(picobootGatewayProvider);
+    if (gateway != null) return _flashPicoboot(file, gateway);
     final timeouts = ref.read(uf2TimeoutsProvider);
     state = state.copyWith(phase: FlashPhase.touching, done: 0, total: file.bytes.length, message: null);
     try {
@@ -266,6 +290,117 @@ class FlashController extends Notifier<FlashState> {
       _fail(l10n.flashCopyFailed(e.written, e.total, '${e.cause}'));
     } catch (e) {
       _fail(errorMessage(l10n, e));
+    }
+  }
+
+  /// Écrit [file] par USB (PICOBOOT), sans disque de stockage : la voie d'Android.
+  ///
+  /// Même déroulé que sur ordinateur : mettre la carte en BOOTSEL si besoin (touch 1200 bauds, puis
+  /// `machine.bootloader()`), attendre qu'elle apparaisse, mais ici en USB ; demander l'autorisation d'accès
+  /// à Android, puis effacer, écrire, vérifier et redémarrer.
+  Future<void> _flashPicoboot(Uf2File file, PicobootGateway gateway) async {
+    final l10n = _l10n;
+    final timeouts = ref.read(uf2TimeoutsProvider);
+    if (file.family != Uf2Family.unknown && !file.family.isRaspberryPi) {
+      _fail(l10n.flashWrongFamily(file.family.label));
+      return;
+    }
+    state = state.copyWith(phase: FlashPhase.touching, done: 0, total: file.bytes.length, message: null);
+    OpenPicobootChannel? channel;
+    try {
+      var device = (await gateway.list()).firstOrNull;
+      if (device == null) {
+        final serial = state.selectedDevice;
+        if (serial == null) {
+          _fail(l10n.flashNoDrive);
+          return;
+        }
+        await _touch(serial);
+        if (!ref.mounted) return;
+        state = state.copyWith(phase: FlashPhase.waitingDrive);
+        device = await _waitForBootsel(gateway, timeouts.touch);
+        if (!ref.mounted) return;
+        if (device == null) {
+          await _bootloaderFromRepl(serial);
+          if (!ref.mounted) return;
+          device = await _waitForBootsel(gateway, timeouts.drive);
+          if (!ref.mounted) return;
+        }
+        if (device == null) {
+          _fail(l10n.flashNoDrive);
+          return;
+        }
+      }
+
+      if (!device.hasPermission) {
+        // Fenêtre du système : l'utilisateur doit autoriser NomadMCU à parler à la carte.
+        state = state.copyWith(phase: FlashPhase.permission);
+        if (!await gateway.requestPermission(device)) {
+          _fail(l10n.flashUsbDenied);
+          return;
+        }
+        if (!ref.mounted) return;
+      }
+
+      channel = await gateway.open(device);
+      await PicobootFlasher(PicobootClient(channel)).flashUf2(
+        file,
+        onProgress: (phase, done, total) {
+          if (!ref.mounted) return;
+          state = state.copyWith(
+            phase: switch (phase) {
+              PicobootPhase.erasing => FlashPhase.erasing,
+              PicobootPhase.writing => FlashPhase.copying,
+              PicobootPhase.verifying => FlashPhase.verifying,
+              PicobootPhase.rebooting => FlashPhase.rebooting,
+            },
+            done: done,
+            total: total,
+          );
+        },
+      );
+      if (!ref.mounted) return;
+
+      // La carte redémarre : sa disparition du bus confirme qu'elle exécute le nouveau programme.
+      final gone = await _waitUntilGone(gateway, timeouts.reboot);
+      if (!ref.mounted) return;
+      if (gone) {
+        state = state.copyWith(
+          phase: FlashPhase.done,
+          bootselUsb: false,
+          message: l10n.flashDone(_size(l10n, file.payloadSize)),
+        );
+      } else {
+        _fail(l10n.flashNoReboot);
+      }
+    } catch (e) {
+      if (!ref.mounted) return;
+      final cause = errorMessage(l10n, e);
+      final interrupted = state.phase == FlashPhase.erasing || state.phase == FlashPhase.copying || state.phase == FlashPhase.verifying;
+      _fail(interrupted ? l10n.flashUsbInterrupted(cause) : cause);
+    } finally {
+      await channel?.close();
+    }
+  }
+
+  /// Attend qu'une carte en BOOTSEL apparaisse sur le bus USB.
+  Future<PicobootDevice?> _waitForBootsel(PicobootGateway gateway, Duration timeout) async {
+    final deadline = DateTime.now().add(timeout);
+    while (true) {
+      final found = (await gateway.list()).firstOrNull;
+      if (found != null) return found;
+      if (DateTime.now().isAfter(deadline)) return null;
+      await Future<void>.delayed(const Duration(milliseconds: 250));
+    }
+  }
+
+  /// Attend que la carte quitte le mode BOOTSEL (elle a redémarré).
+  Future<bool> _waitUntilGone(PicobootGateway gateway, Duration timeout) async {
+    final deadline = DateTime.now().add(timeout);
+    while (true) {
+      if ((await gateway.list()).isEmpty) return true;
+      if (DateTime.now().isAfter(deadline)) return false;
+      await Future<void>.delayed(const Duration(milliseconds: 250));
     }
   }
 

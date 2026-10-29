@@ -1139,4 +1139,30 @@ class AppLocalizationsFr extends AppLocalizations {
   String errPicobootVerify(String address) {
     return 'La flash relue à l’adresse 0x$address ne correspond pas au fichier. Recommencez ; si cela se reproduit, changez de câble.';
   }
+
+  @override
+  String get flashBootselUsbFound => 'Carte en BOOTSEL détectée par USB.';
+
+  @override
+  String get flashPhasePermission =>
+      'Autorisez NomadMCU à accéder à la carte dans la fenêtre qui s’affiche…';
+
+  @override
+  String flashPhaseErasing(int percent) {
+    return 'Effacement de la flash… $percent %';
+  }
+
+  @override
+  String flashPhaseVerifying(int percent) {
+    return 'Vérification de la flash… $percent %';
+  }
+
+  @override
+  String get flashUsbDenied =>
+      'Accès USB refusé. Recommencez et acceptez la demande d’autorisation qui s’affiche.';
+
+  @override
+  String flashUsbInterrupted(String cause) {
+    return '$cause L’écriture a été interrompue : la carte peut contenir un programme incomplet. Débranchez-la, maintenez BOOTSEL en la rebranchant, puis recommencez.';
+  }
 }

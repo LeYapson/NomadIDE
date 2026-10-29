@@ -1146,5 +1146,32 @@
         "type": "String"
       }
     }
+  },
+  "flashBootselUsbFound": "Board in BOOTSEL mode detected over USB.",
+  "flashPhasePermission": "Allow NomadMCU to access the board in the window that appears…",
+  "flashPhaseErasing": "Erasing the flash… {percent}%",
+  "@flashPhaseErasing": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "flashPhaseVerifying": "Checking the flash… {percent}%",
+  "@flashPhaseVerifying": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "flashUsbDenied": "USB access denied. Try again and accept the permission request that appears.",
+  "flashUsbInterrupted": "{cause} The write was interrupted: the board may hold an incomplete program. Unplug it, hold BOOTSEL while plugging it back in, then try again.",
+  "@flashUsbInterrupted": {
+    "placeholders": {
+      "cause": {
+        "type": "String"
+      }
+    }
   }
 }
