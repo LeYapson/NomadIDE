@@ -16,3 +16,5 @@ export 'src/esp/esp_loader.dart';
 export 'src/esp/md5.dart';
 export 'src/esp/slip.dart';
 export 'src/esp/esp_image.dart';
+export 'src/picoboot/picoboot_client.dart';
+export 'src/picoboot/picoboot_flasher.dart';

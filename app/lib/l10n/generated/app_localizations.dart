@@ -1892,6 +1892,24 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Adresse refusée : {host} n’est pas une source officielle.'**
   String fwUntrusted(String host);
+
+  /// No description provided for @errPicoboot.
+  ///
+  /// In fr, this message translates to:
+  /// **'La carte (mode BOOTSEL) a refusé la commande 0x{command} (code {status}).'**
+  String errPicoboot(String command, String status);
+
+  /// No description provided for @errPicobootBadImage.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce fichier contient des données que la carte ne peut pas recevoir par USB (adresse 0x{address}). Il n’est peut-être pas fait pour un RP2040.'**
+  String errPicobootBadImage(String address);
+
+  /// No description provided for @errPicobootVerify.
+  ///
+  /// In fr, this message translates to:
+  /// **'La flash relue à l’adresse 0x{address} ne correspond pas au fichier. Recommencez ; si cela se reproduit, changez de câble.'**
+  String errPicobootVerify(String address);
 }
 
 class _AppLocalizationsDelegate

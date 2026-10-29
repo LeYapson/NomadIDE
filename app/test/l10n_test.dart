@@ -112,6 +112,9 @@ void main() {
       ProtocolRomException(0x03, 0x07),
       const ProtocolDesyncException('x', code: ProtocolErrorCode.espBadPacket, params: {'hex': '01 08'}),
       ProtocolFlashVerifyException(expectedMd5: 'aa', actualMd5: 'bb'),
+      ProtocolPicobootException(0x05, 4),
+      const ProtocolStateException('x', code: ProtocolErrorCode.picobootBadImage, params: {'address': '20000000'}),
+      const ProtocolStateException('x', code: ProtocolErrorCode.picobootVerifyFailed, params: {'address': '10000500'}),
     ];
 
     final storageErrors = [

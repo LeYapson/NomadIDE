@@ -30,6 +30,14 @@ enum Uf2Family {
       };
 }
 
+/// Un bloc de données d'un fichier UF2 : l'adresse où l'écrire et son contenu.
+class Uf2Block {
+  const Uf2Block(this.address, this.data);
+
+  final int address;
+  final Uint8List data;
+}
+
 /// Fichier UF2 mal formé.
 class Uf2FormatException implements FormatException {
   const Uf2FormatException(this.message, {this.blockIndex});
@@ -68,6 +76,19 @@ class Uf2File {
   final Uint8List bytes;
   final int blockCount;
   final Uf2Family family;
+
+  /// Les blocs à écrire en mémoire flash, dans l'ordre du fichier (ceux qui ne visent pas la flash
+  /// principale, comme les métadonnées de fichiers, sont ignorés). Sert aux protocoles qui écrivent
+  /// la flash directement, sans passer par le disque BOOTSEL (PICOBOOT).
+  Iterable<Uf2Block> get flashBlocks sync* {
+    final view = ByteData.sublistView(bytes);
+    for (var i = 0; i < blockCount; i++) {
+      final o = i * blockSize;
+      if (view.getUint32(o + 8, Endian.little) & _flagNotMainFlash != 0) continue;
+      final size = view.getUint32(o + 16, Endian.little);
+      yield Uf2Block(view.getUint32(o + 12, Endian.little), Uint8List.sublistView(bytes, o + 32, o + 32 + size));
+    }
+  }
 
   /// Octets utiles (sans les en-têtes), c'est-à-dire la taille du programme.
   final int payloadSize;

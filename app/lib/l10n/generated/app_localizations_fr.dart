@@ -1123,4 +1123,19 @@ class AppLocalizationsFr extends AppLocalizations {
   String fwUntrusted(String host) {
     return 'Adresse refusée : $host n’est pas une source officielle.';
   }
+
+  @override
+  String errPicoboot(String command, String status) {
+    return 'La carte (mode BOOTSEL) a refusé la commande 0x$command (code $status).';
+  }
+
+  @override
+  String errPicobootBadImage(String address) {
+    return 'Ce fichier contient des données que la carte ne peut pas recevoir par USB (adresse 0x$address). Il n’est peut-être pas fait pour un RP2040.';
+  }
+
+  @override
+  String errPicobootVerify(String address) {
+    return 'La flash relue à l’adresse 0x$address ne correspond pas au fichier. Recommencez ; si cela se reproduit, changez de câble.';
+  }
 }

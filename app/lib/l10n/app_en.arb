@@ -1119,5 +1119,32 @@
         "type": "String"
       }
     }
+  },
+  "errPicoboot": "The board (BOOTSEL mode) refused command 0x{command} (code {status}).",
+  "@errPicoboot": {
+    "placeholders": {
+      "command": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "errPicobootBadImage": "This file contains data the board cannot receive over USB (address 0x{address}). It may not be made for an RP2040.",
+  "@errPicobootBadImage": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
+  "errPicobootVerify": "The flash read back at address 0x{address} does not match the file. Try again; if it happens again, change the cable.",
+  "@errPicobootVerify": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
   }
 }

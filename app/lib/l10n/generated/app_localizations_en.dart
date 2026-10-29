@@ -1119,4 +1119,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String fwUntrusted(String host) {
     return 'Address refused: $host is not an official source.';
   }
+
+  @override
+  String errPicoboot(String command, String status) {
+    return 'The board (BOOTSEL mode) refused command 0x$command (code $status).';
+  }
+
+  @override
+  String errPicobootBadImage(String address) {
+    return 'This file contains data the board cannot receive over USB (address 0x$address). It may not be made for an RP2040.';
+  }
+
+  @override
+  String errPicobootVerify(String address) {
+    return 'The flash read back at address 0x$address does not match the file. Try again; if it happens again, change the cable.';
+  }
 }

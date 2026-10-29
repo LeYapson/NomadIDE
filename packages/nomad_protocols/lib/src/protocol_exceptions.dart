@@ -53,6 +53,17 @@ enum ProtocolErrorCode {
 
   /// Le contenu de la flash ne correspond pas au fichier. Paramètres : `expected`, `actual` (MD5).
   espVerifyFailed,
+
+  /// La ROM du RP2040 a refusé une commande PICOBOOT. Paramètres : `command` (hexadécimal), `status`
+  /// (code) et `statusName`.
+  picobootError,
+
+  /// Le fichier contient des données que PICOBOOT ne peut pas écrire (hors flash, mal alignées).
+  /// Paramètre : `address` (hexadécimal).
+  picobootBadImage,
+
+  /// La flash relue ne correspond pas au fichier. Paramètre : `address` (hexadécimal).
+  picobootVerifyFailed,
 }
 
 /// Erreurs communes aux protocoles carte.
@@ -136,6 +147,42 @@ final class ProtocolRomException extends ProtocolException {
   /// Code d'erreur de la ROM : 0x05 message invalide, 0x06 échec, 0x07 CRC invalide,
   /// 0x08 écriture flash, 0x09 lecture flash, 0x0a longueur de lecture, 0x0b décompression.
   final int error;
+}
+
+/// La ROM du RP2040 (mode BOOTSEL) a refusé une commande PICOBOOT.
+final class ProtocolPicobootException extends ProtocolException {
+  ProtocolPicobootException(this.command, this.status)
+      : super(
+          'La ROM a refusé la commande PICOBOOT 0x${command.toRadixString(16)} : $status (${picobootStatusName(status)}).',
+          code: ProtocolErrorCode.picobootError,
+          params: {
+            'command': command.toRadixString(16),
+            'status': status,
+            'statusName': picobootStatusName(status),
+          },
+        );
+
+  final int command;
+
+  /// Code d'état de la ROM (0 = succès).
+  final int status;
+
+  /// Nom lisible d'un code d'état PICOBOOT.
+  static String picobootStatusName(int status) => switch (status) {
+        0 => 'OK',
+        1 => 'commande inconnue',
+        2 => 'longueur de commande invalide',
+        3 => 'longueur de transfert invalide',
+        4 => 'adresse invalide',
+        5 => 'mauvais alignement',
+        6 => 'écriture entrelacée',
+        7 => 'redémarrage en cours',
+        8 => 'erreur inconnue',
+        9 => 'état invalide',
+        10 => 'non autorisé',
+        11 => 'argument invalide',
+        _ => 'erreur $status',
+      };
 }
 
 /// Le contenu relu dans la flash n'est pas celui qu'on vient d'écrire.
