@@ -1165,4 +1165,70 @@ class AppLocalizationsFr extends AppLocalizations {
   String flashUsbInterrupted(String cause) {
     return '$cause L’écriture a été interrompue : la carte peut contenir un programme incomplet. Débranchez-la, maintenez BOOTSEL en la rebranchant, puis recommencez.';
   }
+
+  @override
+  String get qkBarLabel => 'Raccourcis de saisie';
+
+  @override
+  String get qkUndo => 'Annuler la dernière modification';
+
+  @override
+  String get qkRedo => 'Rétablir la modification annulée';
+
+  @override
+  String get qkSymColon => 'deux-points';
+
+  @override
+  String get qkSymBraceOpen => 'accolade ouvrante';
+
+  @override
+  String get qkSymBraceClose => 'accolade fermante';
+
+  @override
+  String get qkSymParenOpen => 'parenthèse ouvrante';
+
+  @override
+  String get qkSymParenClose => 'parenthèse fermante';
+
+  @override
+  String get qkSymBracketOpen => 'crochet ouvrant';
+
+  @override
+  String get qkSymBracketClose => 'crochet fermant';
+
+  @override
+  String get qkSymDoubleQuote => 'guillemet double';
+
+  @override
+  String get qkSymSingleQuote => 'apostrophe';
+
+  @override
+  String get qkSymUnderscore => 'tiret bas';
+
+  @override
+  String get qkSymEquals => 'égal';
+
+  @override
+  String get qkSymHash => 'dièse';
+
+  @override
+  String get qkSymComma => 'virgule';
+
+  @override
+  String get qkSymDot => 'point';
+
+  @override
+  String get qkSymSemicolon => 'point-virgule';
+
+  @override
+  String get qkSymLess => 'inférieur à';
+
+  @override
+  String get qkSymGreater => 'supérieur à';
+
+  @override
+  String get qkSymSlash => 'barre oblique';
+
+  @override
+  String get qkSymBackslash => 'barre oblique inverse';
 }
