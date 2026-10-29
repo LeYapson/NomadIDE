@@ -101,7 +101,7 @@ abstract class AppLocalizations {
   /// No description provided for @appTitle.
   ///
   /// In fr, this message translates to:
-  /// **'NomadMCU'**
+  /// **'NomadIDE'**
   String get appTitle;
 
   /// No description provided for @navMonitor.
@@ -131,7 +131,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsTitle.
   ///
   /// In fr, this message translates to:
-  /// **'NomadMCU · Réglages'**
+  /// **'NomadIDE · Réglages'**
   String get settingsTitle;
 
   /// No description provided for @settingsLanguage.
@@ -227,7 +227,7 @@ abstract class AppLocalizations {
   /// No description provided for @monTitle.
   ///
   /// In fr, this message translates to:
-  /// **'NomadMCU · Moniteur série'**
+  /// **'NomadIDE · Moniteur série'**
   String get monTitle;
 
   /// No description provided for @monStatusConnected.
@@ -503,7 +503,7 @@ abstract class AppLocalizations {
   /// No description provided for @mpTitle.
   ///
   /// In fr, this message translates to:
-  /// **'NomadMCU · MicroPython'**
+  /// **'NomadIDE · MicroPython'**
   String get mpTitle;
 
   /// No description provided for @mpTabConsole.
@@ -719,7 +719,7 @@ abstract class AppLocalizations {
   /// No description provided for @mpDefaultCode.
   ///
   /// In fr, this message translates to:
-  /// **'print(\"Bonjour depuis NomadMCU\")'**
+  /// **'print(\"Bonjour depuis NomadIDE\")'**
   String get mpDefaultCode;
 
   /// No description provided for @snippetMemory.
@@ -924,7 +924,7 @@ abstract class AppLocalizations {
   /// No description provided for @edTitle.
   ///
   /// In fr, this message translates to:
-  /// **'NomadMCU · Éditeur'**
+  /// **'NomadIDE · Éditeur'**
   String get edTitle;
 
   /// No description provided for @edDraftsTitle.
@@ -1266,7 +1266,7 @@ abstract class AppLocalizations {
   /// No description provided for @flashTitle.
   ///
   /// In fr, this message translates to:
-  /// **'NomadMCU · Flasher un programme'**
+  /// **'NomadIDE · Flasher un programme'**
   String get flashTitle;
 
   /// No description provided for @flashUnsupported.
@@ -1920,7 +1920,7 @@ abstract class AppLocalizations {
   /// No description provided for @flashPhasePermission.
   ///
   /// In fr, this message translates to:
-  /// **'Autorisez NomadMCU à accéder à la carte dans la fenêtre qui s’affiche…'**
+  /// **'Autorisez NomadIDE à accéder à la carte dans la fenêtre qui s’affiche…'**
   String get flashPhasePermission;
 
   /// No description provided for @flashPhaseErasing.

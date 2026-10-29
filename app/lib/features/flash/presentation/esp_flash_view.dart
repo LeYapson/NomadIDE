@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nomad_hal/nomad_hal.dart';
 
+import '../../../app/theme.dart';
 import '../../../l10n/l10n.dart';
 import '../application/esp_flash_controller.dart';
 import '../application/flash_controller.dart' show flashSizeLabel;
@@ -132,6 +133,7 @@ class _EspFlashViewState extends ConsumerState<EspFlashView> {
               Wrap(
                 children: [
                   FilledButton.icon(
+                    style: hardwareButtonStyle(context),
                     onPressed: state.canFlash ? controller.flash : null,
                     icon: const Icon(Icons.bolt),
                     label: Text(l10n.flashRun),

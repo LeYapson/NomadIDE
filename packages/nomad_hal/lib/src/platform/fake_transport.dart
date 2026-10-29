@@ -24,7 +24,7 @@ class FakeSerialTransport implements SerialTransport {
     systemPath: 'loop://',
     vendorId: 0xF055,
     productId: 0x9800,
-    manufacturer: 'NomadMCU',
+    manufacturer: 'NomadIDE',
     product: 'Fake REPL',
   );
 
@@ -114,7 +114,7 @@ class FakeReplConnection extends BaseSerialConnection {
   }) : _onClosed = onClosed;
 
   static const _banner =
-      'MicroPython v1.24.1 on 2026-09-29; NomadMCU simulated board\r\nType "help()" for more information.\r\n';
+      'MicroPython v1.24.1 on 2026-09-29; NomadIDE simulated board\r\nType "help()" for more information.\r\n';
   static const _prompt = '>>> ';
   static final _printCall = RegExp(r'''^print\((['"])(.*)\1\)$''');
   static final _arithmetic = RegExp(r'^(-?\d+)\s*([-+*/%])\s*(-?\d+)$');
@@ -169,7 +169,7 @@ class FakeReplConnection extends BaseSerialConnection {
 
   String _evaluate(String source) {
     if (source.isEmpty) return '';
-    if (source == 'help()') return 'Carte simulée NomadMCU : essayez print("hello") ou 6*7.';
+    if (source == 'help()') return 'Carte simulée NomadIDE : essayez print("hello") ou 6*7.';
 
     final printed = _printCall.firstMatch(source);
     if (printed != null) return printed.group(2)!;

@@ -1,9 +1,9 @@
-# NomadMCU — Document de spécifications produit (PRD)
+# NomadIDE — Document de spécifications produit (PRD)
 
 | | |
 |---|---|
-| **Produit** | NomadMCU (dépôt : NomadIDE) |
-| **Version du document** | 0.10 — étape 3 : flash UF2 validé sur Android (PICOBOOT) ; ajout de l'UX/UI et de l'accessibilité (épopée G) et du flash multi-fichiers (D8) |
+| **Produit** | NomadIDE |
+| **Version du document** | 0.11 — étape 3 : thème et palette appliqués, contrastes testés (épopée G) |
 | **Date** | 2026-10-01 |
 | **Statut du produit** | Étape 1 terminée (HAL USB/série + moniteur série) ; étape 2 en cours |
 | **Documents liés** | [README.md](README.md) · [ADR 0001 — Flutter](docs/adr/0001-stack-flutter.md) |
@@ -185,8 +185,8 @@ Référentiels visés : **WCAG 2.2 niveau AA** et **RGAA 4.1**. Méthode : la co
 | G2 | Je veux que le flash soit un parcours guidé (1. Fichier, 2. Carte, 3. Écriture) lisible sur un écran de 360 dp, sans surcharge. | M | 🧪 trois étapes existantes ; reste la divulgation progressive (seule l'étape utile est développée) et la revue à 360 dp |
 | G3 | Je veux qu'un lecteur d'écran (TalkBack, VoiceOver) annonce l'état de l'app : carte connectée ou déconnectée, flash en cours avec son avancement, erreur. | M | 🔜 |
 | G4 | Je veux que toutes les zones tactiles fassent au moins 48 × 48 dp. | M | 🔜 |
-| G5 | Je veux un thème sombre lisible : contraste ≥ 4,5:1 pour le texte et ≥ 3:1 pour les composants et le focus. | M | 🔜 |
-| G6 | Je veux une identité visuelle cohérente (palette ci-dessous) appliquée à tous les écrans. | S | 🔜 |
+| G5 | Je veux un thème sombre lisible : contraste ≥ 4,5:1 pour le texte et ≥ 3:1 pour les composants et le focus. | M | 🧪 appliqué et testé automatiquement (texte des 5 écrans, thèmes sombre et clair) ; à valider à l'œil sur téléphone |
+| G6 | Je veux une identité visuelle cohérente (palette ci-dessous) appliquée à tous les écrans. | S | 🧪 thème et couleurs de l'éditeur appliqués ; reste la refonte des composants (G7) |
 | G7 | Je veux une interface construite à partir de composants réutilisables (atomes, molécules, organismes) et de la grille Material 3, pour que chaque écran se comporte de la même façon. | S | 🔜 |
 
 **Critères d'acceptation**
@@ -196,30 +196,29 @@ Référentiels visés : **WCAG 2.2 niveau AA** et **RGAA 4.1**. Méthode : la co
 - **G4** — Un test automatisé vérifie la taille des cibles sur les écrans principaux (guide `androidTapTargetGuideline` de Flutter).
 - **G5** — Un test automatisé vérifie les contrastes (guide `textContrastGuideline`) ; les couleurs sont validées par le calcul ci-dessous. La couleur seule n'est jamais le seul indicateur : une erreur ou un succès s'accompagne d'une icône et d'un texte.
 
-**Palette (thème sombre)** et contrastes calculés (WCAG) :
+**Palette (thème sombre)** et contrastes calculés (WCAG). Deux teintes de la charte sont ajustées pour tenir les contrastes (colonne « Appliqué ») :
 
-| Rôle | Teinte | Code | Usage |
-|---|---|---|---|
-| Fond principal | Obsidian Dark | `#111318` | Fond de l'éditeur et de l'app |
-| Surface | Deep Slate | `#1B1E28` | Panneaux, terminal, onglets, barre de navigation |
-| Accent de marque | Electric Indigo | `#6366F1` | Identité, sélection, focus, curseur |
-| Action matérielle | Solar Amber | `#FF6B35` | Flasher, Exécuter, Redémarrer |
-| Connexion et succès | Cyber Mint | `#00E5A3` | USB connecté, REPL réussi, « prêt » |
-| Texte principal | Soft Chalk | `#F3F4F6` | Code et textes |
-| Erreur et danger | Crimson Red | `#EF4444` | Déconnexion, erreur de compilation, échec du flash |
+| Rôle | Teinte | Charte | Appliqué | Usage |
+|---|---|---|---|---|
+| Fond principal | Obsidian Dark | `#111318` | `#111318` | Fond de l'éditeur et de l'app |
+| Surface | Deep Slate | `#1B1E28` | `#1B1E28` | Panneaux, terminal, onglets, barre de navigation |
+| Accent de marque | Electric Indigo | `#6366F1` | `#818CF8` | Identité, sélection, focus, curseur, texte des boutons |
+| Action matérielle | Solar Amber | `#FF6B35` | `#FF6B35` | Flasher, Exécuter (texte sombre) |
+| Connexion et succès | Cyber Mint | `#00E5A3` | `#00E5A3` | USB connecté, flash réussi, « prêt » |
+| Texte principal | Soft Chalk | `#F3F4F6` | `#F3F4F6` | Code et textes |
+| Erreur et danger | Crimson Red | `#EF4444` | `#F87171` | Déconnexion, erreur de compilation, échec du flash |
 
-| Combinaison | Rapport | Verdict |
+| Combinaison (thème sombre) | Rapport | Verdict |
 |---|---|---|
 | Soft Chalk sur Obsidian / sur Deep Slate | 16,9 / 15,1 | ✅ AAA |
 | Cyber Mint sur Obsidian / sur Deep Slate | 11,3 / 10,1 | ✅ AAA |
 | Obsidian sur Solar Amber (texte des boutons d'action) | 6,6 | ✅ AA |
-| Crimson Red sur Obsidian | 4,9 | ✅ AA |
-| Crimson Red sur Deep Slate | 4,4 | ⚠️ juste sous 4,5 : éclaircir le rouge pour le texte sur panneau |
-| Electric Indigo sur Obsidian / sur Deep Slate | 4,2 / 3,7 | ✅ pour focus et composants (≥ 3), ⚠️ insuffisant pour du texte courant |
-| Blanc sur Electric Indigo | 4,5 | ⚠️ limite : réservé au texte en gras ou en grand |
+| Crimson Red `#F87171` sur Obsidian / sur Deep Slate | 6,7 / 6,0 | ✅ AA (`#EF4444` : 4,9 / 4,4, insuffisant sur panneau) |
+| Electric Indigo `#818CF8` sur Obsidian / sur Deep Slate | 6,2 / 5,6 | ✅ AA (`#6366F1` : 4,2 / 3,7, mais Material colore le texte des boutons avec cette teinte : un test l'a montré à 3,8) |
+| Obsidian sur Electric Indigo `#818CF8` (boutons pleins) | 6,2 | ✅ AA |
 | Blanc sur Solar Amber | 2,8 | ❌ interdit : le texte des boutons d'action est sombre |
 
-Le thème clair (E3) reste à décliner de cette palette.
+Le thème clair est décliné de la même palette (indigo `#4F46E5`, rouge `#B91C1C`, vert `#047857`). Les couleurs de coloration du code sont validées à 4,5:1 minimum. Les tests `test/theme_test.dart` et `syntax_theme_test.dart` vérifient chaque couple et le contraste du texte des cinq écrans dans les deux thèmes.
 
 ---
 
@@ -278,7 +277,7 @@ Avant de passer une ligne de ce tableau à ✅, il faut un test manuel document�
 | Étape | Desktop (Windows/macOS/Linux) | Mobile (Android) |
 |---|---|---|
 | 1. Brancher | Câble USB direct | Câble ou adaptateur OTG |
-| 2. Détection | Carte listée automatiquement | Android propose d'ouvrir NomadMCU ; permission USB à accepter (case « toujours » recommandée) |
+| 2. Détection | Carte listée automatiquement | Android propose d'ouvrir NomadIDE ; permission USB à accepter (case « toujours » recommandée) |
 | 3. Connexion | « Connecter » ; le REPL affiche `>>>` | Idem |
 | 4. Écriture | Éditeur plein écran, raccourcis clavier | Éditeur avec barre de symboles, écran partagé éditeur/terminal en paysage |
 | 5. Exécution | Bouton « Run » (ou raccourci), sortie dans le terminal | Bouton « Run » flottant, sortie dans un panneau repliable |
@@ -403,3 +402,4 @@ La date de chaque jalon sera fixée après la décision sur R1 et le banc de tes
 | 0.8 | 2026-10-29 | Étape 3 : D4 (reset automatique ESP par DTR/RTS), D6 (débranchement en pleine écriture) et D7 pour le Badger 2040 (firmware Pimoroni téléchargé et flashé depuis l'app Windows) validés sur matériel |
 | 0.9 | 2026-10-29 | Étape 3 : D2 validé sur Android avec un Badger 2040 (PICOBOOT : autorisation USB, effacement, écriture, vérification, redémarrage) ; R1 levé |
 | 0.10 | 2026-10-29 | C6 ✅ ; ajout de D8 (flash multi-fichiers ESP), de l'épopée G (UX/UI et accessibilité, WCAG 2.2 AA / RGAA 4.1) avec la palette et ses contrastes calculés, de l'exigence d'accessibilité détaillée et du jalon M3c |
+| 0.11 | 2026-10-29 | Épopée G : barre de raccourcis accessible (G1), thème sombre et clair avec la palette de la marque, coloration du code, tests de contraste ; Electric Indigo éclairci (`#818CF8`) et Crimson Red éclairci (`#F87171`) en thème sombre |

@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "dev.nomadmcu" "\0"
-            VALUE "FileDescription", "nomad_mcu" "\0"
+            VALUE "FileDescription", "NomadIDE" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "nomad_mcu" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 dev.nomadmcu. All rights reserved." "\0"
             VALUE "OriginalFilename", "nomad_mcu.exe" "\0"
-            VALUE "ProductName", "nomad_mcu" "\0"
+            VALUE "ProductName", "NomadIDE" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

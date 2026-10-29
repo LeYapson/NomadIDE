@@ -1,4 +1,4 @@
-/// NomadMCU — protocoles de communication avec les cartes, en Dart pur.
+/// NomadIDE — protocoles de communication avec les cartes, en Dart pur.
 ///
 /// Ce package ne dépend ni de Flutter ni de `nomad_hal` : il ne connaît que
 /// [ByteLink]. L'application adapte une `SerialConnection` en [ByteLink],

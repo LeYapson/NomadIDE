@@ -1,4 +1,4 @@
-/// NomadMCU — Hardware Abstraction Layer USB/série.
+/// NomadIDE — Hardware Abstraction Layer USB/série.
 ///
 /// Point d'entrée unique pour l'application et les protocoles :
 ///

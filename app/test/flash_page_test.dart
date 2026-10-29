@@ -89,7 +89,7 @@ void main() {
     await tester.tap(find.text('Flasher').last);
     await tester.pumpAndSettle();
 
-    expect(find.text('NomadMCU · Flasher un programme'), findsOneWidget);
+    expect(find.text('NomadIDE · Flasher un programme'), findsOneWidget);
     expect(find.text('1. Fichier du programme'), findsOneWidget);
     expect(find.text('Aucun fichier choisi'), findsOneWidget);
     FilledButton flashButton() => tester.widget<FilledButton>(_flashButton);

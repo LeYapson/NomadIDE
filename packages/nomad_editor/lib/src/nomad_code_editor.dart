@@ -3,12 +3,11 @@ import 'package:re_editor/re_editor.dart';
 import 'package:re_highlight/languages/c.dart';
 import 'package:re_highlight/languages/cpp.dart';
 import 'package:re_highlight/languages/python.dart';
-import 'package:re_highlight/styles/atom-one-dark.dart';
-import 'package:re_highlight/styles/atom-one-light.dart';
 
 import 'autocomplete.dart';
 import 'code_language.dart';
 import 'nomad_editor_controller.dart';
+import 'syntax_theme.dart';
 
 /// Éditeur de code avec numéros de ligne et coloration syntaxique, qui suit le
 /// thème clair/sombre de l'application.
@@ -39,7 +38,7 @@ class NomadCodeEditor extends StatelessWidget {
   final ValueChanged<String>? onChanged;
 
   static CodeHighlightTheme highlightTheme(CodeLanguage language, Brightness brightness) {
-    final theme = brightness == Brightness.dark ? atomOneDarkTheme : atomOneLightTheme;
+    final theme = brightness == Brightness.dark ? nomadDarkSyntax : nomadLightSyntax;
     final languages = switch (language) {
       CodeLanguage.python => {'python': CodeHighlightThemeMode(mode: langPython)},
       CodeLanguage.c => {'c': CodeHighlightThemeMode(mode: langC)},
@@ -87,7 +86,7 @@ class NomadCodeEditor extends StatelessWidget {
           DefaultCodeLineNumber(
             controller: editingController,
             notifier: notifier,
-            textStyle: TextStyle(color: foreground.withValues(alpha: 0.45), fontSize: fontSize),
+            textStyle: TextStyle(color: foreground.withValues(alpha: 0.6), fontSize: fontSize),
             focusedTextStyle: TextStyle(color: foreground, fontSize: fontSize),
           ),
           DefaultCodeChunkIndicator(width: 20, controller: chunkController, notifier: notifier),

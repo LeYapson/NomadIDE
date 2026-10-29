@@ -1,5 +1,5 @@
 name: nomad_editor
-description: Éditeur de code de NomadMCU (coloration Python / C / C++, barre de symboles pour clavier mobile), basé sur re_editor.
+description: Éditeur de code de NomadIDE (coloration Python / C / C++, barre de symboles pour clavier mobile), basé sur re_editor.
 version: 0.1.0
 publish_to: none
 resolution: workspace

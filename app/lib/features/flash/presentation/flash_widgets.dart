@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../app/theme.dart';
+
 /// Une étape numérotée de l'écran de flash : titre puis contenu.
 class FlashStep extends StatelessWidget {
   const FlashStep({super.key, required this.title, required this.children});
@@ -33,8 +35,9 @@ class FlashBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final background = success ? scheme.primaryContainer : scheme.errorContainer;
-    final foreground = success ? scheme.onPrimaryContainer : scheme.onErrorContainer;
+    final colors = context.nomadColors;
+    final background = success ? colors.successContainer : scheme.errorContainer;
+    final foreground = success ? colors.onSuccessContainer : scheme.onErrorContainer;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(color: background, borderRadius: BorderRadius.circular(8)),

@@ -1,5 +1,5 @@
 name: nomad_mcu
-description: NomadMCU — IDE embarqué léger (MicroPython & C/C++) pour mobile et desktop.
+description: NomadIDE — IDE embarqué léger (MicroPython & C/C++) pour mobile et desktop.
 publish_to: none
 version: 0.1.0+1
 resolution: workspace

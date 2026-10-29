@@ -96,7 +96,7 @@ class HttpFirmwareSource implements FirmwareSource {
     final client = HttpClient()..connectionTimeout = timeout;
     try {
       final request = await client.getUrl(url).timeout(timeout);
-      request.headers.set(HttpHeaders.userAgentHeader, 'NomadMCU');
+      request.headers.set(HttpHeaders.userAgentHeader, 'NomadIDE');
       final response = await request.close().timeout(timeout);
       if (response.statusCode != 200) {
         throw FirmwareException(FirmwareError.badStatus, host: url.host, status: response.statusCode);

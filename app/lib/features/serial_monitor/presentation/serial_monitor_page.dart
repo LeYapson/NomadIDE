@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nomad_hal/nomad_hal.dart' show TransportKind;
 
+import '../../../app/theme.dart';
 import '../../../l10n/error_messages.dart';
 import '../../../l10n/l10n.dart';
 import '../application/serial_monitor_controller.dart';
@@ -65,8 +66,8 @@ class _StatusBadge extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     final l10n = context.l10n;
     final (color, label) = switch (status) {
-      ConnectionStatus.connected => (Colors.green, l10n.monStatusConnected),
-      ConnectionStatus.connecting => (Colors.orange, l10n.monStatusConnecting),
+      ConnectionStatus.connected => (context.nomadColors.success, l10n.monStatusConnected),
+      ConnectionStatus.connecting => (context.nomadColors.hardware, l10n.monStatusConnecting),
       ConnectionStatus.disconnected => (scheme.outline, l10n.monStatusDisconnected),
     };
     return Tooltip(

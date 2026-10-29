@@ -1,5 +1,5 @@
 name: nomad_hal
-description: Couche d'abstraction matérielle (HAL) USB/série de NomadMCU — Android OTG et ports série desktop.
+description: Couche d'abstraction matérielle (HAL) USB/série de NomadIDE — Android OTG et ports série desktop.
 version: 0.1.0
 publish_to: none
 resolution: workspace

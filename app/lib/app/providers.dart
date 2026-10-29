@@ -37,9 +37,22 @@ class HomeTabController extends Notifier<HomeTab> {
 ///
 /// Dans les tests : `storageRootProvider.overrideWith((ref) => tempDir)`.
 final storageRootProvider = FutureProvider<Directory>((ref) async {
-  final documents = await getApplicationDocumentsDirectory();
-  return Directory(p.join(documents.path, 'NomadMCU'));
+  return resolveStorageRoot(await getApplicationDocumentsDirectory());
 });
+
+/// Dossier `NomadIDE` dans les documents. L'app s'appelait `NomadMCU` : si ce dossier existe encore,
+/// il est renommé pour que les projets et brouillons existants restent là ; si le renommage échoue,
+/// l'ancien dossier continue d'être utilisé plutôt que de perdre les projets de vue.
+Future<Directory> resolveStorageRoot(Directory documents) async {
+  final current = Directory(p.join(documents.path, 'NomadIDE'));
+  final legacy = Directory(p.join(documents.path, 'NomadMCU'));
+  if (await current.exists() || !await legacy.exists()) return current;
+  try {
+    return await legacy.rename(current.path);
+  } on FileSystemException {
+    return legacy;
+  }
+}
 
 final projectStoreProvider = FutureProvider<ProjectStore>((ref) async => ProjectStore(await ref.watch(storageRootProvider.future)));
 

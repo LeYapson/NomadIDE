@@ -333,7 +333,7 @@ class FlashController extends Notifier<FlashState> {
       }
 
       if (!device.hasPermission) {
-        // Fenêtre du système : l'utilisateur doit autoriser NomadMCU à parler à la carte.
+        // Fenêtre du système : l'utilisateur doit autoriser NomadIDE à parler à la carte.
         state = state.copyWith(phase: FlashPhase.permission);
         if (!await gateway.requestPermission(device)) {
           _fail(l10n.flashUsbDenied);
