@@ -945,7 +945,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get errLinkReadFailed => 'Erreur de lecture sur le lien.';
 
   @override
-  String get errLinkClosed => 'Le lien a été fermé.';
+  String get errLinkClosed =>
+      'La carte a été débranchée ou la connexion a été coupée.';
 
   @override
   String errRawReplNotEntered(int attempts) {

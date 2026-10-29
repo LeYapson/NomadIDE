@@ -832,7 +832,7 @@
     }
   },
   "errLinkReadFailed": "Link read error.",
-  "errLinkClosed": "The link was closed.",
+  "errLinkClosed": "The board was unplugged or the connection was cut.",
   "errRawReplNotEntered": "The board does not enter raw REPL after {attempts} attempts. Check that it is a MicroPython board and that the port is not in use elsewhere.",
   "@errRawReplNotEntered": {
     "placeholders": {
