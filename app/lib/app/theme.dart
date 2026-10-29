@@ -107,7 +107,11 @@ extension NomadThemeContext on BuildContext {
 /// Style des boutons d'action sur la carte (Flasher, Exécuter, Redémarrer) : Solar Amber, texte sombre.
 ButtonStyle hardwareButtonStyle(BuildContext context) {
   final colors = context.nomadColors;
-  return FilledButton.styleFrom(backgroundColor: colors.hardware, foregroundColor: colors.onHardware);
+  return FilledButton.styleFrom(
+    backgroundColor: colors.hardware,
+    foregroundColor: colors.onHardware,
+    minimumSize: const Size(64, 48),
+  );
 }
 
 const ColorScheme _darkScheme = ColorScheme(

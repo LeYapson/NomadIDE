@@ -543,7 +543,7 @@
   "navFlash": "Flash",
   "flashTitle": "NomadIDE · Flash a program",
   "flashUnsupported": "Copying a .uf2 file is not yet possible on this system (Android: planned through the PICOBOOT protocol).",
-  "flashStepFile": "1. Program file",
+  "flashStepFile": "Program file",
   "flashPickFile": "Choose a .uf2 file",
   "flashNoFile": "No file chosen",
   "flashFileInfo": "{family} · {amount} · {blocks} blocks",
@@ -561,7 +561,7 @@
     }
   },
   "flashFamilyUnknown": "family not specified",
-  "flashStepBoard": "2. Board",
+  "flashStepBoard": "Board",
   "flashBoardHint": "The board restarts into BOOTSEL by itself. Otherwise: hold the BOOTSEL button, plug in the USB cable, then release.",
   "flashDriveFound": "BOOTSEL drive found: {drive} ({board})",
   "@flashDriveFound": {
@@ -575,7 +575,7 @@
     }
   },
   "flashDriveNone": "No BOOTSEL drive detected yet.",
-  "flashStepRun": "3. Writing",
+  "flashStepRun": "Writing",
   "flashRun": "Flash",
   "flashPhaseTouching": "Restarting the board into BOOTSEL mode…",
   "flashPhaseWaiting": "Waiting for the BOOTSEL drive…",
@@ -1195,5 +1195,36 @@
   "qkSymLess": "less than",
   "qkSymGreater": "greater than",
   "qkSymSlash": "slash",
-  "qkSymBackslash": "backslash"
+  "qkSymBackslash": "backslash",
+  "stepA11y": "Step {number} of {total}: {title}",
+  "@stepA11y": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "stepDone": "done",
+  "stepTodo": "to do",
+  "stepShowDetails": "Tap to change this step",
+  "stepHideDetails": "Tap to collapse this step",
+  "advancedTitle": "Advanced options",
+  "espAdvancedSummary": "Address {offset} · {baud} baud",
+  "@espAdvancedSummary": {
+    "placeholders": {
+      "offset": {
+        "type": "String"
+      },
+      "baud": {
+        "type": "int"
+      }
+    }
+  },
+  "flashRunBlocked": "Choose a file first to enable flashing."
 }

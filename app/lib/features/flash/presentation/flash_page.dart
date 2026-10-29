@@ -5,11 +5,11 @@ import 'package:nomad_protocols/nomad_protocols.dart';
 
 import '../../../app/theme.dart';
 import '../../../l10n/l10n.dart';
+import '../../../ui/ui.dart';
 import '../application/flash_controller.dart';
 import '../data/firmware_catalog.dart';
 import 'esp_flash_view.dart';
 import 'firmware_card.dart';
-import 'flash_widgets.dart';
 
 enum _FlashTarget { rp2, esp }
 
@@ -50,9 +50,12 @@ class _FlashPageState extends State<FlashPage> {
   }
 }
 
-/// Flashage d'un fichier `.uf2` sur une carte RP2040 / RP2350 (Pico, Badger 2040…).
+/// Flashage d'un fichier `.uf2` sur une carte RP2040 / RP2350 (Pico, Badger 2040…), en trois étapes :
+/// fichier, carte, écriture. Une étape terminée se replie sur son résumé.
 class Uf2FlashView extends ConsumerWidget {
   const Uf2FlashView({super.key});
+
+  static const _steps = 3;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -60,126 +63,142 @@ class Uf2FlashView extends ConsumerWidget {
     final state = ref.watch(flashProvider);
     final controller = ref.read(flashProvider.notifier);
     final supported = ref.watch(uf2SupportedProvider);
-    final scheme = Theme.of(context).colorScheme;
+
+    final file = state.file;
+    final fileInfo = file == null
+        ? null
+        : l10n.flashFileInfo(
+            file.family == Uf2Family.unknown ? l10n.flashFamilyUnknown : file.family.label,
+            flashSizeLabel(l10n, file.payloadSize),
+            file.blockCount,
+          );
+    final boardFound = state.drive != null || state.bootselUsb;
+    final boardLine = state.drive != null
+        ? l10n.flashDriveFound(state.drive!.path, state.drive!.boardId)
+        : state.bootselUsb
+            ? l10n.flashBootselUsbFound
+            : state.selectedDevice?.displayName;
 
     return SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            if (!supported)
-              Card(
-                color: scheme.secondaryContainer,
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Row(
+      child: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          if (!supported) ...[
+            StatusBanner(message: l10n.flashUnsupported, kind: StatusKind.info),
+            const SizedBox(height: 12),
+          ],
+          StepCard(
+            number: 1,
+            total: _steps,
+            title: l10n.flashStepFile,
+            done: file != null,
+            summary: file == null
+                ? null
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(Icons.info_outline, color: scheme.onSecondaryContainer),
-                      const SizedBox(width: 12),
-                      Expanded(child: Text(l10n.flashUnsupported, style: TextStyle(color: scheme.onSecondaryContainer))),
+                      Text(state.fileName ?? '', style: Theme.of(context).textTheme.titleSmall),
+                      Text(fileInfo!, style: Theme.of(context).textTheme.bodySmall),
                     ],
                   ),
-                ),
-              ),
-            FlashStep(
-              title: l10n.flashStepFile,
-              children: [
-                Wrap(
-                  children: [
-                    OutlinedButton.icon(
-                      onPressed: state.working ? null : controller.pickFile,
-                      icon: const Icon(Icons.folder_open),
-                      label: Text(l10n.flashPickFile),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                if (state.file == null)
-                  Text(state.fileName ?? l10n.flashNoFile)
-                else ...[
-                  Text(state.fileName ?? '', style: Theme.of(context).textTheme.titleSmall),
-                  Text(l10n.flashFileInfo(
-                    state.file!.family == Uf2Family.unknown ? l10n.flashFamilyUnknown : state.file!.family.label,
-                    flashSizeLabel(l10n, state.file!.payloadSize),
-                    state.file!.blockCount,
-                  )),
+            children: [
+              Wrap(
+                children: [
+                  OutlinedButton.icon(
+                    onPressed: state.working ? null : controller.pickFile,
+                    icon: const Icon(Icons.folder_open),
+                    label: Text(l10n.flashPickFile),
+                  ),
                 ],
+              ),
+              const SizedBox(height: 8),
+              if (file == null)
+                Text(state.fileName ?? l10n.flashNoFile)
+              else ...[
+                Text(state.fileName ?? '', style: Theme.of(context).textTheme.titleSmall),
+                Text(fileInfo!),
               ],
-            ),
-            if (supported)
-              FirmwareCard(
-                boards: const [
-                  FirmwareBoard.badger2040,
-                  FirmwareBoard.badger2040w,
-                  FirmwareBoard.pico,
-                  FirmwareBoard.picoW,
-                ],
-                onFile: controller.useFile,
-                enabled: !state.working,
-              ),
-            FlashStep(
-              title: l10n.flashStepBoard,
-              children: [
-                if (state.drive != null || state.bootselUsb)
-                  Row(
-                    children: [
-                      Icon(Icons.check_circle, color: scheme.primary, size: 20),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          state.drive != null
-                              ? l10n.flashDriveFound(state.drive!.path, state.drive!.boardId)
-                              : l10n.flashBootselUsbFound,
-                        ),
-                      ),
+              if (supported)
+                FirmwareCard(
+                  boards: const [
+                    FirmwareBoard.badger2040,
+                    FirmwareBoard.badger2040w,
+                    FirmwareBoard.pico,
+                    FirmwareBoard.picoW,
+                  ],
+                  onFile: controller.useFile,
+                  enabled: !state.working,
+                  initiallyExpanded: false,
+                ),
+            ],
+          ),
+          StepCard(
+            number: 2,
+            total: _steps,
+            title: l10n.flashStepBoard,
+            done: boardLine != null,
+            summary: boardLine == null ? null : Text(boardLine),
+            children: [
+              if (boardFound)
+                Row(
+                  children: [
+                    Icon(Icons.check_circle, color: context.nomadColors.success, size: 20),
+                    const SizedBox(width: 8),
+                    Expanded(child: Text(boardLine!)),
+                  ],
+                )
+              else ...[
+                if (state.devices.isNotEmpty)
+                  DropdownButtonFormField<SerialDeviceInfo>(
+                    key: ValueKey(state.selectedDevice),
+                    initialValue: state.selectedDevice,
+                    isExpanded: true,
+                    decoration: InputDecoration(labelText: l10n.monBoardLabel, border: const OutlineInputBorder()),
+                    items: [
+                      for (final d in state.devices)
+                        DropdownMenuItem(value: d, child: Text('${d.displayName} · ${d.details}', overflow: TextOverflow.ellipsis)),
                     ],
-                  )
-                else ...[
-                  if (state.devices.isNotEmpty)
-                    DropdownButtonFormField<SerialDeviceInfo>(
-                      key: ValueKey(state.selectedDevice),
-                      initialValue: state.selectedDevice,
-                      isExpanded: true,
-                      decoration: InputDecoration(labelText: l10n.monBoardLabel, border: const OutlineInputBorder()),
-                      items: [
-                        for (final d in state.devices)
-                          DropdownMenuItem(value: d, child: Text('${d.displayName} · ${d.details}', overflow: TextOverflow.ellipsis)),
-                      ],
-                      onChanged: state.working ? null : controller.selectDevice,
-                    ),
-                  const SizedBox(height: 8),
-                  Text(l10n.flashDriveNone),
-                ],
-                const SizedBox(height: 4),
-                Text(l10n.flashBoardHint, style: Theme.of(context).textTheme.bodySmall),
+                    onChanged: state.working ? null : controller.selectDevice,
+                  ),
+                const SizedBox(height: 8),
+                Text(l10n.flashDriveNone),
               ],
-            ),
-            FlashStep(
-              title: l10n.flashStepRun,
-              children: [
-                Wrap(
-                  children: [
-                    FilledButton.icon(
-                      style: hardwareButtonStyle(context),
-                      onPressed: supported && state.canFlash ? controller.flash : null,
-                      icon: const Icon(Icons.bolt),
-                      label: Text(l10n.flashRun),
-                    ),
-                  ],
-                ),
-                if (state.working) ...[
-                  const SizedBox(height: 12),
-                  Text(_phaseLabel(l10n, state)),
-                  const SizedBox(height: 6),
-                  LinearProgressIndicator(value: _hasProgress(state.phase) ? _fraction(state) : null),
+              const SizedBox(height: 4),
+              Text(l10n.flashBoardHint, style: Theme.of(context).textTheme.bodySmall),
+            ],
+          ),
+          StepCard(
+            number: 3,
+            total: _steps,
+            title: l10n.flashStepRun,
+            done: state.succeeded,
+            collapsible: false,
+            children: [
+              Wrap(
+                children: [
+                  HardwareButton(
+                    onPressed: supported && state.canFlash ? controller.flash : null,
+                    icon: Icons.bolt,
+                    label: l10n.flashRun,
+                  ),
                 ],
-                if (state.message != null) ...[
-                  const SizedBox(height: 12),
-                  FlashBanner(message: state.message!, success: state.succeeded),
-                ],
+              ),
+              if (file == null && !state.working) ...[
+                const SizedBox(height: 8),
+                Text(l10n.flashRunBlocked, style: Theme.of(context).textTheme.bodySmall),
               ],
-            ),
-          ],
-        ),
+              if (state.working) ...[
+                const SizedBox(height: 12),
+                ProgressStatus(label: _phaseLabel(l10n, state), value: _hasProgress(state.phase) ? _fraction(state) : null),
+              ],
+              if (state.message != null) ...[
+                const SizedBox(height: 12),
+                StatusBanner(message: state.message!, kind: state.succeeded ? StatusKind.success : StatusKind.error),
+              ],
+            ],
+          ),
+        ],
+      ),
     );
   }
 

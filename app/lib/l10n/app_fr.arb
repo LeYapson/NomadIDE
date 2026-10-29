@@ -543,7 +543,7 @@
   "navFlash": "Flasher",
   "flashTitle": "NomadIDE · Flasher un programme",
   "flashUnsupported": "La copie d’un fichier .uf2 n’est pas encore possible sur ce système (Android : prévu via le protocole PICOBOOT).",
-  "flashStepFile": "1. Fichier du programme",
+  "flashStepFile": "Fichier du programme",
   "flashPickFile": "Choisir un fichier .uf2",
   "flashNoFile": "Aucun fichier choisi",
   "flashFileInfo": "{family} · {amount} · {blocks} blocs",
@@ -561,7 +561,7 @@
     }
   },
   "flashFamilyUnknown": "famille non précisée",
-  "flashStepBoard": "2. Carte",
+  "flashStepBoard": "Carte",
   "flashBoardHint": "La carte redémarre toute seule en mode BOOTSEL. Sinon : maintenez le bouton BOOTSEL, branchez le câble USB, puis relâchez.",
   "flashDriveFound": "Disque BOOTSEL détecté : {drive} ({board})",
   "@flashDriveFound": {
@@ -575,7 +575,7 @@
     }
   },
   "flashDriveNone": "Aucun disque BOOTSEL détecté pour l’instant.",
-  "flashStepRun": "3. Écriture",
+  "flashStepRun": "Écriture",
   "flashRun": "Flasher",
   "flashPhaseTouching": "Redémarrage de la carte en mode BOOTSEL…",
   "flashPhaseWaiting": "Attente du disque BOOTSEL…",
@@ -1195,5 +1195,36 @@
   "qkSymLess": "inférieur à",
   "qkSymGreater": "supérieur à",
   "qkSymSlash": "barre oblique",
-  "qkSymBackslash": "barre oblique inverse"
+  "qkSymBackslash": "barre oblique inverse",
+  "stepA11y": "Étape {number} sur {total} : {title}",
+  "@stepA11y": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "stepDone": "terminée",
+  "stepTodo": "à faire",
+  "stepShowDetails": "Toucher pour modifier cette étape",
+  "stepHideDetails": "Toucher pour replier cette étape",
+  "advancedTitle": "Options avancées",
+  "espAdvancedSummary": "Adresse {offset} · {baud} bauds",
+  "@espAdvancedSummary": {
+    "placeholders": {
+      "offset": {
+        "type": "String"
+      },
+      "baud": {
+        "type": "int"
+      }
+    }
+  },
+  "flashRunBlocked": "Choisissez d’abord un fichier pour pouvoir flasher."
 }
