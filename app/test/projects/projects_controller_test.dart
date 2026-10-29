@@ -267,6 +267,15 @@ void main() {
   group('brouillons', () {
     File draftFile(String id) => File('${storage.path}/drafts/$id.json');
 
+    /// Attend que [condition] soit vraie (jusqu'à 5 s) : l'écriture d'un brouillon est asynchrone
+    /// et plus lente sur un serveur d'intégration qu'en local.
+    Future<void> waitUntil(bool Function() condition) async {
+      final deadline = DateTime.now().add(const Duration(seconds: 5));
+      while (!condition() && DateTime.now().isBefore(deadline)) {
+        await Future<void>.delayed(const Duration(milliseconds: 20));
+      }
+    }
+
     test('une modification est écrite en brouillon après le délai', () async {
       final container = newContainer(draftDelay: const Duration(milliseconds: 20));
       final editor = container.read(editorProvider.notifier);
@@ -274,7 +283,7 @@ void main() {
       final doc = container.read(editorProvider).active!;
 
       doc.controller.text = 'modifié';
-      await Future<void>.delayed(const Duration(milliseconds: 200));
+      await waitUntil(() => draftFile(doc.id).existsSync());
 
       expect(draftFile(doc.id).existsSync(), isTrue);
       expect(draftFile(doc.id).readAsStringSync(), contains('modifié'));
@@ -295,11 +304,11 @@ void main() {
       editor.newDocument(text: 'a');
       final doc = container.read(editorProvider).active!;
       doc.controller.text = 'b';
-      await Future<void>.delayed(const Duration(milliseconds: 150));
+      await waitUntil(() => draftFile(doc.id).existsSync());
       expect(draftFile(doc.id).existsSync(), isTrue);
 
       doc.controller.text = 'a';
-      await Future<void>.delayed(const Duration(milliseconds: 150));
+      await waitUntil(() => !draftFile(doc.id).existsSync());
 
       expect(draftFile(doc.id).existsSync(), isFalse);
     });
@@ -347,7 +356,7 @@ void main() {
 
       final second = newContainer();
       second.read(editorProvider);
-      await Future<void>.delayed(const Duration(milliseconds: 100));
+      await waitUntil(() => second.read(editorProvider).pendingDrafts.isNotEmpty);
 
       final pending = second.read(editorProvider).pendingDrafts;
       expect(pending, hasLength(2));
@@ -385,7 +394,7 @@ void main() {
 
       final second = newContainer();
       second.read(editorProvider);
-      await Future<void>.delayed(const Duration(milliseconds: 100));
+      await waitUntil(() => second.read(editorProvider).pendingDrafts.isNotEmpty);
       await second.read(editorProvider.notifier).restoreDrafts();
 
       expect(second.read(editorProvider).documents, isEmpty);
@@ -401,7 +410,7 @@ void main() {
 
       final second = newContainer();
       second.read(editorProvider);
-      await Future<void>.delayed(const Duration(milliseconds: 100));
+      await waitUntil(() => second.read(editorProvider).pendingDrafts.isNotEmpty);
       expect(second.read(editorProvider).pendingDrafts, hasLength(1));
 
       await second.read(editorProvider.notifier).discardDrafts();
@@ -421,7 +430,7 @@ void main() {
 
       final second = newContainer();
       second.read(editorProvider);
-      await Future<void>.delayed(const Duration(milliseconds: 100));
+      await waitUntil(() => second.read(editorProvider).pendingDrafts.isNotEmpty);
 
       expect(second.read(editorProvider).pendingDrafts.single.text, 'bon brouillon');
     });
