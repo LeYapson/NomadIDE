@@ -1946,6 +1946,138 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'{cause} L’écriture a été interrompue : la carte peut contenir un programme incomplet. Débranchez-la, maintenez BOOTSEL en la rebranchant, puis recommencez.'**
   String flashUsbInterrupted(String cause);
+
+  /// No description provided for @qkBarLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Raccourcis de saisie'**
+  String get qkBarLabel;
+
+  /// No description provided for @qkUndo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annuler la dernière modification'**
+  String get qkUndo;
+
+  /// No description provided for @qkRedo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rétablir la modification annulée'**
+  String get qkRedo;
+
+  /// No description provided for @qkSymColon.
+  ///
+  /// In fr, this message translates to:
+  /// **'deux-points'**
+  String get qkSymColon;
+
+  /// No description provided for @qkSymBraceOpen.
+  ///
+  /// In fr, this message translates to:
+  /// **'accolade ouvrante'**
+  String get qkSymBraceOpen;
+
+  /// No description provided for @qkSymBraceClose.
+  ///
+  /// In fr, this message translates to:
+  /// **'accolade fermante'**
+  String get qkSymBraceClose;
+
+  /// No description provided for @qkSymParenOpen.
+  ///
+  /// In fr, this message translates to:
+  /// **'parenthèse ouvrante'**
+  String get qkSymParenOpen;
+
+  /// No description provided for @qkSymParenClose.
+  ///
+  /// In fr, this message translates to:
+  /// **'parenthèse fermante'**
+  String get qkSymParenClose;
+
+  /// No description provided for @qkSymBracketOpen.
+  ///
+  /// In fr, this message translates to:
+  /// **'crochet ouvrant'**
+  String get qkSymBracketOpen;
+
+  /// No description provided for @qkSymBracketClose.
+  ///
+  /// In fr, this message translates to:
+  /// **'crochet fermant'**
+  String get qkSymBracketClose;
+
+  /// No description provided for @qkSymDoubleQuote.
+  ///
+  /// In fr, this message translates to:
+  /// **'guillemet double'**
+  String get qkSymDoubleQuote;
+
+  /// No description provided for @qkSymSingleQuote.
+  ///
+  /// In fr, this message translates to:
+  /// **'apostrophe'**
+  String get qkSymSingleQuote;
+
+  /// No description provided for @qkSymUnderscore.
+  ///
+  /// In fr, this message translates to:
+  /// **'tiret bas'**
+  String get qkSymUnderscore;
+
+  /// No description provided for @qkSymEquals.
+  ///
+  /// In fr, this message translates to:
+  /// **'égal'**
+  String get qkSymEquals;
+
+  /// No description provided for @qkSymHash.
+  ///
+  /// In fr, this message translates to:
+  /// **'dièse'**
+  String get qkSymHash;
+
+  /// No description provided for @qkSymComma.
+  ///
+  /// In fr, this message translates to:
+  /// **'virgule'**
+  String get qkSymComma;
+
+  /// No description provided for @qkSymDot.
+  ///
+  /// In fr, this message translates to:
+  /// **'point'**
+  String get qkSymDot;
+
+  /// No description provided for @qkSymSemicolon.
+  ///
+  /// In fr, this message translates to:
+  /// **'point-virgule'**
+  String get qkSymSemicolon;
+
+  /// No description provided for @qkSymLess.
+  ///
+  /// In fr, this message translates to:
+  /// **'inférieur à'**
+  String get qkSymLess;
+
+  /// No description provided for @qkSymGreater.
+  ///
+  /// In fr, this message translates to:
+  /// **'supérieur à'**
+  String get qkSymGreater;
+
+  /// No description provided for @qkSymSlash.
+  ///
+  /// In fr, this message translates to:
+  /// **'barre oblique'**
+  String get qkSymSlash;
+
+  /// No description provided for @qkSymBackslash.
+  ///
+  /// In fr, this message translates to:
+  /// **'barre oblique inverse'**
+  String get qkSymBackslash;
 }
 
 class _AppLocalizationsDelegate

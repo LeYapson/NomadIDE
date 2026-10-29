@@ -1173,5 +1173,27 @@
         "type": "String"
       }
     }
-  }
+  },
+  "qkBarLabel": "Raccourcis de saisie",
+  "qkUndo": "Annuler la dernière modification",
+  "qkRedo": "Rétablir la modification annulée",
+  "qkSymColon": "deux-points",
+  "qkSymBraceOpen": "accolade ouvrante",
+  "qkSymBraceClose": "accolade fermante",
+  "qkSymParenOpen": "parenthèse ouvrante",
+  "qkSymParenClose": "parenthèse fermante",
+  "qkSymBracketOpen": "crochet ouvrant",
+  "qkSymBracketClose": "crochet fermant",
+  "qkSymDoubleQuote": "guillemet double",
+  "qkSymSingleQuote": "apostrophe",
+  "qkSymUnderscore": "tiret bas",
+  "qkSymEquals": "égal",
+  "qkSymHash": "dièse",
+  "qkSymComma": "virgule",
+  "qkSymDot": "point",
+  "qkSymSemicolon": "point-virgule",
+  "qkSymLess": "inférieur à",
+  "qkSymGreater": "supérieur à",
+  "qkSymSlash": "barre oblique",
+  "qkSymBackslash": "barre oblique inverse"
 }

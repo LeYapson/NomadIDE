@@ -1161,4 +1161,70 @@ class AppLocalizationsEn extends AppLocalizations {
   String flashUsbInterrupted(String cause) {
     return '$cause The write was interrupted: the board may hold an incomplete program. Unplug it, hold BOOTSEL while plugging it back in, then try again.';
   }
+
+  @override
+  String get qkBarLabel => 'Typing shortcuts';
+
+  @override
+  String get qkUndo => 'Undo the last change';
+
+  @override
+  String get qkRedo => 'Redo the undone change';
+
+  @override
+  String get qkSymColon => 'colon';
+
+  @override
+  String get qkSymBraceOpen => 'opening brace';
+
+  @override
+  String get qkSymBraceClose => 'closing brace';
+
+  @override
+  String get qkSymParenOpen => 'opening parenthesis';
+
+  @override
+  String get qkSymParenClose => 'closing parenthesis';
+
+  @override
+  String get qkSymBracketOpen => 'opening bracket';
+
+  @override
+  String get qkSymBracketClose => 'closing bracket';
+
+  @override
+  String get qkSymDoubleQuote => 'double quote';
+
+  @override
+  String get qkSymSingleQuote => 'single quote';
+
+  @override
+  String get qkSymUnderscore => 'underscore';
+
+  @override
+  String get qkSymEquals => 'equals sign';
+
+  @override
+  String get qkSymHash => 'hash';
+
+  @override
+  String get qkSymComma => 'comma';
+
+  @override
+  String get qkSymDot => 'period';
+
+  @override
+  String get qkSymSemicolon => 'semicolon';
+
+  @override
+  String get qkSymLess => 'less than';
+
+  @override
+  String get qkSymGreater => 'greater than';
+
+  @override
+  String get qkSymSlash => 'slash';
+
+  @override
+  String get qkSymBackslash => 'backslash';
 }

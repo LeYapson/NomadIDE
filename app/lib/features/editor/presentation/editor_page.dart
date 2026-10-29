@@ -14,6 +14,7 @@ import '../../projects/presentation/project_dialogs.dart';
 import '../../projects/presentation/projects_panel.dart';
 import '../../../l10n/error_messages.dart';
 import '../../../l10n/l10n.dart';
+import '../../../l10n/quick_key_labels.dart';
 import '../application/editor_controller.dart';
 
 enum _CloseChoice { save, discard, cancel }
@@ -259,7 +260,7 @@ class _EditorPageState extends ConsumerState<EditorPage> {
                     },
                   ),
                 ),
-                if (_isMobile) SymbolBar(controller: document.controller),
+                if (_isMobile) SymbolBar(controller: document.controller, labels: symbolBarLabels(context.l10n)),
               ],
             ),
     );

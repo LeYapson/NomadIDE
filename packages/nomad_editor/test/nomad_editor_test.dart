@@ -201,6 +201,79 @@ void main() {
       expect(interrupts, 1);
     });
 
+    group('accessibilité de la barre de symboles', () {
+      Future<NomadEditorController> pumpBar(WidgetTester tester, {SymbolBarLabels labels = const SymbolBarLabels()}) async {
+        final controller = NomadEditorController(text: '', language: CodeLanguage.python);
+        addTearDown(controller.dispose);
+        await tester.pumpWidget(MaterialApp(home: Scaffold(body: SymbolBar(controller: controller, labels: labels))));
+        return controller;
+      }
+
+      testWidgets('chaque touche mesure au moins 48 × 48 dp et porte un libellé', (tester) async {
+        final handle = tester.ensureSemantics();
+        await pumpBar(tester);
+
+        await expectLater(tester, meetsGuideline(androidTapTargetGuideline));
+        await expectLater(tester, meetsGuideline(iOSTapTargetGuideline));
+        await expectLater(tester, meetsGuideline(labeledTapTargetGuideline));
+        handle.dispose();
+      });
+
+      testWidgets('les touches sont des boutons lus avec leur nom parlé, la barre est nommée', (tester) async {
+        final handle = tester.ensureSemantics();
+        await pumpBar(
+          tester,
+          labels: const SymbolBarLabels(
+            bar: 'Typing shortcuts',
+            insert: _insertEn,
+            symbolNames: {':': 'colon', '{': 'opening brace'},
+          ),
+        );
+
+        expect(tester.getSemantics(find.bySemanticsLabel('Insert colon')), matchesSemantics(label: 'Insert colon', isButton: true, hasTapAction: true, isEnabled: true, hasEnabledState: true));
+        expect(find.bySemanticsLabel('Insert opening brace'), findsOneWidget);
+        expect(find.bySemanticsLabel('Typing shortcuts'), findsOneWidget);
+        handle.dispose();
+      });
+
+      testWidgets('une touche désactivée est annoncée comme telle', (tester) async {
+        final handle = tester.ensureSemantics();
+        await tester.pumpWidget(MaterialApp(
+          home: Scaffold(body: QuickKeyBar(keys: [QuickKey(label: '^C', tooltip: 'Interrompre', onPressed: null)])),
+        ));
+
+        expect(
+          tester.getSemantics(find.bySemanticsLabel('Interrompre')),
+          matchesSemantics(label: 'Interrompre', isButton: true, hasEnabledState: true, isEnabled: false),
+        );
+        handle.dispose();
+      });
+
+      testWidgets('le libellé vocal remplace le tooltip quand il est fourni', (tester) async {
+        final handle = tester.ensureSemantics();
+        await tester.pumpWidget(MaterialApp(
+          home: Scaffold(
+            body: QuickKeyBar(keys: [QuickKey(label: ':', tooltip: 'Insérer :', semanticLabel: 'Insérer deux-points', onPressed: () {})]),
+          ),
+        ));
+
+        expect(find.bySemanticsLabel('Insérer deux-points'), findsOneWidget);
+        expect(find.bySemanticsLabel('Insérer :'), findsNothing);
+        handle.dispose();
+      });
+
+      testWidgets('toucher le bouton par la sémantique (lecteur d\'écran) insère le symbole', (tester) async {
+        final handle = tester.ensureSemantics();
+        final controller = await pumpBar(tester);
+
+        tester.semantics.tap(find.semantics.byLabel('Insérer :'));
+        await tester.pump();
+
+        expect(controller.text, ':');
+        handle.dispose();
+      });
+    });
+
     testWidgets('toucher une touche ne retire pas le focus à l\'éditeur : le clavier reste ouvert', (tester) async {
       final controller = NomadEditorController(text: 'if x', language: CodeLanguage.python);
       addTearDown(controller.dispose);
@@ -253,3 +326,5 @@ void main() {
     });
   });
 }
+
+String _insertEn(String name) => 'Insert $name';

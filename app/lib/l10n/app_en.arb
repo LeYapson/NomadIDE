@@ -1173,5 +1173,27 @@
         "type": "String"
       }
     }
-  }
+  },
+  "qkBarLabel": "Typing shortcuts",
+  "qkUndo": "Undo the last change",
+  "qkRedo": "Redo the undone change",
+  "qkSymColon": "colon",
+  "qkSymBraceOpen": "opening brace",
+  "qkSymBraceClose": "closing brace",
+  "qkSymParenOpen": "opening parenthesis",
+  "qkSymParenClose": "closing parenthesis",
+  "qkSymBracketOpen": "opening bracket",
+  "qkSymBracketClose": "closing bracket",
+  "qkSymDoubleQuote": "double quote",
+  "qkSymSingleQuote": "single quote",
+  "qkSymUnderscore": "underscore",
+  "qkSymEquals": "equals sign",
+  "qkSymHash": "hash",
+  "qkSymComma": "comma",
+  "qkSymDot": "period",
+  "qkSymSemicolon": "semicolon",
+  "qkSymLess": "less than",
+  "qkSymGreater": "greater than",
+  "qkSymSlash": "slash",
+  "qkSymBackslash": "backslash"
 }

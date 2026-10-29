@@ -130,11 +130,12 @@ class _ConsolePanelState extends ConsumerState<ConsolePanel> {
           ),
         ),
         QuickKeyBar(
+          semanticLabel: l10n.qkBarLabel,
           keys: [
             QuickKey(label: 'Tab', tooltip: l10n.qkTabTooltip, onPressed: () => _insert('    ')),
-            QuickKey(label: ':', tooltip: l10n.qkInsert(':'), onPressed: () => _insert(':')),
-            QuickKey(label: '{', tooltip: l10n.qkInsert('{'), onPressed: () => _insert('{')),
-            QuickKey(label: '}', tooltip: l10n.qkInsert('}'), onPressed: () => _insert('}')),
+            QuickKey(label: ':', tooltip: l10n.qkInsert(l10n.qkSymColon), onPressed: () => _insert(':')),
+            QuickKey(label: '{', tooltip: l10n.qkInsert(l10n.qkSymBraceOpen), onPressed: () => _insert('{')),
+            QuickKey(label: '}', tooltip: l10n.qkInsert(l10n.qkSymBraceClose), onPressed: () => _insert('}')),
             QuickKey(
               label: 'Ctrl+C',
               tooltip: l10n.qkCtrlCTooltip,

@@ -8,6 +8,8 @@ import 'package:nomad_hal/nomad_hal.dart';
 import 'package:nomad_mcu/app/app.dart';
 import 'package:nomad_mcu/app/providers.dart';
 import 'package:nomad_mcu/features/editor/application/editor_controller.dart';
+import 'package:nomad_mcu/l10n/l10n.dart';
+import 'package:nomad_mcu/l10n/quick_key_labels.dart';
 import 'support/locale.dart';
 
 ProviderContainer newContainer() {
@@ -158,6 +160,42 @@ void main() {
       // Le brouillon automatique est programmé : on l'écrit pour ne laisser aucun minuteur.
       await tester.runAsync(() => container.read(editorProvider.notifier).flushDrafts());
     }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+    testWidgets('sur Android, la barre est nommée et chaque touche est lue avec le nom du symbole', (tester) async {
+      final handle = tester.ensureSemantics();
+      final container = newContainer();
+      container.read(editorProvider.notifier).newDocument(text: 'x');
+      await tester.pumpWidget(app(container));
+      await tester.pumpAndSettle();
+      container.read(homeTabProvider.notifier).show(HomeTab.editor);
+      await tester.pumpAndSettle();
+
+      expect(find.bySemanticsLabel('Raccourcis de saisie'), findsOneWidget);
+      expect(find.bySemanticsLabel('Insérer deux-points'), findsOneWidget);
+      expect(find.bySemanticsLabel('Insérer accolade ouvrante'), findsOneWidget);
+      // Seule la barre est vérifiée ici : les autres zones de l'écran sont traitées par G4.
+      final buttons = find.descendant(of: find.byType(SymbolBar), matching: find.byType(OutlinedButton));
+      expect(buttons, findsWidgets);
+      for (final button in buttons.evaluate()) {
+        final size = tester.getSize(find.byWidget(button.widget));
+        expect(size.width, greaterThanOrEqualTo(48));
+        expect(size.height, greaterThanOrEqualTo(48));
+      }
+      handle.dispose();
+      await tester.runAsync(() => container.read(editorProvider.notifier).flushDrafts());
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+    test('les noms parlés des symboles existent dans les deux langues, sans doublon', () {
+      for (final locale in appLocales) {
+        final names = symbolBarLabels(lookupAppLocalizations(locale)).symbolNames;
+        final all = [...SymbolBar.primarySymbols, ...SymbolBar.secondarySymbols];
+        for (final s in all) {
+          expect(names[s], isNotNull, reason: '${locale.languageCode} : « $s » sans nom parlé');
+          expect(names[s], isNotEmpty);
+        }
+        expect(names.values.toSet().length, names.length, reason: '${locale.languageCode} : deux symboles ont le même nom');
+      }
+    });
 
     testWidgets('sur desktop, pas de barre de symboles', (tester) async {
       final container = newContainer();
