@@ -1,4 +1,4 @@
-# NomadMCU
+# NomadIDE
 
 IDE embarqué léger et multiplateforme (Android, iOS, Windows, macOS, Linux) pour éditer du
 MicroPython et du C/C++, puis le transférer ou le flasher sur une carte par USB

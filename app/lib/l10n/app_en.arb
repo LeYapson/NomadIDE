@@ -1,11 +1,11 @@
 {
   "@@locale": "en",
-  "appTitle": "NomadMCU",
+  "appTitle": "NomadIDE",
   "navMonitor": "Monitor",
   "navMicroPython": "MicroPython",
   "navEditor": "Editor",
   "navSettings": "Settings",
-  "settingsTitle": "NomadMCU · Settings",
+  "settingsTitle": "NomadIDE · Settings",
   "settingsLanguage": "Language",
   "languageSystem": "System language",
   "languageFrench": "Français",
@@ -42,7 +42,7 @@
       }
     }
   },
-  "monTitle": "NomadMCU · Serial monitor",
+  "monTitle": "NomadIDE · Serial monitor",
   "monStatusConnected": "Connected",
   "monStatusConnecting": "Connecting…",
   "monStatusDisconnected": "Disconnected",
@@ -150,7 +150,7 @@
   },
   "monLogReset": "Hardware reset (RTS → EN pulse)",
   "monLogBootloader": "ESP bootloader sequence sent: the ROM is waiting for esptool",
-  "mpTitle": "NomadMCU · MicroPython",
+  "mpTitle": "NomadIDE · MicroPython",
   "mpTabConsole": "Console",
   "mpTabFiles": "Files",
   "mpConnectRawRepl": "Connect (raw REPL)",
@@ -236,7 +236,7 @@
   "mpConsoleHint": "MicroPython code (Ctrl+Enter to run)",
   "mpStop": "Stop",
   "mpRun": "Run",
-  "mpDefaultCode": "print(\"Hello from NomadMCU\")",
+  "mpDefaultCode": "print(\"Hello from NomadIDE\")",
   "snippetMemory": "memory",
   "snippetError": "error",
   "snippetLoop": "3 s loop",
@@ -415,7 +415,7 @@
       }
     }
   },
-  "edTitle": "NomadMCU · Editor",
+  "edTitle": "NomadIDE · Editor",
   "edDraftsTitle": "Resume your unsaved work?",
   "edDraftsIntro": "The app closed before these files were saved:",
   "edDraftItem": "• {name}",
@@ -541,7 +541,7 @@
   "pfNoProject": "No projects",
   "pfNothing": "Nothing here",
   "navFlash": "Flash",
-  "flashTitle": "NomadMCU · Flash a program",
+  "flashTitle": "NomadIDE · Flash a program",
   "flashUnsupported": "Copying a .uf2 file is not yet possible on this system (Android: planned through the PICOBOOT protocol).",
   "flashStepFile": "1. Program file",
   "flashPickFile": "Choose a .uf2 file",
@@ -1148,7 +1148,7 @@
     }
   },
   "flashBootselUsbFound": "Board in BOOTSEL mode detected over USB.",
-  "flashPhasePermission": "Allow NomadMCU to access the board in the window that appears…",
+  "flashPhasePermission": "Allow NomadIDE to access the board in the window that appears…",
   "flashPhaseErasing": "Erasing the flash… {percent}%",
   "@flashPhaseErasing": {
     "placeholders": {

@@ -18,7 +18,7 @@ import 'base_serial_connection.dart';
 ///
 /// L'intent-filter `USB_DEVICE_ATTACHED` du manifeste (voir
 /// `app/android/app/src/main/AndroidManifest.xml`) permet à l'utilisateur de
-/// cocher « toujours ouvrir avec NomadMCU » et d'éviter la popup à chaque branchement.
+/// cocher « toujours ouvrir avec NomadIDE » et d'éviter la popup à chaque branchement.
 class AndroidUsbSerialTransport implements SerialTransport {
   final Map<String, AndroidUsbSerialConnection> _open = {};
   StreamSubscription<DeviceEvent>? _detachWatcher;

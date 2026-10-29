@@ -1,8 +1,8 @@
-# NomadMCU — Document de spécifications produit (PRD)
+# NomadIDE — Document de spécifications produit (PRD)
 
 | | |
 |---|---|
-| **Produit** | NomadMCU (dépôt : NomadIDE) |
+| **Produit** | NomadIDE |
 | **Version du document** | 0.11 — étape 3 : thème et palette appliqués, contrastes testés (épopée G) |
 | **Date** | 2026-10-01 |
 | **Statut du produit** | Étape 1 terminée (HAL USB/série + moniteur série) ; étape 2 en cours |
@@ -277,7 +277,7 @@ Avant de passer une ligne de ce tableau à ✅, il faut un test manuel document�
 | Étape | Desktop (Windows/macOS/Linux) | Mobile (Android) |
 |---|---|---|
 | 1. Brancher | Câble USB direct | Câble ou adaptateur OTG |
-| 2. Détection | Carte listée automatiquement | Android propose d'ouvrir NomadMCU ; permission USB à accepter (case « toujours » recommandée) |
+| 2. Détection | Carte listée automatiquement | Android propose d'ouvrir NomadIDE ; permission USB à accepter (case « toujours » recommandée) |
 | 3. Connexion | « Connecter » ; le REPL affiche `>>>` | Idem |
 | 4. Écriture | Éditeur plein écran, raccourcis clavier | Éditeur avec barre de symboles, écran partagé éditeur/terminal en paysage |
 | 5. Exécution | Bouton « Run » (ou raccourci), sortie dans le terminal | Bouton « Run » flottant, sortie dans un panneau repliable |

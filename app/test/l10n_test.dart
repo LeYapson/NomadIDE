@@ -237,7 +237,7 @@ void main() {
       addTearDown(tester.platformDispatcher.clearLocalesTestValue);
       await pumpApp(tester, newContainer());
 
-      expect(find.text('NomadMCU · Serial monitor'), findsOneWidget);
+      expect(find.text('NomadIDE · Serial monitor'), findsOneWidget);
       expect(find.text('Monitor'), findsOneWidget); // barre de navigation
       expect(find.text('Editor'), findsOneWidget);
       expect(find.text('Settings'), findsOneWidget);
@@ -250,7 +250,7 @@ void main() {
       addTearDown(tester.platformDispatcher.clearLocalesTestValue);
       await pumpApp(tester, newContainer());
 
-      expect(find.text('NomadMCU · Moniteur série'), findsOneWidget);
+      expect(find.text('NomadIDE · Moniteur série'), findsOneWidget);
       expect(find.text('Réglages'), findsOneWidget);
     });
 
@@ -259,7 +259,7 @@ void main() {
       addTearDown(tester.platformDispatcher.clearLocalesTestValue);
       await pumpApp(tester, newContainer());
 
-      expect(find.text('NomadMCU · Serial monitor'), findsOneWidget);
+      expect(find.text('NomadIDE · Serial monitor'), findsOneWidget);
     });
 
     testWidgets('les autres écrans sont aussi en anglais', (tester) async {
@@ -271,13 +271,13 @@ void main() {
 
       container.read(homeTabProvider.notifier).show(HomeTab.micropython);
       await settle(tester);
-      expect(find.text('NomadMCU · MicroPython'), findsOneWidget);
+      expect(find.text('NomadIDE · MicroPython'), findsOneWidget);
       expect(find.text('Connect (raw REPL)'), findsOneWidget);
       expect(find.text('Run'), findsOneWidget);
 
       container.read(homeTabProvider.notifier).show(HomeTab.editor);
       await settle(tester);
-      expect(find.text('NomadMCU · Editor'), findsOneWidget);
+      expect(find.text('NomadIDE · Editor'), findsOneWidget);
       expect(find.text('No file open.'), findsOneWidget);
       expect(find.text('No projects.'), findsOneWidget);
       expect(find.text('New project'), findsOneWidget);
@@ -290,12 +290,12 @@ void main() {
       await pumpApp(tester, container);
       container.read(homeTabProvider.notifier).show(HomeTab.settings);
       await settle(tester);
-      expect(find.text('NomadMCU · Settings'), findsOneWidget);
+      expect(find.text('NomadIDE · Settings'), findsOneWidget);
 
       await tester.tap(find.text('Français'));
       await settle(tester);
 
-      expect(find.text('NomadMCU · Réglages'), findsOneWidget);
+      expect(find.text('NomadIDE · Réglages'), findsOneWidget);
       expect(container.read(localeProvider), const Locale('fr'));
     });
 

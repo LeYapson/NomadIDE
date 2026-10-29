@@ -7,7 +7,7 @@
     <uses-feature android:name="android.hardware.usb.host" android:required="false" />
 
     <application
-        android:label="NomadMCU"
+        android:label="NomadIDE"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <!-- singleTop : un branchement USB réutilise l'activité existante au lieu d'en créer une seconde. -->
@@ -28,7 +28,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-            <!-- Propose d'ouvrir NomadMCU au branchement d'une carte connue.
+            <!-- Propose d'ouvrir NomadIDE au branchement d'une carte connue.
                  Si l'utilisateur coche « toujours », la permission USB devient persistante. -->
             <intent-filter>
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />

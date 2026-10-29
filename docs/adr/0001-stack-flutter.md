@@ -5,7 +5,7 @@
 
 ## Contexte
 
-NomadMCU doit tourner sur Android, iOS, Windows, macOS et Linux avec une seule base de code,
+NomadIDE doit tourner sur Android, iOS, Windows, macOS et Linux avec une seule base de code,
 et parler à des cartes via **USB-série** (FTDI, CP210x, CH34x, PL2303, CDC-ACM).
 
 La contrainte qui décide de tout est **l'USB OTG sur Android** :
@@ -46,6 +46,6 @@ isolé dans le package `nomad_editor`.
   sans carte, au-dessus d'une simple `SerialConnection`.
 - **iOS :** aucune stack ne contourne la limite. iOS n'a pas d'API USB Host publique :
   seuls les accessoires certifiés MFi sont accessibles, et DriverKit sur iPad exige
-  un entitlement Apple. Sur iOS, NomadMCU sera donc un éditeur, avec des transports
+  un entitlement Apple. Sur iOS, NomadIDE sera donc un éditeur, avec des transports
   **BLE** (Nordic UART) et **WebREPL** (Wi-Fi) à ajouter plus tard comme nouvelles
   implémentations de `SerialTransport`.

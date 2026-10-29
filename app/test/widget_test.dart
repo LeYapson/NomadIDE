@@ -17,7 +17,7 @@ void main() {
     );
     await tester.pumpAndSettle(); // laisse passer le refreshDevices() initial
 
-    expect(find.text('NomadMCU · Moniteur série'), findsOneWidget);
+    expect(find.text('NomadIDE · Moniteur série'), findsOneWidget);
     expect(find.text('Déconnecté'), findsOneWidget);
     expect(
       find.ancestor(of: find.text('Connecter'), matching: find.bySubtype<FilledButton>()),
@@ -38,7 +38,7 @@ void main() {
     await tester.tap(find.text('MicroPython').last);
     await tester.pumpAndSettle();
 
-    expect(find.text('NomadMCU · MicroPython'), findsOneWidget);
+    expect(find.text('NomadIDE · MicroPython'), findsOneWidget);
     expect(find.text('Connecter (raw REPL)'), findsOneWidget);
     expect(find.textContaining('Carte simulée'), findsWidgets);
   });

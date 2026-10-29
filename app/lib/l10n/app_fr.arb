@@ -1,11 +1,11 @@
 {
   "@@locale": "fr",
-  "appTitle": "NomadMCU",
+  "appTitle": "NomadIDE",
   "navMonitor": "Moniteur",
   "navMicroPython": "MicroPython",
   "navEditor": "Éditeur",
   "navSettings": "Réglages",
-  "settingsTitle": "NomadMCU · Réglages",
+  "settingsTitle": "NomadIDE · Réglages",
   "settingsLanguage": "Langue",
   "languageSystem": "Langue du système",
   "languageFrench": "Français",
@@ -42,7 +42,7 @@
       }
     }
   },
-  "monTitle": "NomadMCU · Moniteur série",
+  "monTitle": "NomadIDE · Moniteur série",
   "monStatusConnected": "Connecté",
   "monStatusConnecting": "Connexion…",
   "monStatusDisconnected": "Déconnecté",
@@ -150,7 +150,7 @@
   },
   "monLogReset": "Reset matériel (impulsion RTS → EN)",
   "monLogBootloader": "Séquence bootloader ESP envoyée : la ROM attend esptool",
-  "mpTitle": "NomadMCU · MicroPython",
+  "mpTitle": "NomadIDE · MicroPython",
   "mpTabConsole": "Console",
   "mpTabFiles": "Fichiers",
   "mpConnectRawRepl": "Connecter (raw REPL)",
@@ -236,7 +236,7 @@
   "mpConsoleHint": "Code MicroPython (Ctrl+Entrée pour exécuter)",
   "mpStop": "Arrêter",
   "mpRun": "Exécuter",
-  "mpDefaultCode": "print(\"Bonjour depuis NomadMCU\")",
+  "mpDefaultCode": "print(\"Bonjour depuis NomadIDE\")",
   "snippetMemory": "mémoire",
   "snippetError": "erreur",
   "snippetLoop": "boucle 3 s",
@@ -415,7 +415,7 @@
       }
     }
   },
-  "edTitle": "NomadMCU · Éditeur",
+  "edTitle": "NomadIDE · Éditeur",
   "edDraftsTitle": "Reprendre le travail non enregistré ?",
   "edDraftsIntro": "L’application s’est fermée avant l’enregistrement de ces fichiers :",
   "edDraftItem": "• {name}",
@@ -541,7 +541,7 @@
   "pfNoProject": "Aucun projet",
   "pfNothing": "Rien ici",
   "navFlash": "Flasher",
-  "flashTitle": "NomadMCU · Flasher un programme",
+  "flashTitle": "NomadIDE · Flasher un programme",
   "flashUnsupported": "La copie d’un fichier .uf2 n’est pas encore possible sur ce système (Android : prévu via le protocole PICOBOOT).",
   "flashStepFile": "1. Fichier du programme",
   "flashPickFile": "Choisir un fichier .uf2",
@@ -1148,7 +1148,7 @@
     }
   },
   "flashBootselUsbFound": "Carte en BOOTSEL détectée par USB.",
-  "flashPhasePermission": "Autorisez NomadMCU à accéder à la carte dans la fenêtre qui s’affiche…",
+  "flashPhasePermission": "Autorisez NomadIDE à accéder à la carte dans la fenêtre qui s’affiche…",
   "flashPhaseErasing": "Effacement de la flash… {percent} %",
   "@flashPhaseErasing": {
     "placeholders": {

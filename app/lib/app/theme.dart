@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-// Palette NomadMCU. Les teintes marquées « ajusté » s'écartent légèrement de la charte pour tenir
+// Palette NomadIDE. Les teintes marquées « ajusté » s'écartent légèrement de la charte pour tenir
 // les contrastes WCAG 2.2 AA (voir PRD, épopée G) ; chaque couple texte/fond est vérifié par
 // `test/theme_test.dart`.
 
@@ -28,7 +28,7 @@ const Color electricIndigo = Color(0xFF818CF8);
 /// contre 4,4:1 pour `#EF4444`).
 const Color crimsonRed = Color(0xFFF87171);
 
-/// Couleurs propres à NomadMCU, hors du jeu de rôles Material.
+/// Couleurs propres à NomadIDE, hors du jeu de rôles Material.
 @immutable
 class NomadColors extends ThemeExtension<NomadColors> {
   const NomadColors({

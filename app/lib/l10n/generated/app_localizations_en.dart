@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'NomadMCU';
+  String get appTitle => 'NomadIDE';
 
   @override
   String get navMonitor => 'Monitor';
@@ -24,7 +24,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navSettings => 'Settings';
 
   @override
-  String get settingsTitle => 'NomadMCU · Settings';
+  String get settingsTitle => 'NomadIDE · Settings';
 
   @override
   String get settingsLanguage => 'Language';
@@ -78,7 +78,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get monTitle => 'NomadMCU · Serial monitor';
+  String get monTitle => 'NomadIDE · Serial monitor';
 
   @override
   String get monStatusConnected => 'Connected';
@@ -236,7 +236,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'ESP bootloader sequence sent: the ROM is waiting for esptool';
 
   @override
-  String get mpTitle => 'NomadMCU · MicroPython';
+  String get mpTitle => 'NomadIDE · MicroPython';
 
   @override
   String get mpTabConsole => 'Console';
@@ -354,7 +354,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mpRun => 'Run';
 
   @override
-  String get mpDefaultCode => 'print(\"Hello from NomadMCU\")';
+  String get mpDefaultCode => 'print(\"Hello from NomadIDE\")';
 
   @override
   String get snippetMemory => 'memory';
@@ -489,7 +489,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get edTitle => 'NomadMCU · Editor';
+  String get edTitle => 'NomadIDE · Editor';
 
   @override
   String get edDraftsTitle => 'Resume your unsaved work?';
@@ -681,7 +681,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navFlash => 'Flash';
 
   @override
-  String get flashTitle => 'NomadMCU · Flash a program';
+  String get flashTitle => 'NomadIDE · Flash a program';
 
   @override
   String get flashUnsupported =>
@@ -1141,7 +1141,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get flashPhasePermission =>
-      'Allow NomadMCU to access the board in the window that appears…';
+      'Allow NomadIDE to access the board in the window that appears…';
 
   @override
   String flashPhaseErasing(int percent) {

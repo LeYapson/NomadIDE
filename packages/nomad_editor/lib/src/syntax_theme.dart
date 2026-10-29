@@ -1,6 +1,6 @@
 import 'package:flutter/painting.dart';
 
-/// Couleurs de coloration syntaxique de NomadMCU.
+/// Couleurs de coloration syntaxique de NomadIDE.
 ///
 /// Les fonds suivent la palette de la marque (Obsidian Dark, Soft Chalk). Chaque teinte de texte
 /// respecte un contraste d'au moins 4,5:1 sur son fond (WCAG AA) ; le test

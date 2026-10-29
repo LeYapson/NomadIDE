@@ -1,4 +1,4 @@
-/// NomadMCU — éditeur de code (Python / C / C++) pour écran tactile et desktop.
+/// NomadIDE — éditeur de code (Python / C / C++) pour écran tactile et desktop.
 library;
 
 export 'src/code_language.dart';
