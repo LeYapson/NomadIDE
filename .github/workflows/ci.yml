@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [develop, main]
+  push:
+    branches: [develop, main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analyze-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.38.7
+          cache: true
+
+      - name: Résolution des dépendances (workspace)
+        run: flutter pub get
+
+      - name: Analyse statique
+        run: |
+          flutter analyze app
+          for p in packages/*; do flutter analyze "$p"; done
+
+      - name: Tests de l'application
+        working-directory: app
+        run: flutter test
+
+      - name: Tests des packages
+        run: |
+          for p in packages/*; do
+            if [ -d "$p/test" ]; then
+              (cd "$p" && flutter test) || exit 1
+            fi
+          done
