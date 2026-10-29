@@ -1656,7 +1656,7 @@ abstract class AppLocalizations {
   /// No description provided for @errLinkClosed.
   ///
   /// In fr, this message translates to:
-  /// **'Le lien a été fermé.'**
+  /// **'La carte a été débranchée ou la connexion a été coupée.'**
   String get errLinkClosed;
 
   /// No description provided for @errRawReplNotEntered.

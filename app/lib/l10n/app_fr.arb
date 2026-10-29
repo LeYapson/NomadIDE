@@ -832,7 +832,7 @@
     }
   },
   "errLinkReadFailed": "Erreur de lecture sur le lien.",
-  "errLinkClosed": "Le lien a été fermé.",
+  "errLinkClosed": "La carte a été débranchée ou la connexion a été coupée.",
   "errRawReplNotEntered": "La carte ne passe pas en raw REPL après {attempts} tentatives. Vérifiez qu’il s’agit bien d’une carte MicroPython et que le port n’est pas utilisé ailleurs.",
   "@errRawReplNotEntered": {
     "placeholders": {

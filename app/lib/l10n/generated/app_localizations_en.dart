@@ -941,7 +941,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errLinkReadFailed => 'Link read error.';
 
   @override
-  String get errLinkClosed => 'The link was closed.';
+  String get errLinkClosed =>
+      'The board was unplugged or the connection was cut.';
 
   @override
   String errRawReplNotEntered(int attempts) {
