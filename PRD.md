@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Produit** | NomadMCU (dépôt : NomadIDE) |
-| **Version du document** | 0.9 — étape 3 : flash UF2 validé sur Android (PICOBOOT), en plus d'ESP32 / ESP32-S3 et du firmware MicroPython |
+| **Version du document** | 0.10 — étape 3 : flash UF2 validé sur Android (PICOBOOT) ; ajout de l'UX/UI et de l'accessibilité (épopée G) et du flash multi-fichiers (D8) |
 | **Date** | 2026-10-01 |
 | **Statut du produit** | Étape 1 terminée (HAL USB/série + moniteur série) ; étape 2 en cours |
 | **Documents liés** | [README.md](README.md) · [ADR 0001 — Flutter](docs/adr/0001-stack-flutter.md) |
@@ -115,7 +115,7 @@ Format des critères : **Étant donné** / **Quand** / **Alors**. Chaque story e
 | C3 | Je veux voir les fichiers de la carte et en téléverser, télécharger, renommer, supprimer. | M | ✅ (liste, lecture, écriture vérifiée par CRC32, suppression, envoi depuis un projet, téléchargement et renommage validés sur Badger 2040 depuis un téléphone Android ; coupure de câble testée avec une fausse carte) |
 | C4 | Je veux enregistrer mon `main.py` sur la carte pour qu'il s'exécute au démarrage. | M | ✅ (validé sur Android avec un Badger 2040) |
 | C5 | Je veux interrompre un programme (Ctrl-C) et redémarrer la carte (soft reset). | M | ✅ (arrêt d'une boucle infinie et soft reset validés sur Badger 2040) |
-| C6 | Je veux installer ou mettre à jour le firmware MicroPython sur ma carte. | S | 🔜 (voir épopée D) |
+| C6 | Je veux installer ou mettre à jour le firmware MicroPython sur ma carte. | S | ✅ (fait par D7 : téléchargement et flash du firmware depuis l'app) |
 
 **Critères d'acceptation**
 
@@ -135,6 +135,7 @@ Format des critères : **Étant donné** / **Quand** / **Alors**. Chaque story e
 | D5 | Je veux compiler mon code C/C++ via un service cloud et flasher le résultat directement. | M | 🔜 |
 | D6 | Je veux voir une progression fiable et une vérification du flash. | M | ✅ progression et vérification (MD5 pour l'ESP, redémarrage de la carte pour l'UF2) validées sur matériel ; débranchement en pleine écriture validé sur ESP : message d'erreur avec avertissement « carte possiblement incomplète » et marche à suivre |
 | D7 | Je veux installer le firmware MicroPython adapté à ma carte (ex. firmware Pimoroni pour la Badger 2040). | S | ✅ ESP32 et ESP32-S3 : recherche, téléchargement et flash du firmware officiel validés sur Windows et Android ; ✅ Badger 2040 : firmware Pimoroni téléchargé et flashé depuis l'app Windows, REPL et code exécuté vérifiés ; 🧪 Pico et Pico W (version et téléchargement validés contre micropython.org, flash depuis l'app non essayé), Badger 2040 W |
+| D8 | Je veux flasher plusieurs fichiers à des adresses distinctes en une seule passe (ex. bootloader `0x1000`, table de partitions `0x8000`, application `0x10000`), pour les projets Arduino et ESP-IDF. | S | 🔜 (nécessaire dès que D5 livre un projet complet ; aujourd'hui un seul fichier par flash) |
 
 **Critères d'acceptation**
 
@@ -143,6 +144,7 @@ Format des critères : **Étant donné** / **Quand** / **Alors**. Chaque story e
 - **D3** — *Étant donné* un STM32 avec BOOT0 actif et un adaptateur USB-série, *alors* l'app détecte le bootloader (réponse ACK `0x79`) avant d'écrire.
 - **D5** — *Quand* je lance la compilation, *alors* l'app indique explicitement quel code est envoyé et vers quel serveur, demande une confirmation la première fois, et affiche les erreurs du compilateur avec numéros de ligne cliquables. *Quand* la compilation réussit, *alors* le binaire est téléchargé et le flash peut être lancé en un clic. Le compilateur cible la bonne carte (ESP32 / ESP32-S / RP2040) d'après la carte détectée ou le projet.
 - **D7** — *Étant donné* une carte RP2040 en BOOTSEL ou un ESP32, *alors* l'app propose le firmware correspondant (version indiquée) et le flashe ; pour la Badger 2040, c'est le firmware Pimoroni (qui embarque ses modules d'affichage) et non le MicroPython générique.
+- **D8** — *Quand* je prépare un flash ESP, *alors* je peux ajouter plusieurs fichiers, chacun avec son adresse (déduite de l'en-tête quand c'est possible, modifiable). *Si* deux fichiers se chevauchent en mémoire flash, ou si un fichier ne correspond pas à la puce détectée, *alors* l'app refuse avant toute écriture. Chaque fichier est vérifié (MD5), la progression est globale, et la carte n'est redémarrée qu'une fois, à la fin.
 - **D6** — *Quand* une écriture est interrompue (câble débranché), *alors* l'app l'indique clairement et rappelle que la carte peut avoir un firmware incomplet, avec la marche à suivre pour la récupérer.
 
 ### Épopée F — Compte, abonnement et quotas (compilation cloud)
@@ -172,6 +174,52 @@ Le compte n'est exigé **que** pour la compilation cloud. Éditeur, moniteur, Mi
 | E4 | Je veux être informé clairement des limites de ma plateforme (iOS notamment). | M | 🧪 |
 | E5 | Je veux recevoir les mises à jour de l'app facilement. | C | 🔜 |
 | E6 | Je veux utiliser l'app en français ou en anglais, selon la langue du système ou mon choix. | M | ✅ (changement de langue validé sur Android) |
+
+### Épopée G — UX/UI et accessibilité
+
+Référentiels visés : **WCAG 2.2 niveau AA** et **RGAA 4.1**. Méthode : la conception part des problèmes observés sur le terrain (clavier tactile, petits écrans, atelier sombre), pas d'un catalogue de composants.
+
+| ID | User story | Prio | Statut |
+|---|---|---|---|
+| G1 | Je veux une barre de raccourcis tactile au-dessus du clavier (`Tab`, `:`, `{`, `}` ; `Ctrl+C` et `Ctrl+D` dans la console MicroPython) pour programmer sans chercher les symboles. | M | 🧪 existe déjà (B6) ; reste la mise en conformité : cibles 48 dp, libellés traduits, sémantique |
+| G2 | Je veux que le flash soit un parcours guidé (1. Fichier, 2. Carte, 3. Écriture) lisible sur un écran de 360 dp, sans surcharge. | M | 🧪 trois étapes existantes ; reste la divulgation progressive (seule l'étape utile est développée) et la revue à 360 dp |
+| G3 | Je veux qu'un lecteur d'écran (TalkBack, VoiceOver) annonce l'état de l'app : carte connectée ou déconnectée, flash en cours avec son avancement, erreur. | M | 🔜 |
+| G4 | Je veux que toutes les zones tactiles fassent au moins 48 × 48 dp. | M | 🔜 |
+| G5 | Je veux un thème sombre lisible : contraste ≥ 4,5:1 pour le texte et ≥ 3:1 pour les composants et le focus. | M | 🔜 |
+| G6 | Je veux une identité visuelle cohérente (palette ci-dessous) appliquée à tous les écrans. | S | 🔜 |
+| G7 | Je veux une interface construite à partir de composants réutilisables (atomes, molécules, organismes) et de la grille Material 3, pour que chaque écran se comporte de la même façon. | S | 🔜 |
+
+**Critères d'acceptation**
+
+- **G1** — *Étant donné* un téléphone avec le clavier ouvert, *quand* je touche une touche de la barre, *alors* le symbole est inséré sans fermer le clavier ; chaque touche mesure au moins 48 × 48 dp, a un libellé vocal (« Insérer deux-points », « Indenter ») et est traduite en français et en anglais.
+- **G3** — *Quand* l'état change (connexion, avancement du flash par paliers, fin, erreur), *alors* il est annoncé une fois par le lecteur d'écran, sans répéter chaque pourcentage ; les icônes et boutons sans texte ont un libellé.
+- **G4** — Un test automatisé vérifie la taille des cibles sur les écrans principaux (guide `androidTapTargetGuideline` de Flutter).
+- **G5** — Un test automatisé vérifie les contrastes (guide `textContrastGuideline`) ; les couleurs sont validées par le calcul ci-dessous. La couleur seule n'est jamais le seul indicateur : une erreur ou un succès s'accompagne d'une icône et d'un texte.
+
+**Palette (thème sombre)** et contrastes calculés (WCAG) :
+
+| Rôle | Teinte | Code | Usage |
+|---|---|---|---|
+| Fond principal | Obsidian Dark | `#111318` | Fond de l'éditeur et de l'app |
+| Surface | Deep Slate | `#1B1E28` | Panneaux, terminal, onglets, barre de navigation |
+| Accent de marque | Electric Indigo | `#6366F1` | Identité, sélection, focus, curseur |
+| Action matérielle | Solar Amber | `#FF6B35` | Flasher, Exécuter, Redémarrer |
+| Connexion et succès | Cyber Mint | `#00E5A3` | USB connecté, REPL réussi, « prêt » |
+| Texte principal | Soft Chalk | `#F3F4F6` | Code et textes |
+| Erreur et danger | Crimson Red | `#EF4444` | Déconnexion, erreur de compilation, échec du flash |
+
+| Combinaison | Rapport | Verdict |
+|---|---|---|
+| Soft Chalk sur Obsidian / sur Deep Slate | 16,9 / 15,1 | ✅ AAA |
+| Cyber Mint sur Obsidian / sur Deep Slate | 11,3 / 10,1 | ✅ AAA |
+| Obsidian sur Solar Amber (texte des boutons d'action) | 6,6 | ✅ AA |
+| Crimson Red sur Obsidian | 4,9 | ✅ AA |
+| Crimson Red sur Deep Slate | 4,4 | ⚠️ juste sous 4,5 : éclaircir le rouge pour le texte sur panneau |
+| Electric Indigo sur Obsidian / sur Deep Slate | 4,2 / 3,7 | ✅ pour focus et composants (≥ 3), ⚠️ insuffisant pour du texte courant |
+| Blanc sur Electric Indigo | 4,5 | ⚠️ limite : réservé au texte en gras ou en grand |
+| Blanc sur Solar Amber | 2,8 | ❌ interdit : le texte des boutons d'action est sombre |
+
+Le thème clair (E3) reste à décliner de cette palette.
 
 ---
 
@@ -272,7 +320,7 @@ L'utilisateur ouvre l'app, voit un bandeau expliquant que l'USB-série n'est pas
 | **Confidentialité** | Aucune télémétrie par défaut. Le code n'est envoyé au service de compilation qu'après confirmation explicite, et n'est pas conservé au-delà de la compilation (durée de rétention à définir). |
 | **Sécurité** | Service de compilation : conteneurs éphémères, sans réseau, limites CPU/mémoire/durée, quotas par compte ; authentification obligatoire pour la compilation uniquement. |
 | **Disponibilité du service** | Si le service est indisponible, l'app le dit clairement et propose l'import de binaire ; aucune autre fonction n'est touchée. |
-| **Accessibilité** | Taille de police réglable, contraste suffisant, cibles tactiles ≥ 48 dp sur mobile. |
+| **Accessibilité** | WCAG 2.2 AA / RGAA 4.1 : lecteur d'écran (TalkBack, VoiceOver) pris en charge, contraste ≥ 4,5:1 (texte) et ≥ 3:1 (composants), cibles tactiles ≥ 48 × 48 dp, taille de police réglable, information jamais portée par la couleur seule (voir épopée G). |
 | **Internationalisation** | Interface en **français et anglais** dès la v1 (langue du système par défaut, choix manuel possible). Chaînes externalisées (ARB / `flutter_localizations`) **dès l'étape 2**, pour ne pas avoir à reprendre les écrans existants. |
 | **Testabilité** | Les protocoles sont testables sans matériel (fausse carte) ; les parcours matériels sont couverts par le banc de test §6.4. |
 | **Observabilité** | Journal de diagnostic exportable (versions, carte détectée, trames échouées) pour les rapports de bug. |
@@ -332,6 +380,7 @@ L'utilisateur ouvre l'app, voit un bandeau expliquant que l'USB-série n'est pas
 | **M1** — Étape 1 | HAL USB/série, moniteur série, carte simulée | A1–A7, E2, E3 | ✅ |
 | **M2** — Étape 2 | Éditeur, projets, raw REPL, explorateur de fichiers de la carte, « Run », internationalisation FR/EN | B1–B6, C1–C5, E6 | ✅ (écrit, testé et validé sur Badger 2040 avec Windows et Android) |
 | **M3a** — Étape 3 | Flash ESP32/ESP32-S et RP2040, firmware MicroPython | D1, D2, D4, D6, D7, C6 | 🧪 D1, D2 (Windows), D4, D6 et D7 (ESP, Badger 2040) validés ; D2 validé aussi sur Android (PICOBOOT) ; restent D7 pour Pico, C6 |
+| **M3c** — Étape 3 | UX/UI et accessibilité, flash multi-fichiers ESP | G1–G7, D8 | 🔜 |
 | **M3b** — Étape 3 | Service de compilation cloud, compte, quotas, abonnement | D5, F1–F4 | 🔜 |
 | Post-v1 | Flash STM32 (AN3155) | D3 | 🔜 |
 | **M4** — Étape 4 | CI/CD, signature et distribution (Play Store, MSIX, notarisation macOS), mises à jour | E1, E4, E5 | 🔜 |
@@ -353,3 +402,4 @@ La date de chaque jalon sera fixée après la décision sur R1 et le banc de tes
 | 0.7 | 2026-10-28 | Étape 3 : D1 et D7 validés sur ESP32 et ESP32-S3 avec l'app Windows et l'app Android ; adresse d'écriture déduite de l'en-tête du fichier ; restent l'UF2 sur Android, Pico/Badger depuis D7, compilation cloud |
 | 0.8 | 2026-10-29 | Étape 3 : D4 (reset automatique ESP par DTR/RTS), D6 (débranchement en pleine écriture) et D7 pour le Badger 2040 (firmware Pimoroni téléchargé et flashé depuis l'app Windows) validés sur matériel |
 | 0.9 | 2026-10-29 | Étape 3 : D2 validé sur Android avec un Badger 2040 (PICOBOOT : autorisation USB, effacement, écriture, vérification, redémarrage) ; R1 levé |
+| 0.10 | 2026-10-29 | C6 ✅ ; ajout de D8 (flash multi-fichiers ESP), de l'épopée G (UX/UI et accessibilité, WCAG 2.2 AA / RGAA 4.1) avec la palette et ses contrastes calculés, de l'exigence d'accessibilité détaillée et du jalon M3c |
