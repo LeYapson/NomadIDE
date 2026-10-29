@@ -69,6 +69,9 @@ String protocolErrorMessage(AppLocalizations l, ProtocolException e) {
     ProtocolErrorCode.espRomError => l.errEspRom(text('command'), text('error')),
     ProtocolErrorCode.espBadPacket => l.errEspBadPacket(text('hex')),
     ProtocolErrorCode.espVerifyFailed => l.errEspVerifyFailed(text('expected'), text('actual')),
+    ProtocolErrorCode.picobootError => l.errPicoboot(text('command'), text('status')),
+    ProtocolErrorCode.picobootBadImage => l.errPicobootBadImage(text('address')),
+    ProtocolErrorCode.picobootVerifyFailed => l.errPicobootVerify(text('address')),
     ProtocolErrorCode.other => l.errProtocolOther(e.message),
   };
 }
