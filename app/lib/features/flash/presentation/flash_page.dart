@@ -118,12 +118,18 @@ class Uf2FlashView extends ConsumerWidget {
             FlashStep(
               title: l10n.flashStepBoard,
               children: [
-                if (state.drive != null)
+                if (state.drive != null || state.bootselUsb)
                   Row(
                     children: [
                       Icon(Icons.check_circle, color: scheme.primary, size: 20),
                       const SizedBox(width: 8),
-                      Expanded(child: Text(l10n.flashDriveFound(state.drive!.path, state.drive!.boardId))),
+                      Expanded(
+                        child: Text(
+                          state.drive != null
+                              ? l10n.flashDriveFound(state.drive!.path, state.drive!.boardId)
+                              : l10n.flashBootselUsbFound,
+                        ),
+                      ),
                     ],
                   )
                 else ...[
@@ -162,7 +168,7 @@ class Uf2FlashView extends ConsumerWidget {
                   const SizedBox(height: 12),
                   Text(_phaseLabel(l10n, state)),
                   const SizedBox(height: 6),
-                  LinearProgressIndicator(value: state.phase == FlashPhase.copying ? _fraction(state) : null),
+                  LinearProgressIndicator(value: _hasProgress(state.phase) ? _fraction(state) : null),
                 ],
                 if (state.message != null) ...[
                   const SizedBox(height: 12),
@@ -177,9 +183,16 @@ class Uf2FlashView extends ConsumerWidget {
 
   static double? _fraction(FlashState s) => s.total <= 0 ? null : (s.done / s.total).clamp(0.0, 1.0);
 
+  /// Phases dont l'avancement est connu (les autres affichent une barre indéterminée).
+  static bool _hasProgress(FlashPhase phase) =>
+      phase == FlashPhase.erasing || phase == FlashPhase.copying || phase == FlashPhase.verifying;
+
   static String _phaseLabel(AppLocalizations l10n, FlashState s) => switch (s.phase) {
         FlashPhase.touching => l10n.flashPhaseTouching,
         FlashPhase.waitingDrive => l10n.flashPhaseWaiting,
+        FlashPhase.permission => l10n.flashPhasePermission,
+        FlashPhase.erasing => l10n.flashPhaseErasing(((_fraction(s) ?? 0) * 100).round()),
+        FlashPhase.verifying => l10n.flashPhaseVerifying(((_fraction(s) ?? 0) * 100).round()),
         FlashPhase.copying => l10n.flashPhaseCopying(((_fraction(s) ?? 0) * 100).round()),
         FlashPhase.rebooting => l10n.flashPhaseRebooting,
         _ => '',

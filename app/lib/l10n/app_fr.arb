@@ -1146,5 +1146,32 @@
         "type": "String"
       }
     }
+  },
+  "flashBootselUsbFound": "Carte en BOOTSEL détectée par USB.",
+  "flashPhasePermission": "Autorisez NomadMCU à accéder à la carte dans la fenêtre qui s’affiche…",
+  "flashPhaseErasing": "Effacement de la flash… {percent} %",
+  "@flashPhaseErasing": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "flashPhaseVerifying": "Vérification de la flash… {percent} %",
+  "@flashPhaseVerifying": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "flashUsbDenied": "Accès USB refusé. Recommencez et acceptez la demande d’autorisation qui s’affiche.",
+  "flashUsbInterrupted": "{cause} L’écriture a été interrompue : la carte peut contenir un programme incomplet. Débranchez-la, maintenez BOOTSEL en la rebranchant, puis recommencez.",
+  "@flashUsbInterrupted": {
+    "placeholders": {
+      "cause": {
+        "type": "String"
+      }
+    }
   }
 }
