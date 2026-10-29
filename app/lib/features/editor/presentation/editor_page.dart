@@ -157,7 +157,7 @@ class _EditorPageState extends ConsumerState<EditorPage> {
     if (sent && mounted) {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
-        ..showSnackBar(SnackBar(content: Text(context.l10n.edSentSnack(path!))));
+        ..showSnackBar(SnackBar(content: Text(context.l10n.edSentSnack(path))));
     }
   }
 
