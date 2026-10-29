@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Produit** | NomadMCU (dépôt : NomadIDE) |
-| **Version du document** | 0.8 — étape 3 : flash, reset automatique et firmware MicroPython validés sur ESP32 / ESP32-S3 (Windows et Android) |
+| **Version du document** | 0.9 — étape 3 : flash UF2 validé sur Android (PICOBOOT), en plus d'ESP32 / ESP32-S3 et du firmware MicroPython |
 | **Date** | 2026-10-01 |
 | **Statut du produit** | Étape 1 terminée (HAL USB/série + moniteur série) ; étape 2 en cours |
 | **Documents liés** | [README.md](README.md) · [ADR 0001 — Flutter](docs/adr/0001-stack-flutter.md) |
@@ -129,7 +129,7 @@ Format des critères : **Étant donné** / **Quand** / **Alors**. Chaque story e
 | ID | User story | Prio | Statut |
 |---|---|---|---|
 | D1 | Je veux flasher un binaire `.bin` sur un ESP32. | M | ✅ sur ESP32 et ESP32-S3, avec l'app Windows et avec l'app Android |
-| D2 | Je veux flasher un fichier `.uf2` sur un RP2040/RP2350. | M | ✅ sur Windows avec un Badger 2040, en BOOTSEL manuel et en bascule automatique (Android : 🔜 ⚠️ PICOBOOT) |
+| D2 | Je veux flasher un fichier `.uf2` sur un RP2040/RP2350. | M | ✅ sur Windows avec un Badger 2040, en BOOTSEL manuel et en bascule automatique et sur Android avec un Badger 2040 en OTG, par le protocole PICOBOOT (autorisation USB, effacement, écriture, relecture de vérification) |
 | D3 | Je veux flasher un `.bin`/`.hex` sur un STM32 via son bootloader série. | C (post-v1) | 🔜 |
 | D4 | Je veux que l'app mette la carte en mode bootloader quand c'est possible (DTR/RTS, 1200 bauds, ou `machine.bootloader()` depuis MicroPython). | M | ✅ RP2040 : bascule automatique validée sur Badger 2040 (MicroPython : `machine.bootloader()` ; touch 1200 bauds pour Arduino/SDK, non testé) ; ✅ ESP32 et ESP32-S3 : reset automatique par DTR/RTS validé (un seul clic sur « Flasher », sans toucher à BOOT ni EN), sur Windows et Android |
 | D5 | Je veux compiler mon code C/C++ via un service cloud et flasher le résultat directement. | M | 🔜 |
@@ -181,7 +181,7 @@ Le compte n'est exigé **que** pour la compilation cloud. Éditeur, moniteur, Mi
 
 | Plateforme | Transport série | Éditeur | MicroPython | Flashage | Statut |
 |---|---|---|---|---|---|
-| Android 8+ (OTG requis) | API USB Host (pilotes userland) | 🔜 | 🧪 | ✅ ESP32 et ESP32-S3 ; 🔜 ⚠️ UF2 | Moniteur ✅ |
+| Android 8+ (OTG requis) | API USB Host (pilotes userland) | 🔜 | 🧪 | ✅ ESP32, ESP32-S3 et UF2 (PICOBOOT) | Moniteur ✅ |
 | Windows 10/11 | libserialport (COMx) | 🔜 | 🧪 | ✅ UF2 (Badger 2040), ✅ ESP32 et ESP32-S3 | Moniteur ✅ |
 | macOS 12+ | libserialport (`/dev/cu.*`) | 🔜 | 🧪 | 🔜 | 🧪 |
 | Linux (glibc) | libserialport (`/dev/ttyUSB*`, `ttyACM*`) | 🔜 | 🧪 | 🔜 | 🧪 |
@@ -289,7 +289,7 @@ L'utilisateur ouvre l'app, voit un bandeau expliquant que l'USB-série n'est pas
 
 | # | Risque / question | Impact | Piste |
 |---|---|---|---|
-| R1 | **UF2 sur Android** : en BOOTSEL, le Pico se présente comme un disque USB. Android ne permet pas d'y écrire simplement depuis une application. | D2 non réalisable tel quel sur mobile | Parler le protocole **PICOBOOT** (USB bulk) via un plugin USB maison, ou guider l'utilisateur vers le sélecteur de fichiers système. À trancher avant l'étape 3. |
+| R1 | **UF2 sur Android** : en BOOTSEL, le Pico se présente comme un disque USB. Android ne permet pas d'y écrire simplement depuis une application. | D2 non réalisable tel quel sur mobile | **Levé** : l'app parle le protocole **PICOBOOT** (USB bulk) via du code natif Android ; validé sur Badger 2040. |
 | R2 | **Latence DTR/RTS sur Android** : les séquences de reset des ESP32 sont chronométrées à quelques ms. | D1/D4 peu fiables sur mobile | Valider sur matériel ; repli guidé « maintenez BOOT ». |
 | R3 | **Plugins communautaires** (`usb_serial`, `flutter_libserialport`) : maintenance et API non garanties. | Blocage sur une mise à jour | Isolés derrière la HAL ; plugin Kotlin maison en solution de secours. |
 | R4 | **Éditeur Flutter** moins riche que CodeMirror/Monaco. | B1–B3 en deçà des attentes | Solution de secours : CodeMirror 6 dans une WebView, isolé dans `nomad_editor`. |
@@ -331,7 +331,7 @@ L'utilisateur ouvre l'app, voit un bandeau expliquant que l'USB-série n'est pas
 |---|---|---|---|
 | **M1** — Étape 1 | HAL USB/série, moniteur série, carte simulée | A1–A7, E2, E3 | ✅ |
 | **M2** — Étape 2 | Éditeur, projets, raw REPL, explorateur de fichiers de la carte, « Run », internationalisation FR/EN | B1–B6, C1–C5, E6 | ✅ (écrit, testé et validé sur Badger 2040 avec Windows et Android) |
-| **M3a** — Étape 3 | Flash ESP32/ESP32-S et RP2040, firmware MicroPython | D1, D2, D4, D6, D7, C6 | 🧪 D1, D2 (Windows), D4, D6 et D7 (ESP, Badger 2040) validés ; restent l'UF2 sur Android (PICOBOOT), D7 pour Pico, C6 |
+| **M3a** — Étape 3 | Flash ESP32/ESP32-S et RP2040, firmware MicroPython | D1, D2, D4, D6, D7, C6 | 🧪 D1, D2 (Windows), D4, D6 et D7 (ESP, Badger 2040) validés ; D2 validé aussi sur Android (PICOBOOT) ; restent D7 pour Pico, C6 |
 | **M3b** — Étape 3 | Service de compilation cloud, compte, quotas, abonnement | D5, F1–F4 | 🔜 |
 | Post-v1 | Flash STM32 (AN3155) | D3 | 🔜 |
 | **M4** — Étape 4 | CI/CD, signature et distribution (Play Store, MSIX, notarisation macOS), mises à jour | E1, E4, E5 | 🔜 |
@@ -352,3 +352,4 @@ La date de chaque jalon sera fixée après la décision sur R1 et le banc de tes
 | 0.6 | 2026-10-26 | Étape 3 : flash UF2 (Badger 2040), flash ESP32 et ESP32-S3 validés sur Windows ; restent D7, C6, Android (PICOBOOT), compilation cloud |
 | 0.7 | 2026-10-28 | Étape 3 : D1 et D7 validés sur ESP32 et ESP32-S3 avec l'app Windows et l'app Android ; adresse d'écriture déduite de l'en-tête du fichier ; restent l'UF2 sur Android, Pico/Badger depuis D7, compilation cloud |
 | 0.8 | 2026-10-29 | Étape 3 : D4 (reset automatique ESP par DTR/RTS), D6 (débranchement en pleine écriture) et D7 pour le Badger 2040 (firmware Pimoroni téléchargé et flashé depuis l'app Windows) validés sur matériel |
+| 0.9 | 2026-10-29 | Étape 3 : D2 validé sur Android avec un Badger 2040 (PICOBOOT : autorisation USB, effacement, écriture, vérification, redémarrage) ; R1 levé |

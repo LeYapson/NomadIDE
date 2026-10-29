@@ -137,9 +137,9 @@ cd ../packages/nomad_hal && flutter test   # HAL
    par blocs encodés en base64 et vérifiés par CRC32, exécution de scripts, projets locaux, interface
    en français et en anglais. Validé sur un Pimoroni Badger 2040 (Windows et Android).
 3. **Flasheur** 🧪 : onglet « Flasher ». RP2040 / RP2350 : bascule en BOOTSEL (touch 1200 bauds ou
-   `machine.bootloader()`) puis copie du `.uf2`, validé sur un Badger 2040 (Windows). ESP32 / ESP8266 :
+   `machine.bootloader()`) puis copie du `.uf2` (Windows) ou écriture USB en PICOBOOT (Android), validé sur un Badger 2040. ESP32 / ESP8266 :
    protocole de la ROM d'esptool (SLIP, écriture compressée, vérification MD5), validé sur ESP32 et
    ESP32-S3 (Windows et Android) ; l'adresse d'écriture est déduite de l'en-tête du fichier. Le
    firmware MicroPython officiel se télécharge depuis l'app (micropython.org, Pimoroni). Restent :
-   Android pour l'UF2 (PICOBOOT), STM32 (AN3155, après la v1) et compilateur cloud optionnel.
+   STM32 (AN3155, après la v1) et compilateur cloud optionnel.
 4. **Distribution** : CI multi-OS, signature (Play Store, notarisation macOS, MSIX), mises à jour.
