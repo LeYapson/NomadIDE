@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nomad_editor/nomad_editor.dart';
 
+import '../../../../app/theme.dart';
 import '../../../../l10n/l10n.dart';
 import '../../application/micropython_controller.dart';
 import 'repl_log_view.dart';
@@ -119,6 +120,7 @@ class _ConsolePanelState extends ConsumerState<ConsolePanel> {
                     )
                   else
                     FilledButton.icon(
+                      style: hardwareButtonStyle(context),
                       onPressed: ready ? _run : null,
                       icon: const Icon(Icons.play_arrow),
                       label: Text(l10n.mpRun),

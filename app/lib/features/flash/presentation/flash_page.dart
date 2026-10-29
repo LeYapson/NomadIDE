@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nomad_hal/nomad_hal.dart';
 import 'package:nomad_protocols/nomad_protocols.dart';
 
+import '../../../app/theme.dart';
 import '../../../l10n/l10n.dart';
 import '../application/flash_controller.dart';
 import '../data/firmware_catalog.dart';
@@ -158,6 +159,7 @@ class Uf2FlashView extends ConsumerWidget {
                 Wrap(
                   children: [
                     FilledButton.icon(
+                      style: hardwareButtonStyle(context),
                       onPressed: supported && state.canFlash ? controller.flash : null,
                       icon: const Icon(Icons.bolt),
                       label: Text(l10n.flashRun),
