@@ -1577,5 +1577,37 @@
   "settingsVersion": "Version",
   "settingsSource": "Code source",
   "settingsLicenses": "Licences des composants open source",
-  "settingsLicensesHint": "Bibliothèques utilisées par NomadIDE et leurs licences"
+  "settingsLicensesHint": "Bibliothèques utilisées par NomadIDE et leurs licences",
+  "obSkip": "Passer",
+  "obNext": "Suivant",
+  "obBack": "Précédent",
+  "obStart": "Commencer",
+  "obOpenPython": "Ouvrir l’onglet Python",
+  "obProgress": "Étape {number} sur {total}",
+  "@obProgress": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "obWelcomeTitle": "Bienvenue dans NomadIDE",
+  "obWelcomeBody": "Programmez vos cartes ESP32 et RP2040 (Pico, Badger 2040) en MicroPython, depuis votre téléphone ou votre ordinateur, sans rien installer d’autre.",
+  "obPlugTitle": "Branchez votre carte",
+  "obPlugBody": "Sur ordinateur, un câble USB suffit. Sur téléphone, passez par un adaptateur OTG. Android demande alors l’accès à la carte : acceptez, et cochez « toujours » pour ne plus le voir.",
+  "obPlugCable": "Un câble qui ne fait que charger ne transmet rien : si la carte n’apparaît pas, essayez-en un autre.",
+  "obTabsTitle": "Cinq onglets",
+  "obTabMonitor": "Moniteur : lire ce que la carte affiche.",
+  "obTabPython": "Python : console, fichiers et bibliothèques de la carte.",
+  "obTabEditor": "Éditeur : écrire et enregistrer vos programmes.",
+  "obTabFlash": "Flasher : installer MicroPython ou un programme compilé.",
+  "obTabSettings": "Réglages : langue, thème, aide (ce tutoriel s’y trouve).",
+  "obFirstTitle": "Votre premier programme",
+  "obFirstBody": "Onglet Python : touchez « Connecter », tapez print(\"Bonjour\") dans la console, puis « Exécuter ». La carte répond dans le journal.",
+  "obFirstNoFirmware": "La carte ne répond pas ? Elle n’a peut-être pas encore MicroPython : onglet Flasher, « Firmware MicroPython officiel ».",
+  "settingsTutorial": "Revoir le tutoriel",
+  "settingsTutorialHint": "Les quatre étapes de prise en main de NomadIDE"
 }

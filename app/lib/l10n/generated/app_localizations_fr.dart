@@ -1571,4 +1571,81 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get settingsLicensesHint =>
       'Bibliothèques utilisées par NomadIDE et leurs licences';
+
+  @override
+  String get obSkip => 'Passer';
+
+  @override
+  String get obNext => 'Suivant';
+
+  @override
+  String get obBack => 'Précédent';
+
+  @override
+  String get obStart => 'Commencer';
+
+  @override
+  String get obOpenPython => 'Ouvrir l’onglet Python';
+
+  @override
+  String obProgress(int number, int total) {
+    return 'Étape $number sur $total';
+  }
+
+  @override
+  String get obWelcomeTitle => 'Bienvenue dans NomadIDE';
+
+  @override
+  String get obWelcomeBody =>
+      'Programmez vos cartes ESP32 et RP2040 (Pico, Badger 2040) en MicroPython, depuis votre téléphone ou votre ordinateur, sans rien installer d’autre.';
+
+  @override
+  String get obPlugTitle => 'Branchez votre carte';
+
+  @override
+  String get obPlugBody =>
+      'Sur ordinateur, un câble USB suffit. Sur téléphone, passez par un adaptateur OTG. Android demande alors l’accès à la carte : acceptez, et cochez « toujours » pour ne plus le voir.';
+
+  @override
+  String get obPlugCable =>
+      'Un câble qui ne fait que charger ne transmet rien : si la carte n’apparaît pas, essayez-en un autre.';
+
+  @override
+  String get obTabsTitle => 'Cinq onglets';
+
+  @override
+  String get obTabMonitor => 'Moniteur : lire ce que la carte affiche.';
+
+  @override
+  String get obTabPython =>
+      'Python : console, fichiers et bibliothèques de la carte.';
+
+  @override
+  String get obTabEditor => 'Éditeur : écrire et enregistrer vos programmes.';
+
+  @override
+  String get obTabFlash =>
+      'Flasher : installer MicroPython ou un programme compilé.';
+
+  @override
+  String get obTabSettings =>
+      'Réglages : langue, thème, aide (ce tutoriel s’y trouve).';
+
+  @override
+  String get obFirstTitle => 'Votre premier programme';
+
+  @override
+  String get obFirstBody =>
+      'Onglet Python : touchez « Connecter », tapez print(\"Bonjour\") dans la console, puis « Exécuter ». La carte répond dans le journal.';
+
+  @override
+  String get obFirstNoFirmware =>
+      'La carte ne répond pas ? Elle n’a peut-être pas encore MicroPython : onglet Flasher, « Firmware MicroPython officiel ».';
+
+  @override
+  String get settingsTutorial => 'Revoir le tutoriel';
+
+  @override
+  String get settingsTutorialHint =>
+      'Les quatre étapes de prise en main de NomadIDE';
 }

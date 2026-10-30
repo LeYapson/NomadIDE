@@ -2600,6 +2600,138 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Bibliothèques utilisées par NomadIDE et leurs licences'**
   String get settingsLicensesHint;
+
+  /// No description provided for @obSkip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Passer'**
+  String get obSkip;
+
+  /// No description provided for @obNext.
+  ///
+  /// In fr, this message translates to:
+  /// **'Suivant'**
+  String get obNext;
+
+  /// No description provided for @obBack.
+  ///
+  /// In fr, this message translates to:
+  /// **'Précédent'**
+  String get obBack;
+
+  /// No description provided for @obStart.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commencer'**
+  String get obStart;
+
+  /// No description provided for @obOpenPython.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvrir l’onglet Python'**
+  String get obOpenPython;
+
+  /// No description provided for @obProgress.
+  ///
+  /// In fr, this message translates to:
+  /// **'Étape {number} sur {total}'**
+  String obProgress(int number, int total);
+
+  /// No description provided for @obWelcomeTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bienvenue dans NomadIDE'**
+  String get obWelcomeTitle;
+
+  /// No description provided for @obWelcomeBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Programmez vos cartes ESP32 et RP2040 (Pico, Badger 2040) en MicroPython, depuis votre téléphone ou votre ordinateur, sans rien installer d’autre.'**
+  String get obWelcomeBody;
+
+  /// No description provided for @obPlugTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Branchez votre carte'**
+  String get obPlugTitle;
+
+  /// No description provided for @obPlugBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sur ordinateur, un câble USB suffit. Sur téléphone, passez par un adaptateur OTG. Android demande alors l’accès à la carte : acceptez, et cochez « toujours » pour ne plus le voir.'**
+  String get obPlugBody;
+
+  /// No description provided for @obPlugCable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un câble qui ne fait que charger ne transmet rien : si la carte n’apparaît pas, essayez-en un autre.'**
+  String get obPlugCable;
+
+  /// No description provided for @obTabsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cinq onglets'**
+  String get obTabsTitle;
+
+  /// No description provided for @obTabMonitor.
+  ///
+  /// In fr, this message translates to:
+  /// **'Moniteur : lire ce que la carte affiche.'**
+  String get obTabMonitor;
+
+  /// No description provided for @obTabPython.
+  ///
+  /// In fr, this message translates to:
+  /// **'Python : console, fichiers et bibliothèques de la carte.'**
+  String get obTabPython;
+
+  /// No description provided for @obTabEditor.
+  ///
+  /// In fr, this message translates to:
+  /// **'Éditeur : écrire et enregistrer vos programmes.'**
+  String get obTabEditor;
+
+  /// No description provided for @obTabFlash.
+  ///
+  /// In fr, this message translates to:
+  /// **'Flasher : installer MicroPython ou un programme compilé.'**
+  String get obTabFlash;
+
+  /// No description provided for @obTabSettings.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réglages : langue, thème, aide (ce tutoriel s’y trouve).'**
+  String get obTabSettings;
+
+  /// No description provided for @obFirstTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Votre premier programme'**
+  String get obFirstTitle;
+
+  /// No description provided for @obFirstBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Onglet Python : touchez « Connecter », tapez print(\"Bonjour\") dans la console, puis « Exécuter ». La carte répond dans le journal.'**
+  String get obFirstBody;
+
+  /// No description provided for @obFirstNoFirmware.
+  ///
+  /// In fr, this message translates to:
+  /// **'La carte ne répond pas ? Elle n’a peut-être pas encore MicroPython : onglet Flasher, « Firmware MicroPython officiel ».'**
+  String get obFirstNoFirmware;
+
+  /// No description provided for @settingsTutorial.
+  ///
+  /// In fr, this message translates to:
+  /// **'Revoir le tutoriel'**
+  String get settingsTutorial;
+
+  /// No description provided for @settingsTutorialHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les quatre étapes de prise en main de NomadIDE'**
+  String get settingsTutorialHint;
 }
 
 class _AppLocalizationsDelegate
