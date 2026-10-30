@@ -47,6 +47,9 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     final tab = ref.watch(homeTabProvider);
     // Clavier virtuel ouvert : la barre de navigation céderait sa place à la barre de symboles.
     final keyboardOpen = MediaQuery.viewInsetsOf(context).bottom > 0;
+    // Chaque destination mesure largeur / 5 : sur téléphone (~72 dp), « MicroPython » passe sur deux lignes
+    // et décale toute la barre. Le nom court suffit là ; le nom complet reste dans l'info-bulle.
+    final narrow = MediaQuery.sizeOf(context).width < 480;
 
     return Scaffold(
       body: IndexedStack(
@@ -60,7 +63,11 @@ class _HomeShellState extends ConsumerState<HomeShell> {
               onDestinationSelected: (i) => ref.read(homeTabProvider.notifier).show(HomeTab.values[i]),
               destinations: [
                 NavigationDestination(icon: const Icon(Icons.terminal), label: context.l10n.navMonitor),
-                NavigationDestination(icon: const Icon(Icons.memory), label: context.l10n.navMicroPython),
+                NavigationDestination(
+                  icon: const Icon(Icons.memory),
+                  label: narrow ? context.l10n.navMicroPythonShort : context.l10n.navMicroPython,
+                  tooltip: context.l10n.navMicroPython,
+                ),
                 NavigationDestination(icon: const Icon(Icons.code), label: context.l10n.navEditor),
                 NavigationDestination(icon: const Icon(Icons.bolt), label: context.l10n.navFlash),
                 NavigationDestination(icon: const Icon(Icons.settings_outlined), label: context.l10n.navSettings),

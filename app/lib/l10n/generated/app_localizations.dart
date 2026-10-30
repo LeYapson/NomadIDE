@@ -2138,6 +2138,12 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Éditeur de code : {name}'**
   String edEditorLabel(String name);
+
+  /// No description provided for @navMicroPythonShort.
+  ///
+  /// In fr, this message translates to:
+  /// **'Python'**
+  String get navMicroPythonShort;
 }
 
 class _AppLocalizationsDelegate

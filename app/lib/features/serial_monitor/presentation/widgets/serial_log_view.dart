@@ -63,9 +63,13 @@ class _SerialLogViewState extends ConsumerState<SerialLogView> {
       color: scheme.surfaceContainerLowest,
       child: count == 0
           ? Center(
-              child: Text(
-                context.l10n.monEmptyLog,
-                style: TextStyle(color: scheme.outline),
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Text(
+                  context.l10n.monEmptyLog,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: scheme.onSurfaceVariant),
+                ),
               ),
             )
           : NotificationListener<ScrollNotification>(

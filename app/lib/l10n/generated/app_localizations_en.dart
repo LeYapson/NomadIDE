@@ -1263,4 +1263,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String edEditorLabel(String name) {
     return 'Code editor: $name';
   }
+
+  @override
+  String get navMicroPythonShort => 'Python';
 }
