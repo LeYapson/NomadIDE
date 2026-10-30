@@ -1463,4 +1463,104 @@ class AppLocalizationsEn extends AppLocalizations {
   String libErrInsecure(String target) {
     return '$target: only https addresses are accepted.';
   }
+
+  @override
+  String get settingsAppearance => 'Appearance';
+
+  @override
+  String get themeSystem => 'Same as the system';
+
+  @override
+  String get themeLight => 'Light';
+
+  @override
+  String get themeDark => 'Dark';
+
+  @override
+  String get settingsEditor => 'Editor';
+
+  @override
+  String settingsFontSize(int size) {
+    return 'Code text size: $size';
+  }
+
+  @override
+  String get settingsWordWrap => 'Automatic line wrapping';
+
+  @override
+  String get settingsWordWrapHint => 'Long lines wrap instead of scrolling.';
+
+  @override
+  String get settingsMonitor => 'Serial monitor';
+
+  @override
+  String get settingsDefaultBaud => 'Default baud rate';
+
+  @override
+  String get settingsDefaultLineEnding => 'Default line ending';
+
+  @override
+  String get settingsDefaultTimestamps => 'Log timestamps';
+
+  @override
+  String get settingsHelp => 'Help';
+
+  @override
+  String get settingsDiagnostic => 'Export a diagnostic log';
+
+  @override
+  String get settingsDiagnosticHint =>
+      'Versions, detected boards and latest errors, to attach to a bug report. Neither your projects nor the serial stream are included.';
+
+  @override
+  String settingsDiagnosticDone(String path) {
+    return 'Log copied to the clipboard and saved: $path';
+  }
+
+  @override
+  String settingsDiagnosticFailed(String cause) {
+    return 'The log could not be saved: $cause';
+  }
+
+  @override
+  String get settingsData => 'Data';
+
+  @override
+  String get settingsProjectsFolder => 'Projects folder';
+
+  @override
+  String get settingsCopyPath => 'Copy the path';
+
+  @override
+  String get settingsCopied => 'Copied to the clipboard.';
+
+  @override
+  String get settingsClearCache => 'Clear the library cache';
+
+  @override
+  String settingsCacheSize(String size) {
+    return '$size of downloaded libraries, kept for offline work';
+  }
+
+  @override
+  String get settingsCacheEmpty => 'No library in the cache';
+
+  @override
+  String get settingsCacheCleared => 'Library cache cleared.';
+
+  @override
+  String get settingsAbout => 'About';
+
+  @override
+  String get settingsVersion => 'Version';
+
+  @override
+  String get settingsSource => 'Source code';
+
+  @override
+  String get settingsLicenses => 'Open source component licences';
+
+  @override
+  String get settingsLicensesHint =>
+      'Libraries used by NomadIDE and their licences';
 }

@@ -1470,4 +1470,105 @@ class AppLocalizationsFr extends AppLocalizations {
   String libErrInsecure(String target) {
     return '$target : seules les adresses https sont acceptées.';
   }
+
+  @override
+  String get settingsAppearance => 'Apparence';
+
+  @override
+  String get themeSystem => 'Comme le système';
+
+  @override
+  String get themeLight => 'Clair';
+
+  @override
+  String get themeDark => 'Sombre';
+
+  @override
+  String get settingsEditor => 'Éditeur';
+
+  @override
+  String settingsFontSize(int size) {
+    return 'Taille du texte du code : $size';
+  }
+
+  @override
+  String get settingsWordWrap => 'Retour à la ligne automatique';
+
+  @override
+  String get settingsWordWrapHint =>
+      'Les longues lignes passent à la ligne au lieu de défiler.';
+
+  @override
+  String get settingsMonitor => 'Moniteur série';
+
+  @override
+  String get settingsDefaultBaud => 'Débit par défaut';
+
+  @override
+  String get settingsDefaultLineEnding => 'Fin de ligne par défaut';
+
+  @override
+  String get settingsDefaultTimestamps => 'Horodatage du journal';
+
+  @override
+  String get settingsHelp => 'Aide';
+
+  @override
+  String get settingsDiagnostic => 'Exporter un journal de diagnostic';
+
+  @override
+  String get settingsDiagnosticHint =>
+      'Versions, cartes détectées et dernières erreurs, à joindre à un signalement de bug. Ni vos projets ni le flux série n’y figurent.';
+
+  @override
+  String settingsDiagnosticDone(String path) {
+    return 'Journal copié dans le presse-papiers et enregistré : $path';
+  }
+
+  @override
+  String settingsDiagnosticFailed(String cause) {
+    return 'Le journal n’a pas pu être enregistré : $cause';
+  }
+
+  @override
+  String get settingsData => 'Données';
+
+  @override
+  String get settingsProjectsFolder => 'Dossier des projets';
+
+  @override
+  String get settingsCopyPath => 'Copier le chemin';
+
+  @override
+  String get settingsCopied => 'Copié dans le presse-papiers.';
+
+  @override
+  String get settingsClearCache => 'Vider le cache des bibliothèques';
+
+  @override
+  String settingsCacheSize(String size) {
+    return '$size de bibliothèques téléchargées, gardées pour le travail hors ligne';
+  }
+
+  @override
+  String get settingsCacheEmpty => 'Aucune bibliothèque en cache';
+
+  @override
+  String get settingsCacheCleared => 'Cache des bibliothèques vidé.';
+
+  @override
+  String get settingsAbout => 'À propos';
+
+  @override
+  String get settingsVersion => 'Version';
+
+  @override
+  String get settingsSource => 'Code source';
+
+  @override
+  String get settingsLicenses => 'Licences des composants open source';
+
+  @override
+  String get settingsLicensesHint =>
+      'Bibliothèques utilisées par NomadIDE et leurs licences';
 }

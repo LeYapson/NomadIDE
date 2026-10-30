@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Produit** | NomadIDE |
-| **Version du document** | 0.16 — étape 3 : bibliothèques MicroPython validées sur ESP32 (H1, H2) |
+| **Version du document** | 0.17 — réglages complets (apparence, éditeur, moniteur, diagnostic, données, à propos) |
 | **Date** | 2026-10-01 |
 | **Statut du produit** | Étape 1 terminée (HAL USB/série + moniteur série) ; étape 2 en cours |
 | **Documents liés** | [README.md](README.md) · [ADR 0001 — Flutter](docs/adr/0001-stack-flutter.md) |
@@ -170,7 +170,7 @@ Le compte n'est exigé **que** pour la compilation cloud. Éditeur, moniteur, Mi
 |---|---|---|---|
 | E1 | Je veux la même interface sur téléphone, tablette et ordinateur, adaptée à la taille d'écran. | M | 🧪 |
 | E2 | Je veux que l'app s'ouvre (ou me le propose) quand je branche une carte sur Android. | S | ✅ (filtre USB du manifeste) |
-| E3 | Je veux utiliser l'app en thème clair ou sombre, selon le système. | S | ✅ |
+| E3 | Je veux utiliser l'app en thème clair ou sombre, selon le système. | S | ✅ (et choix manuel clair / sombre dans les réglages) |
 | E4 | Je veux être informé clairement des limites de ma plateforme (iOS notamment). | M | 🧪 |
 | E5 | Je veux recevoir les mises à jour de l'app facilement. | C | 🔜 |
 | E6 | Je veux utiliser l'app en français ou en anglais, selon la langue du système ou mon choix. | M | ✅ (changement de langue validé sur Android) |
@@ -345,7 +345,7 @@ L'utilisateur ouvre l'app, voit un bandeau expliquant que l'USB-série n'est pas
 | **Accessibilité** | WCAG 2.2 AA / RGAA 4.1 : lecteur d'écran (TalkBack, VoiceOver) pris en charge, contraste ≥ 4,5:1 (texte) et ≥ 3:1 (composants), cibles tactiles ≥ 48 × 48 dp, taille de police réglable, information jamais portée par la couleur seule (voir épopée G). |
 | **Internationalisation** | Interface en **français et anglais** dès la v1 (langue du système par défaut, choix manuel possible). Chaînes externalisées (ARB / `flutter_localizations`) **dès l'étape 2**, pour ne pas avoir à reprendre les écrans existants. |
 | **Testabilité** | Les protocoles sont testables sans matériel (fausse carte) ; les parcours matériels sont couverts par le banc de test §6.4. |
-| **Observabilité** | Journal de diagnostic exportable (versions, carte détectée, trames échouées) pour les rapports de bug. |
+| **Observabilité** | Journal de diagnostic exportable (versions, carte détectée, trames échouées) pour les rapports de bug. Fait : Réglages → Aide (copié dans le presse-papiers et enregistré dans `diagnostics/`) ; sans le code des projets ni le flux série. |
 
 ## 9. Contraintes de plateforme
 
@@ -433,3 +433,4 @@ La date de chaque jalon sera fixée après la décision sur R1 et le banc de tes
 | 0.14 | 2026-10-30 | D8 écrit et testé (flash ESP en plusieurs fichiers) ; ajout de l'épopée H (bibliothèques de composants MicroPython et Arduino), du risque R9 et du jalon M3d |
 | 0.15 | 2026-10-30 | Épopée H : bibliothèques MicroPython (recherche dans `micropython-lib`, installation dans `/lib` avec dépendances, paquets GitHub, cache hors ligne, licence affichée, liste et suppression) |
 | 0.16 | 2026-10-30 | H1 et H2 validés sur ESP32 avec l'app Android |
+| 0.17 | 2026-10-30 | Réglages : thème clair / sombre / système, taille du code et retour à la ligne, valeurs par défaut du moniteur, journal de diagnostic (exigence d'observabilité), dossier des projets, cache des bibliothèques, version et licences |

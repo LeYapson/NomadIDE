@@ -6,6 +6,7 @@ import 'package:nomad_editor/nomad_editor.dart';
 
 import '../../../app/dialogs.dart';
 import '../../../app/providers.dart';
+import '../../../app/settings.dart';
 import '../../micropython/application/micropython_controller.dart';
 import '../../micropython/presentation/widgets/repl_log_view.dart';
 import '../../projects/application/projects_controller.dart';
@@ -236,7 +237,12 @@ class _EditorPageState extends ConsumerState<EditorPage> {
                         key: ValueKey(document.id),
                         child: Semantics(
                           label: context.l10n.edEditorLabel(document.name),
-                          child: NomadCodeEditor(controller: document.controller, onSave: () => _save(document)),
+                          child: NomadCodeEditor(
+                            controller: document.controller,
+                            onSave: () => _save(document),
+                            fontSize: ref.watch(settingsProvider.select((s) => s.editorFontSize)),
+                            wordWrap: ref.watch(settingsProvider.select((s) => s.editorWordWrap)),
+                          ),
                         ),
                       );
                       // Écran large ou paysage : éditeur et sortie côte à côte.
