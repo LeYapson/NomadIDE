@@ -9,6 +9,7 @@ import 'package:nomad_protocols/nomad_protocols.dart';
 import '../../../app/dialogs.dart';
 import '../../../l10n/l10n.dart';
 import '../../editor/application/editor_controller.dart';
+import '../../libraries/presentation/libraries_panel.dart';
 import '../../projects/application/projects_controller.dart';
 import '../../projects/presentation/project_dialogs.dart';
 import '../application/micropython_controller.dart';
@@ -43,20 +44,37 @@ class MicroPythonPage extends ConsumerWidget {
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   if (constraints.maxWidth >= 720) {
-                    return const Row(
+                    return Row(
                       children: [
-                        SizedBox(width: 320, child: _FilesPanel()),
-                        VerticalDivider(width: 1),
-                        Expanded(child: ConsolePanel()),
+                        SizedBox(
+                          width: 340,
+                          child: DefaultTabController(
+                            length: 2,
+                            child: Column(
+                              children: [
+                                TabBar(tabs: [Tab(text: context.l10n.mpTabFiles), Tab(text: context.l10n.mpTabLibraries)]),
+                                const Expanded(child: TabBarView(children: [_FilesPanel(), LibrariesPanel()])),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const VerticalDivider(width: 1),
+                        const Expanded(child: ConsolePanel()),
                       ],
                     );
                   }
                   return DefaultTabController(
-                    length: 2,
+                    length: 3,
                     child: Column(
                       children: [
-                        TabBar(tabs: [Tab(text: context.l10n.mpTabConsole), Tab(text: context.l10n.mpTabFiles)]),
-                        const Expanded(child: TabBarView(children: [ConsolePanel(), _FilesPanel()])),
+                        TabBar(
+                          tabs: [
+                            Tab(text: context.l10n.mpTabConsole),
+                            Tab(text: context.l10n.mpTabFiles),
+                            Tab(text: context.l10n.mpTabLibraries),
+                          ],
+                        ),
+                        const Expanded(child: TabBarView(children: [ConsolePanel(), _FilesPanel(), LibrariesPanel()])),
                       ],
                     ),
                   );

@@ -1351,5 +1351,173 @@
         "type": "int"
       }
     }
+  },
+  "mpLibNoSpace": "Not enough space on the board for {name}: about {needed} KB needed, {free} KB left. Nothing was written.",
+  "@mpLibNoSpace": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "needed": {
+        "type": "String"
+      },
+      "free": {
+        "type": "String"
+      }
+    }
+  },
+  "mpLogLibraryInstalled": "Library {name} installed: {count} file(s) in {dir}.",
+  "@mpLogLibraryInstalled": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      },
+      "dir": {
+        "type": "String"
+      }
+    }
+  },
+  "mpTabLibraries": "Libraries",
+  "libSearchLabel": "Search for a library",
+  "libSearchHint": "e.g. ssd1306, dht, neopixel",
+  "libLoading": "Loading the library list…",
+  "libOffline": "Offline: list saved at the last connection.",
+  "libRetry": "Try again",
+  "libNoResult": "No library matches “{query}”. Try a GitHub address below.",
+  "@libNoResult": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "libVersionLicense": "Version {version} · licence {license}",
+  "@libVersionLicense": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      },
+      "license": {
+        "type": "String"
+      }
+    }
+  },
+  "libNoLicense": "not stated",
+  "libInstall": "Install",
+  "libInstallTooltip": "Install {name} on the board",
+  "@libInstallTooltip": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "libConnectFirst": "Connect a board (raw REPL) to install a library.",
+  "libDownloading": "Downloading {name}…",
+  "@libDownloading": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "libWriting": "Copying to the board: file {done} of {total}…",
+  "@libWriting": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "libInstalled": "{name} is installed ({count} file(s) in /lib). Try “import {module}” in the console.",
+  "@libInstalled": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      },
+      "module": {
+        "type": "String"
+      }
+    }
+  },
+  "libGithubTitle": "From GitHub or an address",
+  "libGithubLabel": "Library address",
+  "libGithubHelper": "github:author/repo (with a package.json), or the https address of a .py file",
+  "libInstalledTitle": "Installed on the board",
+  "libInstalledEmpty": "No library in /lib.",
+  "libRefreshInstalled": "Refresh the list of installed libraries",
+  "libRemoveTooltip": "Remove {name} from the board",
+  "@libRemoveTooltip": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "libRemoveConfirmTitle": "Remove {name}?",
+  "@libRemoveConfirmTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "libRemoveConfirmBody": "The file or folder /lib/{name} will be erased from the board.",
+  "@libRemoveConfirmBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "libRemoved": "{name} was removed from the board.",
+  "@libRemoved": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "libSourceNote": "Source: micropython-lib (micropython.org). Files are downloaded by this device then copied to the board: it needs neither Wi-Fi nor mip.",
+  "libErrNetwork": "{target}: network unreachable. Check this device’s Internet connection.",
+  "@libErrNetwork": {
+    "placeholders": {
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "libErrNotFound": "{target}: not found (neither in the micropython-lib index nor at this address).",
+  "@libErrNotFound": {
+    "placeholders": {
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "libErrBadPackage": "{target}: the package description cannot be read.",
+  "@libErrBadPackage": {
+    "placeholders": {
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "libErrInsecure": "{target}: only https addresses are accepted.",
+  "@libErrInsecure": {
+    "placeholders": {
+      "target": {
+        "type": "String"
+      }
+    }
   }
 }

@@ -1332,4 +1332,135 @@ class AppLocalizationsEn extends AppLocalizations {
   String espBaudSummary(int baud) {
     return '$baud baud';
   }
+
+  @override
+  String mpLibNoSpace(String name, String needed, String free) {
+    return 'Not enough space on the board for $name: about $needed KB needed, $free KB left. Nothing was written.';
+  }
+
+  @override
+  String mpLogLibraryInstalled(String name, int count, String dir) {
+    return 'Library $name installed: $count file(s) in $dir.';
+  }
+
+  @override
+  String get mpTabLibraries => 'Libraries';
+
+  @override
+  String get libSearchLabel => 'Search for a library';
+
+  @override
+  String get libSearchHint => 'e.g. ssd1306, dht, neopixel';
+
+  @override
+  String get libLoading => 'Loading the library list…';
+
+  @override
+  String get libOffline => 'Offline: list saved at the last connection.';
+
+  @override
+  String get libRetry => 'Try again';
+
+  @override
+  String libNoResult(String query) {
+    return 'No library matches “$query”. Try a GitHub address below.';
+  }
+
+  @override
+  String libVersionLicense(String version, String license) {
+    return 'Version $version · licence $license';
+  }
+
+  @override
+  String get libNoLicense => 'not stated';
+
+  @override
+  String get libInstall => 'Install';
+
+  @override
+  String libInstallTooltip(String name) {
+    return 'Install $name on the board';
+  }
+
+  @override
+  String get libConnectFirst =>
+      'Connect a board (raw REPL) to install a library.';
+
+  @override
+  String libDownloading(String name) {
+    return 'Downloading $name…';
+  }
+
+  @override
+  String libWriting(int done, int total) {
+    return 'Copying to the board: file $done of $total…';
+  }
+
+  @override
+  String libInstalled(String name, int count, String module) {
+    return '$name is installed ($count file(s) in /lib). Try “import $module” in the console.';
+  }
+
+  @override
+  String get libGithubTitle => 'From GitHub or an address';
+
+  @override
+  String get libGithubLabel => 'Library address';
+
+  @override
+  String get libGithubHelper =>
+      'github:author/repo (with a package.json), or the https address of a .py file';
+
+  @override
+  String get libInstalledTitle => 'Installed on the board';
+
+  @override
+  String get libInstalledEmpty => 'No library in /lib.';
+
+  @override
+  String get libRefreshInstalled => 'Refresh the list of installed libraries';
+
+  @override
+  String libRemoveTooltip(String name) {
+    return 'Remove $name from the board';
+  }
+
+  @override
+  String libRemoveConfirmTitle(String name) {
+    return 'Remove $name?';
+  }
+
+  @override
+  String libRemoveConfirmBody(String name) {
+    return 'The file or folder /lib/$name will be erased from the board.';
+  }
+
+  @override
+  String libRemoved(String name) {
+    return '$name was removed from the board.';
+  }
+
+  @override
+  String get libSourceNote =>
+      'Source: micropython-lib (micropython.org). Files are downloaded by this device then copied to the board: it needs neither Wi-Fi nor mip.';
+
+  @override
+  String libErrNetwork(String target) {
+    return '$target: network unreachable. Check this device’s Internet connection.';
+  }
+
+  @override
+  String libErrNotFound(String target) {
+    return '$target: not found (neither in the micropython-lib index nor at this address).';
+  }
+
+  @override
+  String libErrBadPackage(String target) {
+    return '$target: the package description cannot be read.';
+  }
+
+  @override
+  String libErrInsecure(String target) {
+    return '$target: only https addresses are accepted.';
+  }
 }

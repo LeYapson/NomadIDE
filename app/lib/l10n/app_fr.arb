@@ -1351,5 +1351,173 @@
         "type": "int"
       }
     }
+  },
+  "mpLibNoSpace": "Pas assez de place sur la carte pour {name} : il faut environ {needed} Ko, il en reste {free} Ko. Rien n’a été écrit.",
+  "@mpLibNoSpace": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "needed": {
+        "type": "String"
+      },
+      "free": {
+        "type": "String"
+      }
+    }
+  },
+  "mpLogLibraryInstalled": "Bibliothèque {name} installée : {count} fichier(s) dans {dir}.",
+  "@mpLogLibraryInstalled": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      },
+      "dir": {
+        "type": "String"
+      }
+    }
+  },
+  "mpTabLibraries": "Bibliothèques",
+  "libSearchLabel": "Chercher une bibliothèque",
+  "libSearchHint": "ex. ssd1306, dht, neopixel",
+  "libLoading": "Chargement de la liste des bibliothèques…",
+  "libOffline": "Hors ligne : liste enregistrée lors de la dernière connexion.",
+  "libRetry": "Réessayer",
+  "libNoResult": "Aucune bibliothèque ne correspond à « {query} ». Essayez une adresse GitHub ci-dessous.",
+  "@libNoResult": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "libVersionLicense": "Version {version} · licence {license}",
+  "@libVersionLicense": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      },
+      "license": {
+        "type": "String"
+      }
+    }
+  },
+  "libNoLicense": "non précisée",
+  "libInstall": "Installer",
+  "libInstallTooltip": "Installer {name} sur la carte",
+  "@libInstallTooltip": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "libConnectFirst": "Connectez une carte (raw REPL) pour installer une bibliothèque.",
+  "libDownloading": "Téléchargement de {name}…",
+  "@libDownloading": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "libWriting": "Copie sur la carte : fichier {done} sur {total}…",
+  "@libWriting": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "libInstalled": "{name} est installée ({count} fichier(s) dans /lib). Essayez « import {module} » dans la console.",
+  "@libInstalled": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      },
+      "module": {
+        "type": "String"
+      }
+    }
+  },
+  "libGithubTitle": "Depuis GitHub ou une adresse",
+  "libGithubLabel": "Adresse de la bibliothèque",
+  "libGithubHelper": "github:auteur/dépôt (avec un package.json), ou l’adresse https d’un fichier .py",
+  "libInstalledTitle": "Installées sur la carte",
+  "libInstalledEmpty": "Aucune bibliothèque dans /lib.",
+  "libRefreshInstalled": "Actualiser la liste des bibliothèques installées",
+  "libRemoveTooltip": "Supprimer {name} de la carte",
+  "@libRemoveTooltip": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "libRemoveConfirmTitle": "Supprimer {name} ?",
+  "@libRemoveConfirmTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "libRemoveConfirmBody": "Le fichier ou le dossier /lib/{name} sera effacé de la carte.",
+  "@libRemoveConfirmBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "libRemoved": "{name} a été supprimée de la carte.",
+  "@libRemoved": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "libSourceNote": "Source : micropython-lib (micropython.org). Les fichiers sont téléchargés par l’appareil puis copiés sur la carte : elle n’a besoin ni de Wi-Fi ni de mip.",
+  "libErrNetwork": "{target} : réseau injoignable. Vérifiez la connexion Internet de l’appareil.",
+  "@libErrNetwork": {
+    "placeholders": {
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "libErrNotFound": "{target} : introuvable (ni dans l’index micropython-lib, ni à cette adresse).",
+  "@libErrNotFound": {
+    "placeholders": {
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "libErrBadPackage": "{target} : la description du paquet est illisible.",
+  "@libErrBadPackage": {
+    "placeholders": {
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "libErrInsecure": "{target} : seules les adresses https sont acceptées.",
+  "@libErrInsecure": {
+    "placeholders": {
+      "target": {
+        "type": "String"
+      }
+    }
   }
 }

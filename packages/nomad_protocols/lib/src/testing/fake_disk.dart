@@ -23,6 +23,12 @@ class FakeDisk {
   /// Nombre de prochains morceaux écrits qui lèvent une erreur Python sans errno.
   int garbledWrites = 0;
 
+  /// Version `.mpy` annoncée par `sys.implementation._mpy` (6 : MicroPython 1.19 et suivants).
+  int mpyVersion = 6;
+
+  /// Place totale du système de fichiers ; la place libre en déduit la taille des fichiers présents.
+  int capacity = 1024 * 1024;
+
   BoardProgram run(String code) {
     BoardProgram ok(String out) => (stdout: out, stderr: '', hang: false);
     BoardProgram fail(int errno, String name) => (stdout: '', stderr: _oserr(errno, name), hang: false);
@@ -43,6 +49,11 @@ class FakeDisk {
         if (!rest.contains('/')) lines[rest] = 'd|-1|$rest';
       }
       return ok(lines.values.map((l) => '$l\r\n').join());
+    }
+
+    if (code.contains('os.statvfs(')) {
+      final used = files.values.fold(0, (sum, f) => sum + f.length);
+      return ok('$mpyVersion ${capacity - used}\r\n');
     }
 
     if (code.contains('crc32(')) {

@@ -467,6 +467,108 @@ class MicroPythonController extends Notifier<MicroPythonState> {
       });
 
   // ---------------------------------------------------------------------------
+  // Bibliothèques (dossier /lib, où MicroPython cherche les modules importés)
+  // ---------------------------------------------------------------------------
+
+  static const libDirectory = '/lib';
+
+  /// Taille de bloc des systèmes de fichiers des cartes (LittleFS, FAT) : un fichier occupe au moins
+  /// un bloc, d'où une estimation prudente de la place nécessaire.
+  static const _block = 4096;
+
+  /// Version `.mpy` et place libre de la carte ; null si elle n'est pas prête ou ne répond pas.
+  Future<({int mpy, int free})?> storageInfo() async {
+    ({int mpy, int free})? info;
+    await _guard(() async => info = await _fs!.storageInfo());
+    return info;
+  }
+
+  /// Copie [files] (chemins relatifs à `/lib`) sur la carte en créant les dossiers manquants, chaque
+  /// fichier vérifié par CRC32. Rien n'est écrit si la place manque. Faux en cas d'échec (erreur signalée).
+  Future<bool> installLibrary(
+    String name,
+    List<({String path, Uint8List bytes})> files, {
+    void Function(int done, int total)? onFile,
+  }) async {
+    var installed = false;
+    await _guard(() async {
+      final info = await _fs!.storageInfo();
+      final needed = files.fold(0, (sum, f) => sum + ((f.bytes.length + _block - 1) ~/ _block) * _block);
+      if (needed > info.free) {
+        _fail(_l10n.mpLibNoSpace(name, _kb(needed), _kb(info.free)));
+        return;
+      }
+      final created = <String>{};
+      Future<void> ensureDir(String dir) async {
+        if (dir == '/' || !created.add(dir)) return;
+        await ensureDir(dir.substring(0, dir.lastIndexOf('/')).isEmpty ? '/' : dir.substring(0, dir.lastIndexOf('/')));
+        if (!await _fs!.exists(dir)) await _fs!.mkdir(dir);
+      }
+
+      for (var i = 0; i < files.length; i++) {
+        final file = files[i];
+        final path = '$libDirectory/${file.path}';
+        onFile?.call(i, files.length);
+        await ensureDir(path.substring(0, path.lastIndexOf('/')));
+        final label = file.path.split('/').last;
+        _setTransfer(label, TransferDirection.upload, 0, file.bytes.length);
+        try {
+          await _fs!.write(
+            path,
+            file.bytes,
+            verify: true,
+            onProgress: (sent, total) => _setTransfer(label, TransferDirection.upload, sent, total),
+          );
+        } finally {
+          state = state.copyWith(transfer: null);
+        }
+      }
+      onFile?.call(files.length, files.length);
+      _info(_l10n.mpLogLibraryInstalled(name, files.length, libDirectory));
+      installed = true;
+      await _loadFiles();
+    });
+    return installed;
+  }
+
+  /// Contenu de `/lib` (vide s'il n'existe pas) ; null si la carte n'est pas prête.
+  Future<List<RemoteEntry>?> listLibraries() async {
+    List<RemoteEntry>? entries;
+    await _guard(() async {
+      try {
+        entries = (await _fs!.list(libDirectory))..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+      } on ProtocolRemoteException catch (e) {
+        if (e.errno != 2) rethrow; // ENOENT : pas encore de bibliothèque
+        entries = const [];
+      }
+    });
+    return entries;
+  }
+
+  /// Supprime une bibliothèque de `/lib` : un fichier, ou un dossier et tout son contenu.
+  Future<bool> removeLibrary(RemoteEntry entry) async {
+    var removed = false;
+    await _guard(() async {
+      final path = '$libDirectory/${entry.name}';
+      await _removeTree(path, isDirectory: entry.isDirectory);
+      _info(_l10n.mpLogDeleted(path));
+      removed = true;
+      await _loadFiles();
+    });
+    return removed;
+  }
+
+  Future<void> _removeTree(String path, {required bool isDirectory}) async {
+    if (!isDirectory) return _fs!.remove(path);
+    for (final child in await _fs!.list(path)) {
+      await _removeTree('$path/${child.name}', isDirectory: child.isDirectory);
+    }
+    await _fs!.rmdir(path);
+  }
+
+  static String _kb(int bytes) => (bytes / 1024).toStringAsFixed(bytes < 10240 ? 1 : 0);
+
+  // ---------------------------------------------------------------------------
   // Utilitaires
   // ---------------------------------------------------------------------------
 
