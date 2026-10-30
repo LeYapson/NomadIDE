@@ -1278,7 +1278,7 @@ abstract class AppLocalizations {
   /// No description provided for @flashStepFile.
   ///
   /// In fr, this message translates to:
-  /// **'1. Fichier du programme'**
+  /// **'Fichier du programme'**
   String get flashStepFile;
 
   /// No description provided for @flashPickFile.
@@ -1308,7 +1308,7 @@ abstract class AppLocalizations {
   /// No description provided for @flashStepBoard.
   ///
   /// In fr, this message translates to:
-  /// **'2. Carte'**
+  /// **'Carte'**
   String get flashStepBoard;
 
   /// No description provided for @flashBoardHint.
@@ -1332,7 +1332,7 @@ abstract class AppLocalizations {
   /// No description provided for @flashStepRun.
   ///
   /// In fr, this message translates to:
-  /// **'3. Écriture'**
+  /// **'Écriture'**
   String get flashStepRun;
 
   /// No description provided for @flashRun.
@@ -2078,6 +2078,54 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'barre oblique inverse'**
   String get qkSymBackslash;
+
+  /// No description provided for @stepA11y.
+  ///
+  /// In fr, this message translates to:
+  /// **'Étape {number} sur {total} : {title}'**
+  String stepA11y(int number, int total, String title);
+
+  /// No description provided for @stepDone.
+  ///
+  /// In fr, this message translates to:
+  /// **'terminée'**
+  String get stepDone;
+
+  /// No description provided for @stepTodo.
+  ///
+  /// In fr, this message translates to:
+  /// **'à faire'**
+  String get stepTodo;
+
+  /// No description provided for @stepShowDetails.
+  ///
+  /// In fr, this message translates to:
+  /// **'Toucher pour modifier cette étape'**
+  String get stepShowDetails;
+
+  /// No description provided for @stepHideDetails.
+  ///
+  /// In fr, this message translates to:
+  /// **'Toucher pour replier cette étape'**
+  String get stepHideDetails;
+
+  /// No description provided for @advancedTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Options avancées'**
+  String get advancedTitle;
+
+  /// No description provided for @espAdvancedSummary.
+  ///
+  /// In fr, this message translates to:
+  /// **'Adresse {offset} · {baud} bauds'**
+  String espAdvancedSummary(String offset, int baud);
+
+  /// No description provided for @flashRunBlocked.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisissez d’abord un fichier pour pouvoir flasher.'**
+  String get flashRunBlocked;
 }
 
 class _AppLocalizationsDelegate

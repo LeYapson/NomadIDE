@@ -61,7 +61,11 @@ void main() {
     await tester.tap(find.text('ESP (.bin)'));
     await tester.pumpAndSettle();
 
+    // Le firmware officiel est une section repliée de l'étape 1 : on l'ouvre.
     expect(find.text('Firmware MicroPython officiel'), findsOneWidget);
+    expect(find.text('Chercher la dernière version'), findsNothing);
+    await tester.tap(find.text('Firmware MicroPython officiel'));
+    await tester.pumpAndSettle();
     expect(find.text('Télécharger et utiliser'), findsNothing);
 
     await tester.tap(find.text('Chercher la dernière version'));
@@ -74,9 +78,13 @@ void main() {
     await tester.tap(find.text('Télécharger et utiliser'));
     await tester.pumpAndSettle();
 
-    expect(find.textContaining('ESP32_GENERIC-20260824-v1.29.0.bin téléchargé'), findsOneWidget);
-    // Le fichier est pris comme n'importe quel fichier choisi : adresse déduite de son en-tête.
+    // L'étape 1 est terminée : elle se replie sur le fichier choisi, avec l'adresse déduite de son en-tête.
+    expect(find.text('ESP32_GENERIC-20260824-v1.29.0.bin'), findsOneWidget);
     expect(find.textContaining('Image complète pour ESP32'), findsOneWidget);
+    expect(find.text('Chercher la dernière version'), findsNothing);
+    // L'adresse est dans les options avancées.
+    await tester.tap(find.text('Options avancées'));
+    await tester.pumpAndSettle();
     expect(find.widgetWithText(TextField, '0x1000'), findsOneWidget);
   });
 }

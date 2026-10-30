@@ -692,7 +692,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'La copie d’un fichier .uf2 n’est pas encore possible sur ce système (Android : prévu via le protocole PICOBOOT).';
 
   @override
-  String get flashStepFile => '1. Fichier du programme';
+  String get flashStepFile => 'Fichier du programme';
 
   @override
   String get flashPickFile => 'Choisir un fichier .uf2';
@@ -709,7 +709,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get flashFamilyUnknown => 'famille non précisée';
 
   @override
-  String get flashStepBoard => '2. Carte';
+  String get flashStepBoard => 'Carte';
 
   @override
   String get flashBoardHint =>
@@ -724,7 +724,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get flashDriveNone => 'Aucun disque BOOTSEL détecté pour l’instant.';
 
   @override
-  String get flashStepRun => '3. Écriture';
+  String get flashStepRun => 'Écriture';
 
   @override
   String get flashRun => 'Flasher';
@@ -1231,4 +1231,33 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get qkSymBackslash => 'barre oblique inverse';
+
+  @override
+  String stepA11y(int number, int total, String title) {
+    return 'Étape $number sur $total : $title';
+  }
+
+  @override
+  String get stepDone => 'terminée';
+
+  @override
+  String get stepTodo => 'à faire';
+
+  @override
+  String get stepShowDetails => 'Toucher pour modifier cette étape';
+
+  @override
+  String get stepHideDetails => 'Toucher pour replier cette étape';
+
+  @override
+  String get advancedTitle => 'Options avancées';
+
+  @override
+  String espAdvancedSummary(String offset, int baud) {
+    return 'Adresse $offset · $baud bauds';
+  }
+
+  @override
+  String get flashRunBlocked =>
+      'Choisissez d’abord un fichier pour pouvoir flasher.';
 }

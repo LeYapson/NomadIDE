@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nomad_hal/nomad_hal.dart';
 
-import '../../../app/theme.dart';
 import '../../../l10n/l10n.dart';
+import '../../../ui/ui.dart';
 import '../application/esp_flash_controller.dart';
 import '../application/flash_controller.dart' show flashSizeLabel;
 import '../data/firmware_catalog.dart';
 import 'firmware_card.dart';
-import 'flash_widgets.dart';
 
-/// Flashage d'un fichier `.bin` sur un ESP32 / ESP8266, par le bootloader de la ROM.
+/// Flashage d'un fichier `.bin` sur un ESP32 / ESP8266, par le bootloader de la ROM, en trois étapes :
+/// fichier, carte, écriture. L'adresse et la vitesse d'écriture sont dans les options avancées : l'adresse
+/// est déduite de l'en-tête du fichier, il n'y a normalement rien à y toucher.
 class EspFlashView extends ConsumerStatefulWidget {
   const EspFlashView({super.key});
 
@@ -19,6 +20,8 @@ class EspFlashView extends ConsumerStatefulWidget {
 }
 
 class _EspFlashViewState extends ConsumerState<EspFlashView> {
+  static const _steps = 3;
+
   late final TextEditingController _offset = TextEditingController(text: ref.read(espFlashProvider).offsetText);
 
   @override
@@ -38,12 +41,28 @@ class _EspFlashViewState extends ConsumerState<EspFlashView> {
       if (_offset.text != text) _offset.text = text;
     });
 
+    final bytes = state.bytes;
+    final device = state.selectedDevice;
+
     return SafeArea(
       child: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          FlashStep(
+          StepCard(
+            number: 1,
+            total: _steps,
             title: l10n.flashStepFile,
+            done: bytes != null,
+            summary: bytes == null
+                ? null
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(state.fileName ?? '', style: Theme.of(context).textTheme.titleSmall),
+                      Text(l10n.espFileInfo(flashSizeLabel(l10n, bytes.length)), style: Theme.of(context).textTheme.bodySmall),
+                      if (state.offsetNote != null) Text(state.offsetNote!, style: Theme.of(context).textTheme.bodySmall),
+                    ],
+                  ),
             children: [
               Wrap(
                 children: [
@@ -55,11 +74,11 @@ class _EspFlashViewState extends ConsumerState<EspFlashView> {
                 ],
               ),
               const SizedBox(height: 8),
-              if (state.bytes == null)
+              if (bytes == null)
                 Text(l10n.flashNoFile)
               else ...[
                 Text(state.fileName ?? '', style: Theme.of(context).textTheme.titleSmall),
-                Text(l10n.espFileInfo(flashSizeLabel(l10n, state.bytes!.length))),
+                Text(l10n.espFileInfo(flashSizeLabel(l10n, bytes.length))),
                 if (state.offsetNote != null)
                   Padding(
                     padding: const EdgeInsets.only(top: 4),
@@ -73,33 +92,26 @@ class _EspFlashViewState extends ConsumerState<EspFlashView> {
                     ),
                   ),
               ],
-              const SizedBox(height: 12),
-              TextField(
-                controller: _offset,
+              FirmwareCard(
+                boards: const [
+                  FirmwareBoard.esp32,
+                  FirmwareBoard.esp32s3,
+                  FirmwareBoard.esp32c3,
+                  FirmwareBoard.esp32s2,
+                  FirmwareBoard.esp32c6,
+                ],
+                onFile: controller.useFile,
                 enabled: !state.working,
-                onChanged: controller.setOffset,
-                decoration: InputDecoration(
-                  labelText: l10n.espOffsetLabel,
-                  helperText: l10n.espOffsetHelper,
-                  helperMaxLines: 2,
-                  border: const OutlineInputBorder(),
-                ),
+                initiallyExpanded: false,
               ),
             ],
           ),
-          FirmwareCard(
-            boards: const [
-              FirmwareBoard.esp32,
-              FirmwareBoard.esp32s3,
-              FirmwareBoard.esp32c3,
-              FirmwareBoard.esp32s2,
-              FirmwareBoard.esp32c6,
-            ],
-            onFile: controller.useFile,
-            enabled: !state.working,
-          ),
-          FlashStep(
+          StepCard(
+            number: 2,
+            total: _steps,
             title: l10n.flashStepBoard,
+            done: device != null,
+            summary: device == null ? null : Text('${device.displayName} · ${device.details}'),
             children: [
               if (state.devices.isEmpty)
                 Text(l10n.espNoBoard)
@@ -115,41 +127,67 @@ class _EspFlashViewState extends ConsumerState<EspFlashView> {
                   ],
                   onChanged: state.working ? null : controller.selectDevice,
                 ),
-              const SizedBox(height: 12),
-              DropdownButtonFormField<int>(
-                key: ValueKey(state.baudRate),
-                initialValue: state.baudRate,
-                decoration: InputDecoration(labelText: l10n.espBaudLabel, border: const OutlineInputBorder()),
-                items: [for (final b in espWriteBauds) DropdownMenuItem(value: b, child: Text('$b'))],
-                onChanged: state.working ? null : (b) => controller.setBaudRate(b ?? state.baudRate),
-              ),
               const SizedBox(height: 8),
               Text(l10n.espBoardHint, style: Theme.of(context).textTheme.bodySmall),
             ],
           ),
-          FlashStep(
+          StepCard(
+            number: 3,
+            total: _steps,
             title: l10n.flashStepRun,
+            done: state.succeeded,
+            collapsible: false,
             children: [
               Wrap(
                 children: [
-                  FilledButton.icon(
-                    style: hardwareButtonStyle(context),
+                  HardwareButton(
                     onPressed: state.canFlash ? controller.flash : null,
-                    icon: const Icon(Icons.bolt),
-                    label: Text(l10n.flashRun),
+                    icon: Icons.bolt,
+                    label: l10n.flashRun,
                   ),
                 ],
               ),
+              if (bytes == null && !state.working) ...[
+                const SizedBox(height: 8),
+                Text(l10n.flashRunBlocked, style: Theme.of(context).textTheme.bodySmall),
+              ],
               if (state.working) ...[
                 const SizedBox(height: 12),
-                Text(_phaseLabel(l10n, state)),
-                const SizedBox(height: 6),
-                LinearProgressIndicator(value: state.phase == EspFlashPhase.writing ? _fraction(state) : null),
+                ProgressStatus(
+                  label: _phaseLabel(l10n, state),
+                  value: state.phase == EspFlashPhase.writing ? _fraction(state) : null,
+                ),
               ],
               if (state.message != null) ...[
                 const SizedBox(height: 12),
-                FlashBanner(message: state.message!, success: state.succeeded),
+                StatusBanner(message: state.message!, kind: state.succeeded ? StatusKind.success : StatusKind.error),
               ],
+              Disclosure(
+                title: l10n.advancedTitle,
+                summary: l10n.espAdvancedSummary(state.offsetText, state.baudRate),
+                children: [
+                  const SizedBox(height: 4),
+                  TextField(
+                    controller: _offset,
+                    enabled: !state.working,
+                    onChanged: controller.setOffset,
+                    decoration: InputDecoration(
+                      labelText: l10n.espOffsetLabel,
+                      helperText: l10n.espOffsetHelper,
+                      helperMaxLines: 2,
+                      border: const OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  DropdownButtonFormField<int>(
+                    key: ValueKey(state.baudRate),
+                    initialValue: state.baudRate,
+                    decoration: InputDecoration(labelText: l10n.espBaudLabel, border: const OutlineInputBorder()),
+                    items: [for (final b in espWriteBauds) DropdownMenuItem(value: b, child: Text('$b'))],
+                    onChanged: state.working ? null : (b) => controller.setBaudRate(b ?? state.baudRate),
+                  ),
+                ],
+              ),
             ],
           ),
         ],
