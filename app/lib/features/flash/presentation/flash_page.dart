@@ -189,7 +189,11 @@ class Uf2FlashView extends ConsumerWidget {
               ],
               if (state.working) ...[
                 const SizedBox(height: 12),
-                ProgressStatus(label: _phaseLabel(l10n, state), value: _hasProgress(state.phase) ? _fraction(state) : null),
+                ProgressStatus(
+                  label: _phaseLabel(l10n, state),
+                  spokenLabel: _phaseLabel(l10n, state, coarse: true),
+                  value: _hasProgress(state.phase) ? _fraction(state) : null,
+                ),
               ],
               if (state.message != null) ...[
                 const SizedBox(height: 12),
@@ -208,13 +212,17 @@ class Uf2FlashView extends ConsumerWidget {
   static bool _hasProgress(FlashPhase phase) =>
       phase == FlashPhase.erasing || phase == FlashPhase.copying || phase == FlashPhase.verifying;
 
-  static String _phaseLabel(AppLocalizations l10n, FlashState s) => switch (s.phase) {
+  /// Pourcentage affiché, ou arrondi au palier annoncé au lecteur d'écran ([coarse]).
+  static int _percent(FlashState s, bool coarse) =>
+      coarse ? announcedPercent(_fraction(s)) : ((_fraction(s) ?? 0) * 100).round();
+
+  static String _phaseLabel(AppLocalizations l10n, FlashState s, {bool coarse = false}) => switch (s.phase) {
         FlashPhase.touching => l10n.flashPhaseTouching,
         FlashPhase.waitingDrive => l10n.flashPhaseWaiting,
         FlashPhase.permission => l10n.flashPhasePermission,
-        FlashPhase.erasing => l10n.flashPhaseErasing(((_fraction(s) ?? 0) * 100).round()),
-        FlashPhase.verifying => l10n.flashPhaseVerifying(((_fraction(s) ?? 0) * 100).round()),
-        FlashPhase.copying => l10n.flashPhaseCopying(((_fraction(s) ?? 0) * 100).round()),
+        FlashPhase.erasing => l10n.flashPhaseErasing(_percent(s, coarse)),
+        FlashPhase.verifying => l10n.flashPhaseVerifying(_percent(s, coarse)),
+        FlashPhase.copying => l10n.flashPhaseCopying(_percent(s, coarse)),
         FlashPhase.rebooting => l10n.flashPhaseRebooting,
         _ => '',
       };

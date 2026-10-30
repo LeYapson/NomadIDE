@@ -1260,4 +1260,12 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get flashRunBlocked =>
       'Choisissez d’abord un fichier pour pouvoir flasher.';
+
+  @override
+  String get mpConsoleLabel => 'Code Python à exécuter sur la carte';
+
+  @override
+  String edEditorLabel(String name) {
+    return 'Éditeur de code : $name';
+  }
 }

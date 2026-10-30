@@ -234,7 +234,10 @@ class _EditorPageState extends ConsumerState<EditorPage> {
                       final output = _showOutput ? const ReplLogView() : null;
                       final surface = KeyedSubtree(
                         key: ValueKey(document.id),
-                        child: NomadCodeEditor(controller: document.controller, onSave: () => _save(document)),
+                        child: Semantics(
+                          label: context.l10n.edEditorLabel(document.name),
+                          child: NomadCodeEditor(controller: document.controller, onSave: () => _save(document)),
+                        ),
                       );
                       // Écran large ou paysage : éditeur et sortie côte à côte.
                       if (constraints.maxWidth >= _wideBreakpoint - 280) {
@@ -278,7 +281,12 @@ class _EditorPageState extends ConsumerState<EditorPage> {
       child: Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
-          title: Text(context.l10n.edTitle),
+          // Sur un téléphone, les boutons d'action ne laissent que ~30 dp au titre, qui serait coupé : la
+          // barre de navigation et les onglets de fichiers disent déjà où l'on est. Le lecteur d'écran
+          // lit quand même le titre de la page.
+          title: MediaQuery.sizeOf(context).width < 600
+              ? Semantics(header: true, namesRoute: true, label: context.l10n.edTitle, child: const SizedBox.shrink())
+              : Text(context.l10n.edTitle),
           // Les boutons d'action font partie de la zone de l'éditeur : y toucher ne lui retire
           // ni le focus ni la sélection (sinon « Exécuter » partirait avec tout le fichier).
           actions: [
@@ -389,8 +397,9 @@ class _DocumentTabs extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = ref.read(editorProvider.notifier);
     final scheme = Theme.of(context).colorScheme;
+    // 48 dp de zone tactile + le filet de 2 dp sous l'onglet actif.
     return SizedBox(
-      height: 44,
+      height: 50,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: editor.documents.length,
@@ -414,8 +423,7 @@ class _DocumentTabs extends ConsumerWidget {
                     ),
                     IconButton(
                       tooltip: context.l10n.commonClose,
-                      iconSize: 16,
-                      visualDensity: VisualDensity.compact,
+                      iconSize: 18,
                       onPressed: () => onClose(document),
                       icon: const Icon(Icons.close),
                     ),

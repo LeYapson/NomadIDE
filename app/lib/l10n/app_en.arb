@@ -1226,5 +1226,14 @@
       }
     }
   },
-  "flashRunBlocked": "Choose a file first to enable flashing."
+  "flashRunBlocked": "Choose a file first to enable flashing.",
+  "mpConsoleLabel": "Python code to run on the board",
+  "edEditorLabel": "Code editor: {name}",
+  "@edEditorLabel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

@@ -120,6 +120,32 @@ void main() {
     });
   });
 
+  group('annonces au lecteur d’écran', () {
+    test('le pourcentage annoncé avance par paliers de 25 %', () {
+      expect(announcedPercent(null), 0);
+      expect(announcedPercent(0), 0);
+      expect(announcedPercent(0.24), 0);
+      expect(announcedPercent(0.25), 25);
+      expect(announcedPercent(0.49), 25);
+      expect(announcedPercent(0.5), 50);
+      expect(announcedPercent(0.99), 75);
+      expect(announcedPercent(1), 100);
+      expect(announcedPercent(7), 100);
+    });
+
+    testWidgets('la progression est une région vivante qui lit le palier, pas chaque pourcent', (tester) async {
+      final handle = tester.ensureSemantics();
+      await tester.pumpWidget(_host(const ProgressStatus(label: 'Écriture… 43 %', spokenLabel: 'Écriture… 25 %', value: 0.43)));
+
+      expect(find.text('Écriture… 43 %'), findsOneWidget); // le texte visible reste exact
+      expect(find.bySemanticsLabel('Écriture… 25 %'), findsOneWidget);
+      expect(find.bySemanticsLabel('Écriture… 43 %'), findsNothing);
+      final data = tester.getSemantics(find.bySemanticsLabel('Écriture… 25 %')).getSemanticsData();
+      expect(data.flagsCollection.isLiveRegion, isTrue);
+      handle.dispose();
+    });
+  });
+
   group('ProgressStatus', () {
     testWidgets('le texte porte l\'information, la barre est ignorée du lecteur d\'écran', (tester) async {
       final handle = tester.ensureSemantics();

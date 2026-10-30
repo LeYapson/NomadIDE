@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Produit** | NomadIDE |
-| **Version du document** | 0.12 — étape 3 : parcours Flasher guidé et composants communs (épopée G) |
+| **Version du document** | 0.13 — étape 3 : accessibilité des cinq écrans testée (cibles de 48 dp, annonces, texte agrandi) |
 | **Date** | 2026-10-01 |
 | **Statut du produit** | Étape 1 terminée (HAL USB/série + moniteur série) ; étape 2 en cours |
 | **Documents liés** | [README.md](README.md) · [ADR 0001 — Flutter](docs/adr/0001-stack-flutter.md) |
@@ -183,8 +183,8 @@ Référentiels visés : **WCAG 2.2 niveau AA** et **RGAA 4.1**. Méthode : la co
 |---|---|---|---|
 | G1 | Je veux une barre de raccourcis tactile au-dessus du clavier (`Tab`, `:`, `{`, `}` ; `Ctrl+C` et `Ctrl+D` dans la console MicroPython) pour programmer sans chercher les symboles. | M | 🧪 existe déjà (B6) ; reste la mise en conformité : cibles 48 dp, libellés traduits, sémantique |
 | G2 | Je veux que le flash soit un parcours guidé (1. Fichier, 2. Carte, 3. Écriture) lisible sur un écran de 360 dp, sans surcharge. | M | 🧪 trois étapes avec divulgation progressive (étape terminée repliée sur son résumé, options avancées et firmware officiel repliés), testé à 360 dp et à 150 % de taille de texte ; à valider sur téléphone |
-| G3 | Je veux qu'un lecteur d'écran (TalkBack, VoiceOver) annonce l'état de l'app : carte connectée ou déconnectée, flash en cours avec son avancement, erreur. | M | 🔜 |
-| G4 | Je veux que toutes les zones tactiles fassent au moins 48 × 48 dp. | M | 🔜 |
+| G3 | Je veux qu'un lecteur d'écran (TalkBack, VoiceOver) annonce l'état de l'app : carte connectée ou déconnectée, flash en cours avec son avancement, erreur. | M | 🧪 état de connexion, progression (par paliers de 25 %) et résultats annoncés, zones sans nom nommées ; testé en simulation, à valider avec TalkBack sur téléphone |
+| G4 | Je veux que toutes les zones tactiles fassent au moins 48 × 48 dp. | M | 🧪 vérifié par test sur les 5 écrans (thèmes sombre et clair, téléphone de 360 dp) ; texte agrandi à 150 % et 200 % sans débordement ; à valider sur téléphone |
 | G5 | Je veux un thème sombre lisible : contraste ≥ 4,5:1 pour le texte et ≥ 3:1 pour les composants et le focus. | M | 🧪 appliqué et testé automatiquement (texte des 5 écrans, thèmes sombre et clair) ; à valider à l'œil sur téléphone |
 | G6 | Je veux une identité visuelle cohérente (palette ci-dessous) appliquée à tous les écrans. | S | 🧪 thème et couleurs de l'éditeur appliqués ; reste la refonte des composants (G7) |
 | G7 | Je veux une interface construite à partir de composants réutilisables (atomes, molécules, organismes) et de la grille Material 3, pour que chaque écran se comporte de la même façon. | S | 🧪 dossier `app/lib/ui/` (atomes : bouton d'action matérielle, pastille d'étape ; molécules : étape repliable, bannière, section avancée, progression) appliqué à l'écran Flasher ; reste à l'appliquer aux autres écrans |
@@ -404,3 +404,4 @@ La date de chaque jalon sera fixée après la décision sur R1 et le banc de tes
 | 0.10 | 2026-10-29 | C6 ✅ ; ajout de D8 (flash multi-fichiers ESP), de l'épopée G (UX/UI et accessibilité, WCAG 2.2 AA / RGAA 4.1) avec la palette et ses contrastes calculés, de l'exigence d'accessibilité détaillée et du jalon M3c |
 | 0.11 | 2026-10-29 | Épopée G : barre de raccourcis accessible (G1), thème sombre et clair avec la palette de la marque, coloration du code, tests de contraste ; Electric Indigo éclairci (`#818CF8`) et Crimson Red éclairci (`#F87171`) en thème sombre |
 | 0.12 | 2026-10-30 | Épopée G : composants communs (`app/lib/ui/`), parcours Flasher à divulgation progressive (G2), état de G7 |
+| 0.13 | 2026-10-30 | Épopée G : cibles de 48 dp et libellés sur les cinq écrans, annonces pour le lecteur d'écran (G3, G4), texte agrandi sans débordement |

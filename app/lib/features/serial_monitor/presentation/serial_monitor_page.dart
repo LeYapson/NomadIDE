@@ -38,17 +38,25 @@ class SerialMonitorPage extends ConsumerWidget {
           ),
         ],
       ),
-      body: const SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            ConnectionToolbar(),
-            ControlBar(),
-            Divider(height: 1),
-            Expanded(child: SerialLogView()),
-            Divider(height: 1),
-            SerialInputBar(),
-          ],
+      body: SafeArea(
+        // Les contrôles du haut sont limités à la moitié de la hauteur et défilent au-delà : avec un texte
+        // agrandi, ils ne doivent ni déborder ni chasser le journal.
+        child: LayoutBuilder(
+          builder: (context, constraints) => Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              ConstrainedBox(
+                constraints: BoxConstraints(maxHeight: constraints.maxHeight * 0.5),
+                child: const SingleChildScrollView(
+                  child: Column(children: [ConnectionToolbar(), ControlBar()]),
+                ),
+              ),
+              const Divider(height: 1),
+              const Expanded(child: SerialLogView()),
+              const Divider(height: 1),
+              const SerialInputBar(),
+            ],
+          ),
         ),
       ),
     );
@@ -70,15 +78,23 @@ class _StatusBadge extends StatelessWidget {
       ConnectionStatus.connecting => (context.nomadColors.hardware, l10n.monStatusConnecting),
       ConnectionStatus.disconnected => (scheme.outline, l10n.monStatusDisconnected),
     };
-    return Tooltip(
-      message: l10n.monTransportTooltip(transportKind == null ? '' : transportLabel(l10n, transportKind!)),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.circle, size: 10, color: color),
-          const SizedBox(width: 6),
-          Text(label),
-        ],
+    final transport = l10n.monTransportTooltip(transportKind == null ? '' : transportLabel(l10n, transportKind!));
+    return Semantics(
+      liveRegion: true,
+      container: true,
+      label: label,
+      hint: transport,
+      excludeSemantics: true,
+      child: Tooltip(
+        message: transport,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.circle, size: 10, color: color),
+            const SizedBox(width: 6),
+            Text(label),
+          ],
+        ),
       ),
     );
   }

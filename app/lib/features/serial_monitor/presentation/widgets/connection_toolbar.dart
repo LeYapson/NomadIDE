@@ -14,7 +14,7 @@ class ConnectionToolbar extends ConsumerWidget {
   static const _fieldDecoration = InputDecoration(
     border: OutlineInputBorder(),
     isDense: true,
-    contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+    contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
   );
 
   @override
@@ -38,7 +38,6 @@ class ConnectionToolbar extends ConsumerWidget {
               decoration: _fieldDecoration.copyWith(labelText: l10n.monBoardLabel),
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<SerialDeviceInfo>(
-                  isDense: true,
                   isExpanded: true,
                   // DropdownButton exige que la valeur figure dans la liste.
                   value: state.devices.contains(state.selectedDevice) ? state.selectedDevice : null,
@@ -67,7 +66,6 @@ class ConnectionToolbar extends ConsumerWidget {
               decoration: _fieldDecoration.copyWith(labelText: l10n.monBaudLabel),
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<int>(
-                  isDense: true,
                   isExpanded: true,
                   value: state.config.baudRate,
                   items: [

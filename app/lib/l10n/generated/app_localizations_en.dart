@@ -1255,4 +1255,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get flashRunBlocked => 'Choose a file first to enable flashing.';
+
+  @override
+  String get mpConsoleLabel => 'Python code to run on the board';
+
+  @override
+  String edEditorLabel(String name) {
+    return 'Code editor: $name';
+  }
 }
