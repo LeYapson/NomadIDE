@@ -18,7 +18,7 @@ class NomadApp extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       theme: buildTheme(Brightness.light),
       darkTheme: buildTheme(Brightness.dark),
-      themeMode: ThemeMode.system,
+      themeMode: ref.watch(settingsProvider.select((s) => s.themeMode)),
       locale: locale,
       supportedLocales: appLocales,
       localizationsDelegates: const [

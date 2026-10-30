@@ -2420,6 +2420,186 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'{target} : seules les adresses https sont acceptées.'**
   String libErrInsecure(String target);
+
+  /// No description provided for @settingsAppearance.
+  ///
+  /// In fr, this message translates to:
+  /// **'Apparence'**
+  String get settingsAppearance;
+
+  /// No description provided for @themeSystem.
+  ///
+  /// In fr, this message translates to:
+  /// **'Comme le système'**
+  String get themeSystem;
+
+  /// No description provided for @themeLight.
+  ///
+  /// In fr, this message translates to:
+  /// **'Clair'**
+  String get themeLight;
+
+  /// No description provided for @themeDark.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sombre'**
+  String get themeDark;
+
+  /// No description provided for @settingsEditor.
+  ///
+  /// In fr, this message translates to:
+  /// **'Éditeur'**
+  String get settingsEditor;
+
+  /// No description provided for @settingsFontSize.
+  ///
+  /// In fr, this message translates to:
+  /// **'Taille du texte du code : {size}'**
+  String settingsFontSize(int size);
+
+  /// No description provided for @settingsWordWrap.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retour à la ligne automatique'**
+  String get settingsWordWrap;
+
+  /// No description provided for @settingsWordWrapHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les longues lignes passent à la ligne au lieu de défiler.'**
+  String get settingsWordWrapHint;
+
+  /// No description provided for @settingsMonitor.
+  ///
+  /// In fr, this message translates to:
+  /// **'Moniteur série'**
+  String get settingsMonitor;
+
+  /// No description provided for @settingsDefaultBaud.
+  ///
+  /// In fr, this message translates to:
+  /// **'Débit par défaut'**
+  String get settingsDefaultBaud;
+
+  /// No description provided for @settingsDefaultLineEnding.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fin de ligne par défaut'**
+  String get settingsDefaultLineEnding;
+
+  /// No description provided for @settingsDefaultTimestamps.
+  ///
+  /// In fr, this message translates to:
+  /// **'Horodatage du journal'**
+  String get settingsDefaultTimestamps;
+
+  /// No description provided for @settingsHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aide'**
+  String get settingsHelp;
+
+  /// No description provided for @settingsDiagnostic.
+  ///
+  /// In fr, this message translates to:
+  /// **'Exporter un journal de diagnostic'**
+  String get settingsDiagnostic;
+
+  /// No description provided for @settingsDiagnosticHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Versions, cartes détectées et dernières erreurs, à joindre à un signalement de bug. Ni vos projets ni le flux série n’y figurent.'**
+  String get settingsDiagnosticHint;
+
+  /// No description provided for @settingsDiagnosticDone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Journal copié dans le presse-papiers et enregistré : {path}'**
+  String settingsDiagnosticDone(String path);
+
+  /// No description provided for @settingsDiagnosticFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le journal n’a pas pu être enregistré : {cause}'**
+  String settingsDiagnosticFailed(String cause);
+
+  /// No description provided for @settingsData.
+  ///
+  /// In fr, this message translates to:
+  /// **'Données'**
+  String get settingsData;
+
+  /// No description provided for @settingsProjectsFolder.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dossier des projets'**
+  String get settingsProjectsFolder;
+
+  /// No description provided for @settingsCopyPath.
+  ///
+  /// In fr, this message translates to:
+  /// **'Copier le chemin'**
+  String get settingsCopyPath;
+
+  /// No description provided for @settingsCopied.
+  ///
+  /// In fr, this message translates to:
+  /// **'Copié dans le presse-papiers.'**
+  String get settingsCopied;
+
+  /// No description provided for @settingsClearCache.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vider le cache des bibliothèques'**
+  String get settingsClearCache;
+
+  /// No description provided for @settingsCacheSize.
+  ///
+  /// In fr, this message translates to:
+  /// **'{size} de bibliothèques téléchargées, gardées pour le travail hors ligne'**
+  String settingsCacheSize(String size);
+
+  /// No description provided for @settingsCacheEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune bibliothèque en cache'**
+  String get settingsCacheEmpty;
+
+  /// No description provided for @settingsCacheCleared.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cache des bibliothèques vidé.'**
+  String get settingsCacheCleared;
+
+  /// No description provided for @settingsAbout.
+  ///
+  /// In fr, this message translates to:
+  /// **'À propos'**
+  String get settingsAbout;
+
+  /// No description provided for @settingsVersion.
+  ///
+  /// In fr, this message translates to:
+  /// **'Version'**
+  String get settingsVersion;
+
+  /// No description provided for @settingsSource.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code source'**
+  String get settingsSource;
+
+  /// No description provided for @settingsLicenses.
+  ///
+  /// In fr, this message translates to:
+  /// **'Licences des composants open source'**
+  String get settingsLicenses;
+
+  /// No description provided for @settingsLicensesHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bibliothèques utilisées par NomadIDE et leurs licences'**
+  String get settingsLicensesHint;
 }
 
 class _AppLocalizationsDelegate

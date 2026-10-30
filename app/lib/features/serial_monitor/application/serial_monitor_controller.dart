@@ -46,6 +46,18 @@ class SerialMonitorController extends Notifier<SerialMonitorState> {
     _transport = ref.watch(serialTransportProvider);
     ref.onDispose(_disposeResources);
 
+    // Valeurs par défaut des réglages : appliquées quand le fichier est lu puis à chaque changement,
+    // réglage par réglage (changer le thème ne remet pas à zéro la fin de ligne choisie dans la session).
+    ref.listen(settingsProvider, (previous, next) {
+      var s = state;
+      if (previous?.monitorBaud != next.monitorBaud && _connection == null) {
+        s = s.copyWith(config: s.config.copyWith(baudRate: next.monitorBaud));
+      }
+      if (previous?.monitorLineEnding != next.monitorLineEnding) s = s.copyWith(lineEnding: next.monitorLineEnding);
+      if (previous?.monitorTimestamps != next.monitorTimestamps) s = s.copyWith(showTimestamps: next.monitorTimestamps);
+      state = s;
+    });
+
     final transport = _transport;
     if (transport is UnsupportedSerialTransport) {
       final reason = SerialUnsupportedException(

@@ -1519,5 +1519,63 @@
         "type": "String"
       }
     }
-  }
+  },
+  "settingsAppearance": "Appearance",
+  "themeSystem": "Same as the system",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "settingsEditor": "Editor",
+  "settingsFontSize": "Code text size: {size}",
+  "@settingsFontSize": {
+    "placeholders": {
+      "size": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsWordWrap": "Automatic line wrapping",
+  "settingsWordWrapHint": "Long lines wrap instead of scrolling.",
+  "settingsMonitor": "Serial monitor",
+  "settingsDefaultBaud": "Default baud rate",
+  "settingsDefaultLineEnding": "Default line ending",
+  "settingsDefaultTimestamps": "Log timestamps",
+  "settingsHelp": "Help",
+  "settingsDiagnostic": "Export a diagnostic log",
+  "settingsDiagnosticHint": "Versions, detected boards and latest errors, to attach to a bug report. Neither your projects nor the serial stream are included.",
+  "settingsDiagnosticDone": "Log copied to the clipboard and saved: {path}",
+  "@settingsDiagnosticDone": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsDiagnosticFailed": "The log could not be saved: {cause}",
+  "@settingsDiagnosticFailed": {
+    "placeholders": {
+      "cause": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsData": "Data",
+  "settingsProjectsFolder": "Projects folder",
+  "settingsCopyPath": "Copy the path",
+  "settingsCopied": "Copied to the clipboard.",
+  "settingsClearCache": "Clear the library cache",
+  "settingsCacheSize": "{size} of downloaded libraries, kept for offline work",
+  "@settingsCacheSize": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsCacheEmpty": "No library in the cache",
+  "settingsCacheCleared": "Library cache cleared.",
+  "settingsAbout": "About",
+  "settingsVersion": "Version",
+  "settingsSource": "Source code",
+  "settingsLicenses": "Open source component licences",
+  "settingsLicensesHint": "Libraries used by NomadIDE and their licences"
 }

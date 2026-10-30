@@ -1519,5 +1519,63 @@
         "type": "String"
       }
     }
-  }
+  },
+  "settingsAppearance": "Apparence",
+  "themeSystem": "Comme le système",
+  "themeLight": "Clair",
+  "themeDark": "Sombre",
+  "settingsEditor": "Éditeur",
+  "settingsFontSize": "Taille du texte du code : {size}",
+  "@settingsFontSize": {
+    "placeholders": {
+      "size": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsWordWrap": "Retour à la ligne automatique",
+  "settingsWordWrapHint": "Les longues lignes passent à la ligne au lieu de défiler.",
+  "settingsMonitor": "Moniteur série",
+  "settingsDefaultBaud": "Débit par défaut",
+  "settingsDefaultLineEnding": "Fin de ligne par défaut",
+  "settingsDefaultTimestamps": "Horodatage du journal",
+  "settingsHelp": "Aide",
+  "settingsDiagnostic": "Exporter un journal de diagnostic",
+  "settingsDiagnosticHint": "Versions, cartes détectées et dernières erreurs, à joindre à un signalement de bug. Ni vos projets ni le flux série n’y figurent.",
+  "settingsDiagnosticDone": "Journal copié dans le presse-papiers et enregistré : {path}",
+  "@settingsDiagnosticDone": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsDiagnosticFailed": "Le journal n’a pas pu être enregistré : {cause}",
+  "@settingsDiagnosticFailed": {
+    "placeholders": {
+      "cause": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsData": "Données",
+  "settingsProjectsFolder": "Dossier des projets",
+  "settingsCopyPath": "Copier le chemin",
+  "settingsCopied": "Copié dans le presse-papiers.",
+  "settingsClearCache": "Vider le cache des bibliothèques",
+  "settingsCacheSize": "{size} de bibliothèques téléchargées, gardées pour le travail hors ligne",
+  "@settingsCacheSize": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsCacheEmpty": "Aucune bibliothèque en cache",
+  "settingsCacheCleared": "Cache des bibliothèques vidé.",
+  "settingsAbout": "À propos",
+  "settingsVersion": "Version",
+  "settingsSource": "Code source",
+  "settingsLicenses": "Licences des composants open source",
+  "settingsLicensesHint": "Bibliothèques utilisées par NomadIDE et leurs licences"
 }
