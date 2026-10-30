@@ -66,11 +66,17 @@ class _ConsolePanelState extends ConsumerState<ConsolePanel> {
     final controller = ref.read(microPythonProvider.notifier);
     final scheme = Theme.of(context).colorScheme;
 
-    return Column(
+    return LayoutBuilder(
+      builder: (context, constraints) => Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         const Expanded(child: ReplLogView()),
         const Divider(height: 1),
+        ConstrainedBox(
+          constraints: BoxConstraints(maxHeight: constraints.maxHeight * 0.7),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
           // Une seule ligne qui défile : sur un petit écran, des pastilles sur plusieurs lignes
@@ -96,14 +102,17 @@ class _ConsolePanelState extends ConsumerState<ConsolePanel> {
               Expanded(
                 child: CallbackShortcuts(
                   bindings: {const SingleActivator(LogicalKeyboardKey.enter, control: true): _run},
-                  child: TextField(
-                    controller: _code,
-                    minLines: 3,
-                    maxLines: 8,
-                    style: const TextStyle(fontFamily: 'Consolas', fontFamilyFallback: ['monospace']),
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      hintText: l10n.mpConsoleHint,
+                  child: Semantics(
+                    label: l10n.mpConsoleLabel,
+                    child: TextField(
+                      controller: _code,
+                      minLines: 3,
+                      maxLines: 8,
+                      style: const TextStyle(fontFamily: 'Consolas', fontFamilyFallback: ['monospace']),
+                      decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
+                        hintText: l10n.mpConsoleHint,
+                      ),
                     ),
                   ),
                 ),
@@ -126,6 +135,10 @@ class _ConsolePanelState extends ConsumerState<ConsolePanel> {
             ],
           ),
         ),
+              ],
+            ),
+          ),
+        ),
         QuickKeyBar(
           semanticLabel: l10n.qkBarLabel,
           keys: [
@@ -146,6 +159,7 @@ class _ConsolePanelState extends ConsumerState<ConsolePanel> {
           ],
         ),
       ],
+    ),
     );
   }
 }

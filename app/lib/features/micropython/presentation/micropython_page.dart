@@ -31,9 +31,13 @@ class MicroPythonPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: Text(context.l10n.mpTitle)),
       body: SafeArea(
-        child: Column(
+        child: LayoutBuilder(
+          builder: (context, page) => Column(
           children: [
-            const _Toolbar(),
+            ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: page.maxHeight * 0.4),
+              child: const SingleChildScrollView(child: _Toolbar()),
+            ),
             const Divider(height: 1),
             Expanded(
               child: LayoutBuilder(
@@ -60,6 +64,7 @@ class MicroPythonPage extends ConsumerWidget {
               ),
             ),
           ],
+          ),
         ),
       ),
     );
@@ -90,11 +95,10 @@ class _Toolbar extends ConsumerWidget {
                 labelText: l10n.monBoardLabel,
                 border: const OutlineInputBorder(),
                 isDense: true,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
               ),
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<SerialDeviceInfo>(
-                  isDense: true,
                   isExpanded: true,
                   value: state.devices.contains(state.selectedDevice) ? state.selectedDevice : null,
                   hint: Text(state.devices.isEmpty ? l10n.monNoBoardDetected : l10n.monChooseBoard),

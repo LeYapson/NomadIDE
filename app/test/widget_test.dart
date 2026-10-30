@@ -55,7 +55,8 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('MicroPython').last);
+    // Sur téléphone, le libellé de l'onglet est raccourci pour tenir sur une ligne.
+    await tester.tap(find.text('Python').last);
     await tester.pumpAndSettle();
 
     expect(find.text('Console'), findsOneWidget);

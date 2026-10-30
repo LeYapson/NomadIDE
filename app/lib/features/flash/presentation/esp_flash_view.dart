@@ -155,6 +155,7 @@ class _EspFlashViewState extends ConsumerState<EspFlashView> {
                 const SizedBox(height: 12),
                 ProgressStatus(
                   label: _phaseLabel(l10n, state),
+                  spokenLabel: _phaseLabel(l10n, state, coarse: true),
                   value: state.phase == EspFlashPhase.writing ? _fraction(state) : null,
                 ),
               ],
@@ -197,9 +198,13 @@ class _EspFlashViewState extends ConsumerState<EspFlashView> {
 
   static double? _fraction(EspFlashState s) => s.total <= 0 ? null : (s.done / s.total).clamp(0.0, 1.0);
 
-  static String _phaseLabel(AppLocalizations l10n, EspFlashState s) => switch (s.phase) {
+  /// Pourcentage affiché, ou arrondi au palier annoncé au lecteur d'écran ([coarse]).
+  static int _percent(EspFlashState s, bool coarse) =>
+      coarse ? announcedPercent(_fraction(s)) : ((_fraction(s) ?? 0) * 100).round();
+
+  static String _phaseLabel(AppLocalizations l10n, EspFlashState s, {bool coarse = false}) => switch (s.phase) {
         EspFlashPhase.connecting => l10n.espPhaseConnecting,
-        EspFlashPhase.writing => l10n.espPhaseWriting(((_fraction(s) ?? 0) * 100).round()),
+        EspFlashPhase.writing => l10n.espPhaseWriting(_percent(s, coarse)),
         EspFlashPhase.verifying => l10n.espPhaseVerifying,
         EspFlashPhase.restarting => l10n.espPhaseRestarting,
         _ => '',

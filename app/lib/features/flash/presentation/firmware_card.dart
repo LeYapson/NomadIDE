@@ -93,6 +93,9 @@ class FirmwareCard extends ConsumerWidget {
           const SizedBox(height: 12),
           ProgressStatus(
             label: state.fraction == null ? l10n.fwDownloadingUnknown : l10n.fwDownloading((state.fraction! * 100).round()),
+            spokenLabel: state.fraction == null
+                ? l10n.fwDownloadingUnknown
+                : l10n.fwDownloading(announcedPercent(state.fraction)),
             value: state.fraction,
           ),
         ],

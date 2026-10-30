@@ -2126,6 +2126,24 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Choisissez d’abord un fichier pour pouvoir flasher.'**
   String get flashRunBlocked;
+
+  /// No description provided for @mpConsoleLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code Python à exécuter sur la carte'**
+  String get mpConsoleLabel;
+
+  /// No description provided for @edEditorLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Éditeur de code : {name}'**
+  String edEditorLabel(String name);
+
+  /// No description provided for @navMicroPythonShort.
+  ///
+  /// In fr, this message translates to:
+  /// **'Python'**
+  String get navMicroPythonShort;
 }
 
 class _AppLocalizationsDelegate

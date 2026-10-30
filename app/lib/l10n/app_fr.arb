@@ -1226,5 +1226,15 @@
       }
     }
   },
-  "flashRunBlocked": "Choisissez d’abord un fichier pour pouvoir flasher."
+  "flashRunBlocked": "Choisissez d’abord un fichier pour pouvoir flasher.",
+  "mpConsoleLabel": "Code Python à exécuter sur la carte",
+  "edEditorLabel": "Éditeur de code : {name}",
+  "@edEditorLabel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "navMicroPythonShort": "Python"
 }
