@@ -102,6 +102,15 @@ void main() {
     expect(repl.state, RawReplState.ready);
   });
 
+  test('storageInfo : version .mpy et place libre, qui diminue après une écriture', () async {
+    disk
+      ..mpyVersion = 6
+      ..capacity = 10000;
+    expect(await fs.storageInfo(), (mpy: 6, free: 10000));
+    await fs.write('/lib/a.py', binary(1000));
+    expect((await fs.storageInfo('/lib')).free, 9000);
+  });
+
   test('mkdir, rename, remove, rmdir', () async {
     await fs.mkdir('/data');
     await fs.write('/data/a', binary(10));

@@ -2228,6 +2228,198 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'{baud} bauds'**
   String espBaudSummary(int baud);
+
+  /// No description provided for @mpLibNoSpace.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas assez de place sur la carte pour {name} : il faut environ {needed} Ko, il en reste {free} Ko. Rien n’a été écrit.'**
+  String mpLibNoSpace(String name, String needed, String free);
+
+  /// No description provided for @mpLogLibraryInstalled.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bibliothèque {name} installée : {count} fichier(s) dans {dir}.'**
+  String mpLogLibraryInstalled(String name, int count, String dir);
+
+  /// No description provided for @mpTabLibraries.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bibliothèques'**
+  String get mpTabLibraries;
+
+  /// No description provided for @libSearchLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chercher une bibliothèque'**
+  String get libSearchLabel;
+
+  /// No description provided for @libSearchHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'ex. ssd1306, dht, neopixel'**
+  String get libSearchHint;
+
+  /// No description provided for @libLoading.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chargement de la liste des bibliothèques…'**
+  String get libLoading;
+
+  /// No description provided for @libOffline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Hors ligne : liste enregistrée lors de la dernière connexion.'**
+  String get libOffline;
+
+  /// No description provided for @libRetry.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réessayer'**
+  String get libRetry;
+
+  /// No description provided for @libNoResult.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune bibliothèque ne correspond à « {query} ». Essayez une adresse GitHub ci-dessous.'**
+  String libNoResult(String query);
+
+  /// No description provided for @libVersionLicense.
+  ///
+  /// In fr, this message translates to:
+  /// **'Version {version} · licence {license}'**
+  String libVersionLicense(String version, String license);
+
+  /// No description provided for @libNoLicense.
+  ///
+  /// In fr, this message translates to:
+  /// **'non précisée'**
+  String get libNoLicense;
+
+  /// No description provided for @libInstall.
+  ///
+  /// In fr, this message translates to:
+  /// **'Installer'**
+  String get libInstall;
+
+  /// No description provided for @libInstallTooltip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Installer {name} sur la carte'**
+  String libInstallTooltip(String name);
+
+  /// No description provided for @libConnectFirst.
+  ///
+  /// In fr, this message translates to:
+  /// **'Connectez une carte (raw REPL) pour installer une bibliothèque.'**
+  String get libConnectFirst;
+
+  /// No description provided for @libDownloading.
+  ///
+  /// In fr, this message translates to:
+  /// **'Téléchargement de {name}…'**
+  String libDownloading(String name);
+
+  /// No description provided for @libWriting.
+  ///
+  /// In fr, this message translates to:
+  /// **'Copie sur la carte : fichier {done} sur {total}…'**
+  String libWriting(int done, int total);
+
+  /// No description provided for @libInstalled.
+  ///
+  /// In fr, this message translates to:
+  /// **'{name} est installée ({count} fichier(s) dans /lib). Essayez « import {module} » dans la console.'**
+  String libInstalled(String name, int count, String module);
+
+  /// No description provided for @libGithubTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Depuis GitHub ou une adresse'**
+  String get libGithubTitle;
+
+  /// No description provided for @libGithubLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Adresse de la bibliothèque'**
+  String get libGithubLabel;
+
+  /// No description provided for @libGithubHelper.
+  ///
+  /// In fr, this message translates to:
+  /// **'github:auteur/dépôt (avec un package.json), ou l’adresse https d’un fichier .py'**
+  String get libGithubHelper;
+
+  /// No description provided for @libInstalledTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Installées sur la carte'**
+  String get libInstalledTitle;
+
+  /// No description provided for @libInstalledEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune bibliothèque dans /lib.'**
+  String get libInstalledEmpty;
+
+  /// No description provided for @libRefreshInstalled.
+  ///
+  /// In fr, this message translates to:
+  /// **'Actualiser la liste des bibliothèques installées'**
+  String get libRefreshInstalled;
+
+  /// No description provided for @libRemoveTooltip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer {name} de la carte'**
+  String libRemoveTooltip(String name);
+
+  /// No description provided for @libRemoveConfirmTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer {name} ?'**
+  String libRemoveConfirmTitle(String name);
+
+  /// No description provided for @libRemoveConfirmBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le fichier ou le dossier /lib/{name} sera effacé de la carte.'**
+  String libRemoveConfirmBody(String name);
+
+  /// No description provided for @libRemoved.
+  ///
+  /// In fr, this message translates to:
+  /// **'{name} a été supprimée de la carte.'**
+  String libRemoved(String name);
+
+  /// No description provided for @libSourceNote.
+  ///
+  /// In fr, this message translates to:
+  /// **'Source : micropython-lib (micropython.org). Les fichiers sont téléchargés par l’appareil puis copiés sur la carte : elle n’a besoin ni de Wi-Fi ni de mip.'**
+  String get libSourceNote;
+
+  /// No description provided for @libErrNetwork.
+  ///
+  /// In fr, this message translates to:
+  /// **'{target} : réseau injoignable. Vérifiez la connexion Internet de l’appareil.'**
+  String libErrNetwork(String target);
+
+  /// No description provided for @libErrNotFound.
+  ///
+  /// In fr, this message translates to:
+  /// **'{target} : introuvable (ni dans l’index micropython-lib, ni à cette adresse).'**
+  String libErrNotFound(String target);
+
+  /// No description provided for @libErrBadPackage.
+  ///
+  /// In fr, this message translates to:
+  /// **'{target} : la description du paquet est illisible.'**
+  String libErrBadPackage(String target);
+
+  /// No description provided for @libErrInsecure.
+  ///
+  /// In fr, this message translates to:
+  /// **'{target} : seules les adresses https sont acceptées.'**
+  String libErrInsecure(String target);
 }
 
 class _AppLocalizationsDelegate

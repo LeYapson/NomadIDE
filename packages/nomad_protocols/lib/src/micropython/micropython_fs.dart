@@ -193,6 +193,28 @@ class MicroPythonFs {
     return c;
   });
 
+  /// Version du format `.mpy` que la carte sait charger (0 si elle ne l'indique pas) et place libre,
+  /// en octets, sur le système de fichiers qui contient [path].
+  Future<({int mpy, int free})> storageInfo([String path = '/']) async {
+    final out = await _run(
+      'import os,sys\n'
+      "m=getattr(sys.implementation,'_mpy',0)&0xff\n"
+      's=os.statvfs(${_py(path)})\n'
+      'print(m,s[0]*s[3])\n',
+    );
+    final parts = out.trim().split(RegExp(r'\s+'));
+    final mpy = parts.length == 2 ? int.tryParse(parts[0]) : null;
+    final free = parts.length == 2 ? int.tryParse(parts[1]) : null;
+    if (mpy == null || free == null) {
+      throw ProtocolDesyncException(
+        'Réponse inattendue à la lecture de la place libre : « ${out.trim()} ».',
+        code: ProtocolErrorCode.unexpectedCrcReply,
+        params: {'reply': out.trim()},
+      );
+    }
+    return (mpy: mpy, free: free);
+  }
+
   Future<void> remove(String path) => _run('import os\nos.remove(${_py(path)})\n');
 
   Future<void> mkdir(String path) => _run('import os\nos.mkdir(${_py(path)})\n');

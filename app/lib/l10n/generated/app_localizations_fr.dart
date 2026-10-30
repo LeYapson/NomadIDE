@@ -1337,4 +1337,137 @@ class AppLocalizationsFr extends AppLocalizations {
   String espBaudSummary(int baud) {
     return '$baud bauds';
   }
+
+  @override
+  String mpLibNoSpace(String name, String needed, String free) {
+    return 'Pas assez de place sur la carte pour $name : il faut environ $needed Ko, il en reste $free Ko. Rien n’a été écrit.';
+  }
+
+  @override
+  String mpLogLibraryInstalled(String name, int count, String dir) {
+    return 'Bibliothèque $name installée : $count fichier(s) dans $dir.';
+  }
+
+  @override
+  String get mpTabLibraries => 'Bibliothèques';
+
+  @override
+  String get libSearchLabel => 'Chercher une bibliothèque';
+
+  @override
+  String get libSearchHint => 'ex. ssd1306, dht, neopixel';
+
+  @override
+  String get libLoading => 'Chargement de la liste des bibliothèques…';
+
+  @override
+  String get libOffline =>
+      'Hors ligne : liste enregistrée lors de la dernière connexion.';
+
+  @override
+  String get libRetry => 'Réessayer';
+
+  @override
+  String libNoResult(String query) {
+    return 'Aucune bibliothèque ne correspond à « $query ». Essayez une adresse GitHub ci-dessous.';
+  }
+
+  @override
+  String libVersionLicense(String version, String license) {
+    return 'Version $version · licence $license';
+  }
+
+  @override
+  String get libNoLicense => 'non précisée';
+
+  @override
+  String get libInstall => 'Installer';
+
+  @override
+  String libInstallTooltip(String name) {
+    return 'Installer $name sur la carte';
+  }
+
+  @override
+  String get libConnectFirst =>
+      'Connectez une carte (raw REPL) pour installer une bibliothèque.';
+
+  @override
+  String libDownloading(String name) {
+    return 'Téléchargement de $name…';
+  }
+
+  @override
+  String libWriting(int done, int total) {
+    return 'Copie sur la carte : fichier $done sur $total…';
+  }
+
+  @override
+  String libInstalled(String name, int count, String module) {
+    return '$name est installée ($count fichier(s) dans /lib). Essayez « import $module » dans la console.';
+  }
+
+  @override
+  String get libGithubTitle => 'Depuis GitHub ou une adresse';
+
+  @override
+  String get libGithubLabel => 'Adresse de la bibliothèque';
+
+  @override
+  String get libGithubHelper =>
+      'github:auteur/dépôt (avec un package.json), ou l’adresse https d’un fichier .py';
+
+  @override
+  String get libInstalledTitle => 'Installées sur la carte';
+
+  @override
+  String get libInstalledEmpty => 'Aucune bibliothèque dans /lib.';
+
+  @override
+  String get libRefreshInstalled =>
+      'Actualiser la liste des bibliothèques installées';
+
+  @override
+  String libRemoveTooltip(String name) {
+    return 'Supprimer $name de la carte';
+  }
+
+  @override
+  String libRemoveConfirmTitle(String name) {
+    return 'Supprimer $name ?';
+  }
+
+  @override
+  String libRemoveConfirmBody(String name) {
+    return 'Le fichier ou le dossier /lib/$name sera effacé de la carte.';
+  }
+
+  @override
+  String libRemoved(String name) {
+    return '$name a été supprimée de la carte.';
+  }
+
+  @override
+  String get libSourceNote =>
+      'Source : micropython-lib (micropython.org). Les fichiers sont téléchargés par l’appareil puis copiés sur la carte : elle n’a besoin ni de Wi-Fi ni de mip.';
+
+  @override
+  String libErrNetwork(String target) {
+    return '$target : réseau injoignable. Vérifiez la connexion Internet de l’appareil.';
+  }
+
+  @override
+  String libErrNotFound(String target) {
+    return '$target : introuvable (ni dans l’index micropython-lib, ni à cette adresse).';
+  }
+
+  @override
+  String libErrBadPackage(String target) {
+    return '$target : la description du paquet est illisible.';
+  }
+
+  @override
+  String libErrInsecure(String target) {
+    return '$target : seules les adresses https sont acceptées.';
+  }
 }
