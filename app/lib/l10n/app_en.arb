@@ -1577,5 +1577,37 @@
   "settingsVersion": "Version",
   "settingsSource": "Source code",
   "settingsLicenses": "Open source component licences",
-  "settingsLicensesHint": "Libraries used by NomadIDE and their licences"
+  "settingsLicensesHint": "Libraries used by NomadIDE and their licences",
+  "obSkip": "Skip",
+  "obNext": "Next",
+  "obBack": "Back",
+  "obStart": "Get started",
+  "obOpenPython": "Open the Python tab",
+  "obProgress": "Step {number} of {total}",
+  "@obProgress": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "obWelcomeTitle": "Welcome to NomadIDE",
+  "obWelcomeBody": "Program your ESP32 and RP2040 boards (Pico, Badger 2040) in MicroPython, from your phone or your computer, with nothing else to install.",
+  "obPlugTitle": "Plug in your board",
+  "obPlugBody": "On a computer, a USB cable is enough. On a phone, use an OTG adapter. Android then asks for access to the board: accept, and tick “always” so it does not ask again.",
+  "obPlugCable": "A charge-only cable carries no data: if the board does not appear, try another one.",
+  "obTabsTitle": "Five tabs",
+  "obTabMonitor": "Monitor: read what the board prints.",
+  "obTabPython": "Python: the board’s console, files and libraries.",
+  "obTabEditor": "Editor: write and save your programs.",
+  "obTabFlash": "Flash: install MicroPython or a compiled program.",
+  "obTabSettings": "Settings: language, theme, help (this tutorial is there).",
+  "obFirstTitle": "Your first program",
+  "obFirstBody": "Python tab: tap “Connect”, type print(\"Hello\") in the console, then “Run”. The board answers in the log.",
+  "obFirstNoFirmware": "The board does not answer? It may not have MicroPython yet: Flash tab, “Official MicroPython firmware”.",
+  "settingsTutorial": "See the tutorial again",
+  "settingsTutorialHint": "The four steps to get started with NomadIDE"
 }

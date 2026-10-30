@@ -9,6 +9,7 @@ import '../../../app/theme.dart';
 import '../../../l10n/error_messages.dart';
 import '../../../l10n/l10n.dart';
 import '../../flash/application/flash_controller.dart' show flashSizeLabel;
+import '../../onboarding/onboarding_page.dart';
 import '../../serial_monitor/application/serial_monitor_state.dart' show LineEnding;
 import '../application/diagnostics.dart';
 
@@ -144,6 +145,12 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
             ),
 
             _SectionHeader(l10n.settingsHelp),
+            ListTile(
+              leading: const Icon(Icons.school_outlined),
+              title: Text(l10n.settingsTutorial),
+              subtitle: Text(l10n.settingsTutorialHint),
+              onTap: () => showOnboarding(context),
+            ),
             ListTile(
               leading: const Icon(Icons.bug_report_outlined),
               title: Text(l10n.settingsDiagnostic),

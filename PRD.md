@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Produit** | NomadIDE |
-| **Version du document** | 0.17 — réglages complets (apparence, éditeur, moniteur, diagnostic, données, à propos) |
+| **Version du document** | 0.18 — tutoriel de prise en main (G8) |
 | **Date** | 2026-10-01 |
 | **Statut du produit** | Étape 1 terminée (HAL USB/série + moniteur série) ; étape 2 en cours |
 | **Documents liés** | [README.md](README.md) · [ADR 0001 — Flutter](docs/adr/0001-stack-flutter.md) |
@@ -188,6 +188,7 @@ Référentiels visés : **WCAG 2.2 niveau AA** et **RGAA 4.1**. Méthode : la co
 | G5 | Je veux un thème sombre lisible : contraste ≥ 4,5:1 pour le texte et ≥ 3:1 pour les composants et le focus. | M | 🧪 appliqué et testé automatiquement (texte des 5 écrans, thèmes sombre et clair) ; à valider à l'œil sur téléphone |
 | G6 | Je veux une identité visuelle cohérente (palette ci-dessous) appliquée à tous les écrans. | S | 🧪 thème et couleurs de l'éditeur appliqués ; reste la refonte des composants (G7) |
 | G7 | Je veux une interface construite à partir de composants réutilisables (atomes, molécules, organismes) et de la grille Material 3, pour que chaque écran se comporte de la même façon. | S | 🧪 dossier `app/lib/ui/` (atomes : bouton d'action matérielle, pastille d'étape ; molécules : étape repliable, bannière, section avancée, progression) appliqué à l'écran Flasher ; reste à l'appliquer aux autres écrans |
+| G8 | Je veux une prise en main guidée au premier lancement (ce qu'est l'app, brancher sa carte, les onglets, un premier programme), que je peux passer et revoir. | S | 🧪 quatre étapes au premier lancement, « Passer » à tout moment, « Ouvrir l'onglet Python » à la fin, « Revoir le tutoriel » dans Réglages → Aide ; testé (accessibilité, 360 dp, texte à 200 %), à valider sur téléphone |
 
 **Critères d'acceptation**
 
@@ -434,3 +435,4 @@ La date de chaque jalon sera fixée après la décision sur R1 et le banc de tes
 | 0.15 | 2026-10-30 | Épopée H : bibliothèques MicroPython (recherche dans `micropython-lib`, installation dans `/lib` avec dépendances, paquets GitHub, cache hors ligne, licence affichée, liste et suppression) |
 | 0.16 | 2026-10-30 | H1 et H2 validés sur ESP32 avec l'app Android |
 | 0.17 | 2026-10-30 | Réglages : thème clair / sombre / système, taille du code et retour à la ligne, valeurs par défaut du moniteur, journal de diagnostic (exigence d'observabilité), dossier des projets, cache des bibliothèques, version et licences |
+| 0.18 | 2026-10-30 | Épopée G : tutoriel de prise en main au premier lancement (G8), à revoir depuis les réglages |

@@ -93,6 +93,8 @@ class AppSettings {
     this.monitorBaud = 115200,
     this.monitorLineEnding = LineEnding.cr,
     this.monitorTimestamps = true,
+    this.onboardingDone = false,
+    this.loaded = false,
   });
 
   static const double defaultEditorFontSize = 14;
@@ -108,6 +110,13 @@ class AppSettings {
   final LineEnding monitorLineEnding;
   final bool monitorTimestamps;
 
+  /// Le tutoriel de prise en main a été suivi (ou passé).
+  final bool onboardingDone;
+
+  /// Le fichier a été lu (même absent) : avant, les valeurs ne sont que celles par défaut. Évite par
+  /// exemple d'afficher le tutoriel une fraction de seconde à quelqu'un qui l'a déjà vu.
+  final bool loaded;
+
   factory AppSettings.fromJson(Map<String, Object?> json) {
     const d = AppSettings();
     T pick<T>(String key, T fallback, bool Function(T value) valid) {
@@ -122,6 +131,8 @@ class AppSettings {
       monitorBaud: pick<int>('monitorBaud', d.monitorBaud, (v) => v > 0),
       monitorLineEnding: LineEnding.values.where((e) => e.name == json['monitorLineEnding']).firstOrNull ?? d.monitorLineEnding,
       monitorTimestamps: pick<bool>('monitorTimestamps', d.monitorTimestamps, (_) => true),
+      onboardingDone: pick<bool>('onboardingDone', d.onboardingDone, (_) => true),
+      loaded: true,
     );
   }
 
@@ -132,6 +143,8 @@ class AppSettings {
     int? monitorBaud,
     LineEnding? monitorLineEnding,
     bool? monitorTimestamps,
+    bool? onboardingDone,
+    bool? loaded,
   }) =>
       AppSettings(
         themeMode: themeMode ?? this.themeMode,
@@ -140,6 +153,8 @@ class AppSettings {
         monitorBaud: monitorBaud ?? this.monitorBaud,
         monitorLineEnding: monitorLineEnding ?? this.monitorLineEnding,
         monitorTimestamps: monitorTimestamps ?? this.monitorTimestamps,
+        onboardingDone: onboardingDone ?? this.onboardingDone,
+        loaded: loaded ?? this.loaded,
       );
 }
 
@@ -153,12 +168,18 @@ class SettingsController extends Notifier<AppSettings> {
     return const AppSettings();
   }
 
+  /// Vrai dès qu'un réglage a été changé dans la session.
+  bool _changed = false;
+
   Future<void> _load() async {
     final json = await ref.read(settingsFileProvider).read();
-    if (ref.mounted && json.isNotEmpty) state = AppSettings.fromJson(json);
+    if (!ref.mounted) return;
+    // Un réglage changé pendant la lecture du fichier l'emporte : on ne l'écrase pas par l'ancienne valeur.
+    state = _changed ? state.copyWith(loaded: true) : AppSettings.fromJson(json);
   }
 
   Future<void> _save(AppSettings next, String key, Object? value) async {
+    _changed = true;
     state = next;
     try {
       await ref.read(settingsFileProvider).update({key: value});
@@ -182,4 +203,6 @@ class SettingsController extends Notifier<AppSettings> {
       _save(state.copyWith(monitorLineEnding: ending), 'monitorLineEnding', ending.name);
 
   Future<void> setMonitorTimestamps(bool on) => _save(state.copyWith(monitorTimestamps: on), 'monitorTimestamps', on);
+
+  Future<void> setOnboardingDone(bool done) => _save(state.copyWith(onboardingDone: done), 'onboardingDone', done);
 }

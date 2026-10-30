@@ -1563,4 +1563,79 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get settingsLicensesHint =>
       'Libraries used by NomadIDE and their licences';
+
+  @override
+  String get obSkip => 'Skip';
+
+  @override
+  String get obNext => 'Next';
+
+  @override
+  String get obBack => 'Back';
+
+  @override
+  String get obStart => 'Get started';
+
+  @override
+  String get obOpenPython => 'Open the Python tab';
+
+  @override
+  String obProgress(int number, int total) {
+    return 'Step $number of $total';
+  }
+
+  @override
+  String get obWelcomeTitle => 'Welcome to NomadIDE';
+
+  @override
+  String get obWelcomeBody =>
+      'Program your ESP32 and RP2040 boards (Pico, Badger 2040) in MicroPython, from your phone or your computer, with nothing else to install.';
+
+  @override
+  String get obPlugTitle => 'Plug in your board';
+
+  @override
+  String get obPlugBody =>
+      'On a computer, a USB cable is enough. On a phone, use an OTG adapter. Android then asks for access to the board: accept, and tick “always” so it does not ask again.';
+
+  @override
+  String get obPlugCable =>
+      'A charge-only cable carries no data: if the board does not appear, try another one.';
+
+  @override
+  String get obTabsTitle => 'Five tabs';
+
+  @override
+  String get obTabMonitor => 'Monitor: read what the board prints.';
+
+  @override
+  String get obTabPython => 'Python: the board’s console, files and libraries.';
+
+  @override
+  String get obTabEditor => 'Editor: write and save your programs.';
+
+  @override
+  String get obTabFlash => 'Flash: install MicroPython or a compiled program.';
+
+  @override
+  String get obTabSettings =>
+      'Settings: language, theme, help (this tutorial is there).';
+
+  @override
+  String get obFirstTitle => 'Your first program';
+
+  @override
+  String get obFirstBody =>
+      'Python tab: tap “Connect”, type print(\"Hello\") in the console, then “Run”. The board answers in the log.';
+
+  @override
+  String get obFirstNoFirmware =>
+      'The board does not answer? It may not have MicroPython yet: Flash tab, “Official MicroPython firmware”.';
+
+  @override
+  String get settingsTutorial => 'See the tutorial again';
+
+  @override
+  String get settingsTutorialHint =>
+      'The four steps to get started with NomadIDE';
 }
