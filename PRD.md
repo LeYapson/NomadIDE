@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Produit** | NomadIDE |
-| **Version du document** | 0.13 — étape 3 : accessibilité des cinq écrans testée (cibles de 48 dp, annonces, texte agrandi) |
+| **Version du document** | 0.14 — étape 3 : flash ESP en plusieurs fichiers (D8), bibliothèques de composants prévues (épopée H) |
 | **Date** | 2026-10-01 |
 | **Statut du produit** | Étape 1 terminée (HAL USB/série + moniteur série) ; étape 2 en cours |
 | **Documents liés** | [README.md](README.md) · [ADR 0001 — Flutter](docs/adr/0001-stack-flutter.md) |
@@ -135,7 +135,7 @@ Format des critères : **Étant donné** / **Quand** / **Alors**. Chaque story e
 | D5 | Je veux compiler mon code C/C++ via un service cloud et flasher le résultat directement. | M | 🔜 |
 | D6 | Je veux voir une progression fiable et une vérification du flash. | M | ✅ progression et vérification (MD5 pour l'ESP, redémarrage de la carte pour l'UF2) validées sur matériel ; débranchement en pleine écriture validé sur ESP : message d'erreur avec avertissement « carte possiblement incomplète » et marche à suivre |
 | D7 | Je veux installer le firmware MicroPython adapté à ma carte (ex. firmware Pimoroni pour la Badger 2040). | S | ✅ ESP32 et ESP32-S3 : recherche, téléchargement et flash du firmware officiel validés sur Windows et Android ; ✅ Badger 2040 : firmware Pimoroni téléchargé et flashé depuis l'app Windows, REPL et code exécuté vérifiés ; 🧪 Pico et Pico W (version et téléchargement validés contre micropython.org, flash depuis l'app non essayé), Badger 2040 W |
-| D8 | Je veux flasher plusieurs fichiers à des adresses distinctes en une seule passe (ex. bootloader `0x1000`, table de partitions `0x8000`, application `0x10000`), pour les projets Arduino et ESP-IDF. | S | 🔜 (nécessaire dès que D5 livre un projet complet ; aujourd'hui un seul fichier par flash) |
+| D8 | Je veux flasher plusieurs fichiers à des adresses distinctes en une seule passe (ex. bootloader `0x1000`, table de partitions `0x8000`, application `0x10000`), pour les projets Arduino et ESP-IDF. | S | 🧪 écrit et testé avec une fausse ROM : chaque fichier est reconnu par son contenu (image complète, bootloader, table de partitions, données OTA, application), l'adresse vient de la table de partitions quand elle est fournie, chevauchements refusés, un MD5 par fichier, un seul redémarrage ; à valider sur une carte avec un projet Arduino |
 
 **Critères d'acceptation**
 
@@ -219,6 +219,29 @@ Référentiels visés : **WCAG 2.2 niveau AA** et **RGAA 4.1**. Méthode : la co
 | Blanc sur Solar Amber | 2,8 | ❌ interdit : le texte des boutons d'action est sombre |
 
 Le thème clair est décliné de la même palette (indigo `#4F46E5`, rouge `#B91C1C`, vert `#047857`). Les couleurs de coloration du code sont validées à 4,5:1 minimum. Les tests `test/theme_test.dart` et `syntax_theme_test.dart` vérifient chaque couple et le contraste du texte des cinq écrans dans les deux thèmes.
+
+### Épopée H — Bibliothèques de composants (capteurs, écrans, moteurs)
+
+C'est la force d'Arduino : on branche un capteur, on ajoute sa bibliothèque, on lance un exemple. Sans cela, l'IDE n'a pas d'usage réel. Deux mondes, deux sources :
+
+- **MicroPython** : l'index public de `micropython-lib` (protocole `mip`) et les paquets tiers hébergés sur GitHub. Les fichiers `.py` (ou `.mpy`) sont copiés dans `/lib` sur la carte par le transfert vérifié existant (C3) : **aucun serveur nécessaire**, donc faisable avant la compilation cloud.
+- **C/C++ (Arduino)** : l'index officiel des bibliothèques Arduino (plusieurs milliers). Elles sont installées et mises en cache **sur le serveur de compilation** (`arduino-cli`), jamais sur le téléphone ; le projet retient la liste des bibliothèques et leurs versions pour que la compilation soit reproductible.
+
+| ID | User story | Prio | Statut |
+|---|---|---|---|
+| H1 | Je veux chercher une bibliothèque MicroPython (ex. capteur BME280, écran SSD1306) et l'installer sur ma carte en un toucher, avec ses dépendances. | M | 🔜 |
+| H2 | Je veux voir les bibliothèques installées sur ma carte, les mettre à jour ou les supprimer. | M | 🔜 |
+| H3 | Je veux que l'app détecte les `#include` de mon projet C/C++ et me propose les bibliothèques Arduino correspondantes. | M | 🔜 (avec D5) |
+| H4 | Je veux chercher et ajouter une bibliothèque Arduino à mon projet ; la compilation l'utilise dans la version choisie. | M | 🔜 (avec D5) |
+| H5 | Je veux ouvrir un exemple fourni par une bibliothèque comme point de départ d'un projet. | S | 🔜 |
+| H6 | Je veux retrouver hors ligne les bibliothèques MicroPython déjà téléchargées. | S | 🔜 |
+| H7 | Je veux voir la licence et l'origine d'une bibliothèque avant de l'installer. | C | 🔜 |
+
+**Critères d'acceptation**
+
+- **H1** — *Étant donné* une carte MicroPython connectée, *quand* je choisis une bibliothèque, *alors* l'app affiche sa version, sa source et sa taille, télécharge les fichiers (et leurs dépendances), les copie dans `/lib` avec vérification, puis confirme ; un `import` de la bibliothèque fonctionne dans la console sans autre manipulation. Si la place manque sur la carte, l'app le dit avant d'écrire.
+- **H3** — *Quand* j'ouvre ou modifie un fichier `.ino`/`.cpp`, *alors* chaque `#include` qui ne correspond ni au cœur de la carte ni au projet est rapproché d'une bibliothèque de l'index, proposée en un toucher ; rien n'est ajouté sans confirmation.
+- **H4** — La liste des bibliothèques et de leurs versions est enregistrée avec le projet ; deux compilations du même projet utilisent les mêmes versions.
 
 ---
 
@@ -344,6 +367,7 @@ L'utilisateur ouvre l'app, voit un bandeau expliquant que l'USB-série n'est pas
 | R8 | **Abonnement et boutiques d'applications** : sur Google Play, un abonnement à un service numérique acheté dans l'app passe en principe par Google Play Billing (commission). | Modèle économique mobile | Vérifier les règles en vigueur avant de choisir où se fait le paiement (web ou boutique) ; ne pas afficher de prix dans l'app avant d'avoir tranché. |
 | R6 | **Pilotes Windows** (CH340, CP210x, PL2303 contrefaits). | Support utilisateur | Détection et message dédié avec lien vers le pilote. |
 | R7 | **Brick de carte** lors d'un flash interrompu. | Perte de confiance | Vérifications, avertissements, procédure de récupération documentée. |
+| R9 | **Bibliothèques tierces** (épopée H) : qualité inégale, licences variées, index Arduino volumineux pour un téléphone. | Bibliothèque qui ne compile pas, licence ignorée | Recherche côté serveur (le téléphone ne télécharge pas l'index entier), licence affichée (H7), versions figées par projet (H4), sélection de bibliothèques recommandées pour les capteurs courants. |
 
 **Décisions de cadrage (2026-10-01)**
 
@@ -380,7 +404,8 @@ L'utilisateur ouvre l'app, voit un bandeau expliquant que l'USB-série n'est pas
 | **M2** — Étape 2 | Éditeur, projets, raw REPL, explorateur de fichiers de la carte, « Run », internationalisation FR/EN | B1–B6, C1–C5, E6 | ✅ (écrit, testé et validé sur Badger 2040 avec Windows et Android) |
 | **M3a** — Étape 3 | Flash ESP32/ESP32-S et RP2040, firmware MicroPython | D1, D2, D4, D6, D7, C6 | 🧪 D1, D2 (Windows), D4, D6 et D7 (ESP, Badger 2040) validés ; D2 validé aussi sur Android (PICOBOOT) ; restent D7 pour Pico, C6 |
 | **M3c** — Étape 3 | UX/UI et accessibilité, flash multi-fichiers ESP | G1–G7, D8 | 🔜 |
-| **M3b** — Étape 3 | Service de compilation cloud, compte, quotas, abonnement | D5, F1–F4 | 🔜 |
+| **M3d** — Étape 3 | Bibliothèques MicroPython (sans serveur) | H1, H2, H5, H6, H7 | 🔜 |
+| **M3b** — Étape 3 | Service de compilation cloud, compte, quotas, abonnement | D5, F1–F4, H3, H4 | 🔜 |
 | Post-v1 | Flash STM32 (AN3155) | D3 | 🔜 |
 | **M4** — Étape 4 | CI/CD, signature et distribution (Play Store, MSIX, notarisation macOS), mises à jour | E1, E4, E5 | 🔜 |
 
@@ -405,3 +430,4 @@ La date de chaque jalon sera fixée après la décision sur R1 et le banc de tes
 | 0.11 | 2026-10-29 | Épopée G : barre de raccourcis accessible (G1), thème sombre et clair avec la palette de la marque, coloration du code, tests de contraste ; Electric Indigo éclairci (`#818CF8`) et Crimson Red éclairci (`#F87171`) en thème sombre |
 | 0.12 | 2026-10-30 | Épopée G : composants communs (`app/lib/ui/`), parcours Flasher à divulgation progressive (G2), état de G7 |
 | 0.13 | 2026-10-30 | Épopée G : cibles de 48 dp et libellés sur les cinq écrans, annonces pour le lecteur d'écran (G3, G4), texte agrandi sans débordement |
+| 0.14 | 2026-10-30 | D8 écrit et testé (flash ESP en plusieurs fichiers) ; ajout de l'épopée H (bibliothèques de composants MicroPython et Arduino), du risque R9 et du jalon M3d |

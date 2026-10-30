@@ -1266,4 +1266,70 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get navMicroPythonShort => 'Python';
+
+  @override
+  String espRoleBootloader(String chip, String offset) {
+    return 'Bootloader for $chip: address $offset.';
+  }
+
+  @override
+  String espRolePartitions(String offset) {
+    return 'Partition table: address $offset.';
+  }
+
+  @override
+  String espRoleOtaData(String offset) {
+    return 'OTA boot data: address $offset.';
+  }
+
+  @override
+  String espRoleAppFromTable(String chip, String offset) {
+    return 'Application for $chip: address $offset, from the partition table.';
+  }
+
+  @override
+  String get espRoleUnknown =>
+      'Content not recognised: enter its write address.';
+
+  @override
+  String get espAddFile => 'Add a file';
+
+  @override
+  String espRemoveFile(String name) {
+    return 'Remove $name';
+  }
+
+  @override
+  String espPartsSummary(int count, String amount) {
+    return '$count files · $amount';
+  }
+
+  @override
+  String espPartOffsetLabel(String name) {
+    return 'Address of $name';
+  }
+
+  @override
+  String get espMultiHint =>
+      'Arduino or ESP-IDF project: add the bootloader, the partition table and the application. Each address is worked out from the file; they are written in one go.';
+
+  @override
+  String espOverlap(String first, String second) {
+    return '$first and $second overlap in flash memory: fix their addresses. Nothing was written.';
+  }
+
+  @override
+  String espBadOffsetPart(String name, String value) {
+    return 'Invalid address for $name: “$value”. Example: 0x10000.';
+  }
+
+  @override
+  String espPhaseWritingPart(String name, int index, int count, int percent) {
+    return 'Writing $name ($index/$count)… $percent%';
+  }
+
+  @override
+  String espBaudSummary(int baud) {
+    return '$baud baud';
+  }
 }

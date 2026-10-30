@@ -2144,6 +2144,90 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Python'**
   String get navMicroPythonShort;
+
+  /// No description provided for @espRoleBootloader.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bootloader pour {chip} : adresse {offset}.'**
+  String espRoleBootloader(String chip, String offset);
+
+  /// No description provided for @espRolePartitions.
+  ///
+  /// In fr, this message translates to:
+  /// **'Table de partitions : adresse {offset}.'**
+  String espRolePartitions(String offset);
+
+  /// No description provided for @espRoleOtaData.
+  ///
+  /// In fr, this message translates to:
+  /// **'Données de démarrage OTA : adresse {offset}.'**
+  String espRoleOtaData(String offset);
+
+  /// No description provided for @espRoleAppFromTable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Application pour {chip} : adresse {offset}, d’après la table de partitions.'**
+  String espRoleAppFromTable(String chip, String offset);
+
+  /// No description provided for @espRoleUnknown.
+  ///
+  /// In fr, this message translates to:
+  /// **'Contenu non reconnu : indiquez son adresse d’écriture.'**
+  String get espRoleUnknown;
+
+  /// No description provided for @espAddFile.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter un fichier'**
+  String get espAddFile;
+
+  /// No description provided for @espRemoveFile.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer {name}'**
+  String espRemoveFile(String name);
+
+  /// No description provided for @espPartsSummary.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count} fichiers · {amount}'**
+  String espPartsSummary(int count, String amount);
+
+  /// No description provided for @espPartOffsetLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Adresse de {name}'**
+  String espPartOffsetLabel(String name);
+
+  /// No description provided for @espMultiHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Projet Arduino ou ESP-IDF : ajoutez le bootloader, la table de partitions et l’application. Chaque adresse est déduite du fichier ; ils sont écrits en une seule fois.'**
+  String get espMultiHint;
+
+  /// No description provided for @espOverlap.
+  ///
+  /// In fr, this message translates to:
+  /// **'{first} et {second} se recouvrent en mémoire flash : corrigez leurs adresses. Rien n’a été écrit.'**
+  String espOverlap(String first, String second);
+
+  /// No description provided for @espBadOffsetPart.
+  ///
+  /// In fr, this message translates to:
+  /// **'Adresse invalide pour {name} : « {value} ». Exemple : 0x10000.'**
+  String espBadOffsetPart(String name, String value);
+
+  /// No description provided for @espPhaseWritingPart.
+  ///
+  /// In fr, this message translates to:
+  /// **'Écriture de {name} ({index}/{count})… {percent} %'**
+  String espPhaseWritingPart(String name, int index, int count, int percent);
+
+  /// No description provided for @espBaudSummary.
+  ///
+  /// In fr, this message translates to:
+  /// **'{baud} bauds'**
+  String espBaudSummary(int baud);
 }
 
 class _AppLocalizationsDelegate

@@ -1236,5 +1236,120 @@
       }
     }
   },
-  "navMicroPythonShort": "Python"
+  "navMicroPythonShort": "Python",
+  "espRoleBootloader": "Bootloader for {chip}: address {offset}.",
+  "@espRoleBootloader": {
+    "placeholders": {
+      "chip": {
+        "type": "String"
+      },
+      "offset": {
+        "type": "String"
+      }
+    }
+  },
+  "espRolePartitions": "Partition table: address {offset}.",
+  "@espRolePartitions": {
+    "placeholders": {
+      "offset": {
+        "type": "String"
+      }
+    }
+  },
+  "espRoleOtaData": "OTA boot data: address {offset}.",
+  "@espRoleOtaData": {
+    "placeholders": {
+      "offset": {
+        "type": "String"
+      }
+    }
+  },
+  "espRoleAppFromTable": "Application for {chip}: address {offset}, from the partition table.",
+  "@espRoleAppFromTable": {
+    "placeholders": {
+      "chip": {
+        "type": "String"
+      },
+      "offset": {
+        "type": "String"
+      }
+    }
+  },
+  "espRoleUnknown": "Content not recognised: enter its write address.",
+  "espAddFile": "Add a file",
+  "espRemoveFile": "Remove {name}",
+  "@espRemoveFile": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "espPartsSummary": "{count} files · {amount}",
+  "@espPartsSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "espPartOffsetLabel": "Address of {name}",
+  "@espPartOffsetLabel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "espMultiHint": "Arduino or ESP-IDF project: add the bootloader, the partition table and the application. Each address is worked out from the file; they are written in one go.",
+  "espOverlap": "{first} and {second} overlap in flash memory: fix their addresses. Nothing was written.",
+  "@espOverlap": {
+    "placeholders": {
+      "first": {
+        "type": "String"
+      },
+      "second": {
+        "type": "String"
+      }
+    }
+  },
+  "espBadOffsetPart": "Invalid address for {name}: “{value}”. Example: 0x10000.",
+  "@espBadOffsetPart": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "espPhaseWritingPart": "Writing {name} ({index}/{count})… {percent}%",
+  "@espPhaseWritingPart": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "index": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "espBaudSummary": "{baud} baud",
+  "@espBaudSummary": {
+    "placeholders": {
+      "baud": {
+        "type": "int"
+      }
+    }
+  }
 }

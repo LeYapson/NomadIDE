@@ -201,6 +201,137 @@ void main() {
       expect(transport.opened.single.isOpen, isFalse);
     });
   });
+
+  group('plusieurs fichiers (projet Arduino ou ESP-IDF)', () {
+    final bootloader = _bootloaderImage();
+    final app = _espImage(chipId: 0x00, fullImage: false);
+    final otaData = Uint8List(0x2000)..fillRange(0, 0x2000, 0xFF);
+
+    Future<void> add(String name, Uint8List bytes) async {
+      nextPick = (name: name, bytes: bytes);
+      await controller().addFile();
+    }
+
+    Future<void> arduinoProject({Uint8List? partitions}) async {
+      nextPick = (name: 'sketch.ino.bootloader.bin', bytes: bootloader);
+      await controller().pickFile();
+      await add('sketch.ino.partitions.bin', partitions ?? _partitionTable());
+      await add('boot_app0.bin', otaData);
+      await add('sketch.ino.bin', app);
+    }
+
+    test('chaque fichier reçoit son adresse, déduite de son contenu', () async {
+      await arduinoProject();
+
+      expect(state().multiple, isTrue);
+      expect(state().parts.map((p) => p.offsetText), ['0x1000', '0x8000', '0xe000', '0x10000']);
+      expect(state().parts[0].note, contains('Bootloader pour ESP32'));
+      expect(state().parts[1].note, contains('Table de partitions'));
+      expect(state().parts[2].note, contains('Données de démarrage OTA'));
+      expect(state().parts[3].note, contains('d’après la table de partitions'));
+    });
+
+    test('la table de partitions fournie donne l\'adresse de l\'application et des données OTA', () async {
+      await arduinoProject(partitions: _partitionTable(otaData: 0xD000, app: 0x20000));
+      expect(state().parts[2].offsetText, '0xd000');
+      expect(state().parts[3].offsetText, '0x20000');
+    });
+
+    test('tout est écrit en une passe, chaque fichier vérifié, la carte redémarrée une seule fois', () async {
+      await arduinoProject();
+      final parts = <int>{};
+      container.listen(espFlashProvider, (_, s) {
+        if (s.phase == EspFlashPhase.writing) parts.add(s.currentPart);
+      });
+      await controller().flash();
+
+      expect(state().phase, EspFlashPhase.done, reason: state().message);
+      expect(rom.flash.sublist(0x1000, 0x1000 + bootloader.length), bootloader);
+      expect(rom.flash.sublist(0x8000, 0x8000 + 0xC00), _partitionTable());
+      expect(rom.flash.sublist(0xE000, 0xE000 + otaData.length), otaData);
+      expect(rom.flash.sublist(0x10000, 0x10000 + app.length), app);
+      expect(rom.commands.where((c) => c == EspLoader.opSpiFlashMd5).length, 4, reason: 'un MD5 par fichier');
+      expect(parts, {0, 1, 2, 3});
+      expect(state().message, contains('4 fichiers'));
+      expect(transport.opened, hasLength(1));
+    });
+
+    test('deux fichiers qui se recouvrent : refusé avant d\'ouvrir le port', () async {
+      await arduinoProject();
+      controller().setOffset('0x8400', index: 3); // l'application empiéterait sur la table
+      await controller().flash();
+
+      expect(state().phase, EspFlashPhase.failed);
+      expect(state().message, contains('se recouvrent'));
+      expect(transport.opened, isEmpty);
+    });
+
+    test('un fichier non reconnu demande son adresse', () async {
+      await arduinoProject();
+      await add('donnees.bin', Uint8List.fromList(List.filled(64, 7)));
+
+      expect(state().parts.last.offsetText, '');
+      expect(state().parts.last.note, contains('Contenu non reconnu'));
+      await controller().flash();
+      expect(state().message, contains('donnees.bin'));
+      expect(transport.opened, isEmpty);
+    });
+
+    test('une adresse corrigée à la main n\'est plus recalculée quand on ajoute un fichier', () async {
+      nextPick = (name: 'sketch.ino.bin', bytes: app);
+      await controller().pickFile();
+      controller().setOffset('0x20000');
+      await add('sketch.ino.bootloader.bin', bootloader);
+      expect(state().parts.first.offsetText, '0x20000');
+    });
+
+    test('retirer des fichiers ramène au cas d\'un seul fichier', () async {
+      await arduinoProject();
+      controller().removePart(0);
+      controller().removePart(0);
+      controller().removePart(0);
+      expect(state().multiple, isFalse);
+      expect(state().fileName, 'sketch.ino.bin');
+      expect(state().offsetText, '0x10000');
+    });
+
+    test('choisir un fichier remplace la liste', () async {
+      await arduinoProject();
+      nextPick = (name: 'ESP32_GENERIC.bin', bytes: _espImage(chipId: 0x00, fullImage: true));
+      await controller().pickFile();
+      expect(state().parts, hasLength(1));
+      expect(state().offsetText, '0x1000');
+    });
+  });
+}
+
+/// Bootloader d'ESP32 : une image sans description d'application, assez petite pour tenir avant 0x8000.
+Uint8List _bootloaderImage() {
+  final out = _espImage(chipId: 0x00, fullImage: false);
+  out.setAll(32, [1, 2, 3, 4]); // pas de marque esp_app_desc_t
+  return out;
+}
+
+/// Table de partitions : nvs, otadata ([otaData]), app0 ([app]).
+Uint8List _partitionTable({int otaData = 0xE000, int app = 0x10000}) {
+  final out = Uint8List(0xC00)..fillRange(0, 0xC00, 0xFF);
+  final view = ByteData.sublistView(out);
+  void entry(int i, int type, int subtype, int offset, int size, String label) {
+    final o = i * 32;
+    out[o] = 0xAA;
+    out[o + 1] = 0x50;
+    out[o + 2] = type;
+    out[o + 3] = subtype;
+    view.setUint32(o + 4, offset, Endian.little);
+    view.setUint32(o + 8, size, Endian.little);
+    out.fillRange(o + 12, o + 28, 0);
+    out.setAll(o + 12, label.codeUnits);
+  }
+
+  entry(0, 0x01, 0x02, 0x9000, 0x5000, 'nvs');
+  entry(1, 0x01, 0x00, otaData, 0x2000, 'otadata');
+  entry(2, 0x00, 0x10, app, 0x140000, 'app0');
+  return out;
 }
 
 /// Image ESP32 minimale : en-tête étendu, puis (si [fullImage]) la table de partitions là où elle
@@ -226,6 +357,9 @@ Uint8List _espImage({required int chipId, required bool fullImage}) {
     final tableAt = (chipId == 0x00 || chipId == 0x02) ? 0x7000 : 0x8000;
     out[tableAt] = 0xAA;
     out[tableAt + 1] = 0x50;
+  } else {
+    // Toute application ESP-IDF ou Arduino porte la description `esp_app_desc_t` après son en-tête.
+    out.setAll(32, [0x32, 0x54, 0xCD, 0xAB]);
   }
   return out;
 }
