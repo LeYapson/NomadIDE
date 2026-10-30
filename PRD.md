@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Produit** | NomadIDE |
-| **Version du document** | 0.15 — étape 3 : bibliothèques MicroPython (H1, H2, H6, H7) |
+| **Version du document** | 0.16 — étape 3 : bibliothèques MicroPython validées sur ESP32 (H1, H2) |
 | **Date** | 2026-10-01 |
 | **Statut du produit** | Étape 1 terminée (HAL USB/série + moniteur série) ; étape 2 en cours |
 | **Documents liés** | [README.md](README.md) · [ADR 0001 — Flutter](docs/adr/0001-stack-flutter.md) |
@@ -229,8 +229,8 @@ C'est la force d'Arduino : on branche un capteur, on ajoute sa bibliothèque, on
 
 | ID | User story | Prio | Statut |
 |---|---|---|---|
-| H1 | Je veux chercher une bibliothèque MicroPython (ex. capteur BME280, écran SSD1306) et l'installer sur ma carte en un toucher, avec ses dépendances. | M | 🧪 index `micropython-lib` (version `.mpy` de la carte, sinon sources), dépendances, paquets GitHub (`github:auteur/dépôt`) et adresses https, copie vérifiée dans `/lib`, place vérifiée avant d'écrire ; testé avec une fausse carte, à valider sur Badger 2040 et ESP32 |
-| H2 | Je veux voir les bibliothèques installées sur ma carte, les mettre à jour ou les supprimer. | M | 🧪 liste de `/lib` et suppression (dossier compris) ; mise à jour = réinstaller ; à valider sur carte |
+| H1 | Je veux chercher une bibliothèque MicroPython (ex. capteur BME280, écran SSD1306) et l'installer sur ma carte en un toucher, avec ses dépendances. | M | 🧪 index `micropython-lib` (version `.mpy` de la carte, sinon sources), dépendances, paquets GitHub (`github:auteur/dépôt`) et adresses https, copie vérifiée dans `/lib`, place vérifiée avant d'écrire ; ✅ validé sur ESP32 avec l'app Android (installation, puis `import` dans la console) ; Badger 2040 non essayé |
+| H2 | Je veux voir les bibliothèques installées sur ma carte, les mettre à jour ou les supprimer. | M | ✅ liste de `/lib` et suppression validées sur ESP32 avec l'app Android ; mise à jour = réinstaller |
 | H3 | Je veux que l'app détecte les `#include` de mon projet C/C++ et me propose les bibliothèques Arduino correspondantes. | M | 🔜 (avec D5) |
 | H4 | Je veux chercher et ajouter une bibliothèque Arduino à mon projet ; la compilation l'utilise dans la version choisie. | M | 🔜 (avec D5) |
 | H5 | Je veux ouvrir un exemple fourni par une bibliothèque comme point de départ d'un projet. | S | 🔜 |
@@ -404,7 +404,7 @@ L'utilisateur ouvre l'app, voit un bandeau expliquant que l'USB-série n'est pas
 | **M2** — Étape 2 | Éditeur, projets, raw REPL, explorateur de fichiers de la carte, « Run », internationalisation FR/EN | B1–B6, C1–C5, E6 | ✅ (écrit, testé et validé sur Badger 2040 avec Windows et Android) |
 | **M3a** — Étape 3 | Flash ESP32/ESP32-S et RP2040, firmware MicroPython | D1, D2, D4, D6, D7, C6 | 🧪 D1, D2 (Windows), D4, D6 et D7 (ESP, Badger 2040) validés ; D2 validé aussi sur Android (PICOBOOT) ; restent D7 pour Pico, C6 |
 | **M3c** — Étape 3 | UX/UI et accessibilité, flash multi-fichiers ESP | G1–G7, D8 | 🔜 |
-| **M3d** — Étape 3 | Bibliothèques MicroPython (sans serveur) | H1, H2, H5, H6, H7 | 🧪 H1, H2, H6, H7 écrits et testés ; reste H5 (exemples) et la validation sur carte |
+| **M3d** — Étape 3 | Bibliothèques MicroPython (sans serveur) | H1, H2, H5, H6, H7 | 🧪 H1 et H2 validés sur ESP32 (Android) ; H6 et H7 écrits et testés ; reste H5 (exemples) |
 | **M3b** — Étape 3 | Service de compilation cloud, compte, quotas, abonnement | D5, F1–F4, H3, H4 | 🔜 |
 | Post-v1 | Flash STM32 (AN3155) | D3 | 🔜 |
 | **M4** — Étape 4 | CI/CD, signature et distribution (Play Store, MSIX, notarisation macOS), mises à jour | E1, E4, E5 | 🔜 |
@@ -432,3 +432,4 @@ La date de chaque jalon sera fixée après la décision sur R1 et le banc de tes
 | 0.13 | 2026-10-30 | Épopée G : cibles de 48 dp et libellés sur les cinq écrans, annonces pour le lecteur d'écran (G3, G4), texte agrandi sans débordement |
 | 0.14 | 2026-10-30 | D8 écrit et testé (flash ESP en plusieurs fichiers) ; ajout de l'épopée H (bibliothèques de composants MicroPython et Arduino), du risque R9 et du jalon M3d |
 | 0.15 | 2026-10-30 | Épopée H : bibliothèques MicroPython (recherche dans `micropython-lib`, installation dans `/lib` avec dépendances, paquets GitHub, cache hors ligne, licence affichée, liste et suppression) |
+| 0.16 | 2026-10-30 | H1 et H2 validés sur ESP32 avec l'app Android |
