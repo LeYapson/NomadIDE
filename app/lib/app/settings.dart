@@ -94,6 +94,7 @@ class AppSettings {
     this.monitorLineEnding = LineEnding.cr,
     this.monitorTimestamps = true,
     this.onboardingDone = false,
+    this.checkUpdates = true,
     this.loaded = false,
   });
 
@@ -112,6 +113,9 @@ class AppSettings {
 
   /// Le tutoriel de prise en main a été suivi (ou passé).
   final bool onboardingDone;
+
+  /// Chercher au démarrage une version plus récente sur GitHub.
+  final bool checkUpdates;
 
   /// Le fichier a été lu (même absent) : avant, les valeurs ne sont que celles par défaut. Évite par
   /// exemple d'afficher le tutoriel une fraction de seconde à quelqu'un qui l'a déjà vu.
@@ -132,6 +136,7 @@ class AppSettings {
       monitorLineEnding: LineEnding.values.where((e) => e.name == json['monitorLineEnding']).firstOrNull ?? d.monitorLineEnding,
       monitorTimestamps: pick<bool>('monitorTimestamps', d.monitorTimestamps, (_) => true),
       onboardingDone: pick<bool>('onboardingDone', d.onboardingDone, (_) => true),
+      checkUpdates: pick<bool>('checkUpdates', d.checkUpdates, (_) => true),
       loaded: true,
     );
   }
@@ -144,6 +149,7 @@ class AppSettings {
     LineEnding? monitorLineEnding,
     bool? monitorTimestamps,
     bool? onboardingDone,
+    bool? checkUpdates,
     bool? loaded,
   }) =>
       AppSettings(
@@ -154,6 +160,7 @@ class AppSettings {
         monitorLineEnding: monitorLineEnding ?? this.monitorLineEnding,
         monitorTimestamps: monitorTimestamps ?? this.monitorTimestamps,
         onboardingDone: onboardingDone ?? this.onboardingDone,
+        checkUpdates: checkUpdates ?? this.checkUpdates,
         loaded: loaded ?? this.loaded,
       );
 }
@@ -205,4 +212,6 @@ class SettingsController extends Notifier<AppSettings> {
   Future<void> setMonitorTimestamps(bool on) => _save(state.copyWith(monitorTimestamps: on), 'monitorTimestamps', on);
 
   Future<void> setOnboardingDone(bool done) => _save(state.copyWith(onboardingDone: done), 'onboardingDone', done);
+
+  Future<void> setCheckUpdates(bool on) => _save(state.copyWith(checkUpdates: on), 'checkUpdates', on);
 }

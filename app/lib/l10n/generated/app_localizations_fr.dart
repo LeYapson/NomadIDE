@@ -1648,4 +1648,52 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get settingsTutorialHint =>
       'Les quatre étapes de prise en main de NomadIDE';
+
+  @override
+  String get updTitle => 'Mises à jour';
+
+  @override
+  String get updChecking => 'Recherche d’une nouvelle version…';
+
+  @override
+  String updUpToDate(String version) {
+    return 'Vous avez la dernière version ($version).';
+  }
+
+  @override
+  String updAvailable(String version) {
+    return 'NomadIDE $version est disponible : touchez pour l’ouvrir sur GitHub.';
+  }
+
+  @override
+  String get updFailed =>
+      'Vérification impossible pour l’instant (pas de réseau ?).';
+
+  @override
+  String get updUnknown => 'Pas encore vérifié.';
+
+  @override
+  String get updCheckNow => 'Vérifier maintenant';
+
+  @override
+  String get updAuto => 'Vérifier au démarrage';
+
+  @override
+  String get updAutoHint =>
+      'Une seule requête, vers la liste publique des versions sur GitHub ; rien n’est envoyé sur vous ni sur votre appareil.';
+
+  @override
+  String updSnack(String version) {
+    return 'NomadIDE $version est disponible.';
+  }
+
+  @override
+  String get updSnackAction => 'Voir';
+
+  @override
+  String get linkOpen => 'Ouvrir dans le navigateur';
+
+  @override
+  String get linkOpenFailed =>
+      'Impossible d’ouvrir le lien : l’adresse a été copiée dans le presse-papiers.';
 }

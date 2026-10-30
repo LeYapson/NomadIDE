@@ -6,9 +6,11 @@ import '../features/editor/presentation/editor_page.dart';
 import '../features/flash/presentation/flash_page.dart';
 import '../features/micropython/presentation/micropython_page.dart';
 import '../features/onboarding/onboarding_page.dart';
+import '../features/settings/application/update_checker.dart';
 import '../features/serial_monitor/presentation/serial_monitor_page.dart';
 import '../features/settings/presentation/settings_page.dart';
 import '../l10n/l10n.dart';
+import 'links.dart';
 import 'providers.dart';
 import 'settings.dart';
 
@@ -27,6 +29,8 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   /// Premier lancement : le tutoriel s'ouvre une fois les réglages lus (jamais avant, pour ne pas
   /// l'afficher une fraction de seconde à quelqu'un qui l'a déjà suivi).
   void _maybeShowOnboarding(AppSettings settings) {
+    // Réglages lus : on peut chercher une mise à jour (si le réglage l'autorise).
+    if (settings.loaded) ref.read(updateProvider.notifier).checkAtStartup();
     if (debugSkipOnboarding || _onboardingShown || !settings.loaded || settings.onboardingDone) return;
     _onboardingShown = true;
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -63,6 +67,18 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   Widget build(BuildContext context) {
     final tab = ref.watch(homeTabProvider);
     ref.listen(settingsProvider, (_, next) => _maybeShowOnboarding(next));
+    // Une version plus récente : un message discret, une fois, avec un lien vers sa page.
+    ref.listen(updateProvider, (previous, next) {
+      final release = next.release;
+      if (next.status != UpdateStatus.available || previous?.status == UpdateStatus.available || release == null) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(context.l10n.updSnack(release.version)),
+          duration: const Duration(seconds: 10),
+          action: SnackBarAction(label: context.l10n.updSnackAction, onPressed: () => openOrCopy(ref, release.url)),
+        ),
+      );
+    });
     // Clavier virtuel ouvert : la barre de navigation céderait sa place à la barre de symboles.
     final keyboardOpen = MediaQuery.viewInsetsOf(context).bottom > 0;
     // Chaque destination mesure largeur / 5 : sur téléphone (~72 dp), « MicroPython » passe sur deux lignes
