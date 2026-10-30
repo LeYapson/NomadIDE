@@ -1609,5 +1609,39 @@
   "obFirstBody": "Python tab: tap “Connect”, type print(\"Hello\") in the console, then “Run”. The board answers in the log.",
   "obFirstNoFirmware": "The board does not answer? It may not have MicroPython yet: Flash tab, “Official MicroPython firmware”.",
   "settingsTutorial": "See the tutorial again",
-  "settingsTutorialHint": "The four steps to get started with NomadIDE"
+  "settingsTutorialHint": "The four steps to get started with NomadIDE",
+  "updTitle": "Updates",
+  "updChecking": "Looking for a new version…",
+  "updUpToDate": "You have the latest version ({version}).",
+  "@updUpToDate": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updAvailable": "NomadIDE {version} is available: tap to open it on GitHub.",
+  "@updAvailable": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updFailed": "Cannot check right now (no network?).",
+  "updUnknown": "Not checked yet.",
+  "updCheckNow": "Check now",
+  "updAuto": "Check at startup",
+  "updAutoHint": "A single request, to the public list of versions on GitHub; nothing about you or your device is sent.",
+  "updSnack": "NomadIDE {version} is available.",
+  "@updSnack": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updSnackAction": "View",
+  "linkOpen": "Open in the browser",
+  "linkOpenFailed": "Cannot open the link: the address was copied to the clipboard."
 }

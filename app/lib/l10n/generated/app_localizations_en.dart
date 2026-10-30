@@ -1638,4 +1638,51 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get settingsTutorialHint =>
       'The four steps to get started with NomadIDE';
+
+  @override
+  String get updTitle => 'Updates';
+
+  @override
+  String get updChecking => 'Looking for a new version…';
+
+  @override
+  String updUpToDate(String version) {
+    return 'You have the latest version ($version).';
+  }
+
+  @override
+  String updAvailable(String version) {
+    return 'NomadIDE $version is available: tap to open it on GitHub.';
+  }
+
+  @override
+  String get updFailed => 'Cannot check right now (no network?).';
+
+  @override
+  String get updUnknown => 'Not checked yet.';
+
+  @override
+  String get updCheckNow => 'Check now';
+
+  @override
+  String get updAuto => 'Check at startup';
+
+  @override
+  String get updAutoHint =>
+      'A single request, to the public list of versions on GitHub; nothing about you or your device is sent.';
+
+  @override
+  String updSnack(String version) {
+    return 'NomadIDE $version is available.';
+  }
+
+  @override
+  String get updSnackAction => 'View';
+
+  @override
+  String get linkOpen => 'Open in the browser';
+
+  @override
+  String get linkOpenFailed =>
+      'Cannot open the link: the address was copied to the clipboard.';
 }

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nomad_hal/nomad_hal.dart' show SerialConfig;
 
+import '../../../app/links.dart';
 import '../../../app/providers.dart';
 import '../../../app/settings.dart';
 import '../../../app/theme.dart';
@@ -12,6 +13,7 @@ import '../../flash/application/flash_controller.dart' show flashSizeLabel;
 import '../../onboarding/onboarding_page.dart';
 import '../../serial_monitor/application/serial_monitor_state.dart' show LineEnding;
 import '../application/diagnostics.dart';
+import '../application/update_checker.dart';
 
 /// Réglages de l'application : langue, apparence, éditeur, moniteur série, aide, données, à propos.
 class SettingsPage extends ConsumerStatefulWidget {
@@ -39,6 +41,10 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
   Future<void> _copy(String text) async {
     await Clipboard.setData(ClipboardData(text: text));
     if (mounted) _snack(context.l10n.settingsCopied);
+  }
+
+  Future<void> _open(Uri url) async {
+    if (!await openOrCopy(ref, url) && mounted) _snack(context.l10n.linkOpenFailed);
   }
 
   Future<void> _exportDiagnostic() async {
@@ -193,10 +199,18 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
               title: Text(l10n.settingsVersion),
               subtitle: Text(ref.watch(appVersionProvider).value ?? '…'),
             ),
+            _UpdateTile(onOpen: _open),
+            SwitchListTile(
+              title: Text(l10n.updAuto),
+              subtitle: Text(l10n.updAutoHint),
+              value: settings.checkUpdates,
+              onChanged: controller.setCheckUpdates,
+            ),
             ListTile(
               leading: const Icon(Icons.code),
               title: Text(l10n.settingsSource),
-              subtitle: const SelectableText(repositoryUrl),
+              subtitle: const Text(repositoryUrl),
+              onTap: () => _open(Uri.parse(repositoryUrl)),
               trailing: IconButton(
                 tooltip: l10n.settingsCopyPath,
                 onPressed: () => _copy(repositoryUrl),
@@ -215,6 +229,38 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// État des mises à jour ; une version plus récente s'ouvre d'un toucher sur sa page GitHub.
+class _UpdateTile extends ConsumerWidget {
+  const _UpdateTile({required this.onOpen});
+
+  final Future<void> Function(Uri url) onOpen;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final update = ref.watch(updateProvider);
+    final release = update.release;
+    final subtitle = switch (update.status) {
+      UpdateStatus.unknown => l10n.updUnknown,
+      UpdateStatus.checking => l10n.updChecking,
+      UpdateStatus.upToDate => l10n.updUpToDate(update.installed ?? ''),
+      UpdateStatus.available => l10n.updAvailable(release!.version),
+      UpdateStatus.failed => l10n.updFailed,
+    };
+    return ListTile(
+      leading: Icon(update.status == UpdateStatus.available ? Icons.new_releases_outlined : Icons.system_update_alt),
+      title: Text(l10n.updTitle),
+      subtitle: Semantics(liveRegion: true, child: Text(subtitle)),
+      onTap: release == null ? null : () => onOpen(release.url),
+      trailing: IconButton(
+        tooltip: l10n.updCheckNow,
+        onPressed: update.status == UpdateStatus.checking ? null : ref.read(updateProvider.notifier).check,
+        icon: const Icon(Icons.refresh),
       ),
     );
   }

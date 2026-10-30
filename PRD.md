@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Produit** | NomadIDE |
-| **Version du document** | 0.18 — tutoriel de prise en main (G8) |
+| **Version du document** | 0.19 — préparation de la release 0.1.0 bêta (desktop) |
 | **Date** | 2026-10-01 |
 | **Statut du produit** | Étape 1 terminée (HAL USB/série + moniteur série) ; étape 2 en cours |
 | **Documents liés** | [README.md](README.md) · [ADR 0001 — Flutter](docs/adr/0001-stack-flutter.md) |
@@ -172,7 +172,7 @@ Le compte n'est exigé **que** pour la compilation cloud. Éditeur, moniteur, Mi
 | E2 | Je veux que l'app s'ouvre (ou me le propose) quand je branche une carte sur Android. | S | ✅ (filtre USB du manifeste) |
 | E3 | Je veux utiliser l'app en thème clair ou sombre, selon le système. | S | ✅ (et choix manuel clair / sombre dans les réglages) |
 | E4 | Je veux être informé clairement des limites de ma plateforme (iOS notamment). | M | 🧪 |
-| E5 | Je veux recevoir les mises à jour de l'app facilement. | C | 🔜 |
+| E5 | Je veux recevoir les mises à jour de l'app facilement. | C | 🧪 releases GitHub (Windows, Linux, macOS) publiées par tag ; l'app signale une version plus récente au démarrage (désactivable) et ouvre sa page ; pas encore de mise à jour automatique ni de Play Store |
 | E6 | Je veux utiliser l'app en français ou en anglais, selon la langue du système ou mon choix. | M | ✅ (changement de langue validé sur Android) |
 
 ### Épopée G — UX/UI et accessibilité
@@ -408,7 +408,7 @@ L'utilisateur ouvre l'app, voit un bandeau expliquant que l'USB-série n'est pas
 | **M3d** — Étape 3 | Bibliothèques MicroPython (sans serveur) | H1, H2, H5, H6, H7 | 🧪 H1 et H2 validés sur ESP32 (Android) ; H6 et H7 écrits et testés ; reste H5 (exemples) |
 | **M3b** — Étape 3 | Service de compilation cloud, compte, quotas, abonnement | D5, F1–F4, H3, H4 | 🔜 |
 | Post-v1 | Flash STM32 (AN3155) | D3 | 🔜 |
-| **M4** — Étape 4 | CI/CD, signature et distribution (Play Store, MSIX, notarisation macOS), mises à jour | E1, E4, E5 | 🔜 |
+| **M4** — Étape 4 | CI/CD, signature et distribution (Play Store, MSIX, notarisation macOS), mises à jour | E1, E4, E5 | 🧪 CI (analyse et tests) ; workflow de release desktop ; restent la signature (Windows, macOS), Android (clé de signature, Play Store) |
 
 La date de chaque jalon sera fixée après la décision sur R1 et le banc de test.
 
@@ -436,3 +436,4 @@ La date de chaque jalon sera fixée après la décision sur R1 et le banc de tes
 | 0.16 | 2026-10-30 | H1 et H2 validés sur ESP32 avec l'app Android |
 | 0.17 | 2026-10-30 | Réglages : thème clair / sombre / système, taille du code et retour à la ligne, valeurs par défaut du moniteur, journal de diagnostic (exigence d'observabilité), dossier des projets, cache des bibliothèques, version et licences |
 | 0.18 | 2026-10-30 | Épopée G : tutoriel de prise en main au premier lancement (G8), à revoir depuis les réglages |
+| 0.19 | 2026-10-30 | Release : workflow de publication desktop sur tag, CHANGELOG, contrôle de nouvelle version (E5) ; Android reporté faute de clé de signature stable |

@@ -5,7 +5,27 @@ MicroPython et du C/C++, puis le transférer ou le flasher sur une carte par USB
 (OTG sur mobile, port série sur desktop).
 
 - Choix de stack : [docs/adr/0001-stack-flutter.md](docs/adr/0001-stack-flutter.md) (Flutter).
-- État : **étape 1**, PoC de la couche USB/série et du moniteur série.
+- État : **version 0.1.0 bêta** : moniteur série, MicroPython (console, fichiers, bibliothèques), éditeur,
+  flash UF2 et ESP32. Détail et limites connues : [CHANGELOG.md](CHANGELOG.md).
+
+## Installer
+
+Téléchargez la dernière version dans les [releases GitHub](https://github.com/LeYapson/NomadIDE/releases) :
+
+| Système | Fichier | Installation |
+|---|---|---|
+| Windows 10/11 (64 bits) | `NomadIDE-<version>-windows-x64.zip` | Décompressez, lancez `nomad_mcu.exe`. App non signée : « Informations complémentaires » puis « Exécuter quand même ». |
+| macOS | `NomadIDE-<version>-macos.zip` | Décompressez, glissez l'app dans Applications. Non notarisée : clic droit, « Ouvrir », la première fois. |
+| Linux (64 bits) | `NomadIDE-<version>-linux-x64.tar.gz` | Décompressez, lancez `nomad_mcu`. Ajoutez votre utilisateur au groupe `dialout` (ou `uucp`). |
+
+L'app vérifie au démarrage si une nouvelle version est publiée (désactivable dans Réglages → À propos).
+
+### Publier une version
+
+1. Mettre à jour `CHANGELOG.md` (section `## [x.y.z]`) et fusionner `develop` dans `main`.
+2. Sur `main` : `git tag vx.y.z && git push origin vx.y.z`.
+3. Le workflow [release.yml](.github/workflows/release.yml) compile Windows, Linux et macOS et publie la
+   release avec les notes du CHANGELOG (pré-version pour toute version 0.x).
 
 ## Architecture
 

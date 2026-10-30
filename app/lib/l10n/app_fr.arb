@@ -1609,5 +1609,39 @@
   "obFirstBody": "Onglet Python : touchez « Connecter », tapez print(\"Bonjour\") dans la console, puis « Exécuter ». La carte répond dans le journal.",
   "obFirstNoFirmware": "La carte ne répond pas ? Elle n’a peut-être pas encore MicroPython : onglet Flasher, « Firmware MicroPython officiel ».",
   "settingsTutorial": "Revoir le tutoriel",
-  "settingsTutorialHint": "Les quatre étapes de prise en main de NomadIDE"
+  "settingsTutorialHint": "Les quatre étapes de prise en main de NomadIDE",
+  "updTitle": "Mises à jour",
+  "updChecking": "Recherche d’une nouvelle version…",
+  "updUpToDate": "Vous avez la dernière version ({version}).",
+  "@updUpToDate": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updAvailable": "NomadIDE {version} est disponible : touchez pour l’ouvrir sur GitHub.",
+  "@updAvailable": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updFailed": "Vérification impossible pour l’instant (pas de réseau ?).",
+  "updUnknown": "Pas encore vérifié.",
+  "updCheckNow": "Vérifier maintenant",
+  "updAuto": "Vérifier au démarrage",
+  "updAutoHint": "Une seule requête, vers la liste publique des versions sur GitHub ; rien n’est envoyé sur vous ni sur votre appareil.",
+  "updSnack": "NomadIDE {version} est disponible.",
+  "@updSnack": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updSnackAction": "Voir",
+  "linkOpen": "Ouvrir dans le navigateur",
+  "linkOpenFailed": "Impossible d’ouvrir le lien : l’adresse a été copiée dans le presse-papiers."
 }

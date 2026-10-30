@@ -2732,6 +2732,84 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Les quatre étapes de prise en main de NomadIDE'**
   String get settingsTutorialHint;
+
+  /// No description provided for @updTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mises à jour'**
+  String get updTitle;
+
+  /// No description provided for @updChecking.
+  ///
+  /// In fr, this message translates to:
+  /// **'Recherche d’une nouvelle version…'**
+  String get updChecking;
+
+  /// No description provided for @updUpToDate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vous avez la dernière version ({version}).'**
+  String updUpToDate(String version);
+
+  /// No description provided for @updAvailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'NomadIDE {version} est disponible : touchez pour l’ouvrir sur GitHub.'**
+  String updAvailable(String version);
+
+  /// No description provided for @updFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vérification impossible pour l’instant (pas de réseau ?).'**
+  String get updFailed;
+
+  /// No description provided for @updUnknown.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas encore vérifié.'**
+  String get updUnknown;
+
+  /// No description provided for @updCheckNow.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vérifier maintenant'**
+  String get updCheckNow;
+
+  /// No description provided for @updAuto.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vérifier au démarrage'**
+  String get updAuto;
+
+  /// No description provided for @updAutoHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une seule requête, vers la liste publique des versions sur GitHub ; rien n’est envoyé sur vous ni sur votre appareil.'**
+  String get updAutoHint;
+
+  /// No description provided for @updSnack.
+  ///
+  /// In fr, this message translates to:
+  /// **'NomadIDE {version} est disponible.'**
+  String updSnack(String version);
+
+  /// No description provided for @updSnackAction.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir'**
+  String get updSnackAction;
+
+  /// No description provided for @linkOpen.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvrir dans le navigateur'**
+  String get linkOpen;
+
+  /// No description provided for @linkOpenFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Impossible d’ouvrir le lien : l’adresse a été copiée dans le presse-papiers.'**
+  String get linkOpenFailed;
 }
 
 class _AppLocalizationsDelegate

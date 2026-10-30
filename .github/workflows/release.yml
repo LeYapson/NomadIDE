@@ -1,0 +1,113 @@
+name: Release
+
+# Un tag `v*` (ex. `v0.1.0`) compile l'app pour Windows, Linux et macOS et publie une release GitHub avec
+# les fichiers et les notes de `CHANGELOG.md`. Une PR qui modifie ce fichier compile les trois versions
+# sans rien publier : le workflow est vérifié avant le premier tag.
+on:
+  push:
+    tags: ['v*']
+  pull_request:
+    paths: ['.github/workflows/release.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: build (${{ matrix.platform }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            platform: windows
+          - os: ubuntu-latest
+            platform: linux
+          - os: macos-latest
+            platform: macos
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.38.7
+          cache: true
+
+      - name: Outils de compilation Linux (GTK, CMake, Ninja)
+        if: matrix.platform == 'linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libudev-dev
+
+      - name: Outils de compilation macOS (libserialport se compile avec autotools)
+        if: matrix.platform == 'macos'
+        run: brew install automake libtool
+
+      - name: Numéro de version
+        shell: bash
+        run: |
+          if [[ "$GITHUB_REF_TYPE" == "tag" ]]; then VERSION="${GITHUB_REF_NAME#v}"; else VERSION="0.0.0-pr${{ github.event.number }}"; fi
+          # Les métadonnées Windows et macOS n'acceptent que des chiffres : « 0.1.0-beta.1 » → « 0.1.0 ».
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          echo "BUILD_NAME=${VERSION%%-*}" >> "$GITHUB_ENV"
+
+      - name: Dépendances (workspace)
+        run: flutter pub get
+
+      - name: Compilation
+        working-directory: app
+        shell: bash
+        run: flutter build ${{ matrix.platform }} --release --build-name="$BUILD_NAME" --build-number=${{ github.run_number }}
+
+      - name: Archive Windows
+        if: matrix.platform == 'windows'
+        shell: pwsh
+        run: Compress-Archive -Path app/build/windows/x64/runner/Release/* -DestinationPath "NomadIDE-$env:VERSION-windows-x64.zip"
+
+      - name: Archive Linux
+        if: matrix.platform == 'linux'
+        run: tar -czf "NomadIDE-$VERSION-linux-x64.tar.gz" -C app/build/linux/x64/release/bundle .
+
+      - name: Archive macOS
+        if: matrix.platform == 'macos'
+        run: ditto -c -k --keepParent app/build/macos/Build/Products/Release/*.app "NomadIDE-$VERSION-macos.zip"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nomadide-${{ matrix.platform }}
+          path: NomadIDE-*
+          if-no-files-found: error
+
+  publish:
+    needs: build
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Notes de version (CHANGELOG.md)
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          # La section « ## [VERSION] … » jusqu'à la suivante.
+          awk -v v="$VERSION" '
+            /^## \[/ { if (found) exit; if (index($0, "[" v "]")) { found = 1; next } }
+            found { print }
+          ' CHANGELOG.md > notes.md
+          test -s notes.md || echo "Version $VERSION." > notes.md
+          cat notes.md
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          name: NomadIDE ${{ github.ref_name }}
+          body_path: notes.md
+          files: dist/*
+          # Toute version 0.x est une pré-version (bêta).
+          prerelease: ${{ startsWith(github.ref_name, 'v0.') || contains(github.ref_name, '-') }}
