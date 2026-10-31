@@ -17,15 +17,31 @@ Téléchargez la dernière version dans les [releases GitHub](https://github.com
 | Windows 10/11 (64 bits) | `NomadIDE-<version>-windows-x64.zip` | Décompressez, lancez `nomad_mcu.exe`. App non signée : « Informations complémentaires » puis « Exécuter quand même ». |
 | macOS | `NomadIDE-<version>-macos.zip` | Décompressez, glissez l'app dans Applications. Non notarisée : clic droit, « Ouvrir », la première fois. |
 | Linux (64 bits) | `NomadIDE-<version>-linux-x64.tar.gz` | Décompressez, lancez `nomad_mcu`. Ajoutez votre utilisateur au groupe `dialout` (ou `uucp`). |
+| Android 7+ | `NomadIDE-<version>-android-arm64.apk` (`-arm32` pour les anciens téléphones) | Ouvrez l'APK sur le téléphone et autorisez l'installation depuis cette source. Câble ou adaptateur OTG pour brancher la carte. |
 
 L'app vérifie au démarrage si une nouvelle version est publiée (désactivable dans Réglages → À propos).
 
 ### Publier une version
 
+Une seule fois : la clé de signature Android dans les secrets du dépôt (la même pour toutes les versions,
+sinon une mise à jour refuse de s'installer ; à sauvegarder hors de l'ordinateur) :
+
+```bash
+K=~/.nomadide-keys   # nomadide-upload.jks et key.properties, jamais dans le dépôt
+PW=$(grep '^storePassword=' $K/key.properties | cut -d= -f2-)
+base64 -w0 $K/nomadide-upload.jks | gh secret set ANDROID_KEYSTORE_BASE64
+printf '%s' "$PW" | gh secret set ANDROID_KEYSTORE_PASSWORD
+printf '%s' "$PW" | gh secret set ANDROID_KEY_PASSWORD
+printf 'nomadide' | gh secret set ANDROID_KEY_ALIAS
+```
+
+En local, `app/android/key.properties` (ignoré par git) signe aussi `flutter build apk --release` avec cette clé.
+
 1. Mettre à jour `CHANGELOG.md` (section `## [x.y.z]`) et fusionner `develop` dans `main`.
 2. Sur `main` : `git tag vx.y.z && git push origin vx.y.z`.
-3. Le workflow [release.yml](.github/workflows/release.yml) compile Windows, Linux et macOS et publie la
-   release avec les notes du CHANGELOG (pré-version pour toute version 0.x).
+3. Le workflow [release.yml](.github/workflows/release.yml) compile Windows, Linux, macOS et Android (APK et
+   App Bundle pour le Play Store) et publie la release avec les notes du CHANGELOG (pré-version pour toute
+   version 0.x).
 
 ## Architecture
 
