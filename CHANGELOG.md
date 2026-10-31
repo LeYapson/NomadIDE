@@ -2,6 +2,14 @@
 
 Les notes de chaque version sont reprises telles quelles dans la release GitHub.
 
+## [0.1.1] — Android
+
+- **Android** : APK signés publiés avec chaque version (`arm64` pour la plupart des téléphones, `arm32`
+  pour les plus anciens), ainsi que l'App Bundle destiné au Play Store. Les versions suivantes
+  s'installeront par-dessus.
+- Si vous aviez installé une version de développement : désinstallez-la d'abord (elle était signée avec
+  une autre clé). Attention, la désinstallation efface les projets enregistrés dans l'app.
+
 ## [0.1.0] — version bêta
 
 Première version publique de NomadIDE : programmer des cartes ESP32 et RP2040 en MicroPython, depuis un
