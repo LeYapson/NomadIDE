@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nomad_hal/nomad_hal.dart' show SerialConfig;
 
+import '../../../app/brand.dart';
 import '../../../app/links.dart';
 import '../../../app/providers.dart';
 import '../../../app/settings.dart';
@@ -195,7 +196,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
 
             _SectionHeader(l10n.settingsAbout),
             ListTile(
-              leading: const Icon(Icons.info_outline),
+              leading: const NomadLogo(size: 40),
               title: Text(l10n.settingsVersion),
               subtitle: Text(ref.watch(appVersionProvider).value ?? '…'),
             ),

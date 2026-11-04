@@ -73,6 +73,7 @@ class EspLoader {
   static const int opFlashEnd = 0x04;
   static const int opSync = 0x08;
   static const int opReadReg = 0x0A;
+  static const int opWriteReg = 0x09;
   static const int opSpiSetParams = 0x0B;
   static const int opSpiAttach = 0x0D;
   static const int opChangeBaud = 0x0F;
@@ -117,6 +118,7 @@ class EspLoader {
   /// car la carte met quelques dizaines de ms à démarrer.
   Future<void> sync({int attempts = 7, Duration timeout = const Duration(milliseconds: 200)}) async {
     final payload = Uint8List.fromList([0x07, 0x07, 0x12, 0x20, ...List.filled(32, 0x55)]);
+    _flashAttached = false; // une nouvelle synchro suit un reset : la ROM a perdu SPI_ATTACH
     for (var i = 0; i < attempts; i++) {
       _frames.clear();
       try {
@@ -139,6 +141,26 @@ class EspLoader {
   Future<int> readReg(int address) async {
     final response = await _command(opReadReg, _words([address]));
     return response.value;
+  }
+
+  Future<void> writeReg(int address, int value, {int mask = 0xFFFFFFFF}) =>
+      _command(opWriteReg, _words([address, value, mask, 0]));
+
+  /// Redémarre la puce par un watchdog logiciel (`--after watchdog-reset` d'esptool). Sur l'ESP32-S3
+  /// branché par son USB natif, un reset par RTS ramène toujours la ROM en mode téléchargement ;
+  /// le watchdog, lui, lance le programme. Renvoie `false` pour les puces non prises en charge :
+  /// l'appelant retombe alors sur un reset par RTS.
+  Future<bool> watchdogReset() async {
+    if (chip != EspChip.esp32s3) return false;
+    const wdtConfig0 = 0x60008098;
+    const wdtConfig1 = 0x6000809C;
+    const wdtWriteProtect = 0x600080B0;
+    const wdtKey = 0x50D83AA1;
+    await writeReg(wdtWriteProtect, wdtKey);
+    await writeReg(wdtConfig1, 2000);
+    await writeReg(wdtConfig0, (1 << 31) | (5 << 28) | (1 << 8) | 2);
+    await writeReg(wdtWriteProtect, 0);
+    return true;
   }
 
   /// Identifie la puce et retient la longueur d'état de sa ROM.

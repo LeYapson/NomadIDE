@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/brand.dart';
 import '../../app/providers.dart';
 import '../../app/settings.dart';
 import '../../l10n/l10n.dart';
@@ -73,7 +74,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                 controller: _pages,
                 onPageChanged: (i) => setState(() => _index = i),
                 children: [
-                  _Step(icon: Icons.developer_board, title: l10n.obWelcomeTitle, children: [Text(l10n.obWelcomeBody)]),
+                  _Step(icon: Icons.developer_board, logo: true, title: l10n.obWelcomeTitle, children: [Text(l10n.obWelcomeBody)]),
                   _Step(
                     icon: Icons.usb,
                     title: l10n.obPlugTitle,
@@ -159,9 +160,12 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
 
 /// Une étape : grande icône, titre (annoncé comme titre), contenu qui défile si le texte est agrandi.
 class _Step extends StatelessWidget {
-  const _Step({required this.icon, required this.title, required this.children});
+  const _Step({required this.icon, required this.title, required this.children, this.logo = false});
 
   final IconData icon;
+
+  /// Montre le logo de NomadIDE à la place de l'icône (première étape).
+  final bool logo;
   final String title;
   final List<Widget> children;
 
@@ -173,7 +177,7 @@ class _Step extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ExcludeSemantics(child: Icon(icon, size: 56, color: theme.colorScheme.primary)),
+          if (logo) const NomadLogo(size: 96) else ExcludeSemantics(child: Icon(icon, size: 56, color: theme.colorScheme.primary)),
           const SizedBox(height: 16),
           Semantics(header: true, child: Text(title, style: theme.textTheme.headlineSmall)),
           const SizedBox(height: 12),

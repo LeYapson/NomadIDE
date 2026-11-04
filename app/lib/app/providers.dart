@@ -37,20 +37,41 @@ class HomeTabController extends Notifier<HomeTab> {
 ///
 /// Dans les tests : `storageRootProvider.overrideWith((ref) => tempDir)`.
 final storageRootProvider = FutureProvider<Directory>((ref) async {
-  return resolveStorageRoot(await getApplicationDocumentsDirectory());
+  Directory? fallback;
+  try {
+    fallback = Directory(p.join((await getApplicationSupportDirectory()).path, 'NomadIDE'));
+  } catch (_) {
+    // pas de dossier de données : seul Documents reste possible
+  }
+  return resolveStorageRoot(await getApplicationDocumentsDirectory(), fallback: fallback);
 });
 
 /// Dossier `NomadIDE` dans les documents. L'app s'appelait `NomadMCU` : si ce dossier existe encore,
 /// il est renommé pour que les projets et brouillons existants restent là ; si le renommage échoue,
 /// l'ancien dossier continue d'être utilisé plutôt que de perdre les projets de vue.
-Future<Directory> resolveStorageRoot(Directory documents) async {
+///
+/// Certains systèmes interdisent aux applications de créer des dossiers dans Documents (par exemple
+/// l'« accès contrôlé aux dossiers » de Windows) : si [fallback] est fourni, il prend le relais, et
+/// reste utilisé ensuite pour que les projets ne changent pas d'endroit d'un lancement à l'autre.
+Future<Directory> resolveStorageRoot(Directory documents, {Directory? fallback}) async {
   final current = Directory(p.join(documents.path, 'NomadIDE'));
   final legacy = Directory(p.join(documents.path, 'NomadMCU'));
-  if (await current.exists() || !await legacy.exists()) return current;
+  if (await current.exists()) return current;
+  if (fallback != null && await fallback.exists()) return fallback;
+  if (await legacy.exists()) {
+    try {
+      return await legacy.rename(current.path);
+    } on FileSystemException {
+      return legacy;
+    }
+  }
+  if (fallback == null) return current;
   try {
-    return await legacy.rename(current.path);
+    await current.create(recursive: true);
+    return current;
   } on FileSystemException {
-    return legacy;
+    await fallback.create(recursive: true);
+    return fallback;
   }
 }
 
