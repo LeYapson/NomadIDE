@@ -35,4 +35,41 @@ void main() {
     expect(p.basename(root.path), 'NomadIDE');
     expect(Directory(p.join(documents.path, 'NomadMCU')).existsSync(), isTrue);
   });
+
+  group('dossier de repli (Documents protégé)', () {
+    late Directory support;
+
+    setUp(() => support = Directory.systemTemp.createTempSync('nomad_support_test'));
+    tearDown(() => support.deleteSync(recursive: true));
+
+    Directory fallbackDir() => Directory(p.join(support.path, 'NomadIDE'));
+
+    test('Documents utilisable : il est préféré et le repli n\'est pas créé', () async {
+      final root = await resolveStorageRoot(documents, fallback: fallbackDir());
+      expect(root.path, p.join(documents.path, 'NomadIDE'));
+      expect(Directory(root.path).existsSync(), isTrue);
+      expect(fallbackDir().existsSync(), isFalse);
+    });
+
+    test('création impossible dans Documents : le dossier de repli est créé et utilisé', () async {
+      // Un fichier à la place de Documents : y créer un dossier échoue comme avec l'accès contrôlé de Windows.
+      final blocked = File(p.join(documents.path, 'blocked'))..writeAsStringSync('');
+      final root = await resolveStorageRoot(Directory(blocked.path), fallback: fallbackDir());
+      expect(root.path, fallbackDir().path);
+      expect(fallbackDir().existsSync(), isTrue);
+    });
+
+    test('un dossier de repli déjà utilisé reste utilisé, même si Documents redevient disponible', () async {
+      fallbackDir().createSync(recursive: true);
+      final root = await resolveStorageRoot(documents, fallback: fallbackDir());
+      expect(root.path, fallbackDir().path);
+    });
+
+    test('NomadIDE déjà dans Documents : prioritaire sur le repli', () async {
+      Directory(p.join(documents.path, 'NomadIDE')).createSync();
+      fallbackDir().createSync(recursive: true);
+      final root = await resolveStorageRoot(documents, fallback: fallbackDir());
+      expect(root.path, p.join(documents.path, 'NomadIDE'));
+    });
+  });
 }
