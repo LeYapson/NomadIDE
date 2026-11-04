@@ -38,7 +38,11 @@ void main() {
   });
 
   test('blinkSketch commence par le commentaire donné', () {
-    expect(blinkSketch('Blink'), startsWith('// Blink\nvoid setup()'));
+    final sketch = blinkSketch('Blink');
+    expect(sketch, startsWith('// Blink\n'));
+    // Sans LED_BUILTIN (ESP32 générique), le croquis doit tout de même compiler.
+    expect(sketch, contains('#ifndef LED_BUILTIN\n#define LED_BUILTIN 2\n#endif'));
+    expect(sketch.indexOf('#define LED_BUILTIN'), lessThan(sketch.indexOf('void setup()')));
   });
 
   group('Nouveau projet', () {

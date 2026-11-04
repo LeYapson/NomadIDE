@@ -10,17 +10,26 @@ String sketchNameFor(String project) {
 }
 
 /// Contenu du croquis de départ. [comment] est la première ligne, dans la langue de l'utilisateur.
-String blinkSketch(String comment) => '// $comment\n'
-    'void setup() {\n'
-    '  pinMode(LED_BUILTIN, OUTPUT);\n'
-    '}\n'
-    '\n'
-    'void loop() {\n'
-    '  digitalWrite(LED_BUILTIN, HIGH);\n'
-    '  delay(500);\n'
-    '  digitalWrite(LED_BUILTIN, LOW);\n'
-    '  delay(500);\n'
-    '}\n';
+///
+/// Les cartes ESP32 génériques n'ont pas de `LED_BUILTIN` : on prend la broche 2, celle de la LED de la
+/// plupart des cartes de développement. Les cartes qui la définissent (RP2040, ESP32-S3…) gardent la leur.
+String blinkSketch(String comment) => '${[
+      '// $comment',
+      '#ifndef LED_BUILTIN',
+      '#define LED_BUILTIN 2',
+      '#endif',
+      '',
+      'void setup() {',
+      '  pinMode(LED_BUILTIN, OUTPUT);',
+      '}',
+      '',
+      'void loop() {',
+      '  digitalWrite(LED_BUILTIN, HIGH);',
+      '  delay(500);',
+      '  digitalWrite(LED_BUILTIN, LOW);',
+      '  delay(500);',
+      '}',
+    ].join('\n')}\n';
 
 /// Remplit un projet neuf avec un croquis Blink et le fichier `nomad.json` (carte par défaut).
 /// Renvoie le chemin du croquis.
