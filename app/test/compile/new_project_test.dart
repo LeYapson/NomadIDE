@@ -43,6 +43,8 @@ void main() {
     // Sans LED_BUILTIN (ESP32 générique), le croquis doit tout de même compiler.
     expect(sketch, contains('#ifndef LED_BUILTIN\n#define LED_BUILTIN 2\n#endif'));
     expect(sketch.indexOf('#define LED_BUILTIN'), lessThan(sketch.indexOf('void setup()')));
+    expect(sketch, contains('Serial.begin(115200);'));
+    expect(sketch, contains('Serial.println("Blink");'));
   });
 
   group('Nouveau projet', () {

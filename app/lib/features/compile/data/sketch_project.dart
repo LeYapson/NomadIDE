@@ -13,6 +13,8 @@ String sketchNameFor(String project) {
 ///
 /// Les cartes ESP32 génériques n'ont pas de `LED_BUILTIN` : on prend la broche 2, celle de la LED de la
 /// plupart des cartes de développement. Les cartes qui la définissent (RP2040, ESP32-S3…) gardent la leur.
+/// Le message sur la liaison série (visible dans le Moniteur) prouve que le programme tourne, même quand
+/// la LED de la carte n'est pas sur la broche attendue.
 String blinkSketch(String comment) => '${[
       '// $comment',
       '#ifndef LED_BUILTIN',
@@ -20,10 +22,12 @@ String blinkSketch(String comment) => '${[
       '#endif',
       '',
       'void setup() {',
+      '  Serial.begin(115200);',
       '  pinMode(LED_BUILTIN, OUTPUT);',
       '}',
       '',
       'void loop() {',
+      '  Serial.println("Blink");',
       '  digitalWrite(LED_BUILTIN, HIGH);',
       '  delay(500);',
       '  digitalWrite(LED_BUILTIN, LOW);',
