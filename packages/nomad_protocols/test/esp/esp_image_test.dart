@@ -43,6 +43,29 @@ void main() {
       expect(analyzeEspImage(image(chipId: 0x02, partitionTable: true))!.suggestedOffset, 0x1000);
     });
 
+    test('merged.bin Arduino pour ESP32 (0xFF jusqu\'au bootloader) : image complète à écrire à 0x0', () {
+      final merged = Uint8List(0x40000)..fillRange(0, 0x40000, 0xFF);
+      merged.setRange(0x1000, 0x1000 + 0x20000, image(chipId: 0x00, partitionTable: true));
+      final info = analyzeEspImage(merged)!;
+      expect(info.chip, EspChip.esp32);
+      expect(info.isFullImage, isTrue);
+      expect(info.suggestedOffset, 0x0);
+      final plan = guessEspPart('Mon_projet.ino.merged.bin', merged);
+      expect(plan.role, EspPartRole.fullImage);
+      expect(plan.offset, 0x0);
+    });
+
+    test('merged.bin sans table de partitions ou avec du contenu avant 0x1000 : pas une image complète à 0x0', () {
+      final noTable = Uint8List(0x40000)..fillRange(0, 0x40000, 0xFF);
+      noTable.setRange(0x1000, 0x1000 + 0x20000, image(chipId: 0x00));
+      expect(analyzeEspImage(noTable), isNull);
+
+      final dirty = Uint8List(0x40000)..fillRange(0, 0x40000, 0xFF);
+      dirty.setRange(0x1000, 0x1000 + 0x20000, image(chipId: 0x00, partitionTable: true));
+      dirty[0x800] = 0x12;
+      expect(analyzeEspImage(dirty), isNull);
+    });
+
     test('application seule : à écrire à 0x10000', () {
       final info = analyzeEspImage(image(chipId: 0x09))!;
       expect(info.isFullImage, isFalse);

@@ -15,6 +15,7 @@ dependencies:
   usb_serial: ^0.5.2
   # Windows / macOS / Linux : binding FFI de libserialport.
   flutter_libserialport: ^0.6.0
+  ffi: ^2.1.0
 
 dev_dependencies:
   flutter_test:

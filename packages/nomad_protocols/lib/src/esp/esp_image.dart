@@ -44,6 +44,8 @@ const Map<int, EspChip> _chipIds = {
 /// - Une image complète contient la table de partitions (marque `0xAA 0x50`) à l'endroit où elle
 ///   se retrouve dans la flash : 0x8000 moins l'adresse du bootloader.
 EspImageInfo? analyzeEspImage(Uint8List data) {
+  final fromZero = _imageFromAddressZero(data);
+  if (fromZero != null) return fromZero;
   if (data.length < 24 || data[0] != _imageMagic) return null;
   final view = ByteData.sublistView(data);
   final chip = _chipIds[view.getUint16(12, Endian.little)];
@@ -58,4 +60,19 @@ EspImageInfo? analyzeEspImage(Uint8List data) {
   final tableInFile = _partitionTableAddress - bootloader;
   final full = data.length > tableInFile + 1 && data[tableInFile] == 0xAA && data[tableInFile + 1] == 0x50;
   return EspImageInfo(chip: chip, isFullImage: full, suggestedOffset: full ? bootloader : espDefaultAppOffset);
+}
+
+/// Image complète qui part de l'adresse 0 de la flash, comme le `merged.bin` qu'Arduino produit pour
+/// l'ESP32 et l'ESP32-S2 : 0xFF jusqu'au bootloader, qui est à 0x1000. Sans cette reconnaissance, le
+/// fichier (qui ne commence pas par 0xE9) serait pris pour un fichier inconnu, écrit à l'adresse
+/// par défaut d'une application, et le bootloader resterait vide : « invalid header: 0xffffffff ».
+EspImageInfo? _imageFromAddressZero(Uint8List data) {
+  const bootloaderAt = 0x1000;
+  if (data.length <= bootloaderAt + 24 || data[0] != 0xFF) return null;
+  for (var i = 0; i < bootloaderAt; i++) {
+    if (data[i] != 0xFF) return null;
+  }
+  final inner = analyzeEspImage(Uint8List.sublistView(data, bootloaderAt));
+  if (inner == null || !inner.isFullImage || inner.chip.bootloaderOffset != bootloaderAt) return null;
+  return EspImageInfo(chip: inner.chip, isFullImage: true, suggestedOffset: 0);
 }
