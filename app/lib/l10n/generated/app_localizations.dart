@@ -3122,6 +3122,42 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Le binaire téléchargé est corrompu (empreinte différente) : relancez la compilation.'**
   String get ccProbChecksum;
+
+  /// No description provided for @prKindLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Type de projet'**
+  String get prKindLabel;
+
+  /// No description provided for @prKindMicroPython.
+  ///
+  /// In fr, this message translates to:
+  /// **'MicroPython'**
+  String get prKindMicroPython;
+
+  /// No description provided for @prKindMicroPythonHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Du code Python exécuté directement sur la carte.'**
+  String get prKindMicroPythonHint;
+
+  /// No description provided for @prKindArduino.
+  ///
+  /// In fr, this message translates to:
+  /// **'Arduino C/C++'**
+  String get prKindArduino;
+
+  /// No description provided for @prKindArduinoHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un croquis .ino compilé par le service de compilation cloud, avec un exemple Blink pour démarrer.'**
+  String get prKindArduinoHint;
+
+  /// No description provided for @prSketchBlinkComment.
+  ///
+  /// In fr, this message translates to:
+  /// **'Blink : fait clignoter la LED de la carte.'**
+  String get prSketchBlinkComment;
 }
 
 class _AppLocalizationsDelegate

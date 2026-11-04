@@ -1791,5 +1791,11 @@
     }
   },
   "ccProbDownloadFailed": "Could not download the binary.",
-  "ccProbChecksum": "The downloaded binary is corrupted (different checksum): compile again."
+  "ccProbChecksum": "The downloaded binary is corrupted (different checksum): compile again.",
+  "prKindLabel": "Project type",
+  "prKindMicroPython": "MicroPython",
+  "prKindMicroPythonHint": "Python code that runs directly on the board.",
+  "prKindArduino": "Arduino C/C++",
+  "prKindArduinoHint": "An .ino sketch compiled by the cloud compilation service, with a Blink example to start from.",
+  "prSketchBlinkComment": "Blink: flashes the board's LED."
 }

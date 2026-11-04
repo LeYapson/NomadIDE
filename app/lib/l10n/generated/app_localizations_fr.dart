@@ -1888,4 +1888,25 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get ccProbChecksum =>
       'Le binaire téléchargé est corrompu (empreinte différente) : relancez la compilation.';
+
+  @override
+  String get prKindLabel => 'Type de projet';
+
+  @override
+  String get prKindMicroPython => 'MicroPython';
+
+  @override
+  String get prKindMicroPythonHint =>
+      'Du code Python exécuté directement sur la carte.';
+
+  @override
+  String get prKindArduino => 'Arduino C/C++';
+
+  @override
+  String get prKindArduinoHint =>
+      'Un croquis .ino compilé par le service de compilation cloud, avec un exemple Blink pour démarrer.';
+
+  @override
+  String get prSketchBlinkComment =>
+      'Blink : fait clignoter la LED de la carte.';
 }

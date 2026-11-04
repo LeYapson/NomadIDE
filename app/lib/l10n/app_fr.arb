@@ -1791,5 +1791,11 @@
     }
   },
   "ccProbDownloadFailed": "Téléchargement du binaire impossible.",
-  "ccProbChecksum": "Le binaire téléchargé est corrompu (empreinte différente) : relancez la compilation."
+  "ccProbChecksum": "Le binaire téléchargé est corrompu (empreinte différente) : relancez la compilation.",
+  "prKindLabel": "Type de projet",
+  "prKindMicroPython": "MicroPython",
+  "prKindMicroPythonHint": "Du code Python exécuté directement sur la carte.",
+  "prKindArduino": "Arduino C/C++",
+  "prKindArduinoHint": "Un croquis .ino compilé par le service de compilation cloud, avec un exemple Blink pour démarrer.",
+  "prSketchBlinkComment": "Blink : fait clignoter la LED de la carte."
 }

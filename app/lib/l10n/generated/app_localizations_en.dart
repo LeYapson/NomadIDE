@@ -1874,4 +1874,24 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get ccProbChecksum =>
       'The downloaded binary is corrupted (different checksum): compile again.';
+
+  @override
+  String get prKindLabel => 'Project type';
+
+  @override
+  String get prKindMicroPython => 'MicroPython';
+
+  @override
+  String get prKindMicroPythonHint =>
+      'Python code that runs directly on the board.';
+
+  @override
+  String get prKindArduino => 'Arduino C/C++';
+
+  @override
+  String get prKindArduinoHint =>
+      'An .ino sketch compiled by the cloud compilation service, with a Blink example to start from.';
+
+  @override
+  String get prSketchBlinkComment => 'Blink: flashes the board\'s LED.';
 }
