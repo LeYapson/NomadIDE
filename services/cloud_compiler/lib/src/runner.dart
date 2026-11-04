@@ -70,6 +70,8 @@ List<String> dockerRunArguments(ServerConfig config, RunRequest request) {
     '--user', config.runAs,
     '--tmpfs', '/tmp:rw,exec,nosuid,size=2g',
     '-e', 'HOME=/tmp',
+    // L'image est en lecture seule : arduino-cli doit créer son dossier de téléchargement ailleurs.
+    '-e', 'ARDUINO_DIRECTORIES_DOWNLOADS=/tmp/staging',
     '--mount', 'type=bind,src=${request.sketchDir.path},dst=$sketchMount,readonly',
     '--mount', 'type=bind,src=${request.outDir.path},dst=/work/out',
     config.dockerImage,

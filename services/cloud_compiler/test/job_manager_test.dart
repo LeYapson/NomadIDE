@@ -170,6 +170,7 @@ void main() {
     expect(args, containsAll(['--read-only', '--cap-drop', 'ALL', 'no-new-privileges']));
     expect(args, containsAllInOrder(['--fqbn', 'esp32:esp32:esp32s3']));
     expect(args.where((a) => a.contains('dst=/work/sketch/blink,readonly')), hasLength(1));
+    expect(args, contains('ARDUINO_DIRECTORIES_DOWNLOADS=/tmp/staging'));
     expect(args.contains('nomad-build-abc'), isTrue);
   });
 }
