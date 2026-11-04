@@ -11,3 +11,5 @@ workspace:
   - packages/nomad_hal
   - packages/nomad_protocols
   - packages/nomad_editor
+  - packages/nomad_compile_api
+  - services/cloud_compiler
