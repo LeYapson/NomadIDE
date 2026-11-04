@@ -72,6 +72,15 @@ void main() {
     }
   }
 
+  /// Comme [settle], mais s'arrête dès que [done] est vrai (jusqu'à ~8 s) : sous charge, un nombre
+  /// d'itérations fixe laisse parfois le résultat en retard.
+  Future<void> settleUntil(WidgetTester tester, bool Function() done) async {
+    for (var i = 0; i < 320 && !done(); i++) {
+      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 25)));
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+  }
+
   Future<void> openEditorWithSketch(WidgetTester tester, {bool sketch = true}) async {
     await tester.runAsync(() async {
       final store = ProjectStore(storage);
@@ -125,7 +134,7 @@ void main() {
     expect(find.textContaining('compile.example.com pour être compilé'), findsOneWidget);
     expect(api.submitted, isEmpty);
     await tester.tap(find.widgetWithText(FilledButton, 'Envoyer et compiler'));
-    await settle(tester);
+    await settleUntil(tester, () => find.text('Compilation réussie en 22 s').evaluate().isNotEmpty);
 
     expect(api.submitted.single.board, CompileBoard.esp32);
     expect(find.text('Compilation réussie en 22 s'), findsOneWidget);
@@ -145,7 +154,7 @@ void main() {
     await tester.tap(find.byTooltip('Compiler dans le cloud'));
     await settle(tester);
     await tester.tap(find.widgetWithText(FilledButton, 'Compiler'));
-    await settle(tester);
+    await settleUntil(tester, () => find.text('La compilation a échoué').evaluate().isNotEmpty);
 
     expect(find.text('Envoyer ce code au serveur ?'), findsNothing);
     expect(find.text('La compilation a échoué'), findsOneWidget);
