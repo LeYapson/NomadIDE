@@ -132,7 +132,7 @@ void main() {
     // Réglages → À propos : l'état est repris, et la page s'ouvre d'un toucher.
     container.read(homeTabProvider.notifier).show(HomeTab.settings);
     await tester.pumpAndSettle();
-    await tester.scrollUntilVisible(find.textContaining('NomadIDE 0.2.0 est disponible :'), 200, scrollable: find.byType(Scrollable).last);
+    await tester.scrollUntilVisible(find.textContaining('NomadIDE 0.2.0 est disponible :'), 200, scrollable: find.descendant(of: find.byType(ListView), matching: find.byType(Scrollable)).first);
     await tester.tap(find.textContaining('NomadIDE 0.2.0 est disponible :'));
     await tester.pumpAndSettle();
     expect(opened, hasLength(2));

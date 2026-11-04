@@ -95,6 +95,9 @@ class AppSettings {
     this.monitorTimestamps = true,
     this.onboardingDone = false,
     this.checkUpdates = true,
+    this.compileServerUrl = '',
+    this.compileToken = '',
+    this.compileApprovedServer = '',
     this.loaded = false,
   });
 
@@ -117,6 +120,14 @@ class AppSettings {
   /// Chercher au démarrage une version plus récente sur GitHub.
   final bool checkUpdates;
 
+  /// Service de compilation cloud : adresse, jeton, et dernière adresse vers laquelle l'utilisateur a
+  /// accepté d'envoyer son code (la confirmation n'est redemandée que si l'adresse change).
+  final String compileServerUrl;
+  final String compileToken;
+  final String compileApprovedServer;
+
+  bool get compileConfigured => compileServerUrl.trim().isNotEmpty && compileToken.isNotEmpty;
+
   /// Le fichier a été lu (même absent) : avant, les valeurs ne sont que celles par défaut. Évite par
   /// exemple d'afficher le tutoriel une fraction de seconde à quelqu'un qui l'a déjà vu.
   final bool loaded;
@@ -137,6 +148,9 @@ class AppSettings {
       monitorTimestamps: pick<bool>('monitorTimestamps', d.monitorTimestamps, (_) => true),
       onboardingDone: pick<bool>('onboardingDone', d.onboardingDone, (_) => true),
       checkUpdates: pick<bool>('checkUpdates', d.checkUpdates, (_) => true),
+      compileServerUrl: pick<String>('compileServerUrl', d.compileServerUrl, (_) => true),
+      compileToken: pick<String>('compileToken', d.compileToken, (_) => true),
+      compileApprovedServer: pick<String>('compileApprovedServer', d.compileApprovedServer, (_) => true),
       loaded: true,
     );
   }
@@ -150,6 +164,9 @@ class AppSettings {
     bool? monitorTimestamps,
     bool? onboardingDone,
     bool? checkUpdates,
+    String? compileServerUrl,
+    String? compileToken,
+    String? compileApprovedServer,
     bool? loaded,
   }) =>
       AppSettings(
@@ -161,6 +178,9 @@ class AppSettings {
         monitorTimestamps: monitorTimestamps ?? this.monitorTimestamps,
         onboardingDone: onboardingDone ?? this.onboardingDone,
         checkUpdates: checkUpdates ?? this.checkUpdates,
+        compileServerUrl: compileServerUrl ?? this.compileServerUrl,
+        compileToken: compileToken ?? this.compileToken,
+        compileApprovedServer: compileApprovedServer ?? this.compileApprovedServer,
         loaded: loaded ?? this.loaded,
       );
 }
@@ -214,4 +234,17 @@ class SettingsController extends Notifier<AppSettings> {
   Future<void> setOnboardingDone(bool done) => _save(state.copyWith(onboardingDone: done), 'onboardingDone', done);
 
   Future<void> setCheckUpdates(bool on) => _save(state.copyWith(checkUpdates: on), 'checkUpdates', on);
+
+  Future<void> setCompileServerUrl(String url) {
+    final clean = url.trim().replaceAll(RegExp(r'/+$'), '');
+    return _save(state.copyWith(compileServerUrl: clean), 'compileServerUrl', clean);
+  }
+
+  Future<void> setCompileToken(String token) {
+    final clean = token.trim();
+    return _save(state.copyWith(compileToken: clean), 'compileToken', clean);
+  }
+
+  Future<void> approveCompileServer(String url) =>
+      _save(state.copyWith(compileApprovedServer: url), 'compileApprovedServer', url);
 }
