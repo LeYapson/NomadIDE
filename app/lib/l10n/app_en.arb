@@ -1643,5 +1643,153 @@
   },
   "updSnackAction": "View",
   "linkOpen": "Open in the browser",
-  "linkOpenFailed": "Cannot open the link: the address was copied to the clipboard."
+  "linkOpenFailed": "Cannot open the link: the address was copied to the clipboard.",
+  "settingsCompile": "Cloud compilation",
+  "settingsCompileHint": "A service compiles your C/C++ code for boards. Nothing is sent until you start a compilation.",
+  "settingsCompileUrl": "Service address",
+  "settingsCompileUrlInvalid": "Invalid address: use https://… (http:// is only accepted on your local network).",
+  "settingsCompileToken": "Access token",
+  "settingsCompileTokenShow": "Show token",
+  "settingsCompileTokenHide": "Hide token",
+  "settingsCompileTest": "Test connection",
+  "settingsCompileTesting": "Testing…",
+  "settingsCompileTestOk": "Connected: service {version}, token accepted.",
+  "@settingsCompileTestOk": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "ccTooltip": "Compile in the cloud",
+  "ccTitle": "Compile project",
+  "ccProject": "Project: {name}",
+  "@ccProject": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "ccBoard": "Board",
+  "ccCompile": "Compile",
+  "ccCancel": "Cancel compilation",
+  "ccNeedSetupTitle": "Service not set up",
+  "ccNeedSetupBody": "Enter the compilation service address and your token in the settings.",
+  "ccOpenSettings": "Open settings",
+  "ccPhasePackaging": "Preparing the project…",
+  "ccPhaseUploading": "Sending to the service…",
+  "ccPhaseQueued": "Queued: position {position}",
+  "@ccPhaseQueued": {
+    "placeholders": {
+      "position": {
+        "type": "int"
+      }
+    }
+  },
+  "ccPhaseRunning": "Compiling…",
+  "ccSucceeded": "Compilation succeeded in {seconds} s",
+  "@ccSucceeded": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "ccFailed": "Compilation failed",
+  "ccCancelled": "Compilation cancelled",
+  "ccErrorCount": "Errors: {count}",
+  "@ccErrorCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ccWarningCount": "Warnings: {count}",
+  "@ccWarningCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ccDiagnostics": "Errors and warnings",
+  "ccOpenFile": "Open {file}, line {line}",
+  "@ccOpenFile": {
+    "placeholders": {
+      "file": {
+        "type": "String"
+      },
+      "line": {
+        "type": "int"
+      }
+    }
+  },
+  "ccLog": "Compiler log",
+  "ccFlash": "Send to the Flasher",
+  "ccFlashWorking": "Downloading the binary…",
+  "ccConsentTitle": "Send this code to the server?",
+  "ccConsentBody": "Project “{project}” ({files} files, {size}) will be sent to {host} to be compiled. The server does not keep your code after compilation; the binaries stay available for 30 minutes.",
+  "@ccConsentBody": {
+    "placeholders": {
+      "project": {
+        "type": "String"
+      },
+      "files": {
+        "type": "int"
+      },
+      "size": {
+        "type": "String"
+      },
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "ccConsentSend": "Send and compile",
+  "ccProbNotConfigured": "No compilation service is set up.",
+  "ccProbBadUrl": "The service address is invalid: use https://… (http:// is only accepted on your local network).",
+  "ccProbUnreachable": "The compilation service cannot be reached. Check your connection and the address in the settings.",
+  "ccProbTimeout": "The service did not answer in time.",
+  "ccProbUnauthorized": "Token refused: check it in the settings.",
+  "ccProbRejected": "The service refused the project: {detail}",
+  "@ccProbRejected": {
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "ccProbTooLarge": "Project too large for the service (limit: {limit}).",
+  "@ccProbTooLarge": {
+    "placeholders": {
+      "limit": {
+        "type": "String"
+      }
+    }
+  },
+  "ccProbQueueFull": "The service is busy: try again in a moment.",
+  "ccProbExpired": "This result is no longer available (binaries are only kept for 30 minutes). Compile again.",
+  "ccProbBadResponse": "Unexpected answer from the service.",
+  "ccProbNoSketch": "This project has no .ino file at its root: the service needs one to compile.",
+  "ccProbSeveralSketches": "Several .ino files at the root ({files}): keep only one.",
+  "@ccProbSeveralSketches": {
+    "placeholders": {
+      "files": {
+        "type": "String"
+      }
+    }
+  },
+  "ccProbSaveFailed": "Could not save your changes before compiling.",
+  "ccProbReadFailed": "Could not read the project ({name}).",
+  "@ccProbReadFailed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "ccProbDownloadFailed": "Could not download the binary.",
+  "ccProbChecksum": "The downloaded binary is corrupted (different checksum): compile again."
 }

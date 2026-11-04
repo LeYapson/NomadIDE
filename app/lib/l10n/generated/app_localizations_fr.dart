@@ -1696,4 +1696,196 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get linkOpenFailed =>
       'Impossible d’ouvrir le lien : l’adresse a été copiée dans le presse-papiers.';
+
+  @override
+  String get settingsCompile => 'Compilation cloud';
+
+  @override
+  String get settingsCompileHint =>
+      'Un service compile votre code C/C++ pour les cartes. Rien n’est envoyé tant que vous ne lancez pas une compilation.';
+
+  @override
+  String get settingsCompileUrl => 'Adresse du service';
+
+  @override
+  String get settingsCompileUrlInvalid =>
+      'Adresse invalide : utilisez https://… (http:// n’est accepté que sur votre réseau local).';
+
+  @override
+  String get settingsCompileToken => 'Jeton d’accès';
+
+  @override
+  String get settingsCompileTokenShow => 'Afficher le jeton';
+
+  @override
+  String get settingsCompileTokenHide => 'Masquer le jeton';
+
+  @override
+  String get settingsCompileTest => 'Tester la connexion';
+
+  @override
+  String get settingsCompileTesting => 'Test en cours…';
+
+  @override
+  String settingsCompileTestOk(String version) {
+    return 'Connexion réussie : service $version, jeton accepté.';
+  }
+
+  @override
+  String get ccTooltip => 'Compiler dans le cloud';
+
+  @override
+  String get ccTitle => 'Compiler le projet';
+
+  @override
+  String ccProject(String name) {
+    return 'Projet : $name';
+  }
+
+  @override
+  String get ccBoard => 'Carte';
+
+  @override
+  String get ccCompile => 'Compiler';
+
+  @override
+  String get ccCancel => 'Annuler la compilation';
+
+  @override
+  String get ccNeedSetupTitle => 'Service non configuré';
+
+  @override
+  String get ccNeedSetupBody =>
+      'Indiquez l’adresse du service de compilation et votre jeton dans les réglages.';
+
+  @override
+  String get ccOpenSettings => 'Ouvrir les réglages';
+
+  @override
+  String get ccPhasePackaging => 'Préparation du projet…';
+
+  @override
+  String get ccPhaseUploading => 'Envoi vers le service…';
+
+  @override
+  String ccPhaseQueued(int position) {
+    return 'En file d’attente : position $position';
+  }
+
+  @override
+  String get ccPhaseRunning => 'Compilation en cours…';
+
+  @override
+  String ccSucceeded(int seconds) {
+    return 'Compilation réussie en $seconds s';
+  }
+
+  @override
+  String get ccFailed => 'La compilation a échoué';
+
+  @override
+  String get ccCancelled => 'Compilation annulée';
+
+  @override
+  String ccErrorCount(int count) {
+    return 'Erreurs : $count';
+  }
+
+  @override
+  String ccWarningCount(int count) {
+    return 'Avertissements : $count';
+  }
+
+  @override
+  String get ccDiagnostics => 'Erreurs et avertissements';
+
+  @override
+  String ccOpenFile(String file, int line) {
+    return 'Ouvrir $file, ligne $line';
+  }
+
+  @override
+  String get ccLog => 'Journal du compilateur';
+
+  @override
+  String get ccFlash => 'Envoyer vers le Flasher';
+
+  @override
+  String get ccFlashWorking => 'Téléchargement du binaire…';
+
+  @override
+  String get ccConsentTitle => 'Envoyer ce code au serveur ?';
+
+  @override
+  String ccConsentBody(String project, int files, String size, String host) {
+    return 'Le projet « $project » ($files fichiers, $size) sera envoyé à $host pour être compilé. Le serveur ne garde pas votre code après la compilation ; les binaires restent disponibles 30 minutes.';
+  }
+
+  @override
+  String get ccConsentSend => 'Envoyer et compiler';
+
+  @override
+  String get ccProbNotConfigured =>
+      'Aucun service de compilation n’est configuré.';
+
+  @override
+  String get ccProbBadUrl =>
+      'L’adresse du service est invalide : utilisez https://… (http:// n’est accepté que sur votre réseau local).';
+
+  @override
+  String get ccProbUnreachable =>
+      'Le service de compilation est injoignable. Vérifiez votre connexion et l’adresse dans les réglages.';
+
+  @override
+  String get ccProbTimeout => 'Le service n’a pas répondu à temps.';
+
+  @override
+  String get ccProbUnauthorized =>
+      'Jeton refusé : vérifiez-le dans les réglages.';
+
+  @override
+  String ccProbRejected(String detail) {
+    return 'Le service a refusé le projet : $detail';
+  }
+
+  @override
+  String ccProbTooLarge(String limit) {
+    return 'Projet trop volumineux pour le service (limite : $limit).';
+  }
+
+  @override
+  String get ccProbQueueFull =>
+      'Le service est très sollicité : réessayez dans un instant.';
+
+  @override
+  String get ccProbExpired =>
+      'Ce résultat n’est plus disponible (les binaires ne sont gardés que 30 minutes). Relancez la compilation.';
+
+  @override
+  String get ccProbBadResponse => 'Réponse inattendue du service.';
+
+  @override
+  String get ccProbNoSketch =>
+      'Ce projet n’a pas de fichier .ino à la racine : le service en a besoin pour compiler.';
+
+  @override
+  String ccProbSeveralSketches(String files) {
+    return 'Plusieurs fichiers .ino à la racine ($files) : gardez-en un seul.';
+  }
+
+  @override
+  String get ccProbSaveFailed =>
+      'Impossible d’enregistrer vos modifications avant la compilation.';
+
+  @override
+  String ccProbReadFailed(String name) {
+    return 'Impossible de lire le projet ($name).';
+  }
+
+  @override
+  String get ccProbDownloadFailed => 'Téléchargement du binaire impossible.';
+
+  @override
+  String get ccProbChecksum =>
+      'Le binaire téléchargé est corrompu (empreinte différente) : relancez la compilation.';
 }

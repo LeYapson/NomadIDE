@@ -2810,6 +2810,318 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Impossible d’ouvrir le lien : l’adresse a été copiée dans le presse-papiers.'**
   String get linkOpenFailed;
+
+  /// No description provided for @settingsCompile.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compilation cloud'**
+  String get settingsCompile;
+
+  /// No description provided for @settingsCompileHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un service compile votre code C/C++ pour les cartes. Rien n’est envoyé tant que vous ne lancez pas une compilation.'**
+  String get settingsCompileHint;
+
+  /// No description provided for @settingsCompileUrl.
+  ///
+  /// In fr, this message translates to:
+  /// **'Adresse du service'**
+  String get settingsCompileUrl;
+
+  /// No description provided for @settingsCompileUrlInvalid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Adresse invalide : utilisez https://… (http:// n’est accepté que sur votre réseau local).'**
+  String get settingsCompileUrlInvalid;
+
+  /// No description provided for @settingsCompileToken.
+  ///
+  /// In fr, this message translates to:
+  /// **'Jeton d’accès'**
+  String get settingsCompileToken;
+
+  /// No description provided for @settingsCompileTokenShow.
+  ///
+  /// In fr, this message translates to:
+  /// **'Afficher le jeton'**
+  String get settingsCompileTokenShow;
+
+  /// No description provided for @settingsCompileTokenHide.
+  ///
+  /// In fr, this message translates to:
+  /// **'Masquer le jeton'**
+  String get settingsCompileTokenHide;
+
+  /// No description provided for @settingsCompileTest.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tester la connexion'**
+  String get settingsCompileTest;
+
+  /// No description provided for @settingsCompileTesting.
+  ///
+  /// In fr, this message translates to:
+  /// **'Test en cours…'**
+  String get settingsCompileTesting;
+
+  /// No description provided for @settingsCompileTestOk.
+  ///
+  /// In fr, this message translates to:
+  /// **'Connexion réussie : service {version}, jeton accepté.'**
+  String settingsCompileTestOk(String version);
+
+  /// No description provided for @ccTooltip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compiler dans le cloud'**
+  String get ccTooltip;
+
+  /// No description provided for @ccTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compiler le projet'**
+  String get ccTitle;
+
+  /// No description provided for @ccProject.
+  ///
+  /// In fr, this message translates to:
+  /// **'Projet : {name}'**
+  String ccProject(String name);
+
+  /// No description provided for @ccBoard.
+  ///
+  /// In fr, this message translates to:
+  /// **'Carte'**
+  String get ccBoard;
+
+  /// No description provided for @ccCompile.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compiler'**
+  String get ccCompile;
+
+  /// No description provided for @ccCancel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annuler la compilation'**
+  String get ccCancel;
+
+  /// No description provided for @ccNeedSetupTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Service non configuré'**
+  String get ccNeedSetupTitle;
+
+  /// No description provided for @ccNeedSetupBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Indiquez l’adresse du service de compilation et votre jeton dans les réglages.'**
+  String get ccNeedSetupBody;
+
+  /// No description provided for @ccOpenSettings.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvrir les réglages'**
+  String get ccOpenSettings;
+
+  /// No description provided for @ccPhasePackaging.
+  ///
+  /// In fr, this message translates to:
+  /// **'Préparation du projet…'**
+  String get ccPhasePackaging;
+
+  /// No description provided for @ccPhaseUploading.
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoi vers le service…'**
+  String get ccPhaseUploading;
+
+  /// No description provided for @ccPhaseQueued.
+  ///
+  /// In fr, this message translates to:
+  /// **'En file d’attente : position {position}'**
+  String ccPhaseQueued(int position);
+
+  /// No description provided for @ccPhaseRunning.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compilation en cours…'**
+  String get ccPhaseRunning;
+
+  /// No description provided for @ccSucceeded.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compilation réussie en {seconds} s'**
+  String ccSucceeded(int seconds);
+
+  /// No description provided for @ccFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'La compilation a échoué'**
+  String get ccFailed;
+
+  /// No description provided for @ccCancelled.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compilation annulée'**
+  String get ccCancelled;
+
+  /// No description provided for @ccErrorCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Erreurs : {count}'**
+  String ccErrorCount(int count);
+
+  /// No description provided for @ccWarningCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Avertissements : {count}'**
+  String ccWarningCount(int count);
+
+  /// No description provided for @ccDiagnostics.
+  ///
+  /// In fr, this message translates to:
+  /// **'Erreurs et avertissements'**
+  String get ccDiagnostics;
+
+  /// No description provided for @ccOpenFile.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvrir {file}, ligne {line}'**
+  String ccOpenFile(String file, int line);
+
+  /// No description provided for @ccLog.
+  ///
+  /// In fr, this message translates to:
+  /// **'Journal du compilateur'**
+  String get ccLog;
+
+  /// No description provided for @ccFlash.
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoyer vers le Flasher'**
+  String get ccFlash;
+
+  /// No description provided for @ccFlashWorking.
+  ///
+  /// In fr, this message translates to:
+  /// **'Téléchargement du binaire…'**
+  String get ccFlashWorking;
+
+  /// No description provided for @ccConsentTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoyer ce code au serveur ?'**
+  String get ccConsentTitle;
+
+  /// No description provided for @ccConsentBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le projet « {project} » ({files} fichiers, {size}) sera envoyé à {host} pour être compilé. Le serveur ne garde pas votre code après la compilation ; les binaires restent disponibles 30 minutes.'**
+  String ccConsentBody(String project, int files, String size, String host);
+
+  /// No description provided for @ccConsentSend.
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoyer et compiler'**
+  String get ccConsentSend;
+
+  /// No description provided for @ccProbNotConfigured.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun service de compilation n’est configuré.'**
+  String get ccProbNotConfigured;
+
+  /// No description provided for @ccProbBadUrl.
+  ///
+  /// In fr, this message translates to:
+  /// **'L’adresse du service est invalide : utilisez https://… (http:// n’est accepté que sur votre réseau local).'**
+  String get ccProbBadUrl;
+
+  /// No description provided for @ccProbUnreachable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le service de compilation est injoignable. Vérifiez votre connexion et l’adresse dans les réglages.'**
+  String get ccProbUnreachable;
+
+  /// No description provided for @ccProbTimeout.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le service n’a pas répondu à temps.'**
+  String get ccProbTimeout;
+
+  /// No description provided for @ccProbUnauthorized.
+  ///
+  /// In fr, this message translates to:
+  /// **'Jeton refusé : vérifiez-le dans les réglages.'**
+  String get ccProbUnauthorized;
+
+  /// No description provided for @ccProbRejected.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le service a refusé le projet : {detail}'**
+  String ccProbRejected(String detail);
+
+  /// No description provided for @ccProbTooLarge.
+  ///
+  /// In fr, this message translates to:
+  /// **'Projet trop volumineux pour le service (limite : {limit}).'**
+  String ccProbTooLarge(String limit);
+
+  /// No description provided for @ccProbQueueFull.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le service est très sollicité : réessayez dans un instant.'**
+  String get ccProbQueueFull;
+
+  /// No description provided for @ccProbExpired.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce résultat n’est plus disponible (les binaires ne sont gardés que 30 minutes). Relancez la compilation.'**
+  String get ccProbExpired;
+
+  /// No description provided for @ccProbBadResponse.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réponse inattendue du service.'**
+  String get ccProbBadResponse;
+
+  /// No description provided for @ccProbNoSketch.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce projet n’a pas de fichier .ino à la racine : le service en a besoin pour compiler.'**
+  String get ccProbNoSketch;
+
+  /// No description provided for @ccProbSeveralSketches.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plusieurs fichiers .ino à la racine ({files}) : gardez-en un seul.'**
+  String ccProbSeveralSketches(String files);
+
+  /// No description provided for @ccProbSaveFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Impossible d’enregistrer vos modifications avant la compilation.'**
+  String get ccProbSaveFailed;
+
+  /// No description provided for @ccProbReadFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Impossible de lire le projet ({name}).'**
+  String ccProbReadFailed(String name);
+
+  /// No description provided for @ccProbDownloadFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Téléchargement du binaire impossible.'**
+  String get ccProbDownloadFailed;
+
+  /// No description provided for @ccProbChecksum.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le binaire téléchargé est corrompu (empreinte différente) : relancez la compilation.'**
+  String get ccProbChecksum;
 }
 
 class _AppLocalizationsDelegate

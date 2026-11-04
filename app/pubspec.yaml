@@ -18,6 +18,10 @@ dependencies:
     path: ../packages/nomad_protocols
   nomad_editor:
     path: ../packages/nomad_editor
+  nomad_compile_api:
+    path: ../packages/nomad_compile_api
+  archive: ^4.0.2
+  crypto: ^3.0.3
   path_provider: ^2.1.6
   path: ^1.9.1
   flutter_localizations:
