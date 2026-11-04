@@ -2,6 +2,28 @@
 
 Les notes de chaque version sont reprises telles quelles dans la release GitHub.
 
+## [0.2.0] — Compilation C/C++ dans le cloud
+
+- **Projets Arduino C/C++** : à la création d'un projet, choisissez MicroPython ou Arduino C/C++. Un projet
+  Arduino démarre avec un croquis Blink prêt à compiler.
+- **Compiler depuis l'éditeur** : le bouton de compilation envoie le projet à un service de compilation,
+  pour ESP32, ESP32-S2, ESP32-S3 et RP2040. L'app dit quel code part et vers quel serveur (confirmation la
+  première fois), suit la compilation, affiche les erreurs avec fichier et ligne (touchez-en une pour ouvrir
+  le fichier) et le journal du compilateur. Le binaire est envoyé tel quel dans l'onglet Flasher, après
+  vérification de son empreinte.
+- **Service de compilation** : fourni dans le dépôt (`services/cloud_compiler`) à héberger soi-même pour
+  l'instant ; adresse et jeton se règlent dans Réglages → Compilation cloud. Rien n'est envoyé tant que
+  vous ne lancez pas de compilation.
+- **Flash des ESP32 sous Windows** : le passage en bootloader est automatique et fiable (plus besoin de
+  maintenir BOOT), l'ESP32-S3 branché par son USB natif redémarre sur son programme, et l'image complète
+  d'Arduino est écrite à la bonne adresse (corrige « invalid header: 0xffffffff »).
+- **Windows** : si le dossier Documents est protégé (accès contrôlé aux dossiers), les projets sont rangés
+  dans le dossier de données de l'application au lieu d'échouer.
+- **Logo NomadIDE** : icône de l'app sur Windows, Android et macOS, et dans le tutoriel et la page À propos.
+
+À savoir : le jeton du service est enregistré tel quel dans le fichier de réglages de l'app, et toucher
+une erreur de compilation ouvre le fichier sans encore aller à la ligne.
+
 ## [0.1.1] — Android
 
 - **Android** : APK signés publiés avec chaque version (`arm64` pour la plupart des téléphones, `arm32`
