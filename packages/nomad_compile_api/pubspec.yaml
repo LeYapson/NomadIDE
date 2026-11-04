@@ -1,0 +1,12 @@
+name: nomad_compile_api
+description: "Contrat entre l'app NomadIDE et le service de compilation (cartes, état d'un build, diagnostics), en Dart pur."
+version: 0.1.0
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.6.0
+
+dev_dependencies:
+  lints: ^5.0.0
+  test: ^1.25.0

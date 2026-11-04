@@ -42,3 +42,8 @@ jobs:
               (cd "$p" && flutter test) || exit 1
             fi
           done
+
+      - name: Service de compilation
+        run: |
+          flutter analyze services/cloud_compiler
+          (cd services/cloud_compiler && dart test)
