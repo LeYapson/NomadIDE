@@ -1685,4 +1685,213 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get linkOpenFailed =>
       'Cannot open the link: the address was copied to the clipboard.';
+
+  @override
+  String get settingsCompile => 'Cloud compilation';
+
+  @override
+  String get settingsCompileHint =>
+      'A service compiles your C/C++ code for boards. Nothing is sent until you start a compilation.';
+
+  @override
+  String get settingsCompileUrl => 'Service address';
+
+  @override
+  String get settingsCompileUrlInvalid =>
+      'Invalid address: use https://… (http:// is only accepted on your local network).';
+
+  @override
+  String get settingsCompileToken => 'Access token';
+
+  @override
+  String get settingsCompileTokenShow => 'Show token';
+
+  @override
+  String get settingsCompileTokenHide => 'Hide token';
+
+  @override
+  String get settingsCompileTest => 'Test connection';
+
+  @override
+  String get settingsCompileTesting => 'Testing…';
+
+  @override
+  String settingsCompileTestOk(String version) {
+    return 'Connected: service $version, token accepted.';
+  }
+
+  @override
+  String get ccTooltip => 'Compile in the cloud';
+
+  @override
+  String get ccTitle => 'Compile project';
+
+  @override
+  String ccProject(String name) {
+    return 'Project: $name';
+  }
+
+  @override
+  String get ccBoard => 'Board';
+
+  @override
+  String get ccCompile => 'Compile';
+
+  @override
+  String get ccCancel => 'Cancel compilation';
+
+  @override
+  String get ccNeedSetupTitle => 'Service not set up';
+
+  @override
+  String get ccNeedSetupBody =>
+      'Enter the compilation service address and your token in the settings.';
+
+  @override
+  String get ccOpenSettings => 'Open settings';
+
+  @override
+  String get ccPhasePackaging => 'Preparing the project…';
+
+  @override
+  String get ccPhaseUploading => 'Sending to the service…';
+
+  @override
+  String ccPhaseQueued(int position) {
+    return 'Queued: position $position';
+  }
+
+  @override
+  String get ccPhaseRunning => 'Compiling…';
+
+  @override
+  String ccSucceeded(int seconds) {
+    return 'Compilation succeeded in $seconds s';
+  }
+
+  @override
+  String get ccFailed => 'Compilation failed';
+
+  @override
+  String get ccCancelled => 'Compilation cancelled';
+
+  @override
+  String ccErrorCount(int count) {
+    return 'Errors: $count';
+  }
+
+  @override
+  String ccWarningCount(int count) {
+    return 'Warnings: $count';
+  }
+
+  @override
+  String get ccDiagnostics => 'Errors and warnings';
+
+  @override
+  String ccOpenFile(String file, int line) {
+    return 'Open $file, line $line';
+  }
+
+  @override
+  String get ccLog => 'Compiler log';
+
+  @override
+  String get ccFlash => 'Send to the Flasher';
+
+  @override
+  String get ccFlashWorking => 'Downloading the binary…';
+
+  @override
+  String get ccConsentTitle => 'Send this code to the server?';
+
+  @override
+  String ccConsentBody(String project, int files, String size, String host) {
+    return 'Project “$project” ($files files, $size) will be sent to $host to be compiled. The server does not keep your code after compilation; the binaries stay available for 30 minutes.';
+  }
+
+  @override
+  String get ccConsentSend => 'Send and compile';
+
+  @override
+  String get ccProbNotConfigured => 'No compilation service is set up.';
+
+  @override
+  String get ccProbBadUrl =>
+      'The service address is invalid: use https://… (http:// is only accepted on your local network).';
+
+  @override
+  String get ccProbUnreachable =>
+      'The compilation service cannot be reached. Check your connection and the address in the settings.';
+
+  @override
+  String get ccProbTimeout => 'The service did not answer in time.';
+
+  @override
+  String get ccProbUnauthorized => 'Token refused: check it in the settings.';
+
+  @override
+  String ccProbRejected(String detail) {
+    return 'The service refused the project: $detail';
+  }
+
+  @override
+  String ccProbTooLarge(String limit) {
+    return 'Project too large for the service (limit: $limit).';
+  }
+
+  @override
+  String get ccProbQueueFull => 'The service is busy: try again in a moment.';
+
+  @override
+  String get ccProbExpired =>
+      'This result is no longer available (binaries are only kept for 30 minutes). Compile again.';
+
+  @override
+  String get ccProbBadResponse => 'Unexpected answer from the service.';
+
+  @override
+  String get ccProbNoSketch =>
+      'This project has no .ino file at its root: the service needs one to compile.';
+
+  @override
+  String ccProbSeveralSketches(String files) {
+    return 'Several .ino files at the root ($files): keep only one.';
+  }
+
+  @override
+  String get ccProbSaveFailed =>
+      'Could not save your changes before compiling.';
+
+  @override
+  String ccProbReadFailed(String name) {
+    return 'Could not read the project ($name).';
+  }
+
+  @override
+  String get ccProbDownloadFailed => 'Could not download the binary.';
+
+  @override
+  String get ccProbChecksum =>
+      'The downloaded binary is corrupted (different checksum): compile again.';
+
+  @override
+  String get prKindLabel => 'Project type';
+
+  @override
+  String get prKindMicroPython => 'MicroPython';
+
+  @override
+  String get prKindMicroPythonHint =>
+      'Python code that runs directly on the board.';
+
+  @override
+  String get prKindArduino => 'Arduino C/C++';
+
+  @override
+  String get prKindArduinoHint =>
+      'An .ino sketch compiled by the cloud compilation service, with a Blink example to start from.';
+
+  @override
+  String get prSketchBlinkComment => 'Blink: flashes the board\'s LED.';
 }

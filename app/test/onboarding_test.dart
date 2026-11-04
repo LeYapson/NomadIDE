@@ -110,7 +110,7 @@ void main() {
     await launch(tester, const AppSettings(loaded: true, onboardingDone: true));
     container.read(homeTabProvider.notifier).show(HomeTab.settings);
     await tester.pumpAndSettle();
-    await tester.scrollUntilVisible(find.text('Revoir le tutoriel'), 200, scrollable: find.byType(Scrollable).last);
+    await tester.scrollUntilVisible(find.text('Revoir le tutoriel'), 200, scrollable: find.descendant(of: find.byType(ListView), matching: find.byType(Scrollable)).first);
     await tester.tap(find.text('Revoir le tutoriel'));
     await tester.pumpAndSettle();
     expect(find.text('Étape 1 sur 4'), findsOneWidget);

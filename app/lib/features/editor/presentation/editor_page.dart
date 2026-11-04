@@ -7,6 +7,7 @@ import 'package:nomad_editor/nomad_editor.dart';
 import '../../../app/dialogs.dart';
 import '../../../app/providers.dart';
 import '../../../app/settings.dart';
+import '../../compile/presentation/compile_sheet.dart';
 import '../../micropython/application/micropython_controller.dart';
 import '../../micropython/presentation/widgets/repl_log_view.dart';
 import '../../projects/application/projects_controller.dart';
@@ -210,6 +211,11 @@ class _EditorPageState extends ConsumerState<EditorPage> {
     final controller = ref.read(editorProvider.notifier);
     final document = editor.active;
     final wide = MediaQuery.sizeOf(context).width >= _wideBreakpoint;
+    // Un projet avec un croquis .ino à sa racine se compile dans le cloud.
+    final projects = ref.watch(projectsProvider);
+    final canCompile = projects.current != null &&
+        projects.directory.isEmpty &&
+        projects.entries.any((e) => !e.isDirectory && e.name.toLowerCase().endsWith('.ino'));
 
     ref.listen(editorProvider.select((s) => s.pendingDrafts.length), (_, count) {
       if (count > 0) _offerDrafts();
@@ -305,6 +311,12 @@ class _EditorPageState extends ConsumerState<EditorPage> {
                   onPressed: controller.newDocument,
                   icon: const Icon(Icons.note_add_outlined),
                 ),
+                if (canCompile)
+                  IconButton(
+                    tooltip: context.l10n.ccTooltip,
+                    onPressed: () => showCompileSheet(context),
+                    icon: const Icon(Icons.build_circle_outlined),
+                  ),
                 if (document != null) ...[
                   ListenableBuilder(
                     listenable: document.controller,

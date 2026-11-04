@@ -3,10 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/dialogs.dart';
 import '../../../l10n/l10n.dart';
+import '../../../app/providers.dart';
+import '../../compile/data/sketch_project.dart';
 import '../../editor/application/editor_controller.dart';
 import '../../micropython/application/micropython_controller.dart';
 import '../application/projects_controller.dart';
 import '../data/project_store.dart';
+import 'new_project_dialog.dart';
 
 enum _ProjectAction { create, rename, delete }
 
@@ -24,7 +27,6 @@ class ProjectsPanel extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final state = ref.watch(projectsProvider);
-    final controller = ref.read(projectsProvider.notifier);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -58,7 +60,7 @@ class ProjectsPanel extends ConsumerWidget {
                     if (state.loaded) ...[
                       const SizedBox(height: 12),
                       FilledButton.icon(
-                        onPressed: () => _createProject(context, controller),
+                        onPressed: () => _createProject(context, ref),
                         icon: const Icon(Icons.create_new_folder_outlined),
                         label: Text(l10n.prNewProject),
                       ),
@@ -73,16 +75,19 @@ class ProjectsPanel extends ConsumerWidget {
   }
 }
 
-Future<void> _createProject(BuildContext context, ProjectsController controller) async {
-  final l10n = context.l10n;
-  final name = await showTextInputDialog(
-    context,
-    title: l10n.prNewProject,
-    label: l10n.prProjectNameLabel,
-    initialValue: l10n.prDefaultProjectName,
-    confirmLabel: l10n.commonCreate,
-  );
-  if (name != null) await controller.createProject(name);
+Future<void> _createProject(BuildContext context, WidgetRef ref) async {
+  final request = await showNewProjectDialog(context);
+  if (request == null) return;
+  final controller = ref.read(projectsProvider.notifier);
+  final created = await controller.createProject(request.name);
+  if (created == null || request.kind != ProjectKind.arduino || !context.mounted) return;
+
+  // Projet Arduino : un croquis Blink et la carte par défaut, ouverts tout de suite.
+  final comment = context.l10n.prSketchBlinkComment;
+  final store = await ref.read(projectStoreProvider.future);
+  final sketch = await seedSketchProject(store, created, comment: comment);
+  await controller.refresh();
+  await ref.read(editorProvider.notifier).openLocalFile(created, sketch, show: true);
 }
 
 class _ProjectHeader extends ConsumerWidget {
@@ -116,7 +121,7 @@ class _ProjectHeader extends ConsumerWidget {
             onSelected: (action) async {
               switch (action) {
                 case _ProjectAction.create:
-                  await _createProject(context, controller);
+                  await _createProject(context, ref);
                 case _ProjectAction.rename:
                   final current = state.current;
                   if (current == null) return;
@@ -179,7 +184,7 @@ class _PathBar extends ConsumerWidget {
                 context,
                 title: l10n.mpNewFile,
                 label: l10n.prFileNameLabel,
-                initialValue: 'main.py',
+                initialValue: defaultNewFileName(state.entries.map((e) => e.name)),
                 confirmLabel: l10n.commonCreate,
               );
               if (name == null) return;

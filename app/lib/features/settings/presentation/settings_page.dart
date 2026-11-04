@@ -13,6 +13,9 @@ import '../../../l10n/l10n.dart';
 import '../../flash/application/flash_controller.dart' show flashSizeLabel;
 import '../../onboarding/onboarding_page.dart';
 import '../../serial_monitor/application/serial_monitor_state.dart' show LineEnding;
+import '../../compile/application/compile_controller.dart' show compileApiProvider;
+import '../../compile/data/compile_api.dart';
+import '../../compile/presentation/compile_messages.dart';
 import '../application/diagnostics.dart';
 import '../application/update_checker.dart';
 
@@ -150,6 +153,9 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
               value: settings.monitorTimestamps,
               onChanged: controller.setMonitorTimestamps,
             ),
+
+            _SectionHeader(l10n.settingsCompile),
+            const _CompileSettings(),
 
             _SectionHeader(l10n.settingsHelp),
             ListTile(
@@ -340,6 +346,145 @@ class _ChoiceTile extends StatelessWidget {
           color: selected ? scheme.primary : scheme.onSurfaceVariant,
         ),
         title: Text(label),
+      ),
+    );
+  }
+}
+
+
+/// Adresse et jeton du service de compilation, avec un test de connexion.
+class _CompileSettings extends ConsumerStatefulWidget {
+  const _CompileSettings();
+
+  @override
+  ConsumerState<_CompileSettings> createState() => _CompileSettingsState();
+}
+
+class _CompileSettingsState extends ConsumerState<_CompileSettings> {
+  late final TextEditingController _url;
+  late final TextEditingController _token;
+  bool _showToken = false;
+  bool _testing = false;
+  String? _result;
+  bool _resultOk = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final settings = ref.read(settingsProvider);
+    _url = TextEditingController(text: settings.compileServerUrl);
+    _token = TextEditingController(text: settings.compileToken);
+    // Les réglages se lisent de façon asynchrone : on remplit les champs une fois le fichier lu.
+    ref.listenManual(settingsProvider.select((s) => s.loaded), (_, loaded) {
+      if (!loaded) return;
+      final current = ref.read(settingsProvider);
+      if (_url.text.isEmpty) _url.text = current.compileServerUrl;
+      if (_token.text.isEmpty) _token.text = current.compileToken;
+    });
+  }
+
+  @override
+  void dispose() {
+    _url.dispose();
+    _token.dispose();
+    super.dispose();
+  }
+
+  Future<void> _test() async {
+    final l10n = context.l10n;
+    setState(() {
+      _testing = true;
+      _result = null;
+    });
+    String message;
+    var ok = false;
+    try {
+      final api = ref.read(compileApiProvider) ?? HttpCompileApi(baseUrl: _url.text, token: _token.text);
+      final info = await api.health();
+      await api.checkToken();
+      message = l10n.settingsCompileTestOk(info.version);
+      ok = true;
+    } on CompileApiException catch (e) {
+      message = compileApiErrorMessage(l10n, e);
+    }
+    if (!mounted) return;
+    setState(() {
+      _testing = false;
+      _result = message;
+      _resultOk = ok;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final controller = ref.read(settingsProvider.notifier);
+    final urlValid = _url.text.trim().isEmpty || isAcceptableServerUrl(_url.text);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(l10n.settingsCompileHint, style: Theme.of(context).textTheme.bodyMedium),
+          const SizedBox(height: 12),
+          TextField(
+            controller: _url,
+            keyboardType: TextInputType.url,
+            autocorrect: false,
+            decoration: InputDecoration(
+              labelText: l10n.settingsCompileUrl,
+              hintText: 'https://compile.example.com',
+              errorText: urlValid ? null : l10n.settingsCompileUrlInvalid,
+              border: const OutlineInputBorder(),
+            ),
+            onChanged: (value) {
+              setState(() => _result = null);
+              controller.setCompileServerUrl(value);
+            },
+          ),
+          const SizedBox(height: 12),
+          TextField(
+            controller: _token,
+            obscureText: !_showToken,
+            autocorrect: false,
+            enableSuggestions: false,
+            decoration: InputDecoration(
+              labelText: l10n.settingsCompileToken,
+              border: const OutlineInputBorder(),
+              suffixIcon: IconButton(
+                tooltip: _showToken ? l10n.settingsCompileTokenHide : l10n.settingsCompileTokenShow,
+                onPressed: () => setState(() => _showToken = !_showToken),
+                icon: Icon(_showToken ? Icons.visibility_off_outlined : Icons.visibility_outlined),
+              ),
+            ),
+            onChanged: (value) {
+              setState(() => _result = null);
+              controller.setCompileToken(value);
+            },
+          ),
+          const SizedBox(height: 12),
+          Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: OutlinedButton.icon(
+              onPressed: _testing || _url.text.trim().isEmpty || _token.text.isEmpty || !urlValid ? null : _test,
+              icon: _testing
+                  ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
+                  : const Icon(Icons.wifi_tethering),
+              label: Text(_testing ? l10n.settingsCompileTesting : l10n.settingsCompileTest),
+            ),
+          ),
+          if (_result != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Semantics(
+                liveRegion: true,
+                child: Text(
+                  _result!,
+                  style: TextStyle(color: _resultOk ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.error),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
