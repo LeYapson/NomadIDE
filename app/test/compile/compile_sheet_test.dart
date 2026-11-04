@@ -111,7 +111,7 @@ void main() {
     await settle(tester);
 
     expect(find.text('Service non configuré'), findsOneWidget);
-    await tester.tap(find.widgetWithText(FilledButton, 'Ouvrir les réglages'));
+    await tester.tap(find.text('Ouvrir les réglages'));
     await settle(tester);
     expect(container.read(homeTabProvider), HomeTab.settings);
   });
@@ -126,7 +126,7 @@ void main() {
     expect(find.text('Projet : blink'), findsOneWidget);
     expect(find.text('compile.example.com'), findsOneWidget);
 
-    await tester.tap(find.widgetWithText(FilledButton, 'Compiler'));
+    await tester.tap(find.text('Compiler'));
     await settle(tester);
 
     // Première fois pour ce serveur : le code ne part qu'après confirmation explicite.
@@ -138,7 +138,7 @@ void main() {
 
     expect(api.submitted.single.board, CompileBoard.esp32);
     expect(find.text('Compilation réussie en 22 s'), findsOneWidget);
-    expect(find.widgetWithText(FilledButton, 'Envoyer vers le Flasher'), findsOneWidget);
+    expect(find.text('Envoyer vers le Flasher'), findsOneWidget);
     expect(container.read(settingsProvider).compileApprovedServer, 'https://compile.example.com');
   });
 
@@ -153,7 +153,7 @@ void main() {
 
     await tester.tap(find.byTooltip('Compiler dans le cloud'));
     await settle(tester);
-    await tester.tap(find.widgetWithText(FilledButton, 'Compiler'));
+    await tester.tap(find.text('Compiler'));
     await settleUntil(tester, () => find.text('La compilation a échoué').evaluate().isNotEmpty);
 
     expect(find.text('Envoyer ce code au serveur ?'), findsNothing);
