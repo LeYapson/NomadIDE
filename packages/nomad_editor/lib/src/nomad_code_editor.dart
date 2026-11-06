@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:re_editor/re_editor.dart';
 import 'package:re_highlight/languages/c.dart';
 import 'package:re_highlight/languages/cpp.dart';
+import 'package:re_highlight/languages/plaintext.dart';
 import 'package:re_highlight/languages/python.dart';
 
 import 'autocomplete.dart';
@@ -43,7 +44,9 @@ class NomadCodeEditor extends StatelessWidget {
       CodeLanguage.python => {'python': CodeHighlightThemeMode(mode: langPython)},
       CodeLanguage.c => {'c': CodeHighlightThemeMode(mode: langC)},
       CodeLanguage.cpp => {'cpp': CodeHighlightThemeMode(mode: langCpp)},
-      CodeLanguage.plain => <String, CodeHighlightThemeMode>{},
+      // Une liste vide fait planter la coloration de re_editor (`reduce` sur une liste vide, dans son isolate) :
+      // un fichier sans langage reconnu (`nomad.json`, `.txt`…) utilise le mode « texte brut ».
+      CodeLanguage.plain => {'plaintext': CodeHighlightThemeMode(mode: langPlaintext)},
     };
     return CodeHighlightTheme(languages: languages, theme: theme);
   }
