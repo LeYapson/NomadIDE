@@ -59,7 +59,7 @@ Handler buildHandler({required ServerConfig config, required JobManager jobs, Li
       }
       final board = CompileBoard.fromId(body?['board'] as String?);
       final builtin = board == null ? null : libraries?.builtin.forFamily(board.family);
-      final budget = VerifyBudget(8);
+      final budget = VerifyBudget(12);
       final results = <IncludeResolution>[];
       for (final header in headers.cast<String>()) {
         if (builtin?.providesHeader(header) ?? false) {

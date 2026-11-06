@@ -173,6 +173,35 @@ void main() {
       expect(result.confirmed, isEmpty);
     });
 
+    test('un en-tête très courant n\'épuise pas le budget des suivants', () async {
+      final many = [
+        for (var i = 0; i < 10; i++) entryFor('DHT variant $i', '1.0.0', dht),
+        entryFor('Adafruit SSD1306', '2.5.17', oled, author: 'Adafruit'),
+      ];
+      final zips = {'DHT_variant': dht, 'Adafruit_SSD1306': oled};
+      final svc = LibraryService(
+        indexFile: File(p.join(dir.path, 'library_index.json')),
+        fetch: () async => indexJson(many),
+        cache: LibraryCache(
+          root: Directory(p.join(dir.path, 'libs')),
+          download: (url, {required maxBytes}) async {
+            opened.add(url.pathSegments.last);
+            return zips.entries.firstWhere((e) => url.pathSegments.last.startsWith(e.key)).value;
+          },
+        ),
+      );
+      await svc.start();
+      svc.dispose();
+      final budget = VerifyBudget(4);
+
+      final first = await svc.resolveHeader('DHT.h', budget: budget);
+      final second = await svc.resolveHeader('Adafruit_SSD1306.h', budget: budget);
+
+      expect(opened.where((o) => o.startsWith('DHT_variant')), hasLength(3), reason: '3 vérifications par en-tête au plus');
+      expect(first.confirmed, hasLength(3));
+      expect(second.confirmed, {'Adafruit SSD1306'}, reason: 'le budget a suffi pour l\'en-tête suivant');
+    });
+
     test('en-tête sans ressemblance avec aucun nom : aucun candidat, rien d\'ouvert', () async {
       final svc = await resolver();
       final result = await svc.resolveHeader('Zzzzz.h');

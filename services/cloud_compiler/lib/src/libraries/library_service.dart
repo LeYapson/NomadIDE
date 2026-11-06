@@ -81,9 +81,15 @@ class LibraryService {
   void dispose() => _timer?.cancel();
 
   /// Bibliothèques qui fournissent [header]. Celles que l'index déclare sont sûres ; les autres viennent du nom, et
-  /// leur archive est ouverte (installée dans le cache) pour confirmer, dans la limite de [budget] ouvertures par
-  /// demande. Les confirmées passent d'abord.
-  Future<HeaderResolution> resolveHeader(String header, {CompileBoard? board, VerifyBudget? budget, int limit = 5}) async {
+  /// leur archive est ouverte (installée dans le cache) pour confirmer, dans la limite de [verifyPerHeader] par en-tête et
+  /// de [budget] ouvertures par demande. Les confirmées passent d'abord.
+  Future<HeaderResolution> resolveHeader(
+    String header, {
+    CompileBoard? board,
+    VerifyBudget? budget,
+    int limit = 5,
+    int verifyPerHeader = 3,
+  }) async {
     final index = _index;
     if (index == null) return const HeaderResolution(candidates: [], confirmed: {});
     final architecture = board?.architecture;
@@ -107,7 +113,9 @@ class LibraryService {
     final verified = <String>{};
     final pool = budget ?? VerifyBudget(3);
     // Trois ouvertures en parallèle au plus : c'est un téléchargement chacune.
-    final queue = [...byName];
+    // Les plus plausibles d'abord, et pas plus de [verifyPerHeader] par en-tête : un en-tête très courant (`DHT.h`, une
+    // cinquantaine de bibliothèques « DHT… ») ne doit pas épuiser le budget des suivants.
+    final queue = byName.where((c) => !confirmed.contains(c.name)).take(verifyPerHeader).toList();
     Future<void> worker() async {
       while (queue.isNotEmpty) {
         final candidate = queue.removeAt(0);

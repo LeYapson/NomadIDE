@@ -310,6 +310,8 @@ class LibraryIndex {
       if (byScore != 0) return byScore;
       final byTrust = trustRank(b.$1).compareTo(trustRank(a.$1));
       if (byTrust != 0) return byTrust;
+      final byVersions = _releases[b.$1]!.length.compareTo(_releases[a.$1]!.length);
+      if (byVersions != 0) return byVersions;
       final byLength = a.$1.length.compareTo(b.$1.length);
       return byLength != 0 ? byLength : a.$1.compareTo(b.$1);
     });
