@@ -59,6 +59,61 @@ class FakeCompileApi implements CompileApi {
 
   @override
   Future<void> cancel(String id) async => cancelled.add(id);
+
+  // --- bibliothèques Arduino ---------------------------------------------------------------------------
+
+  /// Catalogue du faux service : résultat de la recherche, versions, en-têtes et fermeture.
+  LibrarySearchResult searchResult = const LibrarySearchResult(total: 0, libraries: []);
+  final Map<String, LibraryDetail> details = {};
+  final Map<String, IncludeResolution> includes = {};
+
+  /// Dépendances de chaque bibliothèque (nom, puis les dépendances qui s'ajoutent).
+  final Map<String, List<LibraryRef>> dependencies = {};
+
+  /// Dernière version connue de chaque bibliothèque (pour « la dernière »).
+  final Map<String, String> latestVersion = {};
+  Object? libraryError;
+  final List<String> searches = [];
+  final List<List<String>> resolved = [];
+  final List<List<LibraryRef>> closures = [];
+
+  @override
+  Future<LibrarySearchResult> searchLibraries(String query, {CompileBoard? board, int limit = 20}) async {
+    if (libraryError != null) throw libraryError!;
+    searches.add(query);
+    return searchResult;
+  }
+
+  @override
+  Future<LibraryDetail> libraryDetail(String name) async {
+    if (libraryError != null) throw libraryError!;
+    return details[name] ?? (throw const CompileApiException(CompileErrorKind.notFound));
+  }
+
+  @override
+  Future<List<IncludeResolution>> resolveIncludes(List<String> headers, CompileBoard board) async {
+    if (libraryError != null) throw libraryError!;
+    resolved.add(headers);
+    return [for (final h in headers) includes[h] ?? IncludeResolution(header: h)];
+  }
+
+  @override
+  Future<LibraryClosure> libraryClosure(List<LibraryRef> libraries, CompileBoard board) async {
+    if (libraryError != null) throw libraryError!;
+    closures.add(libraries);
+    final out = <LibraryRef>[];
+    void add(LibraryRef ref) {
+      if (out.any((o) => o.name == ref.name)) return;
+      final version = ref.version.isEmpty ? (latestVersion[ref.name] ?? '1.0.0') : ref.version;
+      out.add(LibraryRef(name: ref.name, version: version));
+      for (final dep in dependencies[ref.name] ?? const <LibraryRef>[]) {
+        add(dep);
+      }
+    }
+
+    libraries.forEach(add);
+    return LibraryClosure(libraries: out);
+  }
 }
 
 BuildStatus buildStatus(

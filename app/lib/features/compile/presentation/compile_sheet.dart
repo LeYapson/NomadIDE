@@ -7,9 +7,11 @@ import '../../../app/settings.dart';
 import '../../../l10n/l10n.dart';
 import '../../flash/application/flash_controller.dart' show flashSizeLabel;
 import '../../projects/application/projects_controller.dart';
+import '../application/arduino_libraries_controller.dart';
 import '../application/compile_controller.dart';
 import '../data/project_archiver.dart';
 import '../data/project_config.dart';
+import 'arduino_libraries_sheet.dart';
 import 'compile_messages.dart';
 
 /// Feuille de compilation cloud du projet courant.
@@ -36,7 +38,11 @@ class _CompileSheetState extends ConsumerState<CompileSheet> {
   void initState() {
     super.initState();
     _board = ref.read(compileProvider).board;
-    if (_board == null) Future.microtask(_loadBoard);
+    if (_board == null) {
+      Future.microtask(_loadBoard);
+    } else {
+      Future.microtask(_syncLibraries);
+    }
   }
 
   Future<void> _loadBoard() async {
@@ -45,11 +51,21 @@ class _CompileSheetState extends ConsumerState<CompileSheet> {
     final store = await ref.read(projectStoreProvider.future);
     final config = await ProjectConfig.read(store, project);
     if (mounted && _board == null) setState(() => _board = config.board ?? CompileBoard.esp32);
+    _syncLibraries();
+  }
+
+  /// Les bibliothèques du projet et la recherche dépendent de la carte : on les recharge quand elle change.
+  void _syncLibraries() {
+    final project = ref.read(projectsProvider).current;
+    final board = _board;
+    if (project == null || board == null || !mounted) return;
+    ref.read(arduinoLibrariesProvider.notifier).load(project, board);
   }
 
   Future<void> _compile(String project) async {
     final controller = ref.read(compileProvider.notifier);
     final board = _board ?? CompileBoard.esp32;
+    ref.read(arduinoLibrariesProvider.notifier).clearSuggestions();
     final package = await controller.prepare(project);
     if (package == null || !mounted) return;
 
@@ -93,6 +109,13 @@ class _CompileSheetState extends ConsumerState<CompileSheet> {
     final settings = ref.watch(settingsProvider);
     final project = ref.watch(projectsProvider).current;
     final compile = ref.watch(compileProvider);
+    final libraries = ref.watch(arduinoLibrariesProvider);
+
+    ref.listen(compileProvider.select((s) => s.phase), (previous, next) {
+      if (next == CompilePhase.failed && previous != CompilePhase.failed) {
+        ref.read(arduinoLibrariesProvider.notifier).suggestForMessages([for (final d in ref.read(compileProvider).errors) d.message]);
+      }
+    });
 
     Widget body;
     if (project == null || !settings.compileConfigured) {
@@ -118,9 +141,23 @@ class _CompileSheetState extends ConsumerState<CompileSheet> {
             initialValue: _board,
             decoration: InputDecoration(labelText: l10n.ccBoard, border: const OutlineInputBorder()),
             items: [for (final b in CompileBoard.values) DropdownMenuItem(value: b, child: Text(b.label))],
-            onChanged: compile.working ? null : (b) => setState(() => _board = b),
+            onChanged: compile.working
+                ? null
+                : (b) {
+                    setState(() => _board = b);
+                    _syncLibraries();
+                  },
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 8),
+          Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: TextButton.icon(
+              onPressed: _board == null ? null : () => showArduinoLibrariesSheet(context, project: project, board: _board!),
+              icon: const Icon(Icons.extension_outlined),
+              label: Text(libraries.libraries.isEmpty ? l10n.alButton : l10n.alButtonCount(libraries.chosen.length)),
+            ),
+          ),
+          const SizedBox(height: 4),
           if (compile.working)
             OutlinedButton.icon(
               onPressed: ref.read(compileProvider.notifier).cancel,
@@ -135,6 +172,14 @@ class _CompileSheetState extends ConsumerState<CompileSheet> {
             ),
           const SizedBox(height: 12),
           _Result(state: compile, onSendToFlash: _sendToFlash),
+          if (compile.phase == CompilePhase.failed && libraries.suggestions.isNotEmpty)
+            _MissingLibraries(
+              resolutions: libraries.suggestions,
+              working: libraries.working,
+              onAddAndCompile: (name) async {
+                if (await ref.read(arduinoLibrariesProvider.notifier).add(name) && mounted) await _compile(project);
+              },
+            ),
         ],
       );
     }
@@ -298,5 +343,47 @@ class _Result extends ConsumerWidget {
     }
 
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: children);
+  }
+}
+
+/// Une compilation échouée sur un `#include` introuvable : la bibliothèque qui le fournit, à ajouter et recompiler.
+class _MissingLibraries extends StatelessWidget {
+  const _MissingLibraries({required this.resolutions, required this.working, required this.onAddAndCompile});
+
+  final List<IncludeResolution> resolutions;
+  final bool working;
+  final void Function(String name) onAddAndCompile;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return Card(
+      margin: const EdgeInsets.only(top: 12),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Semantics(header: true, child: Text(l10n.alMissingTitle, style: Theme.of(context).textTheme.titleSmall)),
+            for (final resolution in resolutions) ...[
+              const SizedBox(height: 4),
+              Text(l10n.alMissingBody(resolution.header)),
+              if (resolution.candidates.isEmpty)
+                Text(l10n.alSuggestionNone(resolution.header), style: Theme.of(context).textTheme.bodySmall)
+              else
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: Text('${resolution.candidates.first.name} ${resolution.candidates.first.latest}'),
+                  subtitle: Text(resolution.confirmed.contains(resolution.candidates.first.name) ? l10n.alConfirmed : l10n.alGuess),
+                  trailing: FilledButton(
+                    onPressed: working ? null : () => onAddAndCompile(resolution.candidates.first.name),
+                    child: Text(l10n.alAddAndCompile),
+                  ),
+                ),
+            ],
+          ],
+        ),
+      ),
+    );
   }
 }
