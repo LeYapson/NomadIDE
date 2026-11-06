@@ -55,9 +55,12 @@ void main() {
     final resolution = IncludeResolution.fromJson(const IncludeResolution(
       header: 'DHT.h',
       candidates: [LibrarySummary(name: 'DHT', latest: '0.1.0')],
+      confirmed: ['DHT'],
     ).toJson());
     expect(resolution.builtin, isFalse);
     expect(resolution.candidates.single.name, 'DHT');
+    expect(resolution.confirmed, ['DHT']);
+    expect(IncludeResolution.fromJson({'header': 'X.h'}).confirmed, isEmpty);
     expect(IncludeResolution.fromJson({'header': 'Wire.h', 'builtin': true}).candidates, isEmpty);
 
     final closure = LibraryClosure.fromJson(const LibraryClosure(libraries: [LibraryRef(name: 'A', version: '1.0')]).toJson());

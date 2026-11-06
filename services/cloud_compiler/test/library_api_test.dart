@@ -119,6 +119,7 @@ void main() {
       expect(results[0].candidates, isEmpty);
       expect(results[1].builtin, isFalse);
       expect(results[1].candidates.first.name, 'DHT', reason: 'nom égal à l\'en-tête d\'abord');
+      expect(results[1].confirmed, contains('DHT'), reason: 'déclaré par l\'index');
       expect(results[2].builtin, isFalse);
       expect(results[2].candidates, isEmpty);
     });

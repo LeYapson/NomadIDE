@@ -93,3 +93,21 @@ LibraryRelease releaseFor(Uint8List zip, {String name = 'DHT sensor library', St
   ]));
   return index.release(name, version)!;
 }
+
+/// Entrée d'index (adresse, taille et empreinte cohérentes) pour l'archive [zip].
+Map<String, Object?> entryFor(
+  String name,
+  String version,
+  Uint8List zip, {
+  String author = 'Someone',
+  List<String> includes = const [],
+}) =>
+    releaseJson(
+      name,
+      version,
+      author: author,
+      includes: includes,
+      size: zip.length,
+      checksum: 'SHA-256:${sha256Of(zip)}',
+      url: 'https://downloads.arduino.cc/libraries/${name.replaceAll(' ', '_')}-$version.zip',
+    );

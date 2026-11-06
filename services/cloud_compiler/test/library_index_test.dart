@@ -126,6 +126,41 @@ void main() {
     });
   });
 
+  group('candidats d\'après le nom', () {
+    late LibraryIndex names;
+
+    setUp(() {
+      names = LibraryIndex.parse(indexJson([
+        releaseJson('Adafruit SSD1306', '2.5.17', author: 'Adafruit'),
+        releaseJson('Adafruit SSD1306 Wemos Mini OLED', '1.0.0', author: 'Someone'),
+        releaseJson('desklab', '1.0.0', includes: ['Adafruit_SSD1306.h']),
+        releaseJson('DHT sensor library', '1.4.7', author: 'Adafruit'),
+        releaseJson('DHTStable', '1.1.4', includes: ['DHTStable.h']),
+        releaseJson('Servo', '1.2.1', architectures: ['avr']),
+      ]));
+    });
+
+    test('le nom, sans casse ni séparateurs, est celui de l\'en-tête', () {
+      expect(names.nameScore('Adafruit_SSD1306.h', 'Adafruit SSD1306'), 100);
+      expect(names.nameScore('adafruit_ssd1306.h', 'Adafruit SSD1306'), 100);
+      expect(names.nameScore('Adafruit_SSD1306.h', 'Adafruit SSD1306 Wemos Mini OLED'), 70);
+      expect(names.nameScore('DHT.h', 'DHT sensor library'), 70);
+      expect(names.nameScore('Adafruit_SSD1306_Wemos.h', 'Adafruit SSD1306'), 50);
+      expect(names.nameScore('X.h', 'X'), 0, reason: 'trop court pour être fiable');
+      expect(names.nameScore('Wire.h', 'Unrelated'), 0);
+    });
+
+    test('classés par ressemblance, puis éditeur connu', () {
+      expect(names.nameCandidates('Adafruit_SSD1306.h').map((c) => c.name), ['Adafruit SSD1306', 'Adafruit SSD1306 Wemos Mini OLED']);
+      expect(names.nameCandidates('DHT.h').map((c) => c.name), ['DHT sensor library', 'DHTStable']);
+    });
+
+    test('respecte l\'architecture', () {
+      expect(names.nameCandidates('Servo.h', architecture: 'esp32'), isEmpty);
+      expect(names.nameCandidates('Servo.h', architecture: 'avr'), hasLength(1));
+    });
+  });
+
   group('fermeture (bibliothèque + dépendances à versions précises)', () {
     test('sans version : la dernière, avec ses dépendances', () {
       final outcome = index.closure([const LibraryRef(name: 'DHT sensor library', version: '')]);

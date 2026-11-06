@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:nomad_cloud_compiler/nomad_cloud_compiler.dart';
 import 'package:nomad_compile_api/nomad_compile_api.dart';
@@ -92,6 +93,103 @@ void main() {
     });
     await Future.wait([svc.refresh(), svc.refresh(), svc.refresh()]);
     expect(fetched, 1);
+  });
+
+  group('résolution d\'un en-tête (l\'index déclare presque jamais ses en-têtes)', () {
+    late Uint8List oled;
+    late Uint8List oledWemos;
+    late Uint8List dht;
+    late List<String> opened;
+    late bool offline;
+
+    setUp(() {
+      oled = libraryZip(top: 'Adafruit_SSD1306-2.5.17', files: {'library.properties': 'name=Adafruit SSD1306\n', 'Adafruit_SSD1306.h': '#pragma once\n', 'Adafruit_SSD1306.cpp': '//\n'});
+      oledWemos = libraryZip(top: 'wemos', files: {'library.properties': 'name=Wemos\n', 'src/Adafruit_SSD1306_Wemos.h': '#pragma once\n'});
+      dht = libraryZip(files: {'library.properties': 'name=DHT sensor library\n', 'DHT.h': '#pragma once\n', 'DHT_U.h': '#pragma once\n'});
+      opened = [];
+      offline = false;
+    });
+
+    Future<LibraryService> resolver() async {
+      final zips = {
+        'Adafruit_SSD1306': oled,
+        'Adafruit_SSD1306_Wemos_Mini_OLED': oledWemos,
+        'DHT_sensor_library': dht,
+      };
+      final svc = LibraryService(
+        indexFile: File(p.join(dir.path, 'library_index.json')),
+        fetch: () async => indexJson([
+          entryFor('Adafruit SSD1306', '2.5.17', oled, author: 'Adafruit'),
+          entryFor('Adafruit SSD1306 Wemos Mini OLED', '1.0.0', oledWemos),
+          releaseJson('desklab', '1.0.0', includes: ['Adafruit_SSD1306.h']),
+          entryFor('DHT sensor library', '1.4.7', dht, author: 'Adafruit'),
+        ]),
+        cache: LibraryCache(
+          root: Directory(p.join(dir.path, 'libs')),
+          download: (url, {required maxBytes}) async {
+            opened.add(url.pathSegments.last);
+            if (offline) throw const SocketException('hors ligne');
+            final key = zips.keys.firstWhere((k) => url.pathSegments.last.startsWith(k));
+            return zips[key]!;
+          },
+        ),
+      );
+      await svc.start();
+      svc.dispose();
+      return svc;
+    }
+
+    test('une bibliothèque sans en-tête déclaré est confirmée en ouvrant son archive, et passe avant le fork qui le déclare', () async {
+      final svc = await resolver();
+      final result = await svc.resolveHeader('Adafruit_SSD1306.h');
+
+      expect(result.candidates.map((c) => c.name), ['Adafruit SSD1306', 'desklab', 'Adafruit SSD1306 Wemos Mini OLED']);
+      expect(result.confirmed, {'Adafruit SSD1306', 'desklab'}, reason: 'le Wemos a un autre en-tête');
+      svc.dispose();
+    });
+
+    test('en-tête à la racine ou dans src/, casse ignorée', () async {
+      final svc = await resolver();
+      final result = await svc.resolveHeader('dht.h');
+      expect(result.confirmed, {'DHT sensor library'});
+      final second = await svc.resolveHeader('DHT_U.h');
+      expect(second.confirmed, {'DHT sensor library'});
+      expect(opened.where((o) => o.startsWith('DHT')), hasLength(1), reason: 'archive ouverte une seule fois');
+    });
+
+    test('budget épuisé : plus d\'ouverture, les candidats restent des suggestions', () async {
+      final svc = await resolver();
+      final result = await svc.resolveHeader('Adafruit_SSD1306.h', budget: VerifyBudget(0));
+      expect(opened, isEmpty);
+      expect(result.confirmed, {'desklab'}, reason: 'seul ce que l\'index déclare est sûr');
+      expect(result.candidates.map((c) => c.name), contains('Adafruit SSD1306'));
+    });
+
+    test('téléchargement impossible : pas d\'erreur, candidat non confirmé', () async {
+      offline = true;
+      final svc = await resolver();
+      final result = await svc.resolveHeader('DHT.h');
+      expect(result.candidates.map((c) => c.name), ['DHT sensor library']);
+      expect(result.confirmed, isEmpty);
+    });
+
+    test('en-tête sans ressemblance avec aucun nom : aucun candidat, rien d\'ouvert', () async {
+      final svc = await resolver();
+      final result = await svc.resolveHeader('Zzzzz.h');
+      expect(result.candidates, isEmpty);
+      expect(opened, isEmpty);
+    });
+
+    test('catalogue pas chargé : réponse vide', () async {
+      final svc = LibraryService(
+        indexFile: File(p.join(dir.path, 'absent.json')),
+        fetch: () async => throw const SocketException('hors ligne'),
+        cache: LibraryCache(root: Directory(p.join(dir.path, 'x')), download: (url, {required maxBytes}) async => throw UnimplementedError()),
+      );
+      await svc.start();
+      svc.dispose();
+      expect((await svc.resolveHeader('DHT.h')).candidates, isEmpty);
+    });
   });
 
   group('liste de ce que le cœur fournit', () {

@@ -135,26 +135,38 @@ class LibrarySearchResult {
 
 /// Ce que dit le service d'un fichier d'en-tête (`#include <DHT.h>`).
 class IncludeResolution {
-  const IncludeResolution({required this.header, this.builtin = false, this.candidates = const []});
+  const IncludeResolution({
+    required this.header,
+    this.builtin = false,
+    this.candidates = const [],
+    this.confirmed = const [],
+  });
 
   final String header;
 
   /// Fourni par le cœur de la carte (`Wire.h`, `SPI.h`…) : rien à ajouter.
   final bool builtin;
 
-  /// Bibliothèques de l'index qui fournissent cet en-tête, les plus probables d'abord.
+  /// Bibliothèques susceptibles de fournir cet en-tête, les plus probables d'abord.
   final List<LibrarySummary> candidates;
+
+  /// Noms des candidats dont on a la certitude qu'ils fournissent l'en-tête : déclaré par l'index, ou trouvé en
+  /// ouvrant la bibliothèque. L'index ne déclare presque jamais ses en-têtes, donc un candidat non confirmé est
+  /// une simple suggestion (d'après son nom).
+  final List<String> confirmed;
 
   Map<String, Object?> toJson() => {
         'header': header,
         'builtin': builtin,
         'candidates': [for (final c in candidates) c.toJson()],
+        'confirmed': confirmed,
       };
 
   factory IncludeResolution.fromJson(Map<String, Object?> json) => IncludeResolution(
         header: json['header'] as String,
         builtin: (json['builtin'] as bool?) ?? false,
         candidates: [for (final c in (json['candidates'] as List?) ?? const []) LibrarySummary.fromJson((c as Map).cast())],
+        confirmed: [for (final c in (json['confirmed'] as List?) ?? const []) c as String],
       );
 }
 

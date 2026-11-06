@@ -59,18 +59,21 @@ Handler buildHandler({required ServerConfig config, required JobManager jobs, Li
       }
       final board = CompileBoard.fromId(body?['board'] as String?);
       final builtin = board == null ? null : libraries?.builtin.forFamily(board.family);
-      return _json({
-        'includes': [
-          for (final header in headers.cast<String>())
-            IncludeResolution(
-              header: header,
-              builtin: builtin?.providesHeader(header) ?? false,
-              candidates: (builtin?.providesHeader(header) ?? false)
-                  ? const []
-                  : index.providersOf(header, architecture: board?.architecture).take(5).toList(),
-            ).toJson(),
-        ],
-      });
+      final budget = VerifyBudget(8);
+      final results = <IncludeResolution>[];
+      for (final header in headers.cast<String>()) {
+        if (builtin?.providesHeader(header) ?? false) {
+          results.add(IncludeResolution(header: header, builtin: true));
+          continue;
+        }
+        final resolved = await libraries!.resolveHeader(header, board: board, budget: budget);
+        results.add(IncludeResolution(
+          header: header,
+          candidates: resolved.candidates,
+          confirmed: [for (final c in resolved.candidates) if (resolved.confirmed.contains(c.name)) c.name],
+        ));
+      }
+      return _json({'includes': [for (final r in results) r.toJson()]});
     })
     ..post('/v1/libraries/closure', (Request request) async {
       final index = libraries?.index;

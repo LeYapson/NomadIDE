@@ -118,7 +118,7 @@ Le projet doit contenir un croquis `.ino` à la racine. Avec plusieurs `.ino`, `
 |---|---|
 | `GET /v1/libraries/search?q=dht&board=esp32s3&limit=20` | Cherche dans le catalogue officiel (nom, auteur, descriptions) ; `board` écarte les bibliothèques d'une autre architecture |
 | `GET /v1/libraries/{nom}` | Toutes les versions d'une bibliothèque, avec licence et dépendances |
-| `POST /v1/libraries/resolve` | `{"includes": ["DHT.h"], "board": "esp32"}` : pour chaque en-tête, « fourni par le cœur de la carte » ou les bibliothèques qui le fournissent |
+| `POST /v1/libraries/resolve` | `{"includes": ["DHT.h"], "board": "esp32"}` : pour chaque en-tête, « fourni par le cœur de la carte » ou les bibliothèques candidates, avec la liste de celles dont l'en-tête est **confirmé** |
 | `POST /v1/libraries/closure` | `{"libraries": [{"name": "DHT sensor library"}], "board": "esp32"}` : la liste complète (dépendances comprises), chaque bibliothèque à une version précise |
 
 Un projet demande ses bibliothèques dans son `nomad.json`, qui part avec lui :
@@ -136,6 +136,8 @@ Un projet demande ses bibliothèques dans son `nomad.json`, qui part avec lui :
 Le service compile avec exactement ces versions (il n'ajoute pas de dépendances de lui-même : c'est `closure` qui les liste), donc deux compilations du même projet donnent le même résultat.
 
 **Fonctionnement et sécurité.** Le service télécharge lui-même l'index officiel d'Arduino (au démarrage puis chaque jour, l'ancien reste servi si le téléchargement échoue). Une bibliothèque n'est installée qu'à partir de cet index : adresse en HTTPS sur `downloads.arduino.cc`, taille et empreinte SHA-256 vérifiées, extraction qui refuse les chemins sortants et les liens symboliques. Chaque version n'est installée qu'une fois (cache partagé) et montée **en lecture seule** dans le conteneur de compilation, qui reste sans réseau. Tant que l'index n'est pas chargé, les routes répondent `503`.
+
+**Retrouver la bibliothèque d'un `#include`.** L'index officiel ne déclare presque jamais les en-têtes que fournit une bibliothèque (seuls certains auteurs renseignent `includes=`) : `DHT sensor library` ou `Adafruit SSD1306` n'en déclarent aucun. Le service combine donc trois sources : ce que l'index déclare, les bibliothèques dont le nom ressemble à l'en-tête (`Adafruit_SSD1306.h` : « Adafruit SSD1306 »), et les en-têtes des bibliothèques déjà ouvertes. Les candidats trouvés par le nom sont **vérifiés** en installant leur archive dans le cache et en y cherchant l'en-tête (8 ouvertures au plus par demande, 3 en parallèle) ; ceux qui y sont sont renvoyés dans `confirmed` et passent d'abord. Un candidat non confirmé n'est qu'une suggestion.
 
 **Classement et licence.** L'index ne donne ni popularité ni licence : à pertinence égale, les bibliothèques des éditeurs courants (Adafruit, Arduino, SparkFun, Espressif…) passent d'abord, et le champ `license` est vide tant que l'index ne le renseigne pas (l'app affiche alors « licence non précisée »).
 

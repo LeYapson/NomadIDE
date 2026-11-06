@@ -252,7 +252,7 @@ class LibraryIndex {
     scored.sort((a, b) {
       final byScore = b.$2.compareTo(a.$2);
       if (byScore != 0) return byScore;
-      final byTrust = _trustRank(b.$1).compareTo(_trustRank(a.$1));
+      final byTrust = trustRank(b.$1).compareTo(trustRank(a.$1));
       if (byTrust != 0) return byTrust;
       final byVersions = _releases[b.$1]!.length.compareTo(_releases[a.$1]!.length);
       return byVersions != 0 ? byVersions : a.$1.compareTo(b.$1);
@@ -277,7 +277,7 @@ class LibraryIndex {
       final exactA = a.toLowerCase() == base ? 0 : 1;
       final exactB = b.toLowerCase() == base ? 0 : 1;
       if (exactA != exactB) return exactA.compareTo(exactB);
-      final byTrust = _trustRank(b).compareTo(_trustRank(a));
+      final byTrust = trustRank(b).compareTo(trustRank(a));
       if (byTrust != 0) return byTrust;
       final byVersions = _releases[b]!.length.compareTo(_releases[a]!.length);
       return byVersions != 0 ? byVersions : a.compareTo(b);
@@ -288,10 +288,48 @@ class LibraryIndex {
   /// L'index ne dit rien de la popularité : à défaut, on donne la priorité aux éditeurs dont les bibliothèques
   /// sont celles des tutoriels et des cartes (Adafruit, Arduino, SparkFun, Espressif…). 1 si l'auteur en fait
   /// partie, 0 sinon. Ce n'est qu'un départage : l'utilisateur voit les autres candidats.
-  int _trustRank(String name) {
+  int trustRank(String name) {
     final author = latest(name)?.author.toLowerCase() ?? '';
     return RegExp(r'adafruit|arduino|sparkfun|espressif|earlephilhower|seeed|pimoroni').hasMatch(author) ? 1 : 0;
   }
+
+  /// Bibliothèques dont le nom ressemble à [header] (`Adafruit_SSD1306.h` : « Adafruit SSD1306 »). L'index ne déclare
+  /// presque jamais les en-têtes que fournit une bibliothèque : le nom est le seul indice avant d'ouvrir l'archive.
+  /// Noms comparés sans casse ni séparateurs ; égalité d'abord, puis début de nom, puis nom contenu dans l'en-tête.
+  List<LibrarySummary> nameCandidates(String header, {String? architecture, int limit = 8}) {
+    final scored = <(String, int)>[];
+    for (final name in _releases.keys) {
+      final score = nameScore(header, name);
+      if (score == 0) continue;
+      final latest = this.latest(name, architecture: architecture);
+      if (latest == null || !latest.supports(architecture)) continue;
+      scored.add((name, score));
+    }
+    scored.sort((a, b) {
+      final byScore = b.$2.compareTo(a.$2);
+      if (byScore != 0) return byScore;
+      final byTrust = trustRank(b.$1).compareTo(trustRank(a.$1));
+      if (byTrust != 0) return byTrust;
+      final byLength = a.$1.length.compareTo(b.$1.length);
+      return byLength != 0 ? byLength : a.$1.compareTo(b.$1);
+    });
+    return [for (final s in scored.take(limit)) summary(s.$1)];
+  }
+
+  /// À quel point le nom de [name] ressemble à [header] : 100 pour le même nom (sans casse ni séparateurs), 70 si le
+  /// nom commence par l'en-tête, 50 si l'en-tête commence par le nom, 40 si le nom le contient, 0 sinon.
+  int nameScore(String header, String name) {
+    final base = _normalize(header.replaceAll(RegExp(r'\.(h|hpp|hh)$', caseSensitive: false), ''));
+    if (base.length < 3) return 0;
+    final n = _normalize(name);
+    if (n == base) return 100;
+    if (n.startsWith(base)) return 70;
+    if (n.length >= 4 && base.startsWith(n)) return 50;
+    if (base.length >= 4 && n.contains(base)) return 40;
+    return 0;
+  }
+
+  static String _normalize(String text) => text.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]'), '');
 
   /// Résout [requested] (nom et version facultative) avec toutes les dépendances, chacune à une version précise.
   /// Sans version demandée : la dernière. Une dépendance garde la dernière version qui respecte sa contrainte ;
