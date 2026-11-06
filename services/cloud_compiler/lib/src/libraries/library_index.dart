@@ -215,6 +215,7 @@ class LibraryIndex {
       final latest = this.latest(entry.key, architecture: architecture);
       if (latest == null || !latest.supports(architecture)) continue;
       final name = entry.key.toLowerCase();
+      final nameWords = name.split(RegExp(r'[^a-z0-9]+')).where((w) => w.isNotEmpty).toSet();
       final author = latest.author.toLowerCase();
       final category = latest.category.toLowerCase();
       final sentence = latest.sentence.toLowerCase();
@@ -225,6 +226,8 @@ class LibraryIndex {
         var score = 0;
         if (name == token) {
           score = 100;
+        } else if (nameWords.contains(token)) {
+          score = 75; // « DHT » est un mot du nom : mieux que le début d'un nom collé (« DHTNEW »)
         } else if (name.startsWith(token)) {
           score = 60;
         } else if (name.contains(token)) {
@@ -249,6 +252,8 @@ class LibraryIndex {
     scored.sort((a, b) {
       final byScore = b.$2.compareTo(a.$2);
       if (byScore != 0) return byScore;
+      final byTrust = _trustRank(b.$1).compareTo(_trustRank(a.$1));
+      if (byTrust != 0) return byTrust;
       final byVersions = _releases[b.$1]!.length.compareTo(_releases[a.$1]!.length);
       return byVersions != 0 ? byVersions : a.$1.compareTo(b.$1);
     });
@@ -272,10 +277,20 @@ class LibraryIndex {
       final exactA = a.toLowerCase() == base ? 0 : 1;
       final exactB = b.toLowerCase() == base ? 0 : 1;
       if (exactA != exactB) return exactA.compareTo(exactB);
+      final byTrust = _trustRank(b).compareTo(_trustRank(a));
+      if (byTrust != 0) return byTrust;
       final byVersions = _releases[b]!.length.compareTo(_releases[a]!.length);
       return byVersions != 0 ? byVersions : a.compareTo(b);
     });
     return [for (final name in candidates) summary(name)];
+  }
+
+  /// L'index ne dit rien de la popularité : à défaut, on donne la priorité aux éditeurs dont les bibliothèques
+  /// sont celles des tutoriels et des cartes (Adafruit, Arduino, SparkFun, Espressif…). 1 si l'auteur en fait
+  /// partie, 0 sinon. Ce n'est qu'un départage : l'utilisateur voit les autres candidats.
+  int _trustRank(String name) {
+    final author = latest(name)?.author.toLowerCase() ?? '';
+    return RegExp(r'adafruit|arduino|sparkfun|espressif|earlephilhower|seeed|pimoroni').hasMatch(author) ? 1 : 0;
   }
 
   /// Résout [requested] (nom et version facultative) avec toutes les dépendances, chacune à une version précise.

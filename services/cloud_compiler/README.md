@@ -137,6 +137,8 @@ Le service compile avec exactement ces versions (il n'ajoute pas de dépendances
 
 **Fonctionnement et sécurité.** Le service télécharge lui-même l'index officiel d'Arduino (au démarrage puis chaque jour, l'ancien reste servi si le téléchargement échoue). Une bibliothèque n'est installée qu'à partir de cet index : adresse en HTTPS sur `downloads.arduino.cc`, taille et empreinte SHA-256 vérifiées, extraction qui refuse les chemins sortants et les liens symboliques. Chaque version n'est installée qu'une fois (cache partagé) et montée **en lecture seule** dans le conteneur de compilation, qui reste sans réseau. Tant que l'index n'est pas chargé, les routes répondent `503`.
 
+**Classement et licence.** L'index ne donne ni popularité ni licence : à pertinence égale, les bibliothèques des éditeurs courants (Adafruit, Arduino, SparkFun, Espressif…) passent d'abord, et le champ `license` est vide tant que l'index ne le renseigne pas (l'app affiche alors « licence non précisée »).
+
 **Vérifier à la main** (après un démarrage, avec le jeton) :
 
 ```bash

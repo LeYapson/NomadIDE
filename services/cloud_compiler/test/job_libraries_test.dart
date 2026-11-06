@@ -147,6 +147,15 @@ void main() {
     await jobs.dispose();
   });
 
+  test('le journal ne garde pas les avertissements mkdir du core ESP32 (dossier du croquis en lecture seule)', () {
+    const log = "Sketch uses 100 bytes\n"
+        "mkdir: cannot create directory '/work/sketch/t/build': Read-only file system\n"
+        "mkdir: cannot create directory '/work/sketch/t/build': Read-only file system\n"
+        "/work/sketch/t/t.ino:3:1: error: oups\n";
+    expect(JobManager.stripKnownNoise(log), "Sketch uses 100 bytes\n/work/sketch/t/t.ino:3:1: error: oups\n");
+    expect(JobManager.stripKnownNoise('mkdir: cannot create directory \'/ailleurs\': Permission denied\n'), contains('/ailleurs'));
+  });
+
   test('arguments docker : bibliothèques en lecture seule et passées à arduino-cli', () {
     final args = dockerRunArguments(
       testConfig(work),

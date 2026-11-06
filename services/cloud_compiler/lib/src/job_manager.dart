@@ -218,6 +218,7 @@ class JobManager {
         onOutput: (text) => job.log = _appendLog(job.log, text),
         cancel: job.cancel,
       );
+      job.log = stripKnownNoise(job.log);
       job.diagnostics = parseCompilerOutput(job.log, sourceRoots: ['/work/sketch/${job.sketchName}']);
       if (outcome.cancelled) {
         _finish(job, BuildState.cancelled, message: 'Compilation annulée.');
@@ -272,6 +273,13 @@ class JobManager {
       durationMs: started != null && finished != null ? finished.difference(started).inMilliseconds : null,
     );
   }
+
+  /// Retire du journal les avertissements sans conséquence du core ESP32, qui tente de créer un dossier
+  /// `build` dans le croquis (monté en lecture seule) et qui inquiéteraient pour rien.
+  static String stripKnownNoise(String log) => log
+      .split('\n')
+      .where((line) => !RegExp(r"^mkdir: cannot create directory '/work/sketch/[^']*/build': Read-only file system$").hasMatch(line.trimRight()))
+      .join('\n');
 
   static String _appendLog(String log, String text) {
     final joined = log + text;

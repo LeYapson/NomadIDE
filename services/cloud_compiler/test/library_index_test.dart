@@ -53,6 +53,18 @@ void main() {
       expect(names, contains('DHT sensor library'));
     });
 
+    test('un mot entier du nom passe avant le début d\'un nom collé ; à égalité, l\'éditeur connu d\'abord', () {
+      final ranked = LibraryIndex.parse(indexJson([
+        releaseJson('DHTNEW', '0.5.5', author: 'Rob Tillaart'),
+        releaseJson('DHTNEW', '0.5.4', author: 'Rob Tillaart'),
+        releaseJson('DHT sensor library', '1.4.7', author: 'Adafruit'),
+        releaseJson('DHT helper', '1.0.0', author: 'Someone'),
+        releaseJson('DHT helper', '0.9.0', author: 'Someone'),
+        releaseJson('DHT helper', '0.8.0', author: 'Someone'),
+      ])).search('dht').libraries.map((l) => l.name).toList();
+      expect(ranked, ['DHT sensor library', 'DHT helper', 'DHTNEW']);
+    });
+
     test('tous les mots doivent correspondre', () {
       expect(index.search('adafruit sensor').libraries.map((l) => l.name), contains('Adafruit Unified Sensor'));
       expect(index.search('dht moteur').total, 0);
@@ -93,6 +105,14 @@ void main() {
     test('le nom égal à l\'en-tête d\'abord, puis les plus suivies', () {
       final names = index.providersOf('DHT.h').map((l) => l.name).toList();
       expect(names, ['DHT', 'DHT sensor library']);
+    });
+
+    test('à nom différent de l\'en-tête, l\'éditeur connu passe avant la bibliothèque qui a le plus de versions', () {
+      final ranked = LibraryIndex.parse(indexJson([
+        releaseJson('Adafruit SSD1306', '2.5.9', author: 'Adafruit', includes: ['Adafruit_SSD1306.h']),
+        for (var i = 0; i < 6; i++) releaseJson('desklab', '1.0.$i', author: 'desklab', includes: ['Adafruit_SSD1306.h']),
+      ])).providersOf('Adafruit_SSD1306.h').map((l) => l.name).toList();
+      expect(ranked, ['Adafruit SSD1306', 'desklab']);
     });
 
     test('en-tête inconnu ou casse différente', () {
