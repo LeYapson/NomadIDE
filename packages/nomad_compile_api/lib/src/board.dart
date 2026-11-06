@@ -17,6 +17,9 @@ enum CompileBoard {
   final String fqbn;
   final CompileFamily family;
 
+  /// Architecture déclarée par les bibliothèques de l'index (`architectures=` de `library.properties`).
+  String get architecture => family == CompileFamily.rp2040 ? 'rp2040' : 'esp32';
+
   static CompileBoard? fromId(String? id) {
     for (final board in values) {
       if (board.id == id) return board;

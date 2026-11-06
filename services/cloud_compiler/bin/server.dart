@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:nomad_cloud_compiler/nomad_cloud_compiler.dart';
@@ -14,10 +15,28 @@ Future<void> main() async {
   }
 
   Directory(config.workDir).createSync(recursive: true);
-  final jobs = JobManager(config: config, runner: DockerBuildRunner(config));
+  final cacheRoot = Directory(config.libraryCacheDir ?? '${config.workDir}/libraries');
+  final libraries = LibraryService(
+    indexFile: defaultIndexFile(config.workDir),
+    fetch: httpIndexFetcher(Uri.parse(config.libraryIndexUrl)),
+    cache: LibraryCache(root: cacheRoot, download: httpLibraryDownloader()),
+  );
+  final jobs = JobManager(config: config, runner: DockerBuildRunner(config), libraries: libraries);
   final handler = const Pipeline()
       .addMiddleware(logRequests(logger: (message, isError) => stdout.writeln(message)))
-      .addHandler(buildHandler(config: config, jobs: jobs));
+      .addHandler(buildHandler(config: config, jobs: jobs, libraries: libraries));
+
+  // Le catalogue et la liste de ce que les cœurs fournissent se chargent en arrière-plan : le service répond tout de suite.
+  unawaited(libraries.start().then((_) {
+    stdout.writeln('Catalogue de bibliothèques : ${libraries.index?.libraryCount ?? 0}');
+  }).catchError((Object e) {
+    stderr.writeln('Catalogue de bibliothèques indisponible : $e');
+  }));
+  unawaited(DockerBuiltinLoader(config).load().then((catalog) {
+    libraries.builtin = catalog;
+  }).catchError((Object e) {
+    stderr.writeln('Liste des bibliothèques du cœur indisponible : $e');
+  }));
 
   final server = await io.serve(handler, config.host, config.port);
   server.autoCompress = true;
@@ -27,6 +46,7 @@ Future<void> main() async {
   Future<void> stop(ProcessSignal signal) async {
     stdout.writeln('Arrêt ($signal)…');
     await server.close(force: true);
+    libraries.dispose();
     await jobs.dispose();
     exit(0);
   }
