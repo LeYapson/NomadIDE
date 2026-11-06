@@ -18,6 +18,9 @@ enum CompileErrorKind {
   tooLarge,
   queueFull,
 
+  /// Le catalogue de bibliothèques du service n'est pas (encore) chargé : réessayer dans un instant.
+  unavailable,
+
   /// Build inconnu : expiré (les résultats ne sont gardés que 30 minutes) ou jamais créé.
   notFound,
   badResponse,
@@ -59,6 +62,19 @@ abstract class CompileApi {
 
   /// Annule un build en cours ou supprime ses résultats. Les erreurs sont ignorées : sans effet pour l'utilisateur.
   Future<void> cancel(String id);
+
+  /// Cherche une bibliothèque Arduino ; [board] écarte celles qui ne conviennent pas à sa famille de cartes.
+  Future<LibrarySearchResult> searchLibraries(String query, {CompileBoard? board, int limit = 20});
+
+  /// Toutes les versions d'une bibliothèque, avec leurs dépendances.
+  Future<LibraryDetail> libraryDetail(String name);
+
+  /// Pour chaque en-tête (`DHT.h`) : fourni par le cœur de la carte, ou bibliothèques qui le fournissent.
+  Future<List<IncludeResolution>> resolveIncludes(List<String> headers, CompileBoard board);
+
+  /// Les bibliothèques demandées avec leurs dépendances, chacune à une version précise. Une version vide
+  /// veut dire « la dernière ».
+  Future<LibraryClosure> libraryClosure(List<LibraryRef> libraries, CompileBoard board);
 }
 
 /// Adresse acceptée pour le service : HTTPS, ou HTTP vers cette machine / le réseau local seulement.
@@ -151,6 +167,52 @@ class HttpCompileApi implements CompileApi {
     }
   }
 
+  @override
+  Future<LibrarySearchResult> searchLibraries(String query, {CompileBoard? board, int limit = 20}) async {
+    final response = await _send('GET', '/v1/libraries/search', query: {
+      'q': query,
+      'limit': '$limit',
+      if (board != null) 'board': board.id,
+    });
+    return _parse(response, LibrarySearchResult.fromJson);
+  }
+
+  @override
+  Future<LibraryDetail> libraryDetail(String name) async {
+    final response = await _send('GET', '/v1/libraries/${Uri.encodeComponent(name)}');
+    return _parse(response, LibraryDetail.fromJson);
+  }
+
+  @override
+  Future<List<IncludeResolution>> resolveIncludes(List<String> headers, CompileBoard board) async {
+    final response = await _sendJson('POST', '/v1/libraries/resolve', {'includes': headers, 'board': board.id});
+    return _parse(response, (json) => [
+          for (final item in (json['includes'] as List)) IncludeResolution.fromJson((item as Map).cast()),
+        ]);
+  }
+
+  @override
+  Future<LibraryClosure> libraryClosure(List<LibraryRef> libraries, CompileBoard board) async {
+    final response = await _sendJson('POST', '/v1/libraries/closure', {
+      'libraries': [for (final l in libraries) {'name': l.name, if (l.version.isNotEmpty) 'version': l.version}],
+      'board': board.id,
+    });
+    return _parse(response, LibraryClosure.fromJson);
+  }
+
+  Future<_Response> _sendJson(String method, String path, Map<String, Object?> body) =>
+      _send(method, path, body: Uint8List.fromList(utf8.encode(jsonEncode(body))), contentType: 'application/json');
+
+  T _parse<T>(_Response response, T Function(Map<String, Object?> json) build) {
+    try {
+      return build(_decodeJson(response));
+    } on CompileApiException {
+      rethrow;
+    } catch (e) {
+      throw CompileApiException(CompileErrorKind.badResponse, cause: e);
+    }
+  }
+
   // ---------------------------------------------------------------------------
 
   BuildStatus _status(_Response response) {
@@ -224,6 +286,7 @@ class HttpCompileApi implements CompileApi {
       400 => CompileApiException(CompileErrorKind.rejected, detail: message),
       413 => CompileApiException(CompileErrorKind.tooLarge, detail: message),
       429 => CompileApiException(CompileErrorKind.queueFull, detail: message),
+      503 => CompileApiException(CompileErrorKind.unavailable, detail: message),
       _ => CompileApiException(CompileErrorKind.badResponse, detail: 'HTTP ${response.status}'),
     };
   }

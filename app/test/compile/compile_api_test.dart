@@ -187,4 +187,109 @@ void main() {
       expect(isAcceptableServerUrl(bad), isFalse, reason: bad);
     }
   });
+
+  group('bibliothèques Arduino', () {
+    test('recherche : paramètres, jeton et résultat', () async {
+      server.handler = (r) => reply(r, 200, {
+            'total': 57,
+            'libraries': [
+              {'name': 'DHT sensor library', 'latest': '1.4.7', 'author': 'Adafruit', 'sentence': 's', 'category': 'Sensors', 'versionCount': 31},
+            ],
+          });
+
+      final result = await api().searchLibraries('dht sensor', board: CompileBoard.esp32s3, limit: 5);
+
+      expect(result.total, 57);
+      expect(result.libraries.single.name, 'DHT sensor library');
+      final request = server.requests.single;
+      expect(request.path, '/v1/libraries/search');
+      expect(request.query, {'q': 'dht sensor', 'limit': '5', 'board': 'esp32s3'});
+      expect(request.auth, 'Bearer tok');
+    });
+
+    test('détail d\'une bibliothèque dont le nom contient des espaces', () async {
+      server.handler = (r) => reply(r, 200, {
+            'summary': {'name': 'DHT sensor library', 'latest': '1.4.7'},
+            'paragraph': 'long',
+            'versions': [
+              {'version': '1.4.7', 'dependencies': ['Adafruit Unified Sensor']},
+            ],
+          });
+
+      final detail = await api().libraryDetail('DHT sensor library');
+
+      expect(detail.versions.single.dependencies, ['Adafruit Unified Sensor']);
+      expect(server.requests.single.path, '/v1/libraries/DHT%20sensor%20library');
+    });
+
+    test('résolution des #include : corps JSON avec la carte', () async {
+      server.handler = (r) => reply(r, 200, {
+            'includes': [
+              {'header': 'Wire.h', 'builtin': true, 'candidates': []},
+              {
+                'header': 'DHT.h',
+                'builtin': false,
+                'candidates': [
+                  {'name': 'DHT sensor library', 'latest': '1.4.7'},
+                ],
+                'confirmed': ['DHT sensor library'],
+              },
+            ],
+          });
+
+      final results = await api().resolveIncludes(['Wire.h', 'DHT.h'], CompileBoard.esp32);
+
+      expect(results.first.builtin, isTrue);
+      expect(results.last.confirmed, ['DHT sensor library']);
+      final request = server.requests.single;
+      expect(request.method, 'POST');
+      expect(request.type, 'application/json');
+      expect(jsonDecode(utf8.decode(request.body)), {'includes': ['Wire.h', 'DHT.h'], 'board': 'esp32'});
+    });
+
+    test('fermeture : la version vide n\'est pas envoyée', () async {
+      server.handler = (r) => reply(r, 200, {
+            'libraries': [
+              {'name': 'DHT sensor library', 'version': '1.4.7'},
+              {'name': 'Adafruit Unified Sensor', 'version': '1.1.15'},
+            ],
+          });
+
+      final closure = await api().libraryClosure(
+        [const LibraryRef(name: 'DHT sensor library', version: ''), const LibraryRef(name: 'Servo', version: '1.2.1')],
+        CompileBoard.rp2040,
+      );
+
+      expect(closure.libraries, hasLength(2));
+      expect(jsonDecode(utf8.decode(server.requests.single.body)), {
+        'libraries': [
+          {'name': 'DHT sensor library'},
+          {'name': 'Servo', 'version': '1.2.1'},
+        ],
+        'board': 'rp2040',
+      });
+    });
+
+    test('catalogue pas chargé (503) et fermeture impossible (400)', () async {
+      server.handler = (r) => reply(r, 503, {'error': 'libraries_unavailable', 'message': 'pas prêt'});
+      await expectLater(
+        api().searchLibraries('dht'),
+        throwsA(isA<CompileApiException>().having((e) => e.kind, 'kind', CompileErrorKind.unavailable)),
+      );
+
+      server.handler = (r) => reply(r, 400, {'error': 'unresolvable', 'message': 'Bibliothèque inconnue : Nope.'});
+      await expectLater(
+        api().libraryClosure([const LibraryRef(name: 'Nope', version: '')], CompileBoard.esp32),
+        throwsA(isA<CompileApiException>().having((e) => e.kind, 'kind', CompileErrorKind.rejected).having((e) => e.detail, 'detail', contains('Nope'))),
+      );
+    });
+
+    test('bibliothèque inconnue (404) et réponse inattendue', () async {
+      server.handler = (r) => reply(r, 404, {'error': 'not_found'});
+      await expectLater(api().libraryDetail('Nope'), throwsA(isA<CompileApiException>().having((e) => e.kind, 'kind', CompileErrorKind.notFound)));
+
+      server.handler = (r) => reply(r, 200, {'inattendu': true});
+      await expectLater(api().searchLibraries('dht'), throwsA(isA<CompileApiException>().having((e) => e.kind, 'kind', CompileErrorKind.badResponse)));
+    });
+  });
 }

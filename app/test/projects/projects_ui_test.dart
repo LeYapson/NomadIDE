@@ -40,6 +40,16 @@ void main() {
     await tester.pumpAndSettle();
   }
 
+  /// Comme [settle], mais attend que [done] soit vrai (jusqu'à ~8 s) : sur une machine lente, un nombre fixe
+  /// d'itérations laisse parfois l'écriture sur disque en retard.
+  Future<void> settleUntil(WidgetTester tester, bool Function() done) async {
+    for (var i = 0; i < 320 && !done(); i++) {
+      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 25)));
+      await tester.pump();
+    }
+    await tester.pumpAndSettle();
+  }
+
   Future<void> pumpEditor(WidgetTester tester) async {
     tester.view.physicalSize = const Size(1400, 900);
     tester.view.devicePixelRatio = 1;
@@ -97,7 +107,7 @@ void main() {
     expect(find.text('Enregistrer sur cet appareil'), findsOneWidget);
     await tester.enterText(find.widgetWithText(TextField, 'main.py'), 'blink.py');
     await tester.tap(find.widgetWithText(FilledButton, 'Enregistrer'));
-    await settle(tester);
+    await settleUntil(tester, () => container.read(editorProvider).active?.name == 'blink.py' && !container.read(editorProvider).active!.dirty);
 
     expect(File('${storage.path}/projects/p/blink.py').readAsStringSync(), 'print("salut")');
     final doc = container.read(editorProvider).active!;
