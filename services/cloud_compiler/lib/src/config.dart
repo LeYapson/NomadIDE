@@ -18,6 +18,8 @@ class ServerConfig {
     this.containerPids = 512,
     this.runAs = '1000:1000',
     this.dockerBinary = 'docker',
+    this.libraryCacheDir,
+    this.libraryIndexUrl = 'https://downloads.arduino.cc/libraries/library_index.json.gz',
   });
 
   /// Jeton attendu dans `Authorization: Bearer`. Un jeton trop court est refusé au démarrage.
@@ -45,6 +47,12 @@ class ServerConfig {
   /// `uid:gid` du processus dans le conteneur ; doit pouvoir écrire dans [workDir].
   final String runAs;
   final String dockerBinary;
+
+  /// Où sont installées les bibliothèques Arduino (partagées entre les builds) ; par défaut `<workDir>/libraries`.
+  final String? libraryCacheDir;
+
+  /// Index officiel des bibliothèques Arduino.
+  final String libraryIndexUrl;
 
   static const int minTokenLength = 24;
 
@@ -77,6 +85,8 @@ class ServerConfig {
       containerMemory: env['NOMAD_CONTAINER_MEMORY'] ?? '3g',
       containerCpus: env['NOMAD_CONTAINER_CPUS'] ?? '2',
       runAs: env['NOMAD_RUN_AS'] ?? '1000:1000',
+      libraryCacheDir: env['NOMAD_LIB_CACHE'],
+      libraryIndexUrl: env['NOMAD_LIB_INDEX_URL'] ?? 'https://downloads.arduino.cc/libraries/library_index.json.gz',
     );
   }
 }

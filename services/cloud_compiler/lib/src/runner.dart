@@ -25,6 +25,7 @@ class RunRequest {
     required this.sketchName,
     required this.sketchDir,
     required this.outDir,
+    this.libraries = const [],
   });
 
   final String id;
@@ -36,6 +37,9 @@ class RunRequest {
 
   /// Dossier de sortie (monté en écriture) : les binaires y arrivent.
   final Directory outDir;
+
+  /// Bibliothèques Arduino du projet (un dossier chacune, montées en lecture seule).
+  final List<Directory> libraries;
 }
 
 class RunOutcome {
@@ -74,16 +78,22 @@ List<String> dockerRunArguments(ServerConfig config, RunRequest request) {
     '-e', 'ARDUINO_DIRECTORIES_DOWNLOADS=/tmp/staging',
     '--mount', 'type=bind,src=${request.sketchDir.path},dst=$sketchMount,readonly',
     '--mount', 'type=bind,src=${request.outDir.path},dst=/work/out',
+    for (var i = 0; i < request.libraries.length; i++)
+      ...['--mount', 'type=bind,src=${request.libraries[i].path},dst=${libraryMount(i)},readonly'],
     config.dockerImage,
     'arduino-cli', 'compile',
     '--fqbn', request.board.fqbn,
     '--build-path', '/tmp/build',
     '--output-dir', '/work/out',
+    for (var i = 0; i < request.libraries.length; i++) ...['--library', libraryMount(i)],
     sketchMount,
   ];
 }
 
 String containerName(String id) => 'nomad-build-$id';
+
+/// Emplacement, dans le conteneur, de la bibliothèque numéro [index] du projet.
+String libraryMount(int index) => '/work/libs/lib$index';
 
 class DockerBuildRunner implements BuildRunner {
   DockerBuildRunner(this.config);

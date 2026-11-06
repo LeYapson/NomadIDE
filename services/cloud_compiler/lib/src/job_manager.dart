@@ -8,6 +8,10 @@ import 'package:path/path.dart' as p;
 
 import 'artifacts.dart';
 import 'config.dart';
+import 'libraries/library_cache.dart';
+import 'libraries/library_index.dart';
+import 'libraries/library_service.dart';
+import 'libraries/project_libraries.dart';
 import 'project_archive.dart';
 import 'runner.dart';
 
@@ -19,13 +23,23 @@ class QueueFullException implements Exception {
 }
 
 class _Job {
-  _Job({required this.id, required this.board, required this.sketchName, required this.dir, required this.createdAt});
+  _Job({
+    required this.id,
+    required this.board,
+    required this.sketchName,
+    required this.dir,
+    required this.createdAt,
+    this.libraries = const [],
+  });
 
   final String id;
   final CompileBoard board;
   final String sketchName;
   final Directory dir;
   final DateTime createdAt;
+
+  /// Bibliothèques demandées par le projet, déjà vérifiées dans l'index.
+  final List<LibraryRelease> libraries;
   final CancelToken cancel = CancelToken();
 
   Directory get sketchDir => Directory(p.join(dir.path, 'sketch', sketchName));
@@ -44,13 +58,17 @@ class _Job {
 /// File de compilations : borne le nombre de builds simultanés, garde les résultats un temps limité
 /// et supprime le code source dès la fin de chaque build.
 class JobManager {
-  JobManager({required this.config, required this.runner, DateTime Function()? clock}) : _now = clock ?? DateTime.now;
+  JobManager({required this.config, required this.runner, this.libraries, DateTime Function()? clock})
+      : _now = clock ?? DateTime.now;
 
   /// Taille maximale du journal gardé en mémoire (la fin est conservée).
   static const int maxLogChars = 256 * 1024;
 
   final ServerConfig config;
   final BuildRunner runner;
+
+  /// Catalogue des bibliothèques Arduino ; null : les projets ne peuvent pas en demander.
+  final LibraryService? libraries;
   final DateTime Function() _now;
   final Map<String, _Job> _jobs = {};
   final Queue<_Job> _queue = Queue();
@@ -78,7 +96,14 @@ class JobManager {
       Directory(p.join(dir.path, 'out')).createSync();
       // Le conteneur tourne avec un autre utilisateur : il doit pouvoir écrire ses résultats.
       _makeWorldWritable(Directory(p.join(dir.path, 'out')));
-      final job = _Job(id: id, board: board, sketchName: project.sketchName, dir: dir, createdAt: _now());
+      final job = _Job(
+        id: id,
+        board: board,
+        sketchName: project.sketchName,
+        dir: dir,
+        createdAt: _now(),
+        libraries: _projectLibraries(project.sketchDir),
+      );
       _jobs[id] = job;
       _queue.add(job);
       _pump();
@@ -87,6 +112,24 @@ class JobManager {
       _deleteQuietly(dir);
       rethrow;
     }
+  }
+
+  /// Bibliothèques du projet, vérifiées dans l'index officiel (rien n'est téléchargé ici).
+  List<LibraryRelease> _projectLibraries(Directory sketchDir) {
+    final refs = readProjectLibraries(sketchDir);
+    if (refs.isEmpty) return const [];
+    if (refs.length > maxProjectLibraries) {
+      throw ProjectException('Trop de bibliothèques : $maxProjectLibraries au maximum.');
+    }
+    final index = libraries?.index;
+    if (index == null) {
+      throw ProjectException("Le catalogue de bibliothèques n'est pas disponible pour le moment : réessayez plus tard.");
+    }
+    return [
+      for (final ref in refs)
+        index.release(ref.name, ref.version) ??
+            (throw ProjectException('Bibliothèque introuvable : ${ref.name} ${ref.version}.')),
+    ];
   }
 
   BuildStatus? status(String id) {
@@ -148,6 +191,21 @@ class JobManager {
     job.state = BuildState.running;
     job.startedAt = _now();
     try {
+      final libraryDirs = <Directory>[];
+      for (final release in job.libraries) {
+        if (job.cancel.isCancelled) break;
+        job.log = _appendLog(job.log, 'Bibliothèque ${release.name} ${release.version}\n');
+        try {
+          libraryDirs.add(await libraries!.cache.ensure(release));
+        } on LibraryInstallException catch (e) {
+          _finish(job, BuildState.failed, message: e.message);
+          return;
+        }
+      }
+      if (job.cancel.isCancelled) {
+        _finish(job, BuildState.cancelled, message: 'Compilation annulée.');
+        return;
+      }
       final outcome = await runner.run(
         RunRequest(
           id: job.id,
@@ -155,6 +213,7 @@ class JobManager {
           sketchName: job.sketchName,
           sketchDir: job.sketchDir,
           outDir: job.outDir,
+          libraries: libraryDirs,
         ),
         onOutput: (text) => job.log = _appendLog(job.log, text),
         cancel: job.cancel,

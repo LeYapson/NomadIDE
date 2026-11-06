@@ -97,6 +97,8 @@ Pour une protection en plus du jeton, ajoutez une application **Cloudflare Acces
 | `NOMAD_MAX_UPLOAD_MB` | `8` | Taille maximale du zip |
 | `NOMAD_JOB_RETENTION_MIN` | `30` | Durée de conservation des binaires |
 | `NOMAD_CONTAINER_MEMORY` / `NOMAD_CONTAINER_CPUS` | `3g` / `2` | Limites par build |
+| `NOMAD_LIB_CACHE` | `<NOMAD_WORK_DIR>/libraries` | Où sont installées les bibliothèques Arduino (partagées entre les builds) |
+| `NOMAD_LIB_INDEX_URL` | index officiel d'Arduino | Catalogue des bibliothèques (`library_index.json.gz`) |
 
 ## API
 
@@ -109,6 +111,40 @@ Pour une protection en plus du jeton, ajoutez une application **Cloudflare Acces
 | `DELETE /v1/builds/{id}` | Annule un build en cours, supprime un build terminé |
 
 Le projet doit contenir un croquis `.ino` à la racine. Avec plusieurs `.ino`, `sketch=` indique le principal.
+
+### Bibliothèques Arduino
+
+| Requête | Rôle |
+|---|---|
+| `GET /v1/libraries/search?q=dht&board=esp32s3&limit=20` | Cherche dans le catalogue officiel (nom, auteur, descriptions) ; `board` écarte les bibliothèques d'une autre architecture |
+| `GET /v1/libraries/{nom}` | Toutes les versions d'une bibliothèque, avec licence et dépendances |
+| `POST /v1/libraries/resolve` | `{"includes": ["DHT.h"], "board": "esp32"}` : pour chaque en-tête, « fourni par le cœur de la carte » ou les bibliothèques qui le fournissent |
+| `POST /v1/libraries/closure` | `{"libraries": [{"name": "DHT sensor library"}], "board": "esp32"}` : la liste complète (dépendances comprises), chaque bibliothèque à une version précise |
+
+Un projet demande ses bibliothèques dans son `nomad.json`, qui part avec lui :
+
+```json
+{
+  "board": "esp32",
+  "libraries": [
+    {"name": "DHT sensor library", "version": "1.4.6"},
+    {"name": "Adafruit Unified Sensor", "version": "1.1.9"}
+  ]
+}
+```
+
+Le service compile avec exactement ces versions (il n'ajoute pas de dépendances de lui-même : c'est `closure` qui les liste), donc deux compilations du même projet donnent le même résultat.
+
+**Fonctionnement et sécurité.** Le service télécharge lui-même l'index officiel d'Arduino (au démarrage puis chaque jour, l'ancien reste servi si le téléchargement échoue). Une bibliothèque n'est installée qu'à partir de cet index : adresse en HTTPS sur `downloads.arduino.cc`, taille et empreinte SHA-256 vérifiées, extraction qui refuse les chemins sortants et les liens symboliques. Chaque version n'est installée qu'une fois (cache partagé) et montée **en lecture seule** dans le conteneur de compilation, qui reste sans réseau. Tant que l'index n'est pas chargé, les routes répondent `503`.
+
+**Vérifier à la main** (après un démarrage, avec le jeton) :
+
+```bash
+curl -s localhost:8787/v1/health                                   # "libraries": {"available": true, ...}
+curl -s -H "Authorization: Bearer $TOKEN" 'localhost:8787/v1/libraries/search?q=dht&board=esp32'
+curl -s -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
+  -d '{"includes":["DHT.h","Wire.h"],"board":"esp32"}' localhost:8787/v1/libraries/resolve
+```
 
 ## Tests
 
