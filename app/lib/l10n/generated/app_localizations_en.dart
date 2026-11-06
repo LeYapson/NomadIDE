@@ -1894,4 +1894,136 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get prSketchBlinkComment => 'Blink: flashes the board\'s LED.';
+
+  @override
+  String get ccProbLibrariesUnavailable =>
+      'The service’s library catalogue is not loaded yet: try again in a moment.';
+
+  @override
+  String get alButton => 'Libraries';
+
+  @override
+  String alButtonCount(int count) {
+    return 'Libraries ($count)';
+  }
+
+  @override
+  String get alTitle => 'Arduino libraries';
+
+  @override
+  String get alProjectSection => 'In this project';
+
+  @override
+  String get alNoneYet =>
+      'No library added. Search below, or scan the project’s #include lines.';
+
+  @override
+  String alDependencies(String names) {
+    return 'Dependencies: $names';
+  }
+
+  @override
+  String alRemove(String name) {
+    return 'Remove $name';
+  }
+
+  @override
+  String alVersion(String version) {
+    return 'Version $version';
+  }
+
+  @override
+  String get alChangeVersion => 'Change version';
+
+  @override
+  String get alSearchLabel => 'Search for a library';
+
+  @override
+  String get alSearchHint => 'Name, sensor, display…';
+
+  @override
+  String get alSearching => 'Searching…';
+
+  @override
+  String alResultsCount(int shown, int total) {
+    return '$shown of $total results';
+  }
+
+  @override
+  String get alNoResults => 'No library matches.';
+
+  @override
+  String get alAdd => 'Add';
+
+  @override
+  String alAddLibrary(String name) {
+    return 'Add $name';
+  }
+
+  @override
+  String get alAdded => 'Added';
+
+  @override
+  String get alLicenseUnknown => 'License not stated';
+
+  @override
+  String alLicense(String license) {
+    return 'License: $license';
+  }
+
+  @override
+  String alAuthor(String author) {
+    return 'By $author';
+  }
+
+  @override
+  String get alVersionPick => 'Version';
+
+  @override
+  String alVersionLatest(String version) {
+    return '$version (latest)';
+  }
+
+  @override
+  String get alLoadingVersions => 'Loading versions…';
+
+  @override
+  String get alScan => 'Scan the project’s #include lines';
+
+  @override
+  String get alScanning => 'Scanning the project…';
+
+  @override
+  String get alSuggestionsTitle => 'Libraries to add';
+
+  @override
+  String alSuggestionBody(String header) {
+    return 'The project includes $header, which no added library provides.';
+  }
+
+  @override
+  String alSuggestionNone(String header) {
+    return 'No library found for $header.';
+  }
+
+  @override
+  String get alConfirmed => 'Contains this header';
+
+  @override
+  String get alGuess => 'Suggested from its name';
+
+  @override
+  String get alAllProvided =>
+      'Every #include of the project is provided, by the board or by a library.';
+
+  @override
+  String get alMissingTitle => 'Missing library?';
+
+  @override
+  String alMissingBody(String header) {
+    return '$header was not found.';
+  }
+
+  @override
+  String get alAddAndCompile => 'Add and compile';
 }

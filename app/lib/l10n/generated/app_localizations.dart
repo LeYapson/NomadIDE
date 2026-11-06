@@ -3158,6 +3158,216 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Blink : fait clignoter la LED de la carte.'**
   String get prSketchBlinkComment;
+
+  /// No description provided for @ccProbLibrariesUnavailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le catalogue de bibliothèques du service n’est pas encore chargé : réessayez dans un instant.'**
+  String get ccProbLibrariesUnavailable;
+
+  /// No description provided for @alButton.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bibliothèques'**
+  String get alButton;
+
+  /// No description provided for @alButtonCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bibliothèques ({count})'**
+  String alButtonCount(int count);
+
+  /// No description provided for @alTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bibliothèques Arduino'**
+  String get alTitle;
+
+  /// No description provided for @alProjectSection.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dans ce projet'**
+  String get alProjectSection;
+
+  /// No description provided for @alNoneYet.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune bibliothèque ajoutée. Cherchez-en une ci-dessous, ou analysez les #include du projet.'**
+  String get alNoneYet;
+
+  /// No description provided for @alDependencies.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dépendances : {names}'**
+  String alDependencies(String names);
+
+  /// No description provided for @alRemove.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer {name}'**
+  String alRemove(String name);
+
+  /// No description provided for @alVersion.
+  ///
+  /// In fr, this message translates to:
+  /// **'Version {version}'**
+  String alVersion(String version);
+
+  /// No description provided for @alChangeVersion.
+  ///
+  /// In fr, this message translates to:
+  /// **'Changer de version'**
+  String get alChangeVersion;
+
+  /// No description provided for @alSearchLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chercher une bibliothèque'**
+  String get alSearchLabel;
+
+  /// No description provided for @alSearchHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom, capteur, écran…'**
+  String get alSearchHint;
+
+  /// No description provided for @alSearching.
+  ///
+  /// In fr, this message translates to:
+  /// **'Recherche…'**
+  String get alSearching;
+
+  /// No description provided for @alResultsCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{shown} sur {total} résultats'**
+  String alResultsCount(int shown, int total);
+
+  /// No description provided for @alNoResults.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune bibliothèque ne correspond.'**
+  String get alNoResults;
+
+  /// No description provided for @alAdd.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter'**
+  String get alAdd;
+
+  /// No description provided for @alAddLibrary.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter {name}'**
+  String alAddLibrary(String name);
+
+  /// No description provided for @alAdded.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoutée'**
+  String get alAdded;
+
+  /// No description provided for @alLicenseUnknown.
+  ///
+  /// In fr, this message translates to:
+  /// **'Licence non précisée'**
+  String get alLicenseUnknown;
+
+  /// No description provided for @alLicense.
+  ///
+  /// In fr, this message translates to:
+  /// **'Licence : {license}'**
+  String alLicense(String license);
+
+  /// No description provided for @alAuthor.
+  ///
+  /// In fr, this message translates to:
+  /// **'Par {author}'**
+  String alAuthor(String author);
+
+  /// No description provided for @alVersionPick.
+  ///
+  /// In fr, this message translates to:
+  /// **'Version'**
+  String get alVersionPick;
+
+  /// No description provided for @alVersionLatest.
+  ///
+  /// In fr, this message translates to:
+  /// **'{version} (dernière)'**
+  String alVersionLatest(String version);
+
+  /// No description provided for @alLoadingVersions.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chargement des versions…'**
+  String get alLoadingVersions;
+
+  /// No description provided for @alScan.
+  ///
+  /// In fr, this message translates to:
+  /// **'Analyser les #include du projet'**
+  String get alScan;
+
+  /// No description provided for @alScanning.
+  ///
+  /// In fr, this message translates to:
+  /// **'Analyse du projet…'**
+  String get alScanning;
+
+  /// No description provided for @alSuggestionsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bibliothèques à ajouter'**
+  String get alSuggestionsTitle;
+
+  /// No description provided for @alSuggestionBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le projet inclut {header}, qu’aucune bibliothèque ajoutée ne fournit.'**
+  String alSuggestionBody(String header);
+
+  /// No description provided for @alSuggestionNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune bibliothèque trouvée pour {header}.'**
+  String alSuggestionNone(String header);
+
+  /// No description provided for @alConfirmed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Contient bien cet en-tête'**
+  String get alConfirmed;
+
+  /// No description provided for @alGuess.
+  ///
+  /// In fr, this message translates to:
+  /// **'Suggestion d’après le nom'**
+  String get alGuess;
+
+  /// No description provided for @alAllProvided.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tous les #include du projet sont fournis, par la carte ou par une bibliothèque.'**
+  String get alAllProvided;
+
+  /// No description provided for @alMissingTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bibliothèque manquante ?'**
+  String get alMissingTitle;
+
+  /// No description provided for @alMissingBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'{header} est introuvable.'**
+  String alMissingBody(String header);
+
+  /// No description provided for @alAddAndCompile.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter et compiler'**
+  String get alAddAndCompile;
 }
 
 class _AppLocalizationsDelegate
