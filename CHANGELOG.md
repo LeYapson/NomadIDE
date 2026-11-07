@@ -2,6 +2,26 @@
 
 Les notes de chaque version sont reprises telles quelles dans la release GitHub.
 
+## [0.3.0] — Bibliothèques Arduino
+
+- **Bibliothèques Arduino** : dans la feuille de compilation, le bouton Bibliothèques cherche dans le catalogue
+  officiel d'Arduino (plus de 10 000 bibliothèques), montre la description, l'auteur et les versions, ajoute une
+  bibliothèque avec ses dépendances, la retire (les dépendances devenues inutiles partent avec) et change sa version.
+  Chaque bibliothèque est enregistrée à une version précise dans le fichier `nomad.json` du projet : deux
+  compilations du même projet utilisent les mêmes versions, sur ordinateur comme sur téléphone.
+- **`#include` introuvable** : « Analyser les #include du projet » propose la bibliothèque qui fournit chaque
+  en-tête (`DHT.h` : « DHT sensor library »). Quand une compilation échoue sur un en-tête introuvable, « Ajouter et
+  compiler » ajoute la bonne bibliothèque et relance la compilation. L'index d'Arduino déclare presque jamais ses
+  en-têtes : le service les retrouve d'après le nom des bibliothèques et en ouvrant leur archive, et indique celles
+  dont l'en-tête est confirmé.
+- **Service de compilation** : il doit être mis à jour avec cette version pour fournir les bibliothèques. Il ne les
+  installe que depuis l'index officiel d'Arduino, vérifie leur taille et leur empreinte SHA-256, et les monte en
+  lecture seule dans le conteneur de compilation, toujours sans réseau (voir `services/cloud_compiler/README.md`).
+- **Éditeur** : un fichier sans langage reconnu (par exemple `nomad.json`) n'arrête plus la coloration des autres
+  fichiers.
+
+À savoir : l'index officiel ne fournit pas la licence des bibliothèques, l'app affiche donc « Licence non précisée ».
+
 ## [0.2.0] — Compilation C/C++ dans le cloud
 
 - **Projets Arduino C/C++** : à la création d'un projet, choisissez MicroPython ou Arduino C/C++. Un projet

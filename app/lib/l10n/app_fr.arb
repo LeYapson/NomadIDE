@@ -1797,5 +1797,127 @@
   "prKindMicroPythonHint": "Du code Python exécuté directement sur la carte.",
   "prKindArduino": "Arduino C/C++",
   "prKindArduinoHint": "Un croquis .ino compilé par le service de compilation cloud, avec un exemple Blink pour démarrer.",
-  "prSketchBlinkComment": "Blink : fait clignoter la LED de la carte."
+  "prSketchBlinkComment": "Blink : fait clignoter la LED de la carte.",
+  "ccProbLibrariesUnavailable": "Le catalogue de bibliothèques du service n’est pas encore chargé : réessayez dans un instant.",
+  "alButton": "Bibliothèques",
+  "alButtonCount": "Bibliothèques ({count})",
+  "@alButtonCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "alTitle": "Bibliothèques Arduino",
+  "alProjectSection": "Dans ce projet",
+  "alNoneYet": "Aucune bibliothèque ajoutée. Cherchez-en une ci-dessous, ou analysez les #include du projet.",
+  "alDependencies": "Dépendances : {names}",
+  "@alDependencies": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "alRemove": "Retirer {name}",
+  "@alRemove": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "alVersion": "Version {version}",
+  "@alVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "alChangeVersion": "Changer de version",
+  "alSearchLabel": "Chercher une bibliothèque",
+  "alSearchHint": "Nom, capteur, écran…",
+  "alSearching": "Recherche…",
+  "alResultsCount": "{shown} sur {total} résultats",
+  "@alResultsCount": {
+    "placeholders": {
+      "shown": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "alNoResults": "Aucune bibliothèque ne correspond.",
+  "alAdd": "Ajouter",
+  "alAddLibrary": "Ajouter {name}",
+  "@alAddLibrary": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "alAdded": "Ajoutée",
+  "alLicenseUnknown": "Licence non précisée",
+  "alLicense": "Licence : {license}",
+  "@alLicense": {
+    "placeholders": {
+      "license": {
+        "type": "String"
+      }
+    }
+  },
+  "alAuthor": "Par {author}",
+  "@alAuthor": {
+    "placeholders": {
+      "author": {
+        "type": "String"
+      }
+    }
+  },
+  "alVersionPick": "Version",
+  "alVersionLatest": "{version} (dernière)",
+  "@alVersionLatest": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "alLoadingVersions": "Chargement des versions…",
+  "alScan": "Analyser les #include du projet",
+  "alScanning": "Analyse du projet…",
+  "alSuggestionsTitle": "Bibliothèques à ajouter",
+  "alSuggestionBody": "Le projet inclut {header}, qu’aucune bibliothèque ajoutée ne fournit.",
+  "@alSuggestionBody": {
+    "placeholders": {
+      "header": {
+        "type": "String"
+      }
+    }
+  },
+  "alSuggestionNone": "Aucune bibliothèque trouvée pour {header}.",
+  "@alSuggestionNone": {
+    "placeholders": {
+      "header": {
+        "type": "String"
+      }
+    }
+  },
+  "alConfirmed": "Contient bien cet en-tête",
+  "alGuess": "Suggestion d’après le nom",
+  "alAllProvided": "Tous les #include du projet sont fournis, par la carte ou par une bibliothèque.",
+  "alMissingTitle": "Bibliothèque manquante ?",
+  "alMissingBody": "{header} est introuvable.",
+  "@alMissingBody": {
+    "placeholders": {
+      "header": {
+        "type": "String"
+      }
+    }
+  },
+  "alAddAndCompile": "Ajouter et compiler"
 }

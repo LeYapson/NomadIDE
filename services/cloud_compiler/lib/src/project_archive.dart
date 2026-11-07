@@ -55,7 +55,7 @@ ExtractedProject extractProject(
     if (file.isSymbolicLink) throw ProjectException('Les liens symboliques sont interdits (${file.name}).');
     total += file.size;
     if (total > maxBytes) throw ProjectException('Projet trop volumineux : ${maxBytes ~/ (1024 * 1024)} Mo au maximum.');
-    entries[_safePath(file.name)] = file;
+    entries[safeArchivePath(file.name)] = file;
   }
 
   final prefix = _commonDirectory(entries.keys);
@@ -90,7 +90,7 @@ ExtractedProject extractProject(
 }
 
 /// Chemin normalisé en `a/b/c`, ou [ProjectException] s'il sort de la racine.
-String _safePath(String raw) {
+String safeArchivePath(String raw) {
   final slashed = raw.replaceAll('\\', '/');
   if (slashed.startsWith('/') || RegExp(r'^[A-Za-z]:').hasMatch(slashed)) {
     throw ProjectException('Chemin absolu interdit : $raw.');

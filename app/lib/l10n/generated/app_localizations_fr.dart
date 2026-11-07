@@ -1909,4 +1909,136 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get prSketchBlinkComment =>
       'Blink : fait clignoter la LED de la carte.';
+
+  @override
+  String get ccProbLibrariesUnavailable =>
+      'Le catalogue de bibliothèques du service n’est pas encore chargé : réessayez dans un instant.';
+
+  @override
+  String get alButton => 'Bibliothèques';
+
+  @override
+  String alButtonCount(int count) {
+    return 'Bibliothèques ($count)';
+  }
+
+  @override
+  String get alTitle => 'Bibliothèques Arduino';
+
+  @override
+  String get alProjectSection => 'Dans ce projet';
+
+  @override
+  String get alNoneYet =>
+      'Aucune bibliothèque ajoutée. Cherchez-en une ci-dessous, ou analysez les #include du projet.';
+
+  @override
+  String alDependencies(String names) {
+    return 'Dépendances : $names';
+  }
+
+  @override
+  String alRemove(String name) {
+    return 'Retirer $name';
+  }
+
+  @override
+  String alVersion(String version) {
+    return 'Version $version';
+  }
+
+  @override
+  String get alChangeVersion => 'Changer de version';
+
+  @override
+  String get alSearchLabel => 'Chercher une bibliothèque';
+
+  @override
+  String get alSearchHint => 'Nom, capteur, écran…';
+
+  @override
+  String get alSearching => 'Recherche…';
+
+  @override
+  String alResultsCount(int shown, int total) {
+    return '$shown sur $total résultats';
+  }
+
+  @override
+  String get alNoResults => 'Aucune bibliothèque ne correspond.';
+
+  @override
+  String get alAdd => 'Ajouter';
+
+  @override
+  String alAddLibrary(String name) {
+    return 'Ajouter $name';
+  }
+
+  @override
+  String get alAdded => 'Ajoutée';
+
+  @override
+  String get alLicenseUnknown => 'Licence non précisée';
+
+  @override
+  String alLicense(String license) {
+    return 'Licence : $license';
+  }
+
+  @override
+  String alAuthor(String author) {
+    return 'Par $author';
+  }
+
+  @override
+  String get alVersionPick => 'Version';
+
+  @override
+  String alVersionLatest(String version) {
+    return '$version (dernière)';
+  }
+
+  @override
+  String get alLoadingVersions => 'Chargement des versions…';
+
+  @override
+  String get alScan => 'Analyser les #include du projet';
+
+  @override
+  String get alScanning => 'Analyse du projet…';
+
+  @override
+  String get alSuggestionsTitle => 'Bibliothèques à ajouter';
+
+  @override
+  String alSuggestionBody(String header) {
+    return 'Le projet inclut $header, qu’aucune bibliothèque ajoutée ne fournit.';
+  }
+
+  @override
+  String alSuggestionNone(String header) {
+    return 'Aucune bibliothèque trouvée pour $header.';
+  }
+
+  @override
+  String get alConfirmed => 'Contient bien cet en-tête';
+
+  @override
+  String get alGuess => 'Suggestion d’après le nom';
+
+  @override
+  String get alAllProvided =>
+      'Tous les #include du projet sont fournis, par la carte ou par une bibliothèque.';
+
+  @override
+  String get alMissingTitle => 'Bibliothèque manquante ?';
+
+  @override
+  String alMissingBody(String header) {
+    return '$header est introuvable.';
+  }
+
+  @override
+  String get alAddAndCompile => 'Ajouter et compiler';
 }

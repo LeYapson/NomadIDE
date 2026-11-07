@@ -27,6 +27,7 @@ enum CompileProblem {
   rejected,
   tooLarge,
   queueFull,
+  librariesUnavailable,
   expired,
   badResponse,
   noSketch,
@@ -302,6 +303,7 @@ class CompileController extends Notifier<CompileState> {
       CompileErrorKind.rejected => CompileProblem.rejected,
       CompileErrorKind.tooLarge => CompileProblem.tooLarge,
       CompileErrorKind.queueFull => CompileProblem.queueFull,
+      CompileErrorKind.unavailable => CompileProblem.librariesUnavailable,
       CompileErrorKind.notFound => CompileProblem.expired,
       CompileErrorKind.badResponse => CompileProblem.badResponse,
     };

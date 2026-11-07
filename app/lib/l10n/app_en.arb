@@ -1797,5 +1797,127 @@
   "prKindMicroPythonHint": "Python code that runs directly on the board.",
   "prKindArduino": "Arduino C/C++",
   "prKindArduinoHint": "An .ino sketch compiled by the cloud compilation service, with a Blink example to start from.",
-  "prSketchBlinkComment": "Blink: flashes the board's LED."
+  "prSketchBlinkComment": "Blink: flashes the board's LED.",
+  "ccProbLibrariesUnavailable": "The service’s library catalogue is not loaded yet: try again in a moment.",
+  "alButton": "Libraries",
+  "alButtonCount": "Libraries ({count})",
+  "@alButtonCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "alTitle": "Arduino libraries",
+  "alProjectSection": "In this project",
+  "alNoneYet": "No library added. Search below, or scan the project’s #include lines.",
+  "alDependencies": "Dependencies: {names}",
+  "@alDependencies": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "alRemove": "Remove {name}",
+  "@alRemove": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "alVersion": "Version {version}",
+  "@alVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "alChangeVersion": "Change version",
+  "alSearchLabel": "Search for a library",
+  "alSearchHint": "Name, sensor, display…",
+  "alSearching": "Searching…",
+  "alResultsCount": "{shown} of {total} results",
+  "@alResultsCount": {
+    "placeholders": {
+      "shown": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "alNoResults": "No library matches.",
+  "alAdd": "Add",
+  "alAddLibrary": "Add {name}",
+  "@alAddLibrary": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "alAdded": "Added",
+  "alLicenseUnknown": "License not stated",
+  "alLicense": "License: {license}",
+  "@alLicense": {
+    "placeholders": {
+      "license": {
+        "type": "String"
+      }
+    }
+  },
+  "alAuthor": "By {author}",
+  "@alAuthor": {
+    "placeholders": {
+      "author": {
+        "type": "String"
+      }
+    }
+  },
+  "alVersionPick": "Version",
+  "alVersionLatest": "{version} (latest)",
+  "@alVersionLatest": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "alLoadingVersions": "Loading versions…",
+  "alScan": "Scan the project’s #include lines",
+  "alScanning": "Scanning the project…",
+  "alSuggestionsTitle": "Libraries to add",
+  "alSuggestionBody": "The project includes {header}, which no added library provides.",
+  "@alSuggestionBody": {
+    "placeholders": {
+      "header": {
+        "type": "String"
+      }
+    }
+  },
+  "alSuggestionNone": "No library found for {header}.",
+  "@alSuggestionNone": {
+    "placeholders": {
+      "header": {
+        "type": "String"
+      }
+    }
+  },
+  "alConfirmed": "Contains this header",
+  "alGuess": "Suggested from its name",
+  "alAllProvided": "Every #include of the project is provided, by the board or by a library.",
+  "alMissingTitle": "Missing library?",
+  "alMissingBody": "{header} was not found.",
+  "@alMissingBody": {
+    "placeholders": {
+      "header": {
+        "type": "String"
+      }
+    }
+  },
+  "alAddAndCompile": "Add and compile"
 }
