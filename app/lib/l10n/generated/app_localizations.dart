@@ -2991,6 +2991,42 @@ abstract class AppLocalizations {
   /// **'Cet ordinateur n’est pas pris en charge pour la compilation locale : utilisez le serveur.'**
   String get ccLocalUnsupported;
 
+  /// No description provided for @settingsLocalToolchain.
+  ///
+  /// In fr, this message translates to:
+  /// **'Outils de compilation locale'**
+  String get settingsLocalToolchain;
+
+  /// No description provided for @settingsLocalToolchainReady.
+  ///
+  /// In fr, this message translates to:
+  /// **'Installés : arduino-cli et les cœurs ESP32 et RP2040.'**
+  String get settingsLocalToolchainReady;
+
+  /// No description provided for @settingsLocalToolchainMissing.
+  ///
+  /// In fr, this message translates to:
+  /// **'Non installés. Ils s’installent depuis la feuille de compilation, avec « Sur cet ordinateur ».'**
+  String get settingsLocalToolchainMissing;
+
+  /// No description provided for @settingsLocalToolchainRemove.
+  ///
+  /// In fr, this message translates to:
+  /// **'Désinstaller'**
+  String get settingsLocalToolchainRemove;
+
+  /// No description provided for @settingsLocalToolchainRemoveTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Désinstaller les outils de compilation locale ?'**
+  String get settingsLocalToolchainRemoveTitle;
+
+  /// No description provided for @settingsLocalToolchainRemoveBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Libère environ {size} sur le disque. Vos projets ne sont pas touchés, et les outils pourront être réinstallés depuis la feuille de compilation.'**
+  String settingsLocalToolchainRemoveBody(String size);
+
   /// No description provided for @ccPhasePackaging.
   ///
   /// In fr, this message translates to:
