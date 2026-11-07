@@ -1791,6 +1791,29 @@ class AppLocalizationsEn extends AppLocalizations {
       'This computer is not supported for local builds: use the server.';
 
   @override
+  String get settingsLocalToolchain => 'Local build tools';
+
+  @override
+  String get settingsLocalToolchainReady =>
+      'Installed: arduino-cli and the ESP32 and RP2040 cores.';
+
+  @override
+  String get settingsLocalToolchainMissing =>
+      'Not installed. Install them from the build sheet with “On this computer”.';
+
+  @override
+  String get settingsLocalToolchainRemove => 'Uninstall';
+
+  @override
+  String get settingsLocalToolchainRemoveTitle =>
+      'Uninstall the local build tools?';
+
+  @override
+  String settingsLocalToolchainRemoveBody(String size) {
+    return 'Frees about $size of disk space. Your projects are not affected, and the tools can be reinstalled from the build sheet.';
+  }
+
+  @override
   String get ccPhasePackaging => 'Preparing the project…';
 
   @override

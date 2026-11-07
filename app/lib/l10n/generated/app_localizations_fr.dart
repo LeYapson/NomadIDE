@@ -1802,6 +1802,29 @@ class AppLocalizationsFr extends AppLocalizations {
       'Cet ordinateur n’est pas pris en charge pour la compilation locale : utilisez le serveur.';
 
   @override
+  String get settingsLocalToolchain => 'Outils de compilation locale';
+
+  @override
+  String get settingsLocalToolchainReady =>
+      'Installés : arduino-cli et les cœurs ESP32 et RP2040.';
+
+  @override
+  String get settingsLocalToolchainMissing =>
+      'Non installés. Ils s’installent depuis la feuille de compilation, avec « Sur cet ordinateur ».';
+
+  @override
+  String get settingsLocalToolchainRemove => 'Désinstaller';
+
+  @override
+  String get settingsLocalToolchainRemoveTitle =>
+      'Désinstaller les outils de compilation locale ?';
+
+  @override
+  String settingsLocalToolchainRemoveBody(String size) {
+    return 'Libère environ $size sur le disque. Vos projets ne sont pas touchés, et les outils pourront être réinstallés depuis la feuille de compilation.';
+  }
+
+  @override
   String get ccPhasePackaging => 'Préparation du projet…';
 
   @override

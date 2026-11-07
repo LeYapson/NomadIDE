@@ -1715,6 +1715,19 @@
     }
   },
   "ccLocalUnsupported": "This computer is not supported for local builds: use the server.",
+  "settingsLocalToolchain": "Local build tools",
+  "settingsLocalToolchainReady": "Installed: arduino-cli and the ESP32 and RP2040 cores.",
+  "settingsLocalToolchainMissing": "Not installed. Install them from the build sheet with “On this computer”.",
+  "settingsLocalToolchainRemove": "Uninstall",
+  "settingsLocalToolchainRemoveTitle": "Uninstall the local build tools?",
+  "settingsLocalToolchainRemoveBody": "Frees about {size} of disk space. Your projects are not affected, and the tools can be reinstalled from the build sheet.",
+  "@settingsLocalToolchainRemoveBody": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
   "ccPhasePackaging": "Preparing the project…",
   "ccPhaseUploading": "Sending to the service…",
   "ccPhaseQueued": "Queued: position {position}",

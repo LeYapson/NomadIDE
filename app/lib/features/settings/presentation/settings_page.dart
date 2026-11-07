@@ -14,6 +14,8 @@ import '../../flash/application/flash_controller.dart' show flashSizeLabel;
 import '../../onboarding/onboarding_page.dart';
 import '../../serial_monitor/application/serial_monitor_state.dart' show LineEnding;
 import '../../compile/application/compile_controller.dart' show compileApiProvider;
+import '../../compile/application/local_toolchain_controller.dart';
+import '../../compile/local/local_toolchain.dart' show toolchainApproxDownloadMb;
 import '../../compile/data/compile_api.dart';
 import '../../compile/presentation/compile_messages.dart';
 import '../application/diagnostics.dart';
@@ -156,6 +158,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
 
             _SectionHeader(l10n.settingsCompile),
             const _CompileSettings(),
+            if (localCompileAvailable) const _LocalToolchainTile(),
 
             _SectionHeader(l10n.settingsHelp),
             ListTile(
@@ -274,6 +277,41 @@ class _UpdateTile extends ConsumerWidget {
 }
 
 /// Titre d'une section, annoncé comme tel au lecteur d'écran.
+/// Outils de compilation locale (ordinateur seulement) : état, et désinstallation pour libérer la place.
+class _LocalToolchainTile extends ConsumerWidget {
+  const _LocalToolchainTile();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final state = ref.watch(toolchainProvider);
+    final ready = state.phase == ToolchainPhase.ready;
+    final size = '≈ ${(toolchainApproxDownloadMb / 1000).toStringAsFixed(1)} Go';
+
+    Future<void> confirmRemove() async {
+      final ok = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(l10n.settingsLocalToolchainRemoveTitle),
+          content: Text(l10n.settingsLocalToolchainRemoveBody(size)),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(context, false), child: Text(l10n.commonCancel)),
+            FilledButton(onPressed: () => Navigator.pop(context, true), child: Text(l10n.settingsLocalToolchainRemove)),
+          ],
+        ),
+      );
+      if (ok == true) await ref.read(toolchainProvider.notifier).uninstall();
+    }
+
+    return ListTile(
+      leading: const Icon(Icons.computer_outlined),
+      title: Text(l10n.settingsLocalToolchain),
+      subtitle: Text(ready ? l10n.settingsLocalToolchainReady : l10n.settingsLocalToolchainMissing),
+      trailing: ready ? OutlinedButton(onPressed: confirmRemove, child: Text(l10n.settingsLocalToolchainRemove)) : null,
+    );
+  }
+}
+
 class _SectionHeader extends StatelessWidget {
   const _SectionHeader(this.text);
 
