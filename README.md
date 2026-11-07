@@ -5,8 +5,8 @@ MicroPython et du C/C++, puis le transférer ou le flasher sur une carte par USB
 (OTG sur mobile, port série sur desktop).
 
 - Choix de stack : [docs/adr/0001-stack-flutter.md](docs/adr/0001-stack-flutter.md) (Flutter).
-- État : **version 0.3.0 bêta** : moniteur série, MicroPython (console, fichiers, bibliothèques), éditeur,
-  flash UF2 et ESP32. Détail et limites connues : [CHANGELOG.md](CHANGELOG.md).
+- État : **version 0.4.0 bêta** : moniteur série, MicroPython (console, fichiers, bibliothèques), éditeur,
+  flash UF2 et ESP32, compilation C/C++ Arduino sur un serveur ou sur l'ordinateur, avec bibliothèques. Détail et limites connues : [CHANGELOG.md](CHANGELOG.md).
 
 ## Installer
 
