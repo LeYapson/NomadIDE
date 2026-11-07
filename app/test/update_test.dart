@@ -120,6 +120,10 @@ void main() {
       }),
     ]);
     addTearDown(container.dispose);
+    // Fenêtre haute : en bas d'un écran de 600 px, la ligne « À propos » passerait sous la barre de navigation.
+    tester.view.physicalSize = const Size(1400, 1000);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
 
     await tester.pumpWidget(UncontrolledProviderScope(container: container, child: const NomadApp()));
     await tester.pumpAndSettle();
