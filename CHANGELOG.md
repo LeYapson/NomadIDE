@@ -2,13 +2,24 @@
 
 Les notes de chaque version sont reprises telles quelles dans la release GitHub.
 
-## [Non publié]
+## [0.4.0] — Compilation sur cet ordinateur
 
-- **Compilation sur cet ordinateur** (Windows, macOS, Linux) : dans la feuille de compilation, le choix « Sur cet ordinateur » compile
-  sans serveur et sans envoyer le code nulle part. Au premier usage, l'app télécharge `arduino-cli` (empreinte vérifiée) et les cœurs
-  ESP32 et RP2040 (environ 1,1 Go) dans son propre dossier ; ensuite elle compile sans réseau, sauf pour une nouvelle bibliothèque.
-  Les projets, les bibliothèques versionnées, les erreurs cliquables et le passage au Flasher sont les mêmes qu'avec le serveur.
-  Sur mobile, seul le serveur est proposé.
+- **Compilation sur cet ordinateur** (Windows, macOS, Linux) : la feuille de compilation propose « Sur cet ordinateur »
+  ou « Serveur », et retient le choix. En local, le code n'est envoyé nulle part et aucun compte n'est nécessaire.
+  Au premier usage, l'app annonce la taille puis télécharge `arduino-cli` (empreinte vérifiée) et les cœurs ESP32 et
+  RP2040, environ 1,1 Go, dans son propre dossier ; une installation existante de l'Arduino IDE n'est pas touchée.
+  Ensuite, la compilation fonctionne sans réseau, sauf pour récupérer une nouvelle bibliothèque.
+- **Mêmes résultats qu'avec le serveur** : les projets, les bibliothèques à versions précises (`nomad.json`), les
+  erreurs cliquables et le passage au Flasher sont identiques, car c'est le même service de compilation, lancé dans
+  l'app sur cette machine. Validé sur Windows avec ESP32 et ESP32-S3.
+- **Index des bibliothèques à la demande** : il n'est téléchargé que si le projet déclare des bibliothèques ou si
+  l'écran Bibliothèques s'ouvre.
+- **Réglages** : « Outils de compilation locale » indique s'ils sont installés et permet de les désinstaller pour
+  libérer la place ; les projets ne sont pas touchés.
+- Sur mobile, seule la compilation par le serveur est proposée.
+
+À savoir : sous Windows, l'app peut encore se fermer brusquement de temps en temps en revenant sur l'onglet Éditeur.
+Le problème existait avant cette version ; le plantage se produit dans le moteur Flutter et sa cause est en cours d'analyse.
 
 ## [0.3.0] — Bibliothèques Arduino
 
