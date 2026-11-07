@@ -100,3 +100,35 @@ class DockerBuiltinLoader {
     return BuiltinCatalog.parse(result.stdout as String);
   }
 }
+
+/// Même liste, lue directement dans le dossier `packages` d'`arduino-cli` (compilation locale, sans Docker).
+class DirectoryBuiltinLoader {
+  DirectoryBuiltinLoader(this.packagesDir);
+
+  final Directory packagesDir;
+
+  Future<BuiltinCatalog> load() async {
+    if (!packagesDir.existsSync()) return BuiltinCatalog.empty;
+    final lines = StringBuffer();
+    // packages/<paquet>/hardware/<arch>/<version>/{libraries|cores}
+    for (final package in packagesDir.listSync().whereType<Directory>()) {
+      final hardware = Directory('${package.path}/hardware');
+      if (!hardware.existsSync()) continue;
+      for (final arch in hardware.listSync().whereType<Directory>()) {
+        for (final version in arch.listSync().whereType<Directory>()) {
+          for (final kind in const ['libraries', 'cores']) {
+            final root = Directory('${version.path}/$kind');
+            if (!root.existsSync()) continue;
+            await for (final entity in root.list(recursive: true, followLinks: false)) {
+              final path = entity.path.replaceAll('\\', '/');
+              if (entity is Directory && kind == 'libraries' && entity.parent.path == root.path || path.endsWith('.h') || path.endsWith('.hpp')) {
+                lines.writeln(path);
+              }
+            }
+          }
+        }
+      }
+    }
+    return BuiltinCatalog.parse(lines.toString());
+  }
+}

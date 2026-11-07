@@ -2,6 +2,14 @@
 
 Les notes de chaque version sont reprises telles quelles dans la release GitHub.
 
+## [Non publié]
+
+- **Compilation sur cet ordinateur** (Windows, macOS, Linux) : dans la feuille de compilation, le choix « Sur cet ordinateur » compile
+  sans serveur et sans envoyer le code nulle part. Au premier usage, l'app télécharge `arduino-cli` (empreinte vérifiée) et les cœurs
+  ESP32 et RP2040 (environ 1,1 Go) dans son propre dossier ; ensuite elle compile sans réseau, sauf pour une nouvelle bibliothèque.
+  Les projets, les bibliothèques versionnées, les erreurs cliquables et le passage au Flasher sont les mêmes qu'avec le serveur.
+  Sur mobile, seul le serveur est proposé.
+
 ## [0.3.0] — Bibliothèques Arduino
 
 - **Bibliothèques Arduino** : dans la feuille de compilation, le bouton Bibliothèques cherche dans le catalogue

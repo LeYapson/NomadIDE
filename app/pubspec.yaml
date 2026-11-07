@@ -20,6 +20,9 @@ dependencies:
     path: ../packages/nomad_editor
   nomad_compile_api:
     path: ../packages/nomad_compile_api
+  nomad_cloud_compiler:
+    path: ../services/cloud_compiler
+  shelf: ^1.4.1
   archive: ^4.0.2
   crypto: ^3.0.3
   path_provider: ^2.1.6

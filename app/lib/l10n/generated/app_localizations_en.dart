@@ -1751,6 +1751,46 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ccOpenSettings => 'Open settings';
 
   @override
+  String get ccModeLocal => 'On this computer';
+
+  @override
+  String get ccModeCloud => 'Server';
+
+  @override
+  String get ccLocalHost => 'This computer';
+
+  @override
+  String get ccLocalNeedTitle => 'Build tools to install';
+
+  @override
+  String ccLocalNeedBody(String size) {
+    return 'To build on this computer, the app downloads arduino-cli and the ESP32 and RP2040 cores (about $size) and keeps them in its own folder. After that, building works offline and your code is never sent anywhere.';
+  }
+
+  @override
+  String get ccLocalInstall => 'Install';
+
+  @override
+  String get ccLocalStepCli => 'Downloading arduino-cli…';
+
+  @override
+  String get ccLocalStepIndex => 'Updating the board index…';
+
+  @override
+  String ccLocalStepCore(String core, int done, int total) {
+    return 'Installing core $core ($done of $total)…';
+  }
+
+  @override
+  String ccLocalFailed(String detail) {
+    return 'Installation failed: $detail';
+  }
+
+  @override
+  String get ccLocalUnsupported =>
+      'This computer is not supported for local builds: use the server.';
+
+  @override
   String get ccPhasePackaging => 'Preparing the project…';
 
   @override
