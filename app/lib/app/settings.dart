@@ -98,6 +98,7 @@ class AppSettings {
     this.compileServerUrl = '',
     this.compileToken = '',
     this.compileApprovedServer = '',
+    this.compileLocal = false,
     this.loaded = false,
   });
 
@@ -126,6 +127,9 @@ class AppSettings {
   final String compileToken;
   final String compileApprovedServer;
 
+  /// Compiler sur cet ordinateur (D9) plutôt que sur le serveur. Ignoré sur mobile.
+  final bool compileLocal;
+
   bool get compileConfigured => compileServerUrl.trim().isNotEmpty && compileToken.isNotEmpty;
 
   /// Le fichier a été lu (même absent) : avant, les valeurs ne sont que celles par défaut. Évite par
@@ -151,6 +155,7 @@ class AppSettings {
       compileServerUrl: pick<String>('compileServerUrl', d.compileServerUrl, (_) => true),
       compileToken: pick<String>('compileToken', d.compileToken, (_) => true),
       compileApprovedServer: pick<String>('compileApprovedServer', d.compileApprovedServer, (_) => true),
+      compileLocal: pick<bool>('compileLocal', d.compileLocal, (_) => true),
       loaded: true,
     );
   }
@@ -167,6 +172,7 @@ class AppSettings {
     String? compileServerUrl,
     String? compileToken,
     String? compileApprovedServer,
+    bool? compileLocal,
     bool? loaded,
   }) =>
       AppSettings(
@@ -181,6 +187,7 @@ class AppSettings {
         compileServerUrl: compileServerUrl ?? this.compileServerUrl,
         compileToken: compileToken ?? this.compileToken,
         compileApprovedServer: compileApprovedServer ?? this.compileApprovedServer,
+        compileLocal: compileLocal ?? this.compileLocal,
         loaded: loaded ?? this.loaded,
       );
 }
@@ -244,6 +251,8 @@ class SettingsController extends Notifier<AppSettings> {
     final clean = token.trim();
     return _save(state.copyWith(compileToken: clean), 'compileToken', clean);
   }
+
+  Future<void> setCompileLocal(bool on) => _save(state.copyWith(compileLocal: on), 'compileLocal', on);
 
   Future<void> approveCompileServer(String url) =>
       _save(state.copyWith(compileApprovedServer: url), 'compileApprovedServer', url);

@@ -1677,6 +1677,44 @@
   "ccNeedSetupTitle": "Service non configuré",
   "ccNeedSetupBody": "Indiquez l’adresse du service de compilation et votre jeton dans les réglages.",
   "ccOpenSettings": "Ouvrir les réglages",
+  "ccModeLocal": "Sur cet ordinateur",
+  "ccModeCloud": "Serveur",
+  "ccLocalHost": "Cet ordinateur",
+  "ccLocalNeedTitle": "Outils de compilation à installer",
+  "ccLocalNeedBody": "Pour compiler sur cet ordinateur, l’app télécharge arduino-cli et les cœurs ESP32 et RP2040 (environ {size}), puis les garde dans son dossier. Ensuite, la compilation fonctionne sans réseau et sans envoyer votre code nulle part.",
+  "@ccLocalNeedBody": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "ccLocalInstall": "Installer",
+  "ccLocalStepCli": "Téléchargement d’arduino-cli…",
+  "ccLocalStepIndex": "Mise à jour de l’index des cartes…",
+  "ccLocalStepCore": "Installation du cœur {core} ({done} sur {total})…",
+  "@ccLocalStepCore": {
+    "placeholders": {
+      "core": {
+        "type": "String"
+      },
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "ccLocalFailed": "L’installation a échoué : {detail}",
+  "@ccLocalFailed": {
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "ccLocalUnsupported": "Cet ordinateur n’est pas pris en charge pour la compilation locale : utilisez le serveur.",
   "ccPhasePackaging": "Préparation du projet…",
   "ccPhaseUploading": "Envoi vers le service…",
   "ccPhaseQueued": "En file d’attente : position {position}",

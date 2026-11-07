@@ -1762,6 +1762,46 @@ class AppLocalizationsFr extends AppLocalizations {
   String get ccOpenSettings => 'Ouvrir les réglages';
 
   @override
+  String get ccModeLocal => 'Sur cet ordinateur';
+
+  @override
+  String get ccModeCloud => 'Serveur';
+
+  @override
+  String get ccLocalHost => 'Cet ordinateur';
+
+  @override
+  String get ccLocalNeedTitle => 'Outils de compilation à installer';
+
+  @override
+  String ccLocalNeedBody(String size) {
+    return 'Pour compiler sur cet ordinateur, l’app télécharge arduino-cli et les cœurs ESP32 et RP2040 (environ $size), puis les garde dans son dossier. Ensuite, la compilation fonctionne sans réseau et sans envoyer votre code nulle part.';
+  }
+
+  @override
+  String get ccLocalInstall => 'Installer';
+
+  @override
+  String get ccLocalStepCli => 'Téléchargement d’arduino-cli…';
+
+  @override
+  String get ccLocalStepIndex => 'Mise à jour de l’index des cartes…';
+
+  @override
+  String ccLocalStepCore(String core, int done, int total) {
+    return 'Installation du cœur $core ($done sur $total)…';
+  }
+
+  @override
+  String ccLocalFailed(String detail) {
+    return 'L’installation a échoué : $detail';
+  }
+
+  @override
+  String get ccLocalUnsupported =>
+      'Cet ordinateur n’est pas pris en charge pour la compilation locale : utilisez le serveur.';
+
+  @override
   String get ccPhasePackaging => 'Préparation du projet…';
 
   @override
