@@ -22,7 +22,7 @@ ServerConfig testConfig(Directory work, {int concurrent = 2, int queue = 8, Dura
     );
 
 /// Runner de test : appelle [script], qui peut écrire des fichiers dans `request.outDir`.
-class ScriptedRunner implements BuildRunner {
+class ScriptedRunner extends BuildRunner {
   ScriptedRunner(this.script);
 
   final Future<RunOutcome> Function(RunRequest request, void Function(String) onOutput, CancelToken cancel) script;

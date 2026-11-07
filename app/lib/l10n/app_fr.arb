@@ -1677,6 +1677,57 @@
   "ccNeedSetupTitle": "Service non configuré",
   "ccNeedSetupBody": "Indiquez l’adresse du service de compilation et votre jeton dans les réglages.",
   "ccOpenSettings": "Ouvrir les réglages",
+  "ccModeLocal": "Sur cet ordinateur",
+  "ccModeCloud": "Serveur",
+  "ccLocalHost": "Cet ordinateur",
+  "ccLocalNeedTitle": "Outils de compilation à installer",
+  "ccLocalNeedBody": "Pour compiler sur cet ordinateur, l’app télécharge arduino-cli et les cœurs ESP32 et RP2040 (environ {size}), puis les garde dans son dossier. Ensuite, la compilation fonctionne sans réseau et sans envoyer votre code nulle part.",
+  "@ccLocalNeedBody": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "ccLocalInstall": "Installer",
+  "ccLocalStepCli": "Téléchargement d’arduino-cli…",
+  "ccLocalStepIndex": "Mise à jour de l’index des cartes…",
+  "ccLocalStepCore": "Installation du cœur {core} ({done} sur {total})…",
+  "@ccLocalStepCore": {
+    "placeholders": {
+      "core": {
+        "type": "String"
+      },
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "ccLocalFailed": "L’installation a échoué : {detail}",
+  "@ccLocalFailed": {
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "ccLocalUnsupported": "Cet ordinateur n’est pas pris en charge pour la compilation locale : utilisez le serveur.",
+  "settingsLocalToolchain": "Outils de compilation locale",
+  "settingsLocalToolchainReady": "Installés : arduino-cli et les cœurs ESP32 et RP2040.",
+  "settingsLocalToolchainMissing": "Non installés. Ils s’installent depuis la feuille de compilation, avec « Sur cet ordinateur ».",
+  "settingsLocalToolchainRemove": "Désinstaller",
+  "settingsLocalToolchainRemoveTitle": "Désinstaller les outils de compilation locale ?",
+  "settingsLocalToolchainRemoveBody": "Libère environ {size} sur le disque. Vos projets ne sont pas touchés, et les outils pourront être réinstallés depuis la feuille de compilation.",
+  "@settingsLocalToolchainRemoveBody": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
   "ccPhasePackaging": "Préparation du projet…",
   "ccPhaseUploading": "Envoi vers le service…",
   "ccPhaseQueued": "En file d’attente : position {position}",

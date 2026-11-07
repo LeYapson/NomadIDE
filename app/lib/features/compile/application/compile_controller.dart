@@ -14,6 +14,7 @@ import '../../projects/data/storage_exception.dart';
 import '../data/compile_api.dart';
 import '../data/project_archiver.dart';
 import '../data/project_config.dart';
+import 'local_toolchain_controller.dart';
 
 enum CompilePhase { idle, packaging, uploading, queued, running, succeeded, failed, cancelled }
 
@@ -108,6 +109,7 @@ class CompileState {
 /// Client du service de compilation, ou null tant que l'adresse et le jeton ne sont pas réglés.
 final compileApiProvider = Provider<CompileApi?>((ref) {
   final settings = ref.watch(settingsProvider);
+  if (settings.compileLocal && localCompileAvailable) return ref.watch(localCompileApiProvider);
   if (!settings.compileConfigured) return null;
   return HttpCompileApi(baseUrl: settings.compileServerUrl, token: settings.compileToken);
 });

@@ -1677,6 +1677,57 @@
   "ccNeedSetupTitle": "Service not set up",
   "ccNeedSetupBody": "Enter the compilation service address and your token in the settings.",
   "ccOpenSettings": "Open settings",
+  "ccModeLocal": "On this computer",
+  "ccModeCloud": "Server",
+  "ccLocalHost": "This computer",
+  "ccLocalNeedTitle": "Build tools to install",
+  "ccLocalNeedBody": "To build on this computer, the app downloads arduino-cli and the ESP32 and RP2040 cores (about {size}) and keeps them in its own folder. After that, building works offline and your code is never sent anywhere.",
+  "@ccLocalNeedBody": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "ccLocalInstall": "Install",
+  "ccLocalStepCli": "Downloading arduino-cli…",
+  "ccLocalStepIndex": "Updating the board index…",
+  "ccLocalStepCore": "Installing core {core} ({done} of {total})…",
+  "@ccLocalStepCore": {
+    "placeholders": {
+      "core": {
+        "type": "String"
+      },
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "ccLocalFailed": "Installation failed: {detail}",
+  "@ccLocalFailed": {
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "ccLocalUnsupported": "This computer is not supported for local builds: use the server.",
+  "settingsLocalToolchain": "Local build tools",
+  "settingsLocalToolchainReady": "Installed: arduino-cli and the ESP32 and RP2040 cores.",
+  "settingsLocalToolchainMissing": "Not installed. Install them from the build sheet with “On this computer”.",
+  "settingsLocalToolchainRemove": "Uninstall",
+  "settingsLocalToolchainRemoveTitle": "Uninstall the local build tools?",
+  "settingsLocalToolchainRemoveBody": "Frees about {size} of disk space. Your projects are not affected, and the tools can be reinstalled from the build sheet.",
+  "@settingsLocalToolchainRemoveBody": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
   "ccPhasePackaging": "Preparing the project…",
   "ccPhaseUploading": "Sending to the service…",
   "ccPhaseQueued": "Queued: position {position}",

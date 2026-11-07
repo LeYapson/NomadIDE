@@ -9,13 +9,25 @@ import 'package:nomad_mcu/app/app.dart';
 import 'package:nomad_mcu/app/providers.dart';
 import 'package:nomad_mcu/app/settings.dart';
 import 'package:nomad_mcu/features/compile/application/compile_controller.dart';
+import 'package:nomad_mcu/features/compile/application/local_toolchain_controller.dart';
 import 'package:nomad_mcu/features/projects/data/project_store.dart';
 
 import '../support/compile_fakes.dart';
 import '../support/locale.dart';
 
+class _FakeToolchain extends ToolchainController {
+  _FakeToolchain(this.phase);
+
+  final ToolchainPhase phase;
+
+  @override
+  ToolchainState build() => ToolchainState(phase: phase);
+}
+
 class _Settings extends SettingsController {
-  _Settings({required this.configured, this.approved = false});
+  _Settings({required this.configured, this.approved = false, this.local = false});
+
+  final bool local;
 
   final bool configured;
 
@@ -27,6 +39,7 @@ class _Settings extends SettingsController {
         compileServerUrl: configured ? 'https://compile.example.com' : '',
         compileToken: configured ? 'secret-token' : '',
         compileApprovedServer: approved ? 'https://compile.example.com' : '',
+        compileLocal: local,
         onboardingDone: true,
         loaded: true,
       );
@@ -52,13 +65,14 @@ void main() {
     storage.deleteSync(recursive: true);
   });
 
-  void newContainer({required bool configured, bool approved = false}) {
+  void newContainer({required bool configured, bool approved = false, bool local = false, ToolchainPhase toolchain = ToolchainPhase.missing}) {
     container = ProviderContainer(overrides: [
+      toolchainProvider.overrideWith(() => _FakeToolchain(toolchain)),
       frenchLocale,
       serialTransportProvider.overrideWithValue(FakeSerialTransport()),
       storageRootProvider.overrideWith((ref) => storage),
-      settingsProvider.overrideWith(() => _Settings(configured: configured, approved: approved)),
-      compileApiProvider.overrideWithValue(configured ? api : null),
+      settingsProvider.overrideWith(() => _Settings(configured: configured, approved: approved, local: local)),
+      compileApiProvider.overrideWithValue(configured || local ? api : null),
       compilePollIntervalProvider.overrideWithValue(const Duration(milliseconds: 20)),
     ]);
   }
@@ -164,5 +178,35 @@ void main() {
     await tester.tap(find.text("'pinModee' was not declared"));
     await settle(tester);
     expect(find.text('Compiler le projet'), findsNothing, reason: 'la feuille se ferme et le fichier s\'ouvre');
+  });
+
+  testWidgets('sur cet ordinateur, outillage absent : la feuille propose de l’installer, sans réglage de serveur', (tester) async {
+    newContainer(configured: false, local: true);
+    await openEditorWithSketch(tester);
+
+    await tester.tap(find.byTooltip('Compiler dans le cloud'));
+    await settle(tester);
+
+    expect(find.text('Outils de compilation à installer'), findsOneWidget);
+    expect(find.textContaining('sans envoyer votre code nulle part'), findsOneWidget);
+    expect(find.text('Installer'), findsOneWidget);
+    expect(find.text('Service non configuré'), findsNothing);
+    expect(api.submitted, isEmpty);
+  });
+
+  testWidgets('sur cet ordinateur, outillage prêt : compile sans demander d’envoyer le code quelque part', (tester) async {
+    newContainer(configured: false, local: true, toolchain: ToolchainPhase.ready);
+    await openEditorWithSketch(tester);
+
+    await tester.tap(find.byTooltip('Compiler dans le cloud'));
+    await settle(tester);
+    expect(find.text('Cet ordinateur'), findsOneWidget);
+
+    await tester.tap(find.text('Compiler'));
+    await settleUntil(tester, () => find.text('Compilation réussie en 22 s').evaluate().isNotEmpty);
+
+    expect(find.text('Envoyer ce code au serveur ?'), findsNothing);
+    expect(api.submitted, hasLength(1));
+    expect(find.text('Envoyer vers le Flasher'), findsOneWidget);
   });
 }

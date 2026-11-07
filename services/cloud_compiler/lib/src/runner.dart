@@ -52,6 +52,10 @@ class RunOutcome {
 
 /// Exécute une compilation. L'implémentation réelle est [DockerBuildRunner] ; les tests en injectent une fausse.
 abstract class BuildRunner {
+  /// Préfixes à retirer des chemins du compilateur pour obtenir des chemins relatifs au projet.
+  /// Dans le conteneur le croquis est toujours monté au même endroit ; un runner local donne le vrai dossier.
+  List<String> sourceRoots(RunRequest request) => ['/work/sketch/${request.sketchName}'];
+
   Future<RunOutcome> run(RunRequest request, {required void Function(String text) onOutput, required CancelToken cancel});
 }
 
@@ -95,7 +99,7 @@ String containerName(String id) => 'nomad-build-$id';
 /// Emplacement, dans le conteneur, de la bibliothèque numéro [index] du projet.
 String libraryMount(int index) => '/work/libs/lib$index';
 
-class DockerBuildRunner implements BuildRunner {
+class DockerBuildRunner extends BuildRunner {
   DockerBuildRunner(this.config);
 
   final ServerConfig config;

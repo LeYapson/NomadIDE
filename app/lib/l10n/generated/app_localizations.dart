@@ -2925,6 +2925,108 @@ abstract class AppLocalizations {
   /// **'Ouvrir les réglages'**
   String get ccOpenSettings;
 
+  /// No description provided for @ccModeLocal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sur cet ordinateur'**
+  String get ccModeLocal;
+
+  /// No description provided for @ccModeCloud.
+  ///
+  /// In fr, this message translates to:
+  /// **'Serveur'**
+  String get ccModeCloud;
+
+  /// No description provided for @ccLocalHost.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cet ordinateur'**
+  String get ccLocalHost;
+
+  /// No description provided for @ccLocalNeedTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Outils de compilation à installer'**
+  String get ccLocalNeedTitle;
+
+  /// No description provided for @ccLocalNeedBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pour compiler sur cet ordinateur, l’app télécharge arduino-cli et les cœurs ESP32 et RP2040 (environ {size}), puis les garde dans son dossier. Ensuite, la compilation fonctionne sans réseau et sans envoyer votre code nulle part.'**
+  String ccLocalNeedBody(String size);
+
+  /// No description provided for @ccLocalInstall.
+  ///
+  /// In fr, this message translates to:
+  /// **'Installer'**
+  String get ccLocalInstall;
+
+  /// No description provided for @ccLocalStepCli.
+  ///
+  /// In fr, this message translates to:
+  /// **'Téléchargement d’arduino-cli…'**
+  String get ccLocalStepCli;
+
+  /// No description provided for @ccLocalStepIndex.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mise à jour de l’index des cartes…'**
+  String get ccLocalStepIndex;
+
+  /// No description provided for @ccLocalStepCore.
+  ///
+  /// In fr, this message translates to:
+  /// **'Installation du cœur {core} ({done} sur {total})…'**
+  String ccLocalStepCore(String core, int done, int total);
+
+  /// No description provided for @ccLocalFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'L’installation a échoué : {detail}'**
+  String ccLocalFailed(String detail);
+
+  /// No description provided for @ccLocalUnsupported.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cet ordinateur n’est pas pris en charge pour la compilation locale : utilisez le serveur.'**
+  String get ccLocalUnsupported;
+
+  /// No description provided for @settingsLocalToolchain.
+  ///
+  /// In fr, this message translates to:
+  /// **'Outils de compilation locale'**
+  String get settingsLocalToolchain;
+
+  /// No description provided for @settingsLocalToolchainReady.
+  ///
+  /// In fr, this message translates to:
+  /// **'Installés : arduino-cli et les cœurs ESP32 et RP2040.'**
+  String get settingsLocalToolchainReady;
+
+  /// No description provided for @settingsLocalToolchainMissing.
+  ///
+  /// In fr, this message translates to:
+  /// **'Non installés. Ils s’installent depuis la feuille de compilation, avec « Sur cet ordinateur ».'**
+  String get settingsLocalToolchainMissing;
+
+  /// No description provided for @settingsLocalToolchainRemove.
+  ///
+  /// In fr, this message translates to:
+  /// **'Désinstaller'**
+  String get settingsLocalToolchainRemove;
+
+  /// No description provided for @settingsLocalToolchainRemoveTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Désinstaller les outils de compilation locale ?'**
+  String get settingsLocalToolchainRemoveTitle;
+
+  /// No description provided for @settingsLocalToolchainRemoveBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Libère environ {size} sur le disque. Vos projets ne sont pas touchés, et les outils pourront être réinstallés depuis la feuille de compilation.'**
+  String settingsLocalToolchainRemoveBody(String size);
+
   /// No description provided for @ccPhasePackaging.
   ///
   /// In fr, this message translates to:

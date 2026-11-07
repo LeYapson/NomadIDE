@@ -206,20 +206,21 @@ class JobManager {
         _finish(job, BuildState.cancelled, message: 'Compilation annulée.');
         return;
       }
+      final request = RunRequest(
+        id: job.id,
+        board: job.board,
+        sketchName: job.sketchName,
+        sketchDir: job.sketchDir,
+        outDir: job.outDir,
+        libraries: libraryDirs,
+      );
       final outcome = await runner.run(
-        RunRequest(
-          id: job.id,
-          board: job.board,
-          sketchName: job.sketchName,
-          sketchDir: job.sketchDir,
-          outDir: job.outDir,
-          libraries: libraryDirs,
-        ),
+        request,
         onOutput: (text) => job.log = _appendLog(job.log, text),
         cancel: job.cancel,
       );
       job.log = stripKnownNoise(job.log);
-      job.diagnostics = parseCompilerOutput(job.log, sourceRoots: ['/work/sketch/${job.sketchName}']);
+      job.diagnostics = parseCompilerOutput(job.log, sourceRoots: runner.sourceRoots(request));
       if (outcome.cancelled) {
         _finish(job, BuildState.cancelled, message: 'Compilation annulée.');
       } else if (outcome.timedOut) {

@@ -9,6 +9,8 @@ import '../../flash/application/flash_controller.dart' show flashSizeLabel;
 import '../../projects/application/projects_controller.dart';
 import '../application/arduino_libraries_controller.dart';
 import '../application/compile_controller.dart';
+import '../application/local_toolchain_controller.dart';
+import '../local/local_toolchain.dart' show toolchainApproxDownloadMb, toolchainCores, ToolchainStep;
 import '../data/project_archiver.dart';
 import '../data/project_config.dart';
 import 'arduino_libraries_sheet.dart';
@@ -70,7 +72,7 @@ class _CompileSheetState extends ConsumerState<CompileSheet> {
     if (package == null || !mounted) return;
 
     final settings = ref.read(settingsProvider);
-    if (settings.compileApprovedServer != settings.compileServerUrl) {
+    if (!(settings.compileLocal && localCompileAvailable) && settings.compileApprovedServer != settings.compileServerUrl) {
       final ok = await _confirmSend(package, settings.compileServerUrl);
       if (ok != true || !mounted) {
         controller.reset();
@@ -110,6 +112,9 @@ class _CompileSheetState extends ConsumerState<CompileSheet> {
     final project = ref.watch(projectsProvider).current;
     final compile = ref.watch(compileProvider);
     final libraries = ref.watch(arduinoLibrariesProvider);
+    final local = settings.compileLocal && localCompileAvailable;
+    // L'outillage local n'est regardé que si on compile sur cet ordinateur.
+    final toolchain = local ? ref.watch(toolchainProvider) : const ToolchainState();
 
     ref.listen(compileProvider.select((s) => s.phase), (previous, next) {
       if (next == CompilePhase.failed && previous != CompilePhase.failed) {
@@ -118,7 +123,16 @@ class _CompileSheetState extends ConsumerState<CompileSheet> {
     });
 
     Widget body;
-    if (project == null || !settings.compileConfigured) {
+    if (project != null && local && toolchain.phase != ToolchainPhase.ready) {
+      body = Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const _ModePicker(),
+          const SizedBox(height: 12),
+          _LocalSetup(state: toolchain),
+        ],
+      );
+    } else if (project == null || (!local && !settings.compileConfigured)) {
       body = _NeedSetup(
         onOpenSettings: () {
           ref.read(homeTabProvider.notifier).show(HomeTab.settings);
@@ -126,13 +140,14 @@ class _CompileSheetState extends ConsumerState<CompileSheet> {
         },
       );
     } else {
-      final host = Uri.tryParse(settings.compileServerUrl)?.host ?? settings.compileServerUrl;
+      final host = local ? l10n.ccLocalHost : (Uri.tryParse(settings.compileServerUrl)?.host ?? settings.compileServerUrl);
       body = Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          if (localCompileAvailable) ...[const _ModePicker(), const SizedBox(height: 8)],
           ListTile(
             contentPadding: EdgeInsets.zero,
-            leading: const Icon(Icons.cloud_upload_outlined),
+            leading: Icon(local ? Icons.computer_outlined : Icons.cloud_upload_outlined),
             title: Text(l10n.ccProject(project)),
             subtitle: Text(host),
           ),
@@ -197,6 +212,97 @@ class _CompileSheetState extends ConsumerState<CompileSheet> {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Choix du lieu de compilation : cet ordinateur ou le serveur (ordinateur seulement).
+class _ModePicker extends ConsumerWidget {
+  const _ModePicker();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final compile = ref.watch(compileProvider);
+    final local = ref.watch(settingsProvider.select((s) => s.compileLocal));
+    return SegmentedButton<bool>(
+      segments: [
+        ButtonSegment(value: true, icon: const Icon(Icons.computer_outlined), label: Text(l10n.ccModeLocal)),
+        ButtonSegment(value: false, icon: const Icon(Icons.cloud_outlined), label: Text(l10n.ccModeCloud)),
+      ],
+      selected: {local},
+      showSelectedIcon: false,
+      onSelectionChanged: compile.working
+          ? null
+          : (choice) {
+              ref.read(compileProvider.notifier).reset();
+              ref.read(settingsProvider.notifier).setCompileLocal(choice.first);
+            },
+    );
+  }
+}
+
+/// Installation de l'outillage de compilation locale : ce qui sera téléchargé, puis l'avancement.
+class _LocalSetup extends ConsumerWidget {
+  const _LocalSetup({required this.state});
+
+  final ToolchainState state;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final controller = ref.read(toolchainProvider.notifier);
+    final progress = state.progress;
+
+    String? stepText;
+    if (progress != null) {
+      stepText = switch (progress.step) {
+        ToolchainStep.downloadCli => l10n.ccLocalStepCli,
+        ToolchainStep.updateIndex => l10n.ccLocalStepIndex,
+        ToolchainStep.installCore => l10n.ccLocalStepCore(progress.core ?? '', (state.coresDone + 1).clamp(1, toolchainCores.length), toolchainCores.length),
+        ToolchainStep.done => null,
+      };
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (state.phase == ToolchainPhase.unsupported)
+          ListTile(contentPadding: EdgeInsets.zero, leading: const Icon(Icons.block_outlined), title: Text(l10n.ccLocalUnsupported))
+        else ...[
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: const Icon(Icons.download_for_offline_outlined),
+            title: Text(l10n.ccLocalNeedTitle),
+            subtitle: Text(l10n.ccLocalNeedBody('≈ ${(toolchainApproxDownloadMb / 1000).toStringAsFixed(1)} Go')),
+          ),
+          if (state.phase == ToolchainPhase.installing) ...[
+            const LinearProgressIndicator(),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Semantics(liveRegion: true, child: Text(stepText ?? l10n.ccPhasePackaging)),
+            ),
+            if (progress?.line != null)
+              Text(progress!.line!, maxLines: 1, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.bodySmall),
+            const SizedBox(height: 8),
+            OutlinedButton.icon(onPressed: controller.cancelInstall, icon: const Icon(Icons.stop_circle_outlined), label: Text(l10n.ccCancel)),
+          ] else ...[
+            if (state.phase == ToolchainPhase.failed)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Semantics(
+                  liveRegion: true,
+                  child: Text(l10n.ccLocalFailed(state.error ?? ''), style: TextStyle(color: Theme.of(context).colorScheme.error)),
+                ),
+              ),
+            FilledButton.icon(
+              onPressed: state.phase == ToolchainPhase.checking ? null : controller.install,
+              icon: const Icon(Icons.download_outlined),
+              label: Text(l10n.ccLocalInstall),
+            ),
+          ],
+        ],
+      ],
     );
   }
 }
