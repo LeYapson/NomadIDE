@@ -1,0 +1,33 @@
+NAME (30 max)
+NomadIDE
+
+SHORT DESCRIPTION (80 max)
+Write, build and flash your ESP32 and RP2040 boards, on phone or computer.
+
+FULL DESCRIPTION (4000 max)
+NomadIDE is a code editor for microcontroller boards. Plug your ESP32 or RP2040 board (Raspberry Pi Pico, Badger 2040…) into your phone with a USB OTG adapter, write a program in MicroPython or C/C++, try it, then install it on the board.
+
+WHAT YOU CAN DO
+• Serial monitor: see what the board prints, send it commands, drive DTR/RTS and restart it. Boards are detected as soon as you plug them in.
+• MicroPython: interactive console, board files (send, download, rename, verify), run a file or a selection, save main.py for automatic startup.
+• MicroPython libraries: search micropython-lib for a driver (display, sensor…) and install it on the board in one tap, with its dependencies.
+• Code editor: Python, C and C++ with highlighting, autocomplete, tabs and drafts saved automatically. A symbol bar above the keyboard saves you from hunting for braces and colons.
+• Flash: install a firmware or a program on the board (.uf2 files for RP2040, .bin for ESP32) with a check after writing. The official MicroPython firmware is downloaded from the app.
+• C/C++ projects: Arduino-style projects for ESP32 and RP2040, libraries from the Arduino catalogue, tappable build errors, flash the result.
+
+GOOD TO KNOW BEFORE INSTALLING
+• You need an Android 7 or later phone that supports USB host mode (OTG), an OTG adapter and a USB cable that carries data: a charge-only cable is not enough.
+• On a phone, C/C++ builds go through a compile server that you set up yourself (its source code comes with NomadIDE): no server is provided by default. On a computer, builds can run on the machine.
+• Beta version: tested on ESP32, ESP32-S3 and Pimoroni Badger 2040. Other supported boards (ESP32-S2, Raspberry Pi Pico) have not been tried yet.
+
+PRIVACY
+• No account, no ads, no tracking tools.
+• The developer receives no data: your projects stay on your device.
+• The Internet is used only to look for an update (can be turned off), to download what you ask for and to reach the compile server you configured.
+
+FOR EVERYONE
+• French and English interface, light or dark theme.
+• Designed to work with the TalkBack screen reader: touch targets of at least 48 dp, WCAG AA contrast, text enlarged up to 200%.
+• Tutorial on first launch.
+
+NomadIDE is open source (MIT licence): the code is on GitHub (LeYapson/NomadIDE). A question or a problem? Write to us, or open an issue on GitHub.
