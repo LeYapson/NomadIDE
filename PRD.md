@@ -6,7 +6,7 @@
 | **Version du document** | 0.27 — jalons remis en cohérence avec les releases 0.1 à 0.4 |
 | **Date** | 2026-10-01 |
 | **Statut du produit** | Étape 1 terminée (HAL USB/série + moniteur série) ; étape 2 en cours |
-| **Documents liés** | [README.md](README.md) · [ADR 0001 — Flutter](docs/adr/0001-stack-flutter.md) |
+| **Documents liés** | [README.md](README.md) · [ADR 0001 — Flutter](docs/adr/0001-stack-flutter.md) · [Politique de confidentialité](docs/privacy.html) |
 
 ### Légende des statuts (utilisée dans tout le document)
 
@@ -165,6 +165,14 @@ Le compte n'est exigé **que** pour la compilation cloud. Éditeur, moniteur, Mi
 - **F1/F2** — *Étant donné* un compte gratuit, *quand* j'atteins le quota, *alors* la compilation est refusée avec un message qui indique la date de renouvellement du quota, l'offre payante, et le rappel que l'import d'un binaire déjà compilé fonctionne toujours.
 - **F3** — *Quand* je résilie, *alors* l'abonnement reste actif jusqu'à la fin de la période payée, et mes projets (stockés en local) ne sont pas affectés.
 - **F4** — *Étant donné* l'absence de réseau ou de compte, *alors* aucune fonction locale n'est dégradée.
+
+**À faire avant de publier une version avec F1** *(rappel : la politique de confidentialité actuelle, [docs/privacy.html](docs/privacy.html), décrit une app sans compte et sans serveur fourni ; elle deviendrait fausse)*
+
+- **Politique de confidentialité** : la réécrire en français et en anglais avant la mise en ligne de la version avec comptes. Elle doit couvrir l'identifiant de compte (e-mail ou autre), le code source envoyé au service, les quotas et l'historique d'usage, le prestataire de paiement et les autres sous-traitants, la durée de conservation, et le fait que le service de compilation devient exploité par NomadIDE (alors qu'elle dit aujourd'hui qu'aucun serveur n'est fourni par défaut).
+- **Formulaire « Sécurité des données » de la Play Console** : le refaire (il passe de « aucune donnée collectée » à la déclaration des données de compte et de paiement, chiffrées en transit), puis mettre à jour l'URL de la politique si elle change.
+- **Suppression du compte** : Google exige, pour une app qui permet de créer un compte, une suppression possible depuis l'app **et** une URL web pour la demander (à renseigner dans la Play Console). L'ajouter au périmètre de F1–F3.
+- **Paiement** : trancher la question ouverte 4 et le risque R8 (Google Play Billing ou paiement hors boutique) avant d'écrire F3 ; créer le profil marchand de la Play Console si la boutique est retenue.
+- **Compte développeur Play** : revoir la déclaration de statut professionnel (UE) et les informations de contact rendues publiques une fois l'app monétisée.
 
 ### Épopée E — Expérience multi-plateforme (étape 4)
 
@@ -447,3 +455,4 @@ Les dates ne sont pas fixées : les jalons avancent par versions publiées (0.1.
 | 0.24 | 2026-11-06 | H3 et H4 validés sur Windows et Android ; coloration : un fichier sans langage reconnu (`nomad.json`) n'arrête plus la coloration de l'éditeur |
 | 0.25 | 2026-11-07 | Ajout de D9 (compilation locale sur ordinateur) ; le non-objectif « compilation locale » ne vise plus que le mobile. Le service de compilation tourne dans l'app sur 127.0.0.1 avec `arduino-cli` à la place de Docker : un seul code pour le cloud et le local |
 | 0.26 | 2026-11-07 | D9 validé sur Windows (ESP32 et ESP32-S3 : compilation locale, flash, programme exécuté) ; l'index des bibliothèques n'est téléchargé qu'à la demande |
+| 0.27 | 2026-11-16 | Publication sur le Play Store : app gratuite, page de politique de confidentialité (`docs/privacy.html`, FR/EN, hébergée par GitHub Pages) ; épopée F : rappel de ce qu'il faut refaire avant la version avec comptes (politique, formulaire de sécurité des données, suppression du compte, paiement, statut du compte développeur) |
