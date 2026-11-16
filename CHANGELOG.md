@@ -2,6 +2,32 @@
 
 Les notes de chaque version sont reprises telles quelles dans la release GitHub.
 
+## [0.5.0] — Exemples des bibliothèques Arduino
+
+- **Exemples des bibliothèques** : dans le détail d'une bibliothèque Arduino, « Voir les exemples » liste ceux qu'elle
+  fournit. En toucher un crée un projet avec ses fichiers, la bibliothèque et ses dépendances à la bonne version, et
+  la carte de l'écran, puis ouvre le croquis. Un projet du même nom n'est jamais écrasé : le nouveau prend un numéro.
+  Validé sur Windows (compilation locale).
+- **Bouton « Bibliothèques Arduino »** dans la barre de l'éditeur (projets avec un croquis `.ino`) : la recherche et
+  l'ajout de bibliothèques n'obligent plus à passer par la feuille de compilation.
+- **Compilation locale proposée d'emblée** (Windows, macOS, Linux) : sans serveur configuré, l'app compile sur cet
+  ordinateur par défaut, et le choix « Sur cet ordinateur / Serveur » reste visible dans la feuille de compilation
+  (il manquait quand aucun serveur n'était configuré). Un choix déjà fait, ou un serveur déjà configuré, ne change pas.
+- **Linux : AppImage** (`NomadIDE-<version>-linux-x86_64.AppImage`), en plus de l'archive : un seul fichier, qui se
+  lance sans installation sur la plupart des distributions (construit sur Ubuntu 22.04, donc aussi Debian 12 et plus
+  récent). GTK 3 vient du système. Merci à `orkeilius` pour la suggestion.
+- **Onglets** : supprimer un projet, un fichier ou un dossier ferme les onglets concernés ; renommer un projet, un
+  fichier ou un dossier met à jour ses onglets ouverts (un enregistrement ne recrée plus l'ancien fichier).
+- **Textes** : en français, les guillemets « … » ne laissent plus le » seul en début de ligne (tutoriel notamment) ;
+  en anglais, « Version 1.0 · License: MIT » remplace « licence MIT ».
+- **Messages d'erreur du service de compilation** : un service plus ancien que l'app, sans les routes d'exemples, est
+  nommé comme tel au lieu d'un « build expiré » ; les autres erreurs affichent le code et le message du service.
+- **Si vous utilisez un serveur de compilation** (téléphone) : mettez-le à jour pour avoir les exemples (`git pull`,
+  `dart pub get` dans `services/cloud_compiler`, redémarrage du service ; l'image Docker ne change pas). Voir le
+  README du service. Sur ordinateur en mode local, rien à faire.
+- **Site et Google Play** : page d'accueil et politique de confidentialité en ligne (GitHub Pages), fiche Google Play
+  prête (textes FR/EN, captures).
+
 ## [0.4.1] — Nouvel identifiant Android
 
 - **Identifiant de l'application Android** : `dev.nomadide.app`, à la place de `dev.nomadmcu.nomad_mcu` (reste de
