@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Produit** | NomadIDE |
-| **Version du document** | 0.19 — préparation de la release 0.1.0 bêta (desktop) |
+| **Version du document** | 0.27 — jalons remis en cohérence avec les releases 0.1 à 0.4 |
 | **Date** | 2026-10-01 |
 | **Statut du produit** | Étape 1 terminée (HAL USB/série + moniteur série) ; étape 2 en cours |
 | **Documents liés** | [README.md](README.md) · [ADR 0001 — Flutter](docs/adr/0001-stack-flutter.md) |
@@ -371,6 +371,7 @@ L'utilisateur ouvre l'app, voit un bandeau expliquant que l'USB-série n'est pas
 | R6 | **Pilotes Windows** (CH340, CP210x, PL2303 contrefaits). | Support utilisateur | Détection et message dédié avec lien vers le pilote. |
 | R7 | **Brick de carte** lors d'un flash interrompu. | Perte de confiance | Vérifications, avertissements, procédure de récupération documentée. |
 | R9 | **Bibliothèques tierces** (épopée H) : qualité inégale, licences variées, index Arduino volumineux pour un téléphone. | Bibliothèque qui ne compile pas, licence ignorée | Recherche côté serveur (le téléphone ne télécharge pas l'index entier), licence affichée (H7), versions figées par projet (H4), sélection de bibliothèques recommandées pour les capteurs courants. |
+| R10 | **Plantage sous Windows** : l'app peut se fermer brusquement en revenant sur l'onglet Éditeur. Le plantage se produit dans le moteur Flutter et existait avant la 0.4.0 ; sa cause est en cours d'analyse. | Perte du texte non enregistré, perte de confiance | Les brouillons sont écrits automatiquement (B5) et proposés à la réouverture ; analyse en cours ; piste : reproduire avec un moteur Flutter plus récent. |
 
 **Décisions de cadrage (2026-10-01)**
 
@@ -405,14 +406,14 @@ L'utilisateur ouvre l'app, voit un bandeau expliquant que l'USB-série n'est pas
 |---|---|---|---|
 | **M1** — Étape 1 | HAL USB/série, moniteur série, carte simulée | A1–A7, E2, E3 | ✅ |
 | **M2** — Étape 2 | Éditeur, projets, raw REPL, explorateur de fichiers de la carte, « Run », internationalisation FR/EN | B1–B6, C1–C5, E6 | ✅ (écrit, testé et validé sur Badger 2040 avec Windows et Android) |
-| **M3a** — Étape 3 | Flash ESP32/ESP32-S et RP2040, firmware MicroPython | D1, D2, D4, D6, D7, C6 | 🧪 D1, D2 (Windows), D4, D6 et D7 (ESP, Badger 2040) validés ; D2 validé aussi sur Android (PICOBOOT) ; restent D7 pour Pico, C6 |
-| **M3c** — Étape 3 | UX/UI et accessibilité, flash multi-fichiers ESP | G1–G7, D8 | 🔜 |
+| **M3a** — Étape 3 | Flash ESP32/ESP32-S et RP2040, firmware MicroPython | D1, D2, D4, D6, D7, C6 | 🧪 D1, D2 (Windows), D4, D6 et D7 (ESP, Badger 2040) validés ; D2 validé aussi sur Android (PICOBOOT) ; reste D7 pour Pico et Pico W (C6 est couvert par D7, validé) |
+| **M3c** — Étape 3 | UX/UI et accessibilité, flash multi-fichiers ESP | G1–G8, D8 | 🧪 G1–G8 et D8 écrits et testés ; thème, barre de raccourcis, parcours Flasher, réglages et tutoriel essayés sur téléphone et PC ; restent à confirmer : les annonces avec TalkBack (G3) et le flash de plusieurs fichiers sur une carte (D8) |
 | **M3d** — Étape 3 | Bibliothèques MicroPython (sans serveur) | H1, H2, H5, H6, H7 | 🧪 H1 et H2 validés sur ESP32 (Android) ; H6 et H7 écrits et testés ; reste H5 (exemples) |
 | **M3b** — Étape 3 | Service de compilation cloud, compte, quotas, abonnement | D5, F1–F4, H3, H4 | 🧪 D5, H3 et H4 validés ; restent F1–F4 (comptes, quotas, abonnement), qui attendent les décisions sur les limites gratuites, le paiement et la licence |
 | Post-v1 | Flash STM32 (AN3155) | D3 | 🔜 |
-| **M4** — Étape 4 | CI/CD, signature et distribution (Play Store, MSIX, notarisation macOS), mises à jour | E1, E4, E5 | 🧪 CI (analyse et tests) ; workflow de release desktop ; restent la signature (Windows, macOS), Android (clé de signature, Play Store) |
+| **M4** — Étape 4 | CI/CD, signature et distribution (Play Store, MSIX, notarisation macOS), mises à jour | E1, E4, E5 | 🧪 CI (analyse et tests) ; workflow de release desktop ; releases publiées sur GitHub depuis la 0.1.0 pour Windows, Linux et macOS, et pour Android depuis la 0.1.1 (APK signés avec une clé stable, App Bundle pour le Play Store) ; restent la signature de l'app Windows et la notarisation macOS, le test fermé du Play Store et le MSIX |
 
-La date de chaque jalon sera fixée après la décision sur R1 et le banc de test.
+Les dates ne sont pas fixées : les jalons avancent par versions publiées (0.1.0 à 0.4.0 à ce jour, voir `CHANGELOG.md`).
 
 ---
 
