@@ -169,7 +169,7 @@ void main() {
     test('le rapport donne versions, réglages, cartes et état, sans le flux série', () async {
       PackageInfo.setMockInitialValues(
         appName: 'NomadIDE',
-        packageName: 'dev.nomadmcu.nomad_mcu',
+        packageName: 'dev.nomadide.app',
         version: '0.1.0',
         buildNumber: '7',
         buildSignature: '',

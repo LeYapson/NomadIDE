@@ -30,7 +30,7 @@ abstract interface class PicobootGateway {
 
 /// Passerelle Android : parle au code Kotlin `PicobootUsb` par un canal de plateforme.
 class AndroidPicobootGateway implements PicobootGateway {
-  static const MethodChannel _channel = MethodChannel('dev.nomadmcu/picoboot');
+  static const MethodChannel _channel = MethodChannel('dev.nomadide/picoboot');
 
   @override
   Future<List<PicobootDevice>> list() async {
