@@ -136,6 +136,16 @@ class AppSettings {
   /// exemple d'afficher le tutoriel une fraction de seconde à quelqu'un qui l'a déjà vu.
   final bool loaded;
 
+  /// Sans choix mémorisé : sur ordinateur, on compile sur cette machine tant qu'aucun serveur n'est configuré (rien à
+  /// régler pour commencer). Sur téléphone, la compilation locale n'existe pas.
+  static bool _defaultCompileLocal(Map<String, Object?> json) {
+    final desktop = Platform.isWindows || Platform.isMacOS || Platform.isLinux;
+    final url = json['compileServerUrl'];
+    final token = json['compileToken'];
+    final hasServer = url is String && url.trim().isNotEmpty && token is String && token.isNotEmpty;
+    return desktop && !hasServer;
+  }
+
   factory AppSettings.fromJson(Map<String, Object?> json) {
     const d = AppSettings();
     T pick<T>(String key, T fallback, bool Function(T value) valid) {
@@ -155,7 +165,7 @@ class AppSettings {
       compileServerUrl: pick<String>('compileServerUrl', d.compileServerUrl, (_) => true),
       compileToken: pick<String>('compileToken', d.compileToken, (_) => true),
       compileApprovedServer: pick<String>('compileApprovedServer', d.compileApprovedServer, (_) => true),
-      compileLocal: pick<bool>('compileLocal', d.compileLocal, (_) => true),
+      compileLocal: pick<bool>('compileLocal', _defaultCompileLocal(json), (_) => true),
       loaded: true,
     );
   }

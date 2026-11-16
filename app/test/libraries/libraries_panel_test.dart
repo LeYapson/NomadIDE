@@ -71,7 +71,7 @@ void main() {
     await openLibraries(tester);
     await tester.enterText(find.widgetWithText(TextField, 'Chercher une bibliothèque'), 'bme280');
     await tester.pumpAndSettle();
-    expect(find.textContaining('Aucune bibliothèque ne correspond à « bme280 »'), findsOneWidget);
+    expect(find.textContaining('Aucune bibliothèque ne correspond à « bme280 »'), findsOneWidget);
   });
 
   testWidgets('accessibilité : zones tactiles de 48 dp et libellés', (tester) async {

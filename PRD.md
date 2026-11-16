@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Produit** | NomadIDE |
-| **Version du document** | 0.27 — jalons remis en cohérence avec les releases 0.1 à 0.4 |
+| **Version du document** | 0.30 — H5 validé sur Windows |
 | **Date** | 2026-10-01 |
 | **Statut du produit** | Étape 1 terminée (HAL USB/série + moniteur série) ; étape 2 en cours |
 | **Documents liés** | [README.md](README.md) · [ADR 0001 — Flutter](docs/adr/0001-stack-flutter.md) · [Politique de confidentialité](docs/privacy.html) |
@@ -244,7 +244,7 @@ C'est la force d'Arduino : on branche un capteur, on ajoute sa bibliothèque, on
 | H2 | Je veux voir les bibliothèques installées sur ma carte, les mettre à jour ou les supprimer. | M | ✅ liste de `/lib` et suppression validées sur ESP32 avec l'app Android ; mise à jour = réinstaller |
 | H3 | Je veux que l'app détecte les `#include` de mon projet C/C++ et me propose les bibliothèques Arduino correspondantes. | M | ✅ validé de bout en bout sur ordinateur (Windows) et sur téléphone (Android) : « Analyser les #include » dans la feuille Bibliothèques, et « Ajouter et compiler » quand une compilation échoue sur un en-tête introuvable ; le service retrouve la bibliothèque d'un en-tête (l'index officiel ne les déclare presque jamais : nom, archive vérifiée, en-têtes déjà connus) et indique celles dont l'en-tête est confirmé |
 | H4 | Je veux chercher et ajouter une bibliothèque Arduino à mon projet ; la compilation l'utilise dans la version choisie. | M | ✅ validé de bout en bout sur ordinateur (Windows) et sur téléphone (Android) : recherche, détail, choix de la version, ajout avec dépendances à versions précises, retrait (avec les dépendances devenues inutiles), liste enregistrée dans le `nomad.json` du projet ; la licence n'est pas fournie par l'index officiel (« licence non précisée ») |
-| H5 | Je veux ouvrir un exemple fourni par une bibliothèque comme point de départ d'un projet. | S | 🔜 |
+| H5 | Je veux ouvrir un exemple fourni par une bibliothèque comme point de départ d'un projet. | S | ✅ sur Windows (compilation locale, essai du 2026-11-16) ; 🧪 sur Android. Bibliothèques Arduino : « Voir les exemples » dans le détail d'une bibliothèque liste ses exemples (dossiers de `examples/` qui contiennent un croquis du même nom) ; en toucher un crée un projet avec ses fichiers, la bibliothèque et ses dépendances à la version de l'exemple, la carte de l'écran, et ouvre le croquis. Servi par le service de compilation (cloud et local) ; testé avec de fausses archives, puis validé avec le vrai catalogue sur Windows ; reste à essayer sur téléphone (avec un serveur de compilation configuré). MicroPython : sans objet pour l'instant, les paquets de `micropython-lib` ne livrent pas d'exemples |
 | H6 | Je veux retrouver hors ligne les bibliothèques MicroPython déjà téléchargées. | S | 🧪 index et fichiers de l'index gardés en cache sur l'appareil (les fichiers GitHub ne le sont pas encore) |
 | H7 | Je veux voir la licence et l'origine d'une bibliothèque avant de l'installer. | C | 🧪 version et licence affichées pour chaque paquet de l'index (« non précisée » sinon) |
 
@@ -419,9 +419,9 @@ L'utilisateur ouvre l'app, voit un bandeau expliquant que l'USB-série n'est pas
 | **M3d** — Étape 3 | Bibliothèques MicroPython (sans serveur) | H1, H2, H5, H6, H7 | 🧪 H1 et H2 validés sur ESP32 (Android) ; H6 et H7 écrits et testés ; reste H5 (exemples) |
 | **M3b** — Étape 3 | Service de compilation cloud, compte, quotas, abonnement | D5, F1–F4, H3, H4 | 🧪 D5, H3 et H4 validés ; restent F1–F4 (comptes, quotas, abonnement), qui attendent les décisions sur les limites gratuites, le paiement et la licence |
 | Post-v1 | Flash STM32 (AN3155) | D3 | 🔜 |
-| **M4** — Étape 4 | CI/CD, signature et distribution (Play Store, MSIX, notarisation macOS), mises à jour | E1, E4, E5 | 🧪 CI (analyse et tests) ; workflow de release desktop ; releases publiées sur GitHub depuis la 0.1.0 pour Windows, Linux et macOS, et pour Android depuis la 0.1.1 (APK signés avec une clé stable, App Bundle pour le Play Store) ; restent la signature de l'app Windows et la notarisation macOS, le test fermé du Play Store et le MSIX |
+| **M4** — Étape 4 | CI/CD, signature et distribution (Play Store, MSIX, notarisation macOS), mises à jour | E1, E4, E5 | 🧪 CI (analyse et tests) ; workflow de release desktop ; releases publiées sur GitHub depuis la 0.1.0 pour Windows, Linux et macOS, et pour Android depuis la 0.1.1 (APK signés avec une clé stable, App Bundle pour le Play Store) ; identifiant Android définitif `dev.nomadide.app` (0.4.1) ; **Play Store : fiche prête** (textes FR/EN, icône 512, image de présentation, 6 captures FR et 6 EN dans `docs/`, politique de confidentialité et page d'accueil en ligne, formulaires de la Play Console remplis) ; restent le **test fermé** (12 testeurs pendant 14 jours avant de pouvoir publier), la signature de l'app Windows, la notarisation macOS et le MSIX |
 
-Les dates ne sont pas fixées : les jalons avancent par versions publiées (0.1.0 à 0.4.0 à ce jour, voir `CHANGELOG.md`).
+Les dates ne sont pas fixées : les jalons avancent par versions publiées (0.1.0 à 0.5.0 à ce jour, voir `CHANGELOG.md`).
 
 ---
 
@@ -456,3 +456,6 @@ Les dates ne sont pas fixées : les jalons avancent par versions publiées (0.1.
 | 0.25 | 2026-11-07 | Ajout de D9 (compilation locale sur ordinateur) ; le non-objectif « compilation locale » ne vise plus que le mobile. Le service de compilation tourne dans l'app sur 127.0.0.1 avec `arduino-cli` à la place de Docker : un seul code pour le cloud et le local |
 | 0.26 | 2026-11-07 | D9 validé sur Windows (ESP32 et ESP32-S3 : compilation locale, flash, programme exécuté) ; l'index des bibliothèques n'est téléchargé qu'à la demande |
 | 0.27 | 2026-11-16 | Publication sur le Play Store : app gratuite, page de politique de confidentialité (`docs/privacy.html`, FR/EN, hébergée par GitHub Pages) ; épopée F : rappel de ce qu'il faut refaire avant la version avec comptes (politique, formulaire de sécurité des données, suppression du compte, paiement, statut du compte développeur) |
+| 0.28 | 2026-11-16 | M4 : fiche Google Play prête (textes, icône, image de présentation, captures FR et EN prises sur téléphone, page d'accueil du site, politique de confidentialité) ; reste le test fermé (12 testeurs, 14 jours). Défauts relevés pendant les captures : onglet resté ouvert après la suppression d'un projet, « » » seul en fin de ligne dans le tutoriel, « licence » en anglais (corrigés dans la PR #71) ; renommer un fichier ou un dossier laisse son onglet sur l'ancien chemin (à traiter) |
+| 0.29 | 2026-11-16 | H5 écrit et testé pour les bibliothèques Arduino (liste des exemples, création d'un projet depuis un exemple, nouvelles routes `/v1/libraries/{nom}/examples` et `/example` du service) ; renommer un fichier ou un dossier met à jour ses onglets ouverts ; essai sur Windows : sur ordinateur, sans serveur configuré, la compilation se fait par défaut sur cette machine et « Sur cet ordinateur » reste proposé dans la feuille de compilation ; bouton « Bibliothèques Arduino » dans la barre de l'éditeur (recherche et exemples sans passer par la feuille de compilation) |
+| 0.30 | 2026-11-16 | H5 validé sur Windows (compilation locale) ; reste à essayer sur Android |

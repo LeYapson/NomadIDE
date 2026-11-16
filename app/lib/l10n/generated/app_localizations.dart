@@ -629,7 +629,7 @@ abstract class AppLocalizations {
   /// No description provided for @mpReplaceFileMessage.
   ///
   /// In fr, this message translates to:
-  /// **'« {name} » existe déjà dans {folder} sur la carte. Il sera remplacé.'**
+  /// **'« {name} » existe déjà dans {folder} sur la carte. Il sera remplacé.'**
   String mpReplaceFileMessage(String name, String folder);
 
   /// No description provided for @mpDownloadTitle.
@@ -876,7 +876,7 @@ abstract class AppLocalizations {
   /// No description provided for @mpLogLocalReadFailed.
   ///
   /// In fr, this message translates to:
-  /// **'Lecture locale impossible : « {name} »'**
+  /// **'Lecture locale impossible : « {name} »'**
   String mpLogLocalReadFailed(String name);
 
   /// No description provided for @mpLogDownloadCorrupt.
@@ -888,7 +888,7 @@ abstract class AppLocalizations {
   /// No description provided for @mpLogLocalSaveFailed.
   ///
   /// In fr, this message translates to:
-  /// **'Enregistrement local impossible : « {name} »'**
+  /// **'Enregistrement local impossible : « {name} »'**
   String mpLogLocalSaveFailed(String name);
 
   /// No description provided for @mpLogDownloaded.
@@ -966,7 +966,7 @@ abstract class AppLocalizations {
   /// No description provided for @edReplaceFileMessage.
   ///
   /// In fr, this message translates to:
-  /// **'« {path} » existe déjà dans le projet « {project} ». Son contenu sera remplacé.'**
+  /// **'« {path} » existe déjà dans le projet « {project} ». Son contenu sera remplacé.'**
   String edReplaceFileMessage(String path, String project);
 
   /// No description provided for @edSendTitle.
@@ -1002,7 +1002,7 @@ abstract class AppLocalizations {
   /// No description provided for @edCloseTitle.
   ///
   /// In fr, this message translates to:
-  /// **'Enregistrer « {name} » ?'**
+  /// **'Enregistrer « {name} » ?'**
   String edCloseTitle(String name);
 
   /// No description provided for @edCloseBody.
@@ -1152,7 +1152,7 @@ abstract class AppLocalizations {
   /// No description provided for @prDeleteProjectMessage.
   ///
   /// In fr, this message translates to:
-  /// **'Le projet « {name} » et tous ses fichiers seront supprimés de cet appareil. Cette action est définitive.'**
+  /// **'Le projet « {name} » et tous ses fichiers seront supprimés de cet appareil. Cette action est définitive.'**
   String prDeleteProjectMessage(String name);
 
   /// No description provided for @prFileNameLabel.
@@ -1194,13 +1194,13 @@ abstract class AppLocalizations {
   /// No description provided for @prDeleteFolderMessage.
   ///
   /// In fr, this message translates to:
-  /// **'« {name} » et tout son contenu seront supprimés de cet appareil.'**
+  /// **'« {name} » et tout son contenu seront supprimés de cet appareil.'**
   String prDeleteFolderMessage(String name);
 
   /// No description provided for @prDeleteFileMessage.
   ///
   /// In fr, this message translates to:
-  /// **'« {name} » sera supprimé de cet appareil.'**
+  /// **'« {name} » sera supprimé de cet appareil.'**
   String prDeleteFileMessage(String name);
 
   /// No description provided for @sdSaveTitle.
@@ -1500,7 +1500,7 @@ abstract class AppLocalizations {
   /// No description provided for @espBadOffset.
   ///
   /// In fr, this message translates to:
-  /// **'Adresse invalide : « {value} ». Exemple : 0x10000.'**
+  /// **'Adresse invalide : « {value} ». Exemple : 0x10000.'**
   String espBadOffset(String value);
 
   /// No description provided for @espInterrupted.
@@ -1542,7 +1542,7 @@ abstract class AppLocalizations {
   /// No description provided for @errPortPermissionDenied.
   ///
   /// In fr, this message translates to:
-  /// **'Impossible d’ouvrir {path} : {os}. Ajoutez votre utilisateur au groupe « dialout » (Debian/Ubuntu) ou « uucp » (Arch), puis rouvrez votre session.'**
+  /// **'Impossible d’ouvrir {path} : {os}. Ajoutez votre utilisateur au groupe « dialout » (Debian/Ubuntu) ou « uucp » (Arch), puis rouvrez votre session.'**
   String errPortPermissionDenied(String path, String os);
 
   /// No description provided for @errOpenFailedPath.
@@ -1692,13 +1692,13 @@ abstract class AppLocalizations {
   /// No description provided for @errUnexpectedAck.
   ///
   /// In fr, this message translates to:
-  /// **'Réponse inattendue au lieu de « OK » : {hex}.'**
+  /// **'Réponse inattendue au lieu de « OK » : {hex}.'**
   String errUnexpectedAck(String hex);
 
   /// No description provided for @errUnexpectedCrcReply.
   ///
   /// In fr, this message translates to:
-  /// **'Réponse inattendue au calcul du CRC : « {reply} ».'**
+  /// **'Réponse inattendue au calcul du CRC : « {reply} ».'**
   String errUnexpectedCrcReply(String reply);
 
   /// No description provided for @errIntegrity.
@@ -1800,7 +1800,7 @@ abstract class AppLocalizations {
   /// No description provided for @fwHint.
   ///
   /// In fr, this message translates to:
-  /// **'Pour installer MicroPython sur une carte vierge ou revenir à un firmware propre. Le fichier vient directement du site officiel et n’est écrit sur la carte que lorsque vous cliquez sur « Flasher ».'**
+  /// **'Pour installer MicroPython sur une carte vierge ou revenir à un firmware propre. Le fichier vient directement du site officiel et n’est écrit sur la carte que lorsque vous cliquez sur « Flasher ».'**
   String get fwHint;
 
   /// No description provided for @fwBoardLabel.
@@ -1860,7 +1860,7 @@ abstract class AppLocalizations {
   /// No description provided for @fwDownloaded.
   ///
   /// In fr, this message translates to:
-  /// **'{name} téléchargé ({amount}) : il est choisi comme fichier à écrire, cliquez sur « Flasher ».'**
+  /// **'{name} téléchargé ({amount}) : il est choisi comme fichier à écrire, cliquez sur « Flasher ».'**
   String fwDownloaded(String name, String amount);
 
   /// No description provided for @fwNoNetwork.
@@ -2214,7 +2214,7 @@ abstract class AppLocalizations {
   /// No description provided for @espBadOffsetPart.
   ///
   /// In fr, this message translates to:
-  /// **'Adresse invalide pour {name} : « {value} ». Exemple : 0x10000.'**
+  /// **'Adresse invalide pour {name} : « {value} ». Exemple : 0x10000.'**
   String espBadOffsetPart(String name, String value);
 
   /// No description provided for @espPhaseWritingPart.
@@ -2280,7 +2280,7 @@ abstract class AppLocalizations {
   /// No description provided for @libNoResult.
   ///
   /// In fr, this message translates to:
-  /// **'Aucune bibliothèque ne correspond à « {query} ». Essayez une adresse GitHub ci-dessous.'**
+  /// **'Aucune bibliothèque ne correspond à « {query} ». Essayez une adresse GitHub ci-dessous.'**
   String libNoResult(String query);
 
   /// No description provided for @libVersionLicense.
@@ -2328,7 +2328,7 @@ abstract class AppLocalizations {
   /// No description provided for @libInstalled.
   ///
   /// In fr, this message translates to:
-  /// **'{name} est installée ({count} fichier(s) dans /lib). Essayez « import {module} » dans la console.'**
+  /// **'{name} est installée ({count} fichier(s) dans /lib). Essayez « import {module} » dans la console.'**
   String libInstalled(String name, int count, String module);
 
   /// No description provided for @libGithubTitle.
@@ -2658,7 +2658,7 @@ abstract class AppLocalizations {
   /// No description provided for @obPlugBody.
   ///
   /// In fr, this message translates to:
-  /// **'Sur ordinateur, un câble USB suffit. Sur téléphone, passez par un adaptateur OTG. Android demande alors l’accès à la carte : acceptez, et cochez « toujours » pour ne plus le voir.'**
+  /// **'Sur ordinateur, un câble USB suffit. Sur téléphone, passez par un adaptateur OTG. Android demande alors l’accès à la carte : acceptez, et cochez « toujours » pour ne plus le voir.'**
   String get obPlugBody;
 
   /// No description provided for @obPlugCable.
@@ -2712,13 +2712,13 @@ abstract class AppLocalizations {
   /// No description provided for @obFirstBody.
   ///
   /// In fr, this message translates to:
-  /// **'Onglet Python : touchez « Connecter », tapez print(\"Bonjour\") dans la console, puis « Exécuter ». La carte répond dans le journal.'**
+  /// **'Onglet Python : touchez « Connecter », tapez print(\"Bonjour\") dans la console, puis « Exécuter ». La carte répond dans le journal.'**
   String get obFirstBody;
 
   /// No description provided for @obFirstNoFirmware.
   ///
   /// In fr, this message translates to:
-  /// **'La carte ne répond pas ? Elle n’a peut-être pas encore MicroPython : onglet Flasher, « Firmware MicroPython officiel ».'**
+  /// **'La carte ne répond pas ? Elle n’a peut-être pas encore MicroPython : onglet Flasher, « Firmware MicroPython officiel ».'**
   String get obFirstNoFirmware;
 
   /// No description provided for @settingsTutorial.
@@ -2871,6 +2871,12 @@ abstract class AppLocalizations {
   /// **'Connexion réussie : service {version}, jeton accepté.'**
   String settingsCompileTestOk(String version);
 
+  /// No description provided for @edLibrariesTooltip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bibliothèques Arduino'**
+  String get edLibrariesTooltip;
+
   /// No description provided for @ccTooltip.
   ///
   /// In fr, this message translates to:
@@ -3006,7 +3012,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsLocalToolchainMissing.
   ///
   /// In fr, this message translates to:
-  /// **'Non installés. Ils s’installent depuis la feuille de compilation, avec « Sur cet ordinateur ».'**
+  /// **'Non installés. Ils s’installent depuis la feuille de compilation, avec « Sur cet ordinateur ».'**
   String get settingsLocalToolchainMissing;
 
   /// No description provided for @settingsLocalToolchainRemove.
@@ -3120,7 +3126,7 @@ abstract class AppLocalizations {
   /// No description provided for @ccConsentBody.
   ///
   /// In fr, this message translates to:
-  /// **'Le projet « {project} » ({files} fichiers, {size}) sera envoyé à {host} pour être compilé. Le serveur ne garde pas votre code après la compilation ; les binaires restent disponibles 30 minutes.'**
+  /// **'Le projet « {project} » ({files} fichiers, {size}) sera envoyé à {host} pour être compilé. Le serveur ne garde pas votre code après la compilation ; les binaires restent disponibles 30 minutes.'**
   String ccConsentBody(String project, int files, String size, String host);
 
   /// No description provided for @ccConsentSend.
@@ -3188,6 +3194,12 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Réponse inattendue du service.'**
   String get ccProbBadResponse;
+
+  /// No description provided for @ccProbUnsupported.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce service de compilation ne connaît pas cette fonction : il est probablement plus ancien que l’app. Mettez-le à jour (voir le README du service).'**
+  String get ccProbUnsupported;
 
   /// No description provided for @ccProbNoSketch.
   ///
@@ -3404,6 +3416,48 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Chargement des versions…'**
   String get alLoadingVersions;
+
+  /// No description provided for @alExamplesButton.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir les exemples'**
+  String get alExamplesButton;
+
+  /// No description provided for @alExamplesTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Exemples de {name}'**
+  String alExamplesTitle(String name);
+
+  /// No description provided for @alExamplesLoading.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chargement des exemples…'**
+  String get alExamplesLoading;
+
+  /// No description provided for @alExamplesNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette bibliothèque ne fournit pas d’exemple.'**
+  String get alExamplesNone;
+
+  /// No description provided for @alExamplesHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisir un exemple crée un nouveau projet : ses fichiers, la carte de l’écran précédent et cette bibliothèque (version {version}).'**
+  String alExamplesHint(String version);
+
+  /// No description provided for @alExampleCreate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Créer un projet à partir de l’exemple {name}'**
+  String alExampleCreate(String name);
+
+  /// No description provided for @alExampleCreated.
+  ///
+  /// In fr, this message translates to:
+  /// **'Projet « {project} » créé à partir de l’exemple.'**
+  String alExampleCreated(String project);
 
   /// No description provided for @alScan.
   ///

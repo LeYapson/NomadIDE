@@ -222,6 +222,62 @@ void main() {
       expect(server.requests.single.path, '/v1/libraries/DHT%20sensor%20library');
     });
 
+    test("exemples d'une bibliothèque : version et carte en paramètres, liste décodée", () async {
+      server.handler = (r) => reply(r, 200, {
+            'library': 'DHT sensor library',
+            'version': '1.4.6',
+            'examples': [
+              {'path': 'DHTtester'},
+              {'path': 'Sub/Nested'},
+            ],
+          });
+
+      final found = await api().libraryExamples('DHT sensor library', version: '1.4.6', board: CompileBoard.esp32s3);
+
+      expect(found.version, '1.4.6');
+      expect([for (final e in found.examples) e.path], ['DHTtester', 'Sub/Nested']);
+      final request = server.requests.single;
+      expect(request.path, '/v1/libraries/DHT%20sensor%20library/examples');
+      expect(request.query, {'version': '1.4.6', 'board': 'esp32s3'});
+      expect(request.auth, 'Bearer tok');
+    });
+
+    test("fichiers d'un exemple : le chemin part en paramètre, les fichiers sont décodés", () async {
+      server.handler = (r) => reply(r, 200, {
+            'library': 'DHT sensor library',
+            'version': '1.4.6',
+            'path': 'Sub/Nested',
+            'files': [
+              {'name': 'Nested.ino', 'content': 'void setup() {}'},
+            ],
+          });
+
+      final files = await api().libraryExample('DHT sensor library', path: 'Sub/Nested');
+
+      expect(files.files.single.name, 'Nested.ino');
+      expect(files.files.single.content, 'void setup() {}');
+      expect(server.requests.single.path, '/v1/libraries/DHT%20sensor%20library/example');
+      expect(server.requests.single.query, {'path': 'Sub/Nested'});
+    });
+
+    test("erreur du service (502) : le message du service accompagne le code HTTP", () async {
+      server.handler = (r) => reply(r, 502, {'error': 'library_unavailable', 'message': 'Téléchargement impossible : DHT.'});
+      await expectLater(
+        api().libraryExample('DHT', path: 'x'),
+        throwsA(isA<CompileApiException>()
+            .having((e) => e.kind, 'kind', CompileErrorKind.badResponse)
+            .having((e) => e.detail, 'detail', 'HTTP 502 : Téléchargement impossible : DHT.')),
+      );
+    });
+
+    test("exemple inconnu : l'erreur « introuvable »", () async {
+      server.handler = (r) => reply(r, 404, {'error': 'not_found'});
+      await expectLater(
+        api().libraryExample('Nope', path: 'x'),
+        throwsA(isA<CompileApiException>().having((e) => e.kind, 'kind', CompileErrorKind.notFound)),
+      );
+    });
+
     test('résolution des #include : corps JSON avec la carte', () async {
       server.handler = (r) => reply(r, 200, {
             'includes': [

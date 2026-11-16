@@ -329,6 +329,20 @@ class _LibraryDialogState extends ConsumerState<_LibraryDialog> {
                     ],
                     onChanged: (v) => setState(() => _version = v),
                   ),
+                  const SizedBox(height: 8),
+                  Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: TextButton.icon(
+                      onPressed: _version == null
+                          ? null
+                          : () => showDialog<void>(
+                                context: context,
+                                builder: (_) => _ExamplesDialog(name: widget.name, version: _version!),
+                              ),
+                      icon: const Icon(Icons.code),
+                      label: Text(l10n.alExamplesButton),
+                    ),
+                  ),
                 ],
               ),
       ),
@@ -339,6 +353,116 @@ class _LibraryDialogState extends ConsumerState<_LibraryDialog> {
           child: Text(adding ? l10n.alAdd : l10n.alChangeVersion),
         ),
       ],
+    );
+  }
+}
+
+/// Exemples d'une version d'une bibliothèque : en choisir un crée un projet avec ses fichiers.
+class _ExamplesDialog extends ConsumerStatefulWidget {
+  const _ExamplesDialog({required this.name, required this.version});
+
+  final String name;
+  final String version;
+
+  @override
+  ConsumerState<_ExamplesDialog> createState() => _ExamplesDialogState();
+}
+
+class _ExamplesDialogState extends ConsumerState<_ExamplesDialog> {
+  LibraryExamples? _examples;
+  bool _failed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final examples = await ref.read(arduinoLibrariesProvider.notifier).examplesOf(widget.name, version: widget.version);
+    if (!mounted) return;
+    setState(() {
+      _examples = examples;
+      _failed = examples == null;
+    });
+  }
+
+  Future<void> _create(LibraryExample example) async {
+    final l10n = context.l10n;
+    final navigator = Navigator.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    final created = await ref.read(arduinoLibrariesProvider.notifier).createProjectFromExample(
+          widget.name,
+          example.path,
+          version: widget.version,
+        );
+    if (created == null) return; // le problème s'affiche dans cette fenêtre
+    // Le projet est créé et ouvert : on referme les fenêtres et la feuille pour montrer l'éditeur.
+    navigator.popUntil((route) => route.isFirst);
+    messenger.showSnackBar(SnackBar(content: Text(l10n.alExampleCreated(created))));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final state = ref.watch(arduinoLibrariesProvider);
+    final examples = _examples;
+    return AlertDialog(
+      title: Text(l10n.alExamplesTitle(widget.name)),
+      content: SizedBox(
+        width: double.maxFinite,
+        child: examples == null
+            ? (_failed
+                ? Text(
+                    state.problem == null ? '' : compileProblemMessage(l10n, state.problem!, state.detail),
+                    style: TextStyle(color: Theme.of(context).colorScheme.error),
+                  )
+                : Semantics(liveRegion: true, child: Text(l10n.alExamplesLoading)))
+            : examples.examples.isEmpty
+                ? Text(l10n.alExamplesNone)
+                : Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (state.working) const LinearProgressIndicator(),
+                      if (state.problem != null)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: Semantics(
+                            liveRegion: true,
+                            child: Text(
+                              compileProblemMessage(l10n, state.problem!, state.detail),
+                              style: TextStyle(color: Theme.of(context).colorScheme.error),
+                            ),
+                          ),
+                        ),
+                      Text(l10n.alExamplesHint(examples.version), style: Theme.of(context).textTheme.bodySmall),
+                      const SizedBox(height: 8),
+                      Flexible(
+                        child: ListView(
+                          shrinkWrap: true,
+                          children: [
+                            for (final example in examples.examples)
+                              ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                title: Text(example.name),
+                                subtitle: example.path == example.name ? null : Text(example.path),
+                                enabled: !state.working,
+                                onTap: () => _create(example),
+                                // Le lecteur d'écran annonce l'effet du toucher, pas seulement le nom.
+                                trailing: Semantics(
+                                  label: l10n.alExampleCreate(example.name),
+                                  excludeSemantics: true,
+                                  child: const Icon(Icons.add_circle_outline),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+      ),
+      actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text(l10n.commonClose))],
     );
   }
 }

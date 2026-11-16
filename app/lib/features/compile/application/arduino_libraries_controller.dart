@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nomad_compile_api/nomad_compile_api.dart';
 
 import '../../../app/providers.dart';
+import '../../editor/application/editor_controller.dart';
+import '../../projects/application/projects_controller.dart';
 import '../../projects/data/storage_exception.dart';
 import '../data/compile_api.dart';
 import '../data/include_scanner.dart';
@@ -160,6 +162,85 @@ class ArduinoLibrariesController extends Notifier<ArduinoLibrariesState> {
       return null;
     }
   }
+
+  /// Exemples de [name] (à [version], sinon la dernière). Null (et un problème posé) si le service ne répond pas.
+  Future<LibraryExamples?> examplesOf(String name, {String? version}) async {
+    final api = _api;
+    if (api == null) {
+      state = state.copyWith(problem: CompileProblem.notConfigured, detail: null);
+      return null;
+    }
+    try {
+      return await api.libraryExamples(name, version: version, board: state.board);
+    } on CompileApiException catch (e) {
+      state = state.copyWith(problem: _exampleProblemFor(e.kind), detail: e.detail);
+      return null;
+    }
+  }
+
+  /// Crée un projet à partir de l'exemple [path] de [name] : ses fichiers, la bibliothèque (avec ses dépendances) à la
+  /// version de l'exemple et la carte de cet écran. Le projet porte le nom de l'exemple (suivi d'un numéro s'il existe
+  /// déjà) ; il devient le projet courant et son croquis s'ouvre dans l'éditeur. Renvoie son nom, ou null.
+  Future<String?> createProjectFromExample(String name, String path, {String? version}) async {
+    final api = _api;
+    if (api == null) {
+      state = state.copyWith(problem: CompileProblem.notConfigured, detail: null);
+      return null;
+    }
+    final board = state.board;
+    state = state.copyWith(working: true, problem: null, detail: null);
+    try {
+      final example = await api.libraryExample(name, version: version, board: board, path: path);
+      final closure = await api.libraryClosure([LibraryRef(name: example.library, version: example.version)], board);
+      final files = [for (final f in example.files) if (_isPlainFileName(f.name)) f];
+      final sketch = files.where((f) => f.name.toLowerCase().endsWith('.ino')).firstOrNull;
+      if (sketch == null) {
+        state = state.copyWith(working: false, problem: CompileProblem.noSketch, detail: null);
+        return null;
+      }
+
+      final store = await ref.read(projectStoreProvider.future);
+      final taken = {for (final p in await store.listProjects()) p.toLowerCase()};
+      final base = path.split('/').last;
+      var projectName = base;
+      for (var n = 2; taken.contains(projectName.toLowerCase()); n++) {
+        projectName = '$base $n';
+      }
+      final created = await ref.read(projectsProvider.notifier).createProject(projectName);
+      if (created == null) {
+        state = state.copyWith(working: false);
+        return null;
+      }
+      for (final file in files) {
+        await store.writeText(created, file.name, file.content);
+      }
+      await ProjectConfig.writeBoard(store, created, board);
+      await ProjectConfig.writeLibraries(store, created, closure.libraries, [example.library]);
+      await ref.read(projectsProvider.notifier).refresh();
+      await ref.read(editorProvider.notifier).openLocalFile(created, sketch.name, show: true);
+      state = state.copyWith(working: false);
+      return created;
+    } on CompileApiException catch (e) {
+      state = state.copyWith(working: false, problem: _exampleProblemFor(e.kind), detail: e.detail);
+      return null;
+    } on StorageException catch (e) {
+      state = state.copyWith(working: false, problem: CompileProblem.saveFailed, detail: e.name);
+      return null;
+    }
+  }
+
+  /// Comme [problemFor], mais « introuvable » ne doit pas se lire « build expiré » : pour les exemples, c'est un service
+  /// plus ancien que l'app, qui n'a pas la route.
+  static CompileProblem _exampleProblemFor(CompileErrorKind kind) =>
+      kind == CompileErrorKind.notFound ? CompileProblem.unsupported : problemFor(kind);
+
+  /// Un nom de fichier sans dossier ni nom caché : ce que le service renvoie, vérifié ici aussi avant d'écrire.
+  static bool _isPlainFileName(String name) =>
+      name.isNotEmpty &&
+      !name.startsWith('.') &&
+      !name.contains('/') &&
+      !name.contains(String.fromCharCode(0x5c)) && // la barre oblique inverse
+      !name.contains('..');
 
   /// Ajoute [name] (à [version], sinon la dernière) avec ses dépendances. Faux si le service refuse.
   Future<bool> add(String name, {String? version}) async {

@@ -17,6 +17,7 @@ Téléchargez la dernière version dans les [releases GitHub](https://github.com
 | Windows 10/11 (64 bits) | `NomadIDE-<version>-windows-x64.zip` | Décompressez, lancez `nomad_mcu.exe`. App non signée : « Informations complémentaires » puis « Exécuter quand même ». |
 | macOS | `NomadIDE-<version>-macos.zip` | Décompressez, glissez l'app dans Applications. Non notarisée : clic droit, « Ouvrir », la première fois. |
 | Linux (64 bits) | `NomadIDE-<version>-linux-x64.tar.gz` | Décompressez, lancez `nomad_mcu`. Ajoutez votre utilisateur au groupe `dialout` (ou `uucp`). |
+| Linux (64 bits), AppImage | `NomadIDE-<version>-linux-x86_64.AppImage` *(dès la prochaine version)* | Rendez le fichier exécutable (`chmod +x`) puis lancez-le, sans installation. Il demande GTK 3 sur le système (présent sur la plupart des bureaux) ; construit sur Ubuntu 22.04, il tourne aussi sur Debian 12 et plus récent. Même groupe `dialout` (ou `uucp`) pour les ports série. |
 | Android 7+ | `NomadIDE-<version>-android-arm64.apk` (`-arm32` pour les anciens téléphones) | Ouvrez l'APK sur le téléphone et autorisez l'installation depuis cette source. Câble ou adaptateur OTG pour brancher la carte. |
 
 L'app vérifie au démarrage si une nouvelle version est publiée (désactivable dans Réglages → À propos).

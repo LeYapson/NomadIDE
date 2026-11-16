@@ -1394,7 +1394,7 @@
       }
     }
   },
-  "libVersionLicense": "Version {version} · licence {license}",
+  "libVersionLicense": "Version {version} · License: {license}",
   "@libVersionLicense": {
     "placeholders": {
       "version": {
@@ -1661,6 +1661,7 @@
       }
     }
   },
+  "edLibrariesTooltip": "Arduino libraries",
   "ccTooltip": "Compile in the cloud",
   "ccTitle": "Compile project",
   "ccProject": "Project: {name}",
@@ -1823,6 +1824,7 @@
   "ccProbQueueFull": "The service is busy: try again in a moment.",
   "ccProbExpired": "This result is no longer available (binaries are only kept for 30 minutes). Compile again.",
   "ccProbBadResponse": "Unexpected answer from the service.",
+  "ccProbUnsupported": "This compile service does not know this feature: it is probably older than the app. Update it (see the service README).",
   "ccProbNoSketch": "This project has no .ino file at its root: the service needs one to compile.",
   "ccProbSeveralSketches": "Several .ino files at the root ({files}): keep only one.",
   "@ccProbSeveralSketches": {
@@ -1939,6 +1941,41 @@
     }
   },
   "alLoadingVersions": "Loading versions…",
+  "alExamplesButton": "See examples",
+  "alExamplesTitle": "Examples from {name}",
+  "@alExamplesTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "alExamplesLoading": "Loading examples…",
+  "alExamplesNone": "This library does not provide any example.",
+  "alExamplesHint": "Choosing an example creates a new project: its files, the board selected on the previous screen and this library (version {version}).",
+  "@alExamplesHint": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "alExampleCreate": "Create a project from the example {name}",
+  "@alExampleCreate": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "alExampleCreated": "Project “{project}” created from the example.",
+  "@alExampleCreated": {
+    "placeholders": {
+      "project": {
+        "type": "String"
+      }
+    }
+  },
   "alScan": "Scan the project’s #include lines",
   "alScanning": "Scanning the project…",
   "alSuggestionsTitle": "Libraries to add",

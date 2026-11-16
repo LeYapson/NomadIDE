@@ -1368,7 +1368,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String libVersionLicense(String version, String license) {
-    return 'Version $version · licence $license';
+    return 'Version $version · License: $license';
   }
 
   @override
@@ -1721,6 +1721,9 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get edLibrariesTooltip => 'Arduino libraries';
+
+  @override
   String get ccTooltip => 'Compile in the cloud';
 
   @override
@@ -1914,6 +1917,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ccProbBadResponse => 'Unexpected answer from the service.';
 
   @override
+  String get ccProbUnsupported =>
+      'This compile service does not know this feature: it is probably older than the app. Update it (see the service README).';
+
+  @override
   String get ccProbNoSketch =>
       'This project has no .ino file at its root: the service needs one to compile.';
 
@@ -2049,6 +2056,35 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get alLoadingVersions => 'Loading versions…';
+
+  @override
+  String get alExamplesButton => 'See examples';
+
+  @override
+  String alExamplesTitle(String name) {
+    return 'Examples from $name';
+  }
+
+  @override
+  String get alExamplesLoading => 'Loading examples…';
+
+  @override
+  String get alExamplesNone => 'This library does not provide any example.';
+
+  @override
+  String alExamplesHint(String version) {
+    return 'Choosing an example creates a new project: its files, the board selected on the previous screen and this library (version $version).';
+  }
+
+  @override
+  String alExampleCreate(String name) {
+    return 'Create a project from the example $name';
+  }
+
+  @override
+  String alExampleCreated(String project) {
+    return 'Project “$project” created from the example.';
+  }
 
   @override
   String get alScan => 'Scan the project’s #include lines';

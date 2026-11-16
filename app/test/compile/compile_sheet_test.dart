@@ -180,6 +180,22 @@ void main() {
     expect(find.text('Compiler le projet'), findsNothing, reason: 'la feuille se ferme et le fichier s\'ouvre');
   });
 
+  testWidgets("sans serveur, sur ordinateur : « Sur cet ordinateur » est proposé dans la feuille, sans passer par les réglages", (tester) async {
+    newContainer(configured: false);
+    await openEditorWithSketch(tester);
+
+    await tester.tap(find.byTooltip('Compiler dans le cloud'));
+    await settle(tester);
+
+    expect(find.text('Service non configuré'), findsOneWidget);
+    expect(find.text('Sur cet ordinateur'), findsOneWidget);
+    expect(find.text('Serveur'), findsOneWidget);
+    await tester.tap(find.text('Sur cet ordinateur'));
+    await settle(tester);
+    expect(find.text('Outils de compilation à installer'), findsOneWidget);
+    expect(find.text('Service non configuré'), findsNothing);
+  });
+
   testWidgets('sur cet ordinateur, outillage absent : la feuille propose de l’installer, sans réglage de serveur', (tester) async {
     newContainer(configured: false, local: true);
     await openEditorWithSketch(tester);

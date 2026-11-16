@@ -132,7 +132,13 @@ class _ProjectHeader extends ConsumerWidget {
                     initialValue: current,
                     confirmLabel: l10n.commonRename,
                   );
-                  if (name != null && name != current) await controller.renameProject(current, name);
+                  if (name != null && name != current) {
+                    await controller.renameProject(current, name);
+                    final renamed = ref.read(projectsProvider).current;
+                    if (renamed != null && renamed != current) {
+                      ref.read(editorProvider.notifier).renameLocalProject(current, renamed);
+                    }
+                  }
                 case _ProjectAction.delete:
                   final current = state.current;
                   if (current == null) return;
@@ -143,7 +149,12 @@ class _ProjectHeader extends ConsumerWidget {
                     confirmLabel: l10n.commonDelete,
                     destructive: true,
                   );
-                  if (confirmed) await controller.deleteProject(current);
+                  if (confirmed) {
+                    await controller.deleteProject(current);
+                    if (!ref.read(projectsProvider).projects.contains(current)) {
+                      ref.read(editorProvider.notifier).closeLocal(current);
+                    }
+                  }
               }
             },
             itemBuilder: (context) => [
@@ -252,7 +263,10 @@ class _EntryTile extends ConsumerWidget {
                 initialValue: entry.name,
                 confirmLabel: l10n.commonRename,
               );
-              if (name != null && name != entry.name) await controller.renameEntry(entry, name);
+              if (name != null && name != entry.name) {
+                final target = await controller.renameEntry(entry, name);
+                if (target != null) ref.read(editorProvider.notifier).renameLocalPath(project, entry.path, target);
+              }
             case _EntryAction.delete:
               final confirmed = await showConfirmDialog(
                 context,
@@ -261,7 +275,12 @@ class _EntryTile extends ConsumerWidget {
                 confirmLabel: l10n.commonDelete,
                 destructive: true,
               );
-              if (confirmed) await controller.deleteEntry(entry);
+              if (confirmed) {
+                await controller.deleteEntry(entry);
+                if (ref.read(projectsProvider).error == null) {
+                  ref.read(editorProvider.notifier).closeLocal(project, path: entry.path);
+                }
+              }
             case _EntryAction.upload:
               await ref.read(microPythonProvider.notifier).uploadFromProject(project, entry.path);
           }

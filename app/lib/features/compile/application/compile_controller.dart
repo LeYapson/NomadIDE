@@ -31,6 +31,9 @@ enum CompileProblem {
   librariesUnavailable,
   expired,
   badResponse,
+
+  /// Le service ne connaît pas la fonction demandée (il est plus ancien que l'app).
+  unsupported,
   noSketch,
   severalSketches,
   saveFailed,
