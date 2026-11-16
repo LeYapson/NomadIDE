@@ -1394,7 +1394,7 @@
       }
     }
   },
-  "libVersionLicense": "Version {version} · licence {license}",
+  "libVersionLicense": "Version {version} · License: {license}",
   "@libVersionLicense": {
     "placeholders": {
       "version": {
