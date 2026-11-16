@@ -151,6 +151,74 @@ class LibraryService {
     return HeaderResolution(candidates: ordered.take(limit).toList(), confirmed: confirmed);
   }
 
+  /// Exemples de la bibliothèque [name] : à [version], sinon à sa dernière version pour [architecture]. Null si la
+  /// bibliothèque ou la version est inconnue. L'archive est installée dans le cache au besoin.
+  Future<LibraryExamples?> examples(String name, {String? version, String? architecture}) async {
+    final release = _releaseFor(name, version, architecture);
+    if (release == null) return null;
+    final dir = await cache.ensure(release);
+    return LibraryExamples(
+      library: release.name,
+      version: release.version,
+      examples: [for (final path in _examplePaths(dir)) LibraryExample(path: path)],
+    );
+  }
+
+  /// Fichiers texte de l'exemple [path] (un des chemins renvoyés par [examples]). Null si la bibliothèque, la version
+  /// ou l'exemple est inconnu : un chemin qui n'est pas dans la liste n'est jamais lu.
+  Future<LibraryExampleFiles?> exampleFiles(String name, {String? version, String? architecture, required String path}) async {
+    final release = _releaseFor(name, version, architecture);
+    if (release == null) return null;
+    final dir = await cache.ensure(release);
+    if (!_examplePaths(dir).contains(path)) return null;
+    final exampleDir = Directory(p.joinAll([dir.path, 'examples', ...path.split('/')]));
+    final files = <ExampleFile>[];
+    var total = 0;
+    final entries = exampleDir.listSync(followLinks: false).whereType<File>().toList()
+      ..sort((a, b) => p.basename(a.path).compareTo(p.basename(b.path)));
+    for (final file in entries) {
+      final name = p.basename(file.path);
+      if (!_exampleExtensions.contains(p.extension(name).toLowerCase())) continue;
+      final length = file.lengthSync();
+      if (length > maxExampleFileBytes || total + length > maxExampleBytes || files.length >= maxExampleFiles) continue;
+      total += length;
+      files.add(ExampleFile(name: name, content: utf8.decode(file.readAsBytesSync(), allowMalformed: true)));
+    }
+    final sketch = '${path.split('/').last}.ino';
+    if (!files.any((f) => f.name == sketch)) return null;
+    return LibraryExampleFiles(library: release.name, version: release.version, path: path, files: files);
+  }
+
+  LibraryRelease? _releaseFor(String name, String? version, String? architecture) {
+    final index = _index;
+    if (index == null) return null;
+    return version == null || version.isEmpty ? index.latest(name, architecture: architecture) : index.release(name, version);
+  }
+
+  /// Dossiers de `examples/` qui contiennent un croquis du même nom (la convention d'Arduino), triés, avec des `/`.
+  static List<String> _examplePaths(Directory libraryDir) {
+    final root = Directory(p.join(libraryDir.path, 'examples'));
+    if (!root.existsSync()) return const [];
+    final found = <String>[];
+    var seen = 0;
+    for (final entity in root.listSync(recursive: true, followLinks: false)) {
+      if (++seen > 5000 || found.length >= maxExamples) break;
+      if (entity is! Directory) continue;
+      final name = p.basename(entity.path);
+      if (File(p.join(entity.path, '$name.ino')).existsSync()) {
+        found.add(p.split(p.relative(entity.path, from: root.path)).join('/'));
+      }
+    }
+    return found..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
+  }
+
+  /// Limites : une bibliothèque en a rarement plus de quelques dizaines, et un exemple tient en quelques fichiers.
+  static const int maxExamples = 200;
+  static const int maxExampleFiles = 20;
+  static const int maxExampleFileBytes = 128 * 1024;
+  static const int maxExampleBytes = 256 * 1024;
+  static const Set<String> _exampleExtensions = {'.ino', '.h', '.hpp', '.hh', '.c', '.cc', '.cpp'};
+
   Future<Set<String>> _headersOf(LibraryRelease release) async {
     final key = '${release.name}@${release.version}';
     final known = _headerSets[key];

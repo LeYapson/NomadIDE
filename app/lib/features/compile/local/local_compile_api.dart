@@ -188,6 +188,18 @@ class LocalCompileApi implements CompileApi {
   }
 
   @override
+  Future<LibraryExamples> libraryExamples(String name, {String? version, CompileBoard? board}) async {
+    final api = await _indexed;
+    return api.libraryExamples(name, version: version, board: board);
+  }
+
+  @override
+  Future<LibraryExampleFiles> libraryExample(String name, {String? version, CompileBoard? board, required String path}) async {
+    final api = await _indexed;
+    return api.libraryExample(name, version: version, board: board, path: path);
+  }
+
+  @override
   Future<List<IncludeResolution>> resolveIncludes(List<String> headers, CompileBoard board) async {
     final api = await _indexed;
     return api.resolveIncludes(headers, board);

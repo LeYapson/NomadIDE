@@ -69,6 +69,12 @@ abstract class CompileApi {
   /// Toutes les versions d'une bibliothèque, avec leurs dépendances.
   Future<LibraryDetail> libraryDetail(String name);
 
+  /// Exemples d'une bibliothèque : de [version], sinon de la dernière pour [board].
+  Future<LibraryExamples> libraryExamples(String name, {String? version, CompileBoard? board});
+
+  /// Fichiers de l'exemple [path] (un chemin renvoyé par [libraryExamples]).
+  Future<LibraryExampleFiles> libraryExample(String name, {String? version, CompileBoard? board, required String path});
+
   /// Pour chaque en-tête (`DHT.h`) : fourni par le cœur de la carte, ou bibliothèques qui le fournissent.
   Future<List<IncludeResolution>> resolveIncludes(List<String> headers, CompileBoard board);
 
@@ -181,6 +187,25 @@ class HttpCompileApi implements CompileApi {
   Future<LibraryDetail> libraryDetail(String name) async {
     final response = await _send('GET', '/v1/libraries/${Uri.encodeComponent(name)}');
     return _parse(response, LibraryDetail.fromJson);
+  }
+
+  @override
+  Future<LibraryExamples> libraryExamples(String name, {String? version, CompileBoard? board}) async {
+    final response = await _send('GET', '/v1/libraries/${Uri.encodeComponent(name)}/examples', query: {
+      if (version != null) 'version': version,
+      if (board != null) 'board': board.id,
+    });
+    return _parse(response, LibraryExamples.fromJson);
+  }
+
+  @override
+  Future<LibraryExampleFiles> libraryExample(String name, {String? version, CompileBoard? board, required String path}) async {
+    final response = await _send('GET', '/v1/libraries/${Uri.encodeComponent(name)}/example', query: {
+      'path': path,
+      if (version != null) 'version': version,
+      if (board != null) 'board': board.id,
+    });
+    return _parse(response, LibraryExampleFiles.fromJson);
   }
 
   @override

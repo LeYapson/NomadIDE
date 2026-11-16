@@ -1661,6 +1661,7 @@
       }
     }
   },
+  "edLibrariesTooltip": "Bibliothèques Arduino",
   "ccTooltip": "Compiler dans le cloud",
   "ccTitle": "Compiler le projet",
   "ccProject": "Projet : {name}",
@@ -1939,6 +1940,41 @@
     }
   },
   "alLoadingVersions": "Chargement des versions…",
+  "alExamplesButton": "Voir les exemples",
+  "alExamplesTitle": "Exemples de {name}",
+  "@alExamplesTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "alExamplesLoading": "Chargement des exemples…",
+  "alExamplesNone": "Cette bibliothèque ne fournit pas d’exemple.",
+  "alExamplesHint": "Choisir un exemple crée un nouveau projet : ses fichiers, la carte de l’écran précédent et cette bibliothèque (version {version}).",
+  "@alExamplesHint": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "alExampleCreate": "Créer un projet à partir de l’exemple {name}",
+  "@alExampleCreate": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "alExampleCreated": "Projet « {project} » créé à partir de l’exemple.",
+  "@alExampleCreated": {
+    "placeholders": {
+      "project": {
+        "type": "String"
+      }
+    }
+  },
   "alScan": "Analyser les #include du projet",
   "alScanning": "Analyse du projet…",
   "alSuggestionsTitle": "Bibliothèques à ajouter",

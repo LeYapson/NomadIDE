@@ -72,4 +72,28 @@ void main() {
     expect(CompileBoard.esp32s3.architecture, 'esp32');
     expect(CompileBoard.rp2040.architecture, 'rp2040');
   });
+
+  test("les exemples d'une bibliothèque font l'aller-retour en JSON, le nom est le dernier élément du chemin", () {
+    const example = LibraryExample(path: 'Sub/Nested');
+    expect(example.name, 'Nested');
+    expect(const LibraryExample(path: 'DHTtester').name, 'DHTtester');
+    expect(LibraryExample.fromJson(example.toJson()), example);
+
+    const list = LibraryExamples(library: 'DHT sensor library', version: '1.4.6', examples: [example]);
+    final back = LibraryExamples.fromJson(list.toJson());
+    expect(back.library, 'DHT sensor library');
+    expect(back.version, '1.4.6');
+    expect(back.examples, [example]);
+
+    const files = LibraryExampleFiles(
+      library: 'DHT sensor library',
+      version: '1.4.6',
+      path: 'Sub/Nested',
+      files: [ExampleFile(name: 'Nested.ino', content: 'void setup() {}')],
+    );
+    final filesBack = LibraryExampleFiles.fromJson(files.toJson());
+    expect(filesBack.path, 'Sub/Nested');
+    expect(filesBack.files.single.name, 'Nested.ino');
+    expect(filesBack.files.single.content, 'void setup() {}');
+  });
 }

@@ -90,6 +90,30 @@ class FakeCompileApi implements CompileApi {
     return details[name] ?? (throw const CompileApiException(CompileErrorKind.notFound));
   }
 
+  /// Exemples du faux service, par nom de bibliothèque, puis fichiers de chaque exemple par chemin.
+  final Map<String, List<String>> examples = {};
+  final Map<String, List<ExampleFile>> exampleFiles = {};
+  final List<String> exampleRequests = [];
+
+  @override
+  Future<LibraryExamples> libraryExamples(String name, {String? version, CompileBoard? board}) async {
+    if (libraryError != null) throw libraryError!;
+    final paths = examples[name] ?? (throw const CompileApiException(CompileErrorKind.notFound));
+    return LibraryExamples(
+      library: name,
+      version: version ?? latestVersion[name] ?? '1.0.0',
+      examples: [for (final p in paths) LibraryExample(path: p)],
+    );
+  }
+
+  @override
+  Future<LibraryExampleFiles> libraryExample(String name, {String? version, CompileBoard? board, required String path}) async {
+    if (libraryError != null) throw libraryError!;
+    exampleRequests.add('$name:$path');
+    final files = exampleFiles['$name:$path'] ?? (throw const CompileApiException(CompileErrorKind.notFound));
+    return LibraryExampleFiles(library: name, version: version ?? latestVersion[name] ?? '1.0.0', path: path, files: files);
+  }
+
   @override
   Future<List<IncludeResolution>> resolveIncludes(List<String> headers, CompileBoard board) async {
     if (libraryError != null) throw libraryError!;

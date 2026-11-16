@@ -133,11 +133,18 @@ class _CompileSheetState extends ConsumerState<CompileSheet> {
         ],
       );
     } else if (project == null || (!local && !settings.compileConfigured)) {
-      body = _NeedSetup(
-        onOpenSettings: () {
-          ref.read(homeTabProvider.notifier).show(HomeTab.settings);
-          Navigator.pop(context);
-        },
+      body = Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Sur ordinateur, sans serveur : « Sur cet ordinateur » reste à portée, sans passer par les réglages.
+          if (project != null && localCompileAvailable) ...[const _ModePicker(), const SizedBox(height: 12)],
+          _NeedSetup(
+            onOpenSettings: () {
+              ref.read(homeTabProvider.notifier).show(HomeTab.settings);
+              Navigator.pop(context);
+            },
+          ),
+        ],
       );
     } else {
       final host = local ? l10n.ccLocalHost : (Uri.tryParse(settings.compileServerUrl)?.host ?? settings.compileServerUrl);

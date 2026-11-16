@@ -263,7 +263,10 @@ class _EntryTile extends ConsumerWidget {
                 initialValue: entry.name,
                 confirmLabel: l10n.commonRename,
               );
-              if (name != null && name != entry.name) await controller.renameEntry(entry, name);
+              if (name != null && name != entry.name) {
+                final target = await controller.renameEntry(entry, name);
+                if (target != null) ref.read(editorProvider.notifier).renameLocalPath(project, entry.path, target);
+              }
             case _EntryAction.delete:
               final confirmed = await showConfirmDialog(
                 context,
