@@ -173,7 +173,7 @@ class ArduinoLibrariesController extends Notifier<ArduinoLibrariesState> {
     try {
       return await api.libraryExamples(name, version: version, board: state.board);
     } on CompileApiException catch (e) {
-      state = state.copyWith(problem: problemFor(e.kind), detail: e.detail);
+      state = state.copyWith(problem: _exampleProblemFor(e.kind), detail: e.detail);
       return null;
     }
   }
@@ -221,13 +221,18 @@ class ArduinoLibrariesController extends Notifier<ArduinoLibrariesState> {
       state = state.copyWith(working: false);
       return created;
     } on CompileApiException catch (e) {
-      state = state.copyWith(working: false, problem: problemFor(e.kind), detail: e.detail);
+      state = state.copyWith(working: false, problem: _exampleProblemFor(e.kind), detail: e.detail);
       return null;
     } on StorageException catch (e) {
       state = state.copyWith(working: false, problem: CompileProblem.saveFailed, detail: e.name);
       return null;
     }
   }
+
+  /// Comme [problemFor], mais « introuvable » (un service sans cette route, une bibliothèque sans exemple connu) ne
+  /// doit pas se lire « build expiré » : c'est une réponse inattendue du service.
+  static CompileProblem _exampleProblemFor(CompileErrorKind kind) =>
+      kind == CompileErrorKind.notFound ? CompileProblem.badResponse : problemFor(kind);
 
   /// Un nom de fichier sans dossier ni nom caché : ce que le service renvoie, vérifié ici aussi avant d'écrire.
   static bool _isPlainFileName(String name) =>

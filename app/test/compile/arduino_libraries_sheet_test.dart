@@ -360,5 +360,13 @@ void main() {
       expect(find.textContaining('injoignable'), findsWidgets);
       expect(await projects(tester), ['blink']);
     });
+
+    testWidgets("service sans cette route (introuvable) : « réponse inattendue », pas « build expiré »", (tester) async {
+      api.examples.clear(); // le faux service répond « introuvable »
+      await openExamples(tester);
+
+      expect(find.textContaining('expiré'), findsNothing);
+      expect(find.textContaining('inattendue'), findsWidgets);
+    });
   });
 }
