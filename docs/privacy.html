@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NomadIDE – Politique de confidentialité / Privacy policy</title>
+<meta name="description" content="Politique de confidentialité de l'application NomadIDE (Android). Privacy policy of the NomadIDE app.">
+<style>
+  :root { color-scheme: light dark; --fg:#1b1f24; --bg:#fff; --muted:#59636e; --line:#d8dee4; --link:#0b5fd0; }
+  @media (prefers-color-scheme: dark) { :root { --fg:#e6edf3; --bg:#0d1117; --muted:#9198a1; --line:#30363d; --link:#58a6ff; } }
+  body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+  main { max-width:46rem; margin:0 auto; padding:2rem 16px 4rem; }
+  h1 { font-size:1.8rem; margin:0 0 .25rem; }
+  h2 { font-size:1.25rem; margin:2rem 0 .5rem; padding-top:1rem; border-top:1px solid var(--line); }
+  h2.lang { font-size:1.6rem; border-top:3px solid var(--line); margin-top:3rem; }
+  a { color:var(--link); }
+  .muted { color:var(--muted); font-size:.95rem; }
+  nav a { margin-right:1rem; }
+  table { border-collapse:collapse; width:100%; font-size:.95rem; }
+  th, td { border:1px solid var(--line); padding:.4rem .6rem; text-align:left; vertical-align:top; }
+  th { background:color-mix(in srgb, var(--line) 40%, transparent); }
+  .scroll { overflow-x:auto; }
+</style>
+</head>
+<body>
+<main>
+
+<h1>NomadIDE</h1>
+<p class="muted">Politique de confidentialité · Privacy policy<br>
+Dernière mise à jour / Last updated : 16 novembre 2026 / November 16, 2026</p>
+<nav><a href="#fr">Français</a><a href="#en">English</a></nav>
+
+<!-- ===================================================== FRANÇAIS -->
+<h2 class="lang" id="fr" lang="fr">Français</h2>
+<div lang="fr">
+
+<p>NomadIDE est un éditeur de code embarqué (MicroPython, C/C++) pour Android qui permet d'écrire un programme, de le transférer ou de le flasher sur une carte (ESP32, Raspberry Pi Pico, etc.) branchée en USB. Cette politique s'applique à l'application Android NomadIDE (identifiant <code>dev.nomadide.app</code>). Le code source est public : <a href="https://github.com/LeYapson/NomadIDE">github.com/LeYapson/NomadIDE</a>.</p>
+
+<h2>En résumé</h2>
+<ul>
+  <li>Aucun compte, aucune inscription.</li>
+  <li><strong>Le développeur ne collecte, ne reçoit et ne stocke aucune donnée personnelle</strong> : pas de statistiques d'usage, pas de rapport de plantage, pas de publicité, pas de pistage.</li>
+  <li>Vos projets et réglages restent sur votre appareil.</li>
+  <li>L'application accède à Internet uniquement pour les fonctions décrites ci-dessous, et seulement vers les services indiqués.</li>
+  <li>Aucune donnée n'est vendue ni utilisée à des fins publicitaires.</li>
+</ul>
+
+<h2>Données stockées sur votre appareil</h2>
+<p>Ces données ne quittent pas l'appareil, sauf action de votre part décrite plus bas :</p>
+<ul>
+  <li>vos projets, fichiers et brouillons de code ;</li>
+  <li>vos réglages (langue, préférences d'affichage, mise à jour automatique) ;</li>
+  <li>si vous configurez la compilation à distance : l'adresse du serveur et le jeton d'accès que vous avez saisis ;</li>
+  <li>un cache de bibliothèques MicroPython et de firmwares téléchargés.</li>
+</ul>
+<p>Tout est supprimé en désinstallant l'application ou en effaçant son stockage depuis les réglages Android.</p>
+
+<h2>Connexion USB à votre carte</h2>
+<p>Quand vous branchez une carte, Android vous demande l'autorisation d'accès USB pour NomadIDE. L'application échange alors avec la carte (envoi du code, lecture des fichiers et de la sortie série, flashage de firmware). Ces échanges se font <strong>uniquement entre votre appareil et votre carte</strong> ; rien n'est envoyé sur Internet.</p>
+
+<h2>Accès à Internet : quand et vers qui</h2>
+<p>L'application demande la seule permission Android <code>INTERNET</code>. Elle ne demande ni localisation, ni contacts, ni appareil photo, ni micro, ni accès aux photos ou fichiers du téléphone en dehors de ses propres dossiers et des fichiers que vous choisissez vous-même.</p>
+<div class="scroll">
+<table>
+  <tr><th>Fonction</th><th>Quand</th><th>Destinataire</th><th>Ce qui est envoyé</th></tr>
+  <tr>
+    <td>Recherche de mise à jour de l'application</td>
+    <td>Au démarrage ; désactivable dans Réglages → À propos</td>
+    <td>GitHub (<code>api.github.com</code>)</td>
+    <td>Une requête de lecture de la liste des versions publiées. L'application n'ajoute aucun identifiant.</td>
+  </tr>
+  <tr>
+    <td>Téléchargement d'un firmware MicroPython</td>
+    <td>Seulement quand vous le demandez</td>
+    <td><code>micropython.org</code> ; GitHub (cartes Pimoroni)</td>
+    <td>Une requête de téléchargement du fichier correspondant à la carte choisie.</td>
+  </tr>
+  <tr>
+    <td>Bibliothèques MicroPython (équivalent de <code>mip</code>)</td>
+    <td>Seulement quand vous installez ou recherchez une bibliothèque</td>
+    <td><code>micropython.org</code>, GitHub, ou l'adresse HTTPS que vous saisissez vous-même</td>
+    <td>Une requête de téléchargement de l'index ou des fichiers demandés.</td>
+  </tr>
+  <tr>
+    <td>Compilation à distance (C/C++)</td>
+    <td>Seulement si <em>vous</em> avez saisi l'adresse d'un serveur de compilation et son jeton, et lancé une compilation</td>
+    <td>Le serveur que vous avez configuré</td>
+    <td>Le code source de votre projet (archive zip), la carte cible et votre jeton d'accès.</td>
+  </tr>
+  <tr>
+    <td>Outils de compilation locale (ordinateur uniquement)</td>
+    <td>Seulement quand vous installez les outils</td>
+    <td>GitHub et <code>espressif.github.io</code></td>
+    <td>Une requête de téléchargement des outils.</td>
+  </tr>
+</table>
+</div>
+
+<h3>À propos de la compilation à distance</h3>
+<p>NomadIDE n'est livrée avec <strong>aucun serveur de compilation par défaut</strong> et ne vous en impose aucun. Cette fonction est inactive tant que vous n'avez pas renseigné une adresse et un jeton. Le serveur est alors choisi, et le plus souvent exploité, par vous ou par la personne qui vous a fourni l'accès : la façon dont il traite votre code relève de son exploitant. Le service de référence fourni dans le dépôt compile dans un conteneur isolé sans accès réseau, supprime le code source dès la fin de la compilation et efface les binaires générés après 30 minutes. N'envoyez pas de secrets (mots de passe, clés) dans le code compilé à distance.</p>
+
+<h2>Services tiers</h2>
+<p>Les services listés ci-dessus (GitHub, micropython.org, espressif.github.io, et le serveur de compilation que vous choisissez éventuellement) reçoivent, comme tout site web contacté, votre adresse IP et les informations techniques d'une requête HTTPS. Leur traitement est régi par leurs propres politiques de confidentialité. NomadIDE ne leur transmet ni votre nom, ni un identifiant de l'appareil, ni de donnée de publicité. Toutes les connexions de l'application utilisent HTTPS (HTTP n'est accepté que vers un serveur de votre réseau local).</p>
+
+<h2>Partage, vente, publicité</h2>
+<p>Le développeur ne reçoit aucune donnée utilisateur et n'en partage donc avec personne. Aucune donnée n'est vendue. L'application ne contient aucune publicité, aucun outil d'analyse et aucun SDK de pistage.</p>
+
+<h2>Enfants</h2>
+<p>NomadIDE n'est pas destinée aux enfants de moins de 13 ans et ne collecte sciemment aucune donnée à leur sujet.</p>
+
+<h2>Conservation et suppression</h2>
+<p>Le développeur ne conservant aucune donnée utilisateur, il n'y a rien à supprimer de son côté. Les données locales se suppriment en désinstallant l'application ou en effaçant son stockage. Pour les données traitées par un serveur de compilation ou un service tiers, adressez-vous à leur exploitant.</p>
+
+<h2>Vos droits</h2>
+<p>Conformément au RGPD et aux lois applicables, vous pouvez demander l'accès, la rectification ou l'effacement de vos données. Comme le développeur n'en détient aucune, ces droits s'exercent directement sur votre appareil ou auprès du tiers concerné.</p>
+
+<h2>Modifications</h2>
+<p>Cette politique peut évoluer, par exemple si une nouvelle fonction utilise le réseau. La date de dernière mise à jour figure en haut de la page et l'historique est public dans le <a href="https://github.com/LeYapson/NomadIDE/commits/main/docs/privacy.html">dépôt GitHub</a>.</p>
+
+<h2>Contact</h2>
+<p>Pour toute question : <a href="https://github.com/LeYapson/NomadIDE/issues">github.com/LeYapson/NomadIDE/issues</a>.</p>
+</div>
+
+<!-- ===================================================== ENGLISH -->
+<h2 class="lang" id="en" lang="en">English</h2>
+<div lang="en">
+
+<p>NomadIDE is an embedded code editor (MicroPython, C/C++) for Android. You write a program and transfer or flash it to a board (ESP32, Raspberry Pi Pico, etc.) connected over USB. This policy applies to the NomadIDE Android app (package <code>dev.nomadide.app</code>). The source code is public: <a href="https://github.com/LeYapson/NomadIDE">github.com/LeYapson/NomadIDE</a>.</p>
+
+<h2>Summary</h2>
+<ul>
+  <li>No account, no sign-up.</li>
+  <li><strong>The developer does not collect, receive or store any personal data</strong>: no usage analytics, no crash reports, no ads, no tracking.</li>
+  <li>Your projects and settings stay on your device.</li>
+  <li>The app connects to the Internet only for the features described below, and only to the services listed.</li>
+  <li>No data is sold or used for advertising.</li>
+</ul>
+
+<h2>Data stored on your device</h2>
+<p>This data does not leave the device unless you take an action described below:</p>
+<ul>
+  <li>your projects, files and code drafts;</li>
+  <li>your settings (language, display preferences, automatic update check);</li>
+  <li>if you set up remote compilation: the server address and access token you entered;</li>
+  <li>a cache of downloaded MicroPython libraries and firmware files.</li>
+</ul>
+<p>Everything is removed when you uninstall the app or clear its storage in Android settings.</p>
+
+<h2>USB connection to your board</h2>
+<p>When you plug in a board, Android asks for USB access permission for NomadIDE. The app then talks to the board (sending code, reading files and serial output, flashing firmware). This exchange happens <strong>only between your device and your board</strong>; nothing is sent over the Internet.</p>
+
+<h2>Internet access: when and to whom</h2>
+<p>The app requests only the Android <code>INTERNET</code> permission. It does not request location, contacts, camera, microphone, or access to your photos or files beyond its own folders and the files you pick yourself.</p>
+<div class="scroll">
+<table>
+  <tr><th>Feature</th><th>When</th><th>Recipient</th><th>What is sent</th></tr>
+  <tr>
+    <td>App update check</td>
+    <td>At startup; can be turned off in Settings → About</td>
+    <td>GitHub (<code>api.github.com</code>)</td>
+    <td>A read request for the list of published releases. The app adds no identifier.</td>
+  </tr>
+  <tr>
+    <td>MicroPython firmware download</td>
+    <td>Only when you ask for it</td>
+    <td><code>micropython.org</code>; GitHub (Pimoroni boards)</td>
+    <td>A download request for the file matching the board you chose.</td>
+  </tr>
+  <tr>
+    <td>MicroPython libraries (<code>mip</code> equivalent)</td>
+    <td>Only when you browse or install a library</td>
+    <td><code>micropython.org</code>, GitHub, or the HTTPS address you enter yourself</td>
+    <td>A download request for the index or the requested files.</td>
+  </tr>
+  <tr>
+    <td>Remote compilation (C/C++)</td>
+    <td>Only if <em>you</em> entered a compile server address and token and started a build</td>
+    <td>The server you configured</td>
+    <td>Your project source code (zip archive), the target board and your access token.</td>
+  </tr>
+  <tr>
+    <td>Local build tools (desktop only)</td>
+    <td>Only when you install the tools</td>
+    <td>GitHub and <code>espressif.github.io</code></td>
+    <td>A download request for the tools.</td>
+  </tr>
+</table>
+</div>
+
+<h3>About remote compilation</h3>
+<p>NomadIDE ships with <strong>no default compile server</strong> and does not require one. The feature stays inactive until you enter an address and a token. The server is then chosen, and usually operated, by you or whoever gave you access: how it handles your code is up to its operator. The reference service in the repository compiles inside an isolated container with no network access, deletes the source code as soon as the build ends and erases the generated binaries after 30 minutes. Do not include secrets (passwords, keys) in code compiled remotely.</p>
+
+<h2>Third parties</h2>
+<p>The services listed above (GitHub, micropython.org, espressif.github.io, and any compile server you choose) receive, like any website you contact, your IP address and the technical information of an HTTPS request. Their handling of it is governed by their own privacy policies. NomadIDE sends them no name, no device identifier and no advertising data. All connections use HTTPS (HTTP is accepted only for a server on your local network).</p>
+
+<h2>Sharing, selling, advertising</h2>
+<p>The developer receives no user data and therefore shares none. No data is sold. The app contains no ads, no analytics tools and no tracking SDKs.</p>
+
+<h2>Children</h2>
+<p>NomadIDE is not directed at children under 13 and does not knowingly collect data about them.</p>
+
+<h2>Retention and deletion</h2>
+<p>Since the developer holds no user data, there is nothing to delete on their side. Local data is removed by uninstalling the app or clearing its storage. For data handled by a compile server or a third-party service, contact its operator.</p>
+
+<h2>Your rights</h2>
+<p>Under the GDPR and other applicable laws, you may request access, correction or deletion of your data. Since the developer holds none, these rights are exercised directly on your device or with the relevant third party.</p>
+
+<h2>Changes</h2>
+<p>This policy may change, for example if a new feature uses the network. The last-updated date is at the top of the page and the history is public in the <a href="https://github.com/LeYapson/NomadIDE/commits/main/docs/privacy.html">GitHub repository</a>.</p>
+
+<h2>Contact</h2>
+<p>For any question: <a href="https://github.com/LeYapson/NomadIDE/issues">github.com/LeYapson/NomadIDE/issues</a>.</p>
+</div>
+
+</main>
+</body>
+</html>
