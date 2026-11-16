@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Produit** | NomadIDE |
-| **Version du document** | 0.27 — jalons remis en cohérence avec les releases 0.1 à 0.4 |
+| **Version du document** | 0.28 — fiche Google Play prête, test fermé en recherche de testeurs |
 | **Date** | 2026-10-01 |
 | **Statut du produit** | Étape 1 terminée (HAL USB/série + moniteur série) ; étape 2 en cours |
 | **Documents liés** | [README.md](README.md) · [ADR 0001 — Flutter](docs/adr/0001-stack-flutter.md) · [Politique de confidentialité](docs/privacy.html) |
@@ -419,7 +419,7 @@ L'utilisateur ouvre l'app, voit un bandeau expliquant que l'USB-série n'est pas
 | **M3d** — Étape 3 | Bibliothèques MicroPython (sans serveur) | H1, H2, H5, H6, H7 | 🧪 H1 et H2 validés sur ESP32 (Android) ; H6 et H7 écrits et testés ; reste H5 (exemples) |
 | **M3b** — Étape 3 | Service de compilation cloud, compte, quotas, abonnement | D5, F1–F4, H3, H4 | 🧪 D5, H3 et H4 validés ; restent F1–F4 (comptes, quotas, abonnement), qui attendent les décisions sur les limites gratuites, le paiement et la licence |
 | Post-v1 | Flash STM32 (AN3155) | D3 | 🔜 |
-| **M4** — Étape 4 | CI/CD, signature et distribution (Play Store, MSIX, notarisation macOS), mises à jour | E1, E4, E5 | 🧪 CI (analyse et tests) ; workflow de release desktop ; releases publiées sur GitHub depuis la 0.1.0 pour Windows, Linux et macOS, et pour Android depuis la 0.1.1 (APK signés avec une clé stable, App Bundle pour le Play Store) ; restent la signature de l'app Windows et la notarisation macOS, le test fermé du Play Store et le MSIX |
+| **M4** — Étape 4 | CI/CD, signature et distribution (Play Store, MSIX, notarisation macOS), mises à jour | E1, E4, E5 | 🧪 CI (analyse et tests) ; workflow de release desktop ; releases publiées sur GitHub depuis la 0.1.0 pour Windows, Linux et macOS, et pour Android depuis la 0.1.1 (APK signés avec une clé stable, App Bundle pour le Play Store) ; identifiant Android définitif `dev.nomadide.app` (0.4.1) ; **Play Store : fiche prête** (textes FR/EN, icône 512, image de présentation, 6 captures FR et 6 EN dans `docs/`, politique de confidentialité et page d'accueil en ligne, formulaires de la Play Console remplis) ; restent le **test fermé** (12 testeurs pendant 14 jours avant de pouvoir publier), la signature de l'app Windows, la notarisation macOS et le MSIX |
 
 Les dates ne sont pas fixées : les jalons avancent par versions publiées (0.1.0 à 0.4.0 à ce jour, voir `CHANGELOG.md`).
 
@@ -456,3 +456,4 @@ Les dates ne sont pas fixées : les jalons avancent par versions publiées (0.1.
 | 0.25 | 2026-11-07 | Ajout de D9 (compilation locale sur ordinateur) ; le non-objectif « compilation locale » ne vise plus que le mobile. Le service de compilation tourne dans l'app sur 127.0.0.1 avec `arduino-cli` à la place de Docker : un seul code pour le cloud et le local |
 | 0.26 | 2026-11-07 | D9 validé sur Windows (ESP32 et ESP32-S3 : compilation locale, flash, programme exécuté) ; l'index des bibliothèques n'est téléchargé qu'à la demande |
 | 0.27 | 2026-11-16 | Publication sur le Play Store : app gratuite, page de politique de confidentialité (`docs/privacy.html`, FR/EN, hébergée par GitHub Pages) ; épopée F : rappel de ce qu'il faut refaire avant la version avec comptes (politique, formulaire de sécurité des données, suppression du compte, paiement, statut du compte développeur) |
+| 0.28 | 2026-11-16 | M4 : fiche Google Play prête (textes, icône, image de présentation, captures FR et EN prises sur téléphone, page d'accueil du site, politique de confidentialité) ; reste le test fermé (12 testeurs, 14 jours). Défauts relevés pendant les captures : onglet resté ouvert après la suppression d'un projet, « » » seul en fin de ligne dans le tutoriel, « licence » en anglais (corrigés dans la PR #71) ; renommer un fichier ou un dossier laisse son onglet sur l'ancien chemin (à traiter) |
