@@ -2,6 +2,16 @@
 
 Les notes de chaque version sont reprises telles quelles dans la release GitHub.
 
+## [0.4.1] — Nouvel identifiant Android
+
+- **Identifiant de l'application Android** : `dev.nomadide.app`, à la place de `dev.nomadmcu.nomad_mcu` (reste de
+  l'ancien nom du projet). Il est définitif sur Google Play et apparaît dans l'adresse de la fiche, d'où ce
+  changement avant la première publication.
+- **Conséquence à connaître** : pour Android, c'est une autre application. Elle **ne remplace pas** la version déjà
+  installée : désinstallez l'ancienne NomadIDE avant d'installer celle-ci (les projets enregistrés dans l'ancienne
+  seront perdus ; copiez le code important avant). Les versions suivantes se mettront à jour normalement, par-dessus.
+- Windows, macOS et Linux ne sont pas concernés.
+
 ## [0.4.0] — Compilation sur cet ordinateur
 
 - **Compilation sur cet ordinateur** (Windows, macOS, Linux) : la feuille de compilation propose « Sur cet ordinateur »

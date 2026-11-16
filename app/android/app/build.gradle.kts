@@ -22,7 +22,7 @@ fun signingValue(property: String, env: String): String? =
 val releaseStoreFile = signingValue("storeFile", "ANDROID_KEYSTORE_PATH")
 
 android {
-    namespace = "dev.nomadmcu.nomad_mcu"
+    namespace = "dev.nomadide.app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -36,7 +36,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "dev.nomadmcu.nomad_mcu"
+        applicationId = "dev.nomadide.app"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
