@@ -1,4 +1,4 @@
-package dev.nomadmcu.nomad_mcu
+package dev.nomadide.app
 
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
@@ -31,8 +31,8 @@ import java.util.concurrent.Executors
  */
 class PicobootUsb(private val context: Context, engine: FlutterEngine) : MethodChannel.MethodCallHandler {
     companion object {
-        const val CHANNEL = "dev.nomadmcu/picoboot"
-        private const val ACTION_PERMISSION = "dev.nomadmcu.nomad_mcu.USB_PERMISSION"
+        const val CHANNEL = "dev.nomadide/picoboot"
+        private const val ACTION_PERMISSION = "dev.nomadide.app.USB_PERMISSION"
         private const val VENDOR_RASPBERRY_PI = 0x2E8A
         private const val PRODUCT_RP2040_BOOTSEL = 0x0003
         private const val CLASS_VENDOR_SPECIFIC = 0xFF

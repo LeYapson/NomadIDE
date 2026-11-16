@@ -1,4 +1,4 @@
-package dev.nomadmcu.nomad_mcu
+package dev.nomadide.app
 
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
