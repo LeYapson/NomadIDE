@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NomadIDE – Programmez vos cartes ESP32 et RP2040</title>
+<meta name="description" content="NomadIDE : écrivez, compilez et flashez du MicroPython et du C/C++ sur vos cartes ESP32 et RP2040, depuis un téléphone Android ou un ordinateur. Sans compte, sans collecte de données.">
+<meta name="theme-color" content="#111318">
+<link rel="icon" href="brand/NomadIDE.ico">
+<link rel="stylesheet" href="assets/site.css">
+<link rel="alternate" hreflang="en" href="https://leyapson.github.io/NomadIDE/en/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="NomadIDE – Programmez vos cartes ESP32 et RP2040">
+<meta property="og:description" content="MicroPython et C/C++ pour ESP32 et RP2040, sur téléphone et ordinateur. Sans compte, sans collecte de données.">
+<meta property="og:image" content="https://leyapson.github.io/NomadIDE/brand/NomadIDE.png">
+<meta property="og:url" content="https://leyapson.github.io/NomadIDE/">
+</head>
+<body>
+<a class="skip" href="#contenu">Aller au contenu</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="./"><img src="brand/NomadIDE.png" alt="" width="40" height="40">NomadIDE</a>
+    <nav class="main" aria-label="Navigation principale">
+      <a href="#fonctions">Fonctions</a>
+      <a href="#cartes">Cartes</a>
+      <a href="#telecharger">Télécharger</a>
+      <a href="privacy.html#fr">Confidentialité</a>
+      <a href="https://github.com/LeYapson/NomadIDE">GitHub</a>
+      <a href="en/" hreflang="en" lang="en">English</a>
+    </nav>
+  </div>
+</header>
+
+<main id="contenu">
+
+<section class="hero" aria-labelledby="titre">
+  <div class="wrap">
+    <div>
+      <p class="badge">Version bêta</p>
+      <h1 id="titre">Programmez vos cartes ESP32 et RP2040, d'où vous voulez.</h1>
+      <p class="lead">Écrivez en MicroPython ou en C/C++, compilez, flashez : depuis votre téléphone Android ou votre ordinateur. Branchez la carte, c'est tout.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="#telecharger">Télécharger</a>
+        <a class="btn btn-outline" href="https://github.com/LeYapson/NomadIDE">Voir le code sur GitHub</a>
+      </div>
+      <p class="note">Gratuit, sans compte, sans publicité. Code source libre (licence MIT).</p>
+    </div>
+
+    <div class="mock" aria-hidden="true">
+      <div class="mock-bar"><span>NomadIDE · MicroPython</span><span class="mock-status">Connecté</span></div>
+<pre><span class="in">&gt;&gt;&gt; </span>print("Bonjour depuis NomadIDE")
+<span class="out">Bonjour depuis NomadIDE</span>
+<span class="in">&gt;&gt;&gt; </span>import machine, ssd1306
+<span class="ok">Bibliothèque ssd1306 installée</span></pre>
+      <div class="mock-actions"><span class="btn btn-hardware">▶ Exécuter</span><span class="btn btn-outline">Effacer</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="fonctions" class="alt" aria-labelledby="t-fonctions">
+  <div class="wrap">
+    <h2 id="t-fonctions">Tout ce qu'il faut, au même endroit</h2>
+    <p class="section-lead">Un seul outil pour écrire un programme, l'essayer sur la carte et l'installer pour de bon.</p>
+    <ul class="grid">
+      <li class="card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+        <h3>Moniteur série</h3>
+        <p>Voyez ce que votre carte affiche, envoyez-lui des commandes, pilotez DTR/RTS et redémarrez-la. Les cartes sont détectées dès le branchement.</p>
+      </li>
+      <li class="card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg>
+        <h3>MicroPython</h3>
+        <p>Console interactive, fichiers de la carte envoyés et vérifiés, exécution d'un fichier ou d'une sélection, et bibliothèques de <em>micropython-lib</em> installées en un toucher.</p>
+      </li>
+      <li class="card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        <h3>Éditeur de code</h3>
+        <p>Python, C et C++ avec coloration, autocomplétion, onglets et brouillons enregistrés tout seuls. Sur téléphone, une barre de symboles se place au-dessus du clavier.</p>
+      </li>
+      <li class="card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <h3>C/C++ et bibliothèques Arduino</h3>
+        <p>Projets Arduino pour ESP32 et RP2040, compilés sur votre ordinateur ou sur un serveur que vous choisissez, avec le catalogue de bibliothèques d'Arduino et leurs versions enregistrées dans le projet.</p>
+      </li>
+      <li class="card">
+        <svg class="icon hw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 4 14 12 14 11 22 20 10 12 10 13 2"/></svg>
+        <h3>Flash vérifié</h3>
+        <p>Fichiers <code>.uf2</code> pour les cartes RP2040, <code>.bin</code> pour les ESP32 (même plusieurs à la fois), vérification après écriture et firmware MicroPython officiel téléchargé depuis l'app.</p>
+      </li>
+      <li class="card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="4.5" r="2"/><path d="M5 8l7 1 7-1M12 9v5M9 21l3-7 3 7"/></svg>
+        <h3>Pour tout le monde</h3>
+        <p>Interface en français et en anglais, thème clair ou sombre, tutoriel au premier lancement, compatibilité avec le lecteur d'écran et texte agrandi jusqu'à 200 %.</p>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section aria-labelledby="t-etapes">
+  <div class="wrap">
+    <h2 id="t-etapes">De l'idée à la carte en trois étapes</h2>
+    <p class="section-lead">Le même parcours que dans l'onglet Flasher de l'app.</p>
+    <ol class="steps">
+      <li><h3>Brancher</h3><p>Un câble USB sur ordinateur, un adaptateur OTG sur téléphone. Android demande l'autorisation une seule fois.</p></li>
+      <li><h3>Écrire</h3><p>Tapez votre programme, ou compilez un projet Arduino. Essayez-le tout de suite dans la console.</p></li>
+      <li><h3>Flasher</h3><p>Un bouton installe le programme sur la carte, vérifie l'écriture et la redémarre.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section id="cartes" class="alt" aria-labelledby="t-cartes">
+  <div class="wrap">
+    <h2 id="t-cartes">Cartes prises en charge</h2>
+    <p class="section-lead">Testées sur du vrai matériel, sous Windows et sous Android.</p>
+    <div class="table-scroll" tabindex="0" role="region" aria-label="Tableau des cartes prises en charge">
+      <table class="boards">
+        <thead><tr><th scope="col">Carte</th><th scope="col">Puce</th><th scope="col">État</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">ESP32 (DevKit)</th><td>ESP32</td><td class="status"><span class="tag-ok">Validée</span></td></tr>
+          <tr><th scope="row">ESP32-S3</th><td>ESP32-S3</td><td class="status"><span class="tag-ok">Validée</span></td></tr>
+          <tr><th scope="row">Pimoroni Badger 2040</th><td>RP2040</td><td class="status"><span class="tag-ok">Validée</span></td></tr>
+          <tr><th scope="row">ESP32-S2</th><td>ESP32-S2</td><td class="status"><span class="tag-todo">Prise en charge, non testée</span></td></tr>
+          <tr><th scope="row">Raspberry Pi Pico, Pico W</th><td>RP2040</td><td class="status"><span class="tag-todo">Prise en charge, non testée</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="t-valeurs">
+  <div class="wrap">
+    <h2 id="t-valeurs">Respectueux, et accessible</h2>
+    <div class="two">
+      <div class="card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <h3>Vos données restent chez vous</h3>
+        <ul class="check">
+          <li>Aucun compte, aucune publicité, aucun outil de suivi.</li>
+          <li>Le développeur ne reçoit aucune donnée.</li>
+          <li>Internet n'est utilisé que pour chercher une mise à jour (désactivable), télécharger ce que vous demandez, ou joindre le serveur de compilation que vous avez configuré.</li>
+        </ul>
+        <p><a href="privacy.html#fr">Lire la politique de confidentialité</a></p>
+      </div>
+      <div class="card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="4.5" r="2"/><path d="M5 8l7 1 7-1M12 9v5M9 21l3-7 3 7"/></svg>
+        <h3>Conçue pour être utilisable par tous</h3>
+        <ul class="check">
+          <li>Compatible avec le lecteur d'écran (TalkBack sous Android).</li>
+          <li>Zones tactiles d'au moins 48 dp.</li>
+          <li>Contrastes WCAG 2.2 AA, vérifiés par des tests automatiques.</li>
+          <li>Texte agrandi jusqu'à 200 % sans rien qui déborde.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="telecharger" class="alt" aria-labelledby="t-dl">
+  <div class="wrap">
+    <h2 id="t-dl">Télécharger</h2>
+    <p class="section-lead">NomadIDE est en version bêta. Les fichiers de chaque version sont sur GitHub.</p>
+    <p><a class="btn btn-primary" href="https://github.com/LeYapson/NomadIDE/releases">Voir les versions sur GitHub</a></p>
+    <div class="table-scroll" tabindex="0" role="region" aria-label="Tableau des téléchargements par système">
+      <table class="stack" role="table">
+        <thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Système</th><th scope="col" role="columnheader">Fichier</th><th scope="col" role="columnheader">Pour l'installer</th><th scope="col" role="columnheader">État</th></tr></thead>
+        <tbody role="rowgroup">
+          <tr role="row">
+            <th scope="row" role="rowheader">Android 7 et plus</th>
+            <td role="cell" data-label="Fichier"><code>NomadIDE-…-android-arm64.apk</code> (<code>arm32</code> pour les anciens téléphones)</td>
+            <td role="cell" data-label="Pour l'installer">Ouvrez l'APK et autorisez l'installation depuis cette source. Adaptateur OTG pour la carte. Google Play : en préparation.</td>
+            <td class="status" role="cell" data-label="État"><span class="tag-ok">Validé</span></td>
+          </tr>
+          <tr role="row">
+            <th scope="row" role="rowheader">Windows 10 et 11 (64 bits)</th>
+            <td role="cell" data-label="Fichier"><code>NomadIDE-…-windows-x64.zip</code></td>
+            <td role="cell" data-label="Pour l'installer">Décompressez et lancez <code>nomad_mcu.exe</code>. L'app n'est pas signée : cliquez sur « Informations complémentaires », puis « Exécuter quand même ».</td>
+            <td class="status" role="cell" data-label="État"><span class="tag-ok">Validé</span></td>
+          </tr>
+          <tr role="row">
+            <th scope="row" role="rowheader">macOS</th>
+            <td role="cell" data-label="Fichier"><code>NomadIDE-…-macos.zip</code></td>
+            <td role="cell" data-label="Pour l'installer">Décompressez, glissez l'app dans Applications. Non notarisée : clic droit, « Ouvrir », la première fois.</td>
+            <td class="status" role="cell" data-label="État"><span class="tag-todo">Compilée, non testée</span></td>
+          </tr>
+          <tr role="row">
+            <th scope="row" role="rowheader">Linux (64 bits)</th>
+            <td role="cell" data-label="Fichier"><code>NomadIDE-…-linux-x64.tar.gz</code></td>
+            <td role="cell" data-label="Pour l'installer">Décompressez et lancez <code>nomad_mcu</code>. Ajoutez votre utilisateur au groupe <code>dialout</code> (ou <code>uucp</code>) pour accéder aux ports série.</td>
+            <td class="status" role="cell" data-label="État"><span class="tag-todo">Compilée, non testée</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Un problème ? Dans l'app, Réglages → Aide → « Exporter un journal de diagnostic », puis <a href="https://github.com/LeYapson/NomadIDE/issues">ouvrez une issue</a>.</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p>NomadIDE · licence MIT · par Yatokishi</p>
+    <ul>
+      <li><a href="privacy.html#fr">Confidentialité</a></li>
+      <li><a href="privacy.html#suppression">Suppression des données</a></li>
+      <li><a href="https://github.com/LeYapson/NomadIDE/blob/main/CHANGELOG.md">Historique des versions</a></li>
+      <li><a href="mailto:yapsonstudio@gmail.com">Contact</a></li>
+    </ul>
+  </div>
+</footer>
+</body>
+</html>

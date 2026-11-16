@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NomadIDE – Program your ESP32 and RP2040 boards</title>
+<meta name="description" content="NomadIDE: write, build and flash MicroPython and C/C++ on your ESP32 and RP2040 boards, from an Android phone or a computer. No account, no data collection.">
+<meta name="theme-color" content="#111318">
+<link rel="icon" href="../brand/NomadIDE.ico">
+<link rel="stylesheet" href="../assets/site.css">
+<link rel="alternate" hreflang="fr" href="https://leyapson.github.io/NomadIDE/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="NomadIDE – Program your ESP32 and RP2040 boards">
+<meta property="og:description" content="MicroPython and C/C++ for ESP32 and RP2040, on phone and computer. No account, no data collection.">
+<meta property="og:image" content="https://leyapson.github.io/NomadIDE/brand/NomadIDE.png">
+<meta property="og:url" content="https://leyapson.github.io/NomadIDE/en/">
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="./"><img src="../brand/NomadIDE.png" alt="" width="40" height="40">NomadIDE</a>
+    <nav class="main" aria-label="Main navigation">
+      <a href="#features">Features</a>
+      <a href="#boards">Boards</a>
+      <a href="#download">Download</a>
+      <a href="../privacy.html#en">Privacy</a>
+      <a href="https://github.com/LeYapson/NomadIDE">GitHub</a>
+      <a href="../" hreflang="fr" lang="fr">Français</a>
+    </nav>
+  </div>
+</header>
+
+<main id="content">
+
+<section class="hero" aria-labelledby="title">
+  <div class="wrap">
+    <div>
+      <p class="badge">Beta</p>
+      <h1 id="title">Program your ESP32 and RP2040 boards, from anywhere.</h1>
+      <p class="lead">Write in MicroPython or C/C++, build, flash: from your Android phone or your computer. Plug in the board, that's all.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="#download">Download</a>
+        <a class="btn btn-outline" href="https://github.com/LeYapson/NomadIDE">View the code on GitHub</a>
+      </div>
+      <p class="note">Free, no account, no ads. Open source (MIT licence).</p>
+    </div>
+
+    <div class="mock" aria-hidden="true">
+      <div class="mock-bar"><span>NomadIDE · MicroPython</span><span class="mock-status">Connected</span></div>
+<pre><span class="in">&gt;&gt;&gt; </span>print("Hello from NomadIDE")
+<span class="out">Hello from NomadIDE</span>
+<span class="in">&gt;&gt;&gt; </span>import machine, ssd1306
+<span class="ok">Library ssd1306 installed</span></pre>
+      <div class="mock-actions"><span class="btn btn-hardware">▶ Run</span><span class="btn btn-outline">Clear</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="features" class="alt" aria-labelledby="t-features">
+  <div class="wrap">
+    <h2 id="t-features">Everything you need, in one place</h2>
+    <p class="section-lead">One tool to write a program, try it on the board and install it for good.</p>
+    <ul class="grid">
+      <li class="card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+        <h3>Serial monitor</h3>
+        <p>See what your board prints, send it commands, drive DTR/RTS and restart it. Boards are detected as soon as you plug them in.</p>
+      </li>
+      <li class="card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg>
+        <h3>MicroPython</h3>
+        <p>Interactive console, board files sent and verified, run a file or a selection, and <em>micropython-lib</em> libraries installed in one tap.</p>
+      </li>
+      <li class="card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        <h3>Code editor</h3>
+        <p>Python, C and C++ with highlighting, autocomplete, tabs and drafts saved automatically. On a phone, a symbol bar sits above the keyboard.</p>
+      </li>
+      <li class="card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <h3>C/C++ and Arduino libraries</h3>
+        <p>Arduino projects for ESP32 and RP2040, built on your computer or on a server you choose, with Arduino's library catalogue and the versions pinned in the project.</p>
+      </li>
+      <li class="card">
+        <svg class="icon hw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 4 14 12 14 11 22 20 10 12 10 13 2"/></svg>
+        <h3>Verified flashing</h3>
+        <p><code>.uf2</code> files for RP2040 boards, <code>.bin</code> for ESP32 (even several at once), a check after writing, and the official MicroPython firmware downloaded from the app.</p>
+      </li>
+      <li class="card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="4.5" r="2"/><path d="M5 8l7 1 7-1M12 9v5M9 21l3-7 3 7"/></svg>
+        <h3>For everyone</h3>
+        <p>French and English interface, light or dark theme, a tutorial on first launch, screen reader support and text enlarged up to 200%.</p>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section aria-labelledby="t-steps">
+  <div class="wrap">
+    <h2 id="t-steps">From idea to board in three steps</h2>
+    <p class="section-lead">The same path as the Flash tab of the app.</p>
+    <ol class="steps">
+      <li><h3>Plug in</h3><p>A USB cable on a computer, an OTG adapter on a phone. Android asks for permission once.</p></li>
+      <li><h3>Write</h3><p>Type your program, or build an Arduino project. Try it right away in the console.</p></li>
+      <li><h3>Flash</h3><p>One button installs the program on the board, checks the write and restarts it.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section id="boards" class="alt" aria-labelledby="t-boards">
+  <div class="wrap">
+    <h2 id="t-boards">Supported boards</h2>
+    <p class="section-lead">Tested on real hardware, on Windows and on Android.</p>
+    <div class="table-scroll" tabindex="0" role="region" aria-label="Table of supported boards">
+      <table class="boards">
+        <thead><tr><th scope="col">Board</th><th scope="col">Chip</th><th scope="col">Status</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">ESP32 (DevKit)</th><td>ESP32</td><td class="status"><span class="tag-ok">Validated</span></td></tr>
+          <tr><th scope="row">ESP32-S3</th><td>ESP32-S3</td><td class="status"><span class="tag-ok">Validated</span></td></tr>
+          <tr><th scope="row">Pimoroni Badger 2040</th><td>RP2040</td><td class="status"><span class="tag-ok">Validated</span></td></tr>
+          <tr><th scope="row">ESP32-S2</th><td>ESP32-S2</td><td class="status"><span class="tag-todo">Supported, not tested</span></td></tr>
+          <tr><th scope="row">Raspberry Pi Pico, Pico W</th><td>RP2040</td><td class="status"><span class="tag-todo">Supported, not tested</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="t-values">
+  <div class="wrap">
+    <h2 id="t-values">Respectful, and accessible</h2>
+    <div class="two">
+      <div class="card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <h3>Your data stays with you</h3>
+        <ul class="check">
+          <li>No account, no ads, no tracking tools.</li>
+          <li>The developer receives no data.</li>
+          <li>The Internet is used only to look for an update (can be turned off), download what you ask for, or reach the compile server you configured.</li>
+        </ul>
+        <p><a href="../privacy.html#en">Read the privacy policy</a></p>
+      </div>
+      <div class="card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="4.5" r="2"/><path d="M5 8l7 1 7-1M12 9v5M9 21l3-7 3 7"/></svg>
+        <h3>Designed to be usable by everyone</h3>
+        <ul class="check">
+          <li>Screen reader support (TalkBack on Android).</li>
+          <li>Touch targets of at least 48 dp.</li>
+          <li>WCAG 2.2 AA contrast, checked by automated tests.</li>
+          <li>Text enlarged up to 200% with nothing overflowing.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="download" class="alt" aria-labelledby="t-dl">
+  <div class="wrap">
+    <h2 id="t-dl">Download</h2>
+    <p class="section-lead">NomadIDE is in beta. The files for each version are on GitHub.</p>
+    <p><a class="btn btn-primary" href="https://github.com/LeYapson/NomadIDE/releases">See the releases on GitHub</a></p>
+    <div class="table-scroll" tabindex="0" role="region" aria-label="Downloads by system">
+      <table class="stack" role="table">
+        <thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">System</th><th scope="col" role="columnheader">File</th><th scope="col" role="columnheader">How to install</th><th scope="col" role="columnheader">Status</th></tr></thead>
+        <tbody role="rowgroup">
+          <tr role="row">
+            <th scope="row" role="rowheader">Android 7 and later</th>
+            <td role="cell" data-label="File"><code>NomadIDE-…-android-arm64.apk</code> (<code>arm32</code> for older phones)</td>
+            <td role="cell" data-label="How to install">Open the APK and allow installing from this source. OTG adapter for the board. Google Play: in preparation.</td>
+            <td class="status" role="cell" data-label="Status"><span class="tag-ok">Validated</span></td>
+          </tr>
+          <tr role="row">
+            <th scope="row" role="rowheader">Windows 10 and 11 (64-bit)</th>
+            <td role="cell" data-label="File"><code>NomadIDE-…-windows-x64.zip</code></td>
+            <td role="cell" data-label="How to install">Unzip and run <code>nomad_mcu.exe</code>. The app is not signed: click “More info”, then “Run anyway”.</td>
+            <td class="status" role="cell" data-label="Status"><span class="tag-ok">Validated</span></td>
+          </tr>
+          <tr role="row">
+            <th scope="row" role="rowheader">macOS</th>
+            <td role="cell" data-label="File"><code>NomadIDE-…-macos.zip</code></td>
+            <td role="cell" data-label="How to install">Unzip and drag the app to Applications. Not notarized: right-click, “Open”, the first time.</td>
+            <td class="status" role="cell" data-label="Status"><span class="tag-todo">Built, not tested</span></td>
+          </tr>
+          <tr role="row">
+            <th scope="row" role="rowheader">Linux (64-bit)</th>
+            <td role="cell" data-label="File"><code>NomadIDE-…-linux-x64.tar.gz</code></td>
+            <td role="cell" data-label="How to install">Unpack and run <code>nomad_mcu</code>. Add your user to the <code>dialout</code> (or <code>uucp</code>) group to access serial ports.</td>
+            <td class="status" role="cell" data-label="Status"><span class="tag-todo">Built, not tested</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">A problem? In the app, Settings → Help → “Export a diagnostic log”, then <a href="https://github.com/LeYapson/NomadIDE/issues">open an issue</a>.</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p>NomadIDE · MIT licence · by Yatokishi</p>
+    <ul>
+      <li><a href="../privacy.html#en">Privacy</a></li>
+      <li><a href="../privacy.html#deletion">Data deletion</a></li>
+      <li><a href="https://github.com/LeYapson/NomadIDE/blob/main/CHANGELOG.md">Changelog</a></li>
+      <li><a href="mailto:yapsonstudio@gmail.com">Contact</a></li>
+    </ul>
+  </div>
+</footer>
+</body>
+</html>
