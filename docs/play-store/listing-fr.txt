@@ -1,0 +1,33 @@
+NOM (30 max)
+NomadIDE
+
+BRÈVE DESCRIPTION (80 max)
+Écrivez, compilez et flashez vos cartes ESP32 et RP2040, sur téléphone ou PC.
+
+DESCRIPTION COMPLÈTE (4000 max)
+NomadIDE est un éditeur de code pour cartes à microcontrôleur. Branchez votre carte ESP32 ou RP2040 (Raspberry Pi Pico, Badger 2040…) à votre téléphone avec un adaptateur USB OTG, écrivez un programme en MicroPython ou en C/C++, essayez-le, puis installez-le sur la carte.
+
+CE QUE VOUS POUVEZ FAIRE
+• Moniteur série : voyez ce que la carte affiche, envoyez-lui des commandes, pilotez DTR/RTS et redémarrez-la. Les cartes sont détectées dès le branchement.
+• MicroPython : console interactive, fichiers de la carte (envoi, téléchargement, renommage, vérification), exécution d'un fichier ou d'une sélection, enregistrement de main.py pour un démarrage automatique.
+• Bibliothèques MicroPython : cherchez un pilote (écran, capteur…) dans micropython-lib et installez-le sur la carte en un toucher, avec ses dépendances.
+• Éditeur de code : Python, C et C++ avec coloration, autocomplétion, onglets et brouillons enregistrés automatiquement. Une barre de symboles au-dessus du clavier évite de chercher les accolades et les deux-points.
+• Flash : installez un firmware ou un programme sur la carte (fichiers .uf2 pour RP2040, .bin pour ESP32) avec vérification après écriture. Le firmware MicroPython officiel se télécharge depuis l'application.
+• Projets C/C++ : projets de type Arduino pour ESP32 et RP2040, bibliothèques du catalogue d'Arduino, erreurs de compilation cliquables, flash du résultat.
+
+À SAVOIR AVANT DE L'INSTALLER
+• Il faut un téléphone Android 7 ou plus qui accepte le mode hôte USB (OTG), un adaptateur OTG et un câble USB qui transmet des données : un câble de charge seule ne suffit pas.
+• Sur téléphone, la compilation C/C++ passe par un serveur de compilation que vous configurez vous-même (son code source est fourni avec NomadIDE) : aucun serveur n'est fourni par défaut. Sur ordinateur, elle peut se faire sur la machine.
+• Version bêta : testée sur ESP32, ESP32-S3 et Pimoroni Badger 2040. Les autres cartes compatibles (ESP32-S2, Raspberry Pi Pico) n'ont pas encore été essayées.
+
+VIE PRIVÉE
+• Aucun compte, aucune publicité, aucun outil de suivi.
+• Le développeur ne reçoit aucune donnée : vos projets restent sur votre appareil.
+• Internet sert seulement à chercher une mise à jour (désactivable), à télécharger ce que vous demandez et à joindre le serveur de compilation que vous avez configuré.
+
+POUR TOUS
+• Interface en français et en anglais, thème clair ou sombre.
+• Pensée pour fonctionner avec le lecteur d'écran TalkBack : zones tactiles d'au moins 48 dp, contrastes WCAG AA, texte agrandi jusqu'à 200 %.
+• Tutoriel au premier lancement.
+
+NomadIDE est libre (licence MIT) : le code source est sur GitHub (LeYapson/NomadIDE). Une question ou un problème ? Écrivez-nous, ou ouvrez une issue sur GitHub.
