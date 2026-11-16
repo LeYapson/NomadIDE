@@ -187,7 +187,7 @@
   "mpRenameOnBoardTitle": "Renommer sur la carte",
   "mpNewName": "Nouveau nom",
   "mpReplaceFileTitle": "Remplacer le fichier ?",
-  "mpReplaceFileMessage": "« {name} » existe déjà dans {folder} sur la carte. Il sera remplacé.",
+  "mpReplaceFileMessage": "« {name} » existe déjà dans {folder} sur la carte. Il sera remplacé.",
   "@mpReplaceFileMessage": {
     "placeholders": {
       "name": {
@@ -356,7 +356,7 @@
       }
     }
   },
-  "mpLogLocalReadFailed": "Lecture locale impossible : « {name} »",
+  "mpLogLocalReadFailed": "Lecture locale impossible : « {name} »",
   "@mpLogLocalReadFailed": {
     "placeholders": {
       "name": {
@@ -375,7 +375,7 @@
       }
     }
   },
-  "mpLogLocalSaveFailed": "Enregistrement local impossible : « {name} »",
+  "mpLogLocalSaveFailed": "Enregistrement local impossible : « {name} »",
   "@mpLogLocalSaveFailed": {
     "placeholders": {
       "name": {
@@ -439,7 +439,7 @@
   },
   "edDraftsDiscard": "Abandonner",
   "edDraftsRestore": "Restaurer",
-  "edReplaceFileMessage": "« {path} » existe déjà dans le projet « {project} ». Son contenu sera remplacé.",
+  "edReplaceFileMessage": "« {path} » existe déjà dans le projet « {project} ». Son contenu sera remplacé.",
   "@edReplaceFileMessage": {
     "placeholders": {
       "path": {
@@ -462,7 +462,7 @@
       }
     }
   },
-  "edCloseTitle": "Enregistrer « {name} » ?",
+  "edCloseTitle": "Enregistrer « {name} » ?",
   "@edCloseTitle": {
     "placeholders": {
       "name": {
@@ -501,7 +501,7 @@
   "prMenuDeleteProject": "Supprimer le projet…",
   "prRenameProjectTitle": "Renommer le projet",
   "prDeleteProjectTitle": "Supprimer le projet ?",
-  "prDeleteProjectMessage": "Le projet « {name} » et tous ses fichiers seront supprimés de cet appareil. Cette action est définitive.",
+  "prDeleteProjectMessage": "Le projet « {name} » et tous ses fichiers seront supprimés de cet appareil. Cette action est définitive.",
   "@prDeleteProjectMessage": {
     "placeholders": {
       "name": {
@@ -515,7 +515,7 @@
   "prMenuUploadDisconnected": "Envoyer sur la carte (carte non connectée)",
   "prDeleteFolderTitle": "Supprimer le dossier ?",
   "prDeleteFileTitle": "Supprimer le fichier ?",
-  "prDeleteFolderMessage": "« {name} » et tout son contenu seront supprimés de cet appareil.",
+  "prDeleteFolderMessage": "« {name} » et tout son contenu seront supprimés de cet appareil.",
   "@prDeleteFolderMessage": {
     "placeholders": {
       "name": {
@@ -523,7 +523,7 @@
       }
     }
   },
-  "prDeleteFileMessage": "« {name} » sera supprimé de cet appareil.",
+  "prDeleteFileMessage": "« {name} » sera supprimé de cet appareil.",
   "@prDeleteFileMessage": {
     "placeholders": {
       "name": {
@@ -685,7 +685,7 @@
       }
     }
   },
-  "espBadOffset": "Adresse invalide : « {value} ». Exemple : 0x10000.",
+  "espBadOffset": "Adresse invalide : « {value} ». Exemple : 0x10000.",
   "@espBadOffset": {
     "placeholders": {
       "value": {
@@ -727,7 +727,7 @@
     }
   },
   "errUsbPermissionDenied": "Permission USB refusée, ou puce USB-série non prise en charge.",
-  "errPortPermissionDenied": "Impossible d’ouvrir {path} : {os}. Ajoutez votre utilisateur au groupe « dialout » (Debian/Ubuntu) ou « uucp » (Arch), puis rouvrez votre session.",
+  "errPortPermissionDenied": "Impossible d’ouvrir {path} : {os}. Ajoutez votre utilisateur au groupe « dialout » (Debian/Ubuntu) ou « uucp » (Arch), puis rouvrez votre session.",
   "@errPortPermissionDenied": {
     "placeholders": {
       "path": {
@@ -852,7 +852,7 @@
   "errBusy": "Une exécution est en cours.",
   "errNotActive": "Raw REPL inactif : connectez-vous d’abord.",
   "errSessionBroken": "Session désynchronisée : reconnectez-vous pour la rétablir.",
-  "errUnexpectedAck": "Réponse inattendue au lieu de « OK » : {hex}.",
+  "errUnexpectedAck": "Réponse inattendue au lieu de « OK » : {hex}.",
   "@errUnexpectedAck": {
     "placeholders": {
       "hex": {
@@ -860,7 +860,7 @@
       }
     }
   },
-  "errUnexpectedCrcReply": "Réponse inattendue au calcul du CRC : « {reply} ».",
+  "errUnexpectedCrcReply": "Réponse inattendue au calcul du CRC : « {reply} ».",
   "@errUnexpectedCrcReply": {
     "placeholders": {
       "reply": {
@@ -1019,7 +1019,7 @@
     }
   },
   "fwTitle": "Firmware MicroPython officiel",
-  "fwHint": "Pour installer MicroPython sur une carte vierge ou revenir à un firmware propre. Le fichier vient directement du site officiel et n’est écrit sur la carte que lorsque vous cliquez sur « Flasher ».",
+  "fwHint": "Pour installer MicroPython sur une carte vierge ou revenir à un firmware propre. Le fichier vient directement du site officiel et n’est écrit sur la carte que lorsque vous cliquez sur « Flasher ».",
   "fwBoardLabel": "Carte",
   "fwFind": "Chercher la dernière version",
   "fwSearching": "Recherche de la dernière version…",
@@ -1060,7 +1060,7 @@
     }
   },
   "fwDownloadingUnknown": "Téléchargement…",
-  "fwDownloaded": "{name} téléchargé ({amount}) : il est choisi comme fichier à écrire, cliquez sur « Flasher ».",
+  "fwDownloaded": "{name} téléchargé ({amount}) : il est choisi comme fichier à écrire, cliquez sur « Flasher ».",
   "@fwDownloaded": {
     "placeholders": {
       "name": {
@@ -1316,7 +1316,7 @@
       }
     }
   },
-  "espBadOffsetPart": "Adresse invalide pour {name} : « {value} ». Exemple : 0x10000.",
+  "espBadOffsetPart": "Adresse invalide pour {name} : « {value} ». Exemple : 0x10000.",
   "@espBadOffsetPart": {
     "placeholders": {
       "name": {
@@ -1386,7 +1386,7 @@
   "libLoading": "Chargement de la liste des bibliothèques…",
   "libOffline": "Hors ligne : liste enregistrée lors de la dernière connexion.",
   "libRetry": "Réessayer",
-  "libNoResult": "Aucune bibliothèque ne correspond à « {query} ». Essayez une adresse GitHub ci-dessous.",
+  "libNoResult": "Aucune bibliothèque ne correspond à « {query} ». Essayez une adresse GitHub ci-dessous.",
   "@libNoResult": {
     "placeholders": {
       "query": {
@@ -1435,7 +1435,7 @@
       }
     }
   },
-  "libInstalled": "{name} est installée ({count} fichier(s) dans /lib). Essayez « import {module} » dans la console.",
+  "libInstalled": "{name} est installée ({count} fichier(s) dans /lib). Essayez « import {module} » dans la console.",
   "@libInstalled": {
     "placeholders": {
       "name": {
@@ -1597,7 +1597,7 @@
   "obWelcomeTitle": "Bienvenue dans NomadIDE",
   "obWelcomeBody": "Programmez vos cartes ESP32 et RP2040 (Pico, Badger 2040) en MicroPython, depuis votre téléphone ou votre ordinateur, sans rien installer d’autre.",
   "obPlugTitle": "Branchez votre carte",
-  "obPlugBody": "Sur ordinateur, un câble USB suffit. Sur téléphone, passez par un adaptateur OTG. Android demande alors l’accès à la carte : acceptez, et cochez « toujours » pour ne plus le voir.",
+  "obPlugBody": "Sur ordinateur, un câble USB suffit. Sur téléphone, passez par un adaptateur OTG. Android demande alors l’accès à la carte : acceptez, et cochez « toujours » pour ne plus le voir.",
   "obPlugCable": "Un câble qui ne fait que charger ne transmet rien : si la carte n’apparaît pas, essayez-en un autre.",
   "obTabsTitle": "Cinq onglets",
   "obTabMonitor": "Moniteur : lire ce que la carte affiche.",
@@ -1606,8 +1606,8 @@
   "obTabFlash": "Flasher : installer MicroPython ou un programme compilé.",
   "obTabSettings": "Réglages : langue, thème, aide (ce tutoriel s’y trouve).",
   "obFirstTitle": "Votre premier programme",
-  "obFirstBody": "Onglet Python : touchez « Connecter », tapez print(\"Bonjour\") dans la console, puis « Exécuter ». La carte répond dans le journal.",
-  "obFirstNoFirmware": "La carte ne répond pas ? Elle n’a peut-être pas encore MicroPython : onglet Flasher, « Firmware MicroPython officiel ».",
+  "obFirstBody": "Onglet Python : touchez « Connecter », tapez print(\"Bonjour\") dans la console, puis « Exécuter ». La carte répond dans le journal.",
+  "obFirstNoFirmware": "La carte ne répond pas ? Elle n’a peut-être pas encore MicroPython : onglet Flasher, « Firmware MicroPython officiel ».",
   "settingsTutorial": "Revoir le tutoriel",
   "settingsTutorialHint": "Les quatre étapes de prise en main de NomadIDE",
   "updTitle": "Mises à jour",
@@ -1717,7 +1717,7 @@
   "ccLocalUnsupported": "Cet ordinateur n’est pas pris en charge pour la compilation locale : utilisez le serveur.",
   "settingsLocalToolchain": "Outils de compilation locale",
   "settingsLocalToolchainReady": "Installés : arduino-cli et les cœurs ESP32 et RP2040.",
-  "settingsLocalToolchainMissing": "Non installés. Ils s’installent depuis la feuille de compilation, avec « Sur cet ordinateur ».",
+  "settingsLocalToolchainMissing": "Non installés. Ils s’installent depuis la feuille de compilation, avec « Sur cet ordinateur ».",
   "settingsLocalToolchainRemove": "Désinstaller",
   "settingsLocalToolchainRemoveTitle": "Désinstaller les outils de compilation locale ?",
   "settingsLocalToolchainRemoveBody": "Libère environ {size} sur le disque. Vos projets ne sont pas touchés, et les outils pourront être réinstallés depuis la feuille de compilation.",
@@ -1781,7 +1781,7 @@
   "ccFlash": "Envoyer vers le Flasher",
   "ccFlashWorking": "Téléchargement du binaire…",
   "ccConsentTitle": "Envoyer ce code au serveur ?",
-  "ccConsentBody": "Le projet « {project} » ({files} fichiers, {size}) sera envoyé à {host} pour être compilé. Le serveur ne garde pas votre code après la compilation ; les binaires restent disponibles 30 minutes.",
+  "ccConsentBody": "Le projet « {project} » ({files} fichiers, {size}) sera envoyé à {host} pour être compilé. Le serveur ne garde pas votre code après la compilation ; les binaires restent disponibles 30 minutes.",
   "@ccConsentBody": {
     "placeholders": {
       "project": {

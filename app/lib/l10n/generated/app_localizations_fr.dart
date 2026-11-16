@@ -304,7 +304,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String mpReplaceFileMessage(String name, String folder) {
-    return '« $name » existe déjà dans $folder sur la carte. Il sera remplacé.';
+    return '« $name » existe déjà dans $folder sur la carte. Il sera remplacé.';
   }
 
   @override
@@ -457,7 +457,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String mpLogLocalReadFailed(String name) {
-    return 'Lecture locale impossible : « $name »';
+    return 'Lecture locale impossible : « $name »';
   }
 
   @override
@@ -467,7 +467,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String mpLogLocalSaveFailed(String name) {
-    return 'Enregistrement local impossible : « $name »';
+    return 'Enregistrement local impossible : « $name »';
   }
 
   @override
@@ -519,7 +519,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String edReplaceFileMessage(String path, String project) {
-    return '« $path » existe déjà dans le projet « $project ». Son contenu sera remplacé.';
+    return '« $path » existe déjà dans le projet « $project ». Son contenu sera remplacé.';
   }
 
   @override
@@ -541,7 +541,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String edCloseTitle(String name) {
-    return 'Enregistrer « $name » ?';
+    return 'Enregistrer « $name » ?';
   }
 
   @override
@@ -622,7 +622,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String prDeleteProjectMessage(String name) {
-    return 'Le projet « $name » et tous ses fichiers seront supprimés de cet appareil. Cette action est définitive.';
+    return 'Le projet « $name » et tous ses fichiers seront supprimés de cet appareil. Cette action est définitive.';
   }
 
   @override
@@ -646,12 +646,12 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String prDeleteFolderMessage(String name) {
-    return '« $name » et tout son contenu seront supprimés de cet appareil.';
+    return '« $name » et tout son contenu seront supprimés de cet appareil.';
   }
 
   @override
   String prDeleteFileMessage(String name) {
-    return '« $name » sera supprimé de cet appareil.';
+    return '« $name » sera supprimé de cet appareil.';
   }
 
   @override
@@ -833,7 +833,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String espBadOffset(String value) {
-    return 'Adresse invalide : « $value ». Exemple : 0x10000.';
+    return 'Adresse invalide : « $value ». Exemple : 0x10000.';
   }
 
   @override
@@ -866,7 +866,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String errPortPermissionDenied(String path, String os) {
-    return 'Impossible d’ouvrir $path : $os. Ajoutez votre utilisateur au groupe « dialout » (Debian/Ubuntu) ou « uucp » (Arch), puis rouvrez votre session.';
+    return 'Impossible d’ouvrir $path : $os. Ajoutez votre utilisateur au groupe « dialout » (Debian/Ubuntu) ou « uucp » (Arch), puis rouvrez votre session.';
   }
 
   @override
@@ -970,12 +970,12 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String errUnexpectedAck(String hex) {
-    return 'Réponse inattendue au lieu de « OK » : $hex.';
+    return 'Réponse inattendue au lieu de « OK » : $hex.';
   }
 
   @override
   String errUnexpectedCrcReply(String reply) {
-    return 'Réponse inattendue au calcul du CRC : « $reply ».';
+    return 'Réponse inattendue au calcul du CRC : « $reply ».';
   }
 
   @override
@@ -1058,7 +1058,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get fwHint =>
-      'Pour installer MicroPython sur une carte vierge ou revenir à un firmware propre. Le fichier vient directement du site officiel et n’est écrit sur la carte que lorsque vous cliquez sur « Flasher ».';
+      'Pour installer MicroPython sur une carte vierge ou revenir à un firmware propre. Le fichier vient directement du site officiel et n’est écrit sur la carte que lorsque vous cliquez sur « Flasher ».';
 
   @override
   String get fwBoardLabel => 'Carte';
@@ -1097,7 +1097,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String fwDownloaded(String name, String amount) {
-    return '$name téléchargé ($amount) : il est choisi comme fichier à écrire, cliquez sur « Flasher ».';
+    return '$name téléchargé ($amount) : il est choisi comme fichier à écrire, cliquez sur « Flasher ».';
   }
 
   @override
@@ -1325,7 +1325,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String espBadOffsetPart(String name, String value) {
-    return 'Adresse invalide pour $name : « $value ». Exemple : 0x10000.';
+    return 'Adresse invalide pour $name : « $value ». Exemple : 0x10000.';
   }
 
   @override
@@ -1369,7 +1369,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String libNoResult(String query) {
-    return 'Aucune bibliothèque ne correspond à « $query ». Essayez une adresse GitHub ci-dessous.';
+    return 'Aucune bibliothèque ne correspond à « $query ». Essayez une adresse GitHub ci-dessous.';
   }
 
   @override
@@ -1404,7 +1404,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String libInstalled(String name, int count, String module) {
-    return '$name est installée ($count fichier(s) dans /lib). Essayez « import $module » dans la console.';
+    return '$name est installée ($count fichier(s) dans /lib). Essayez « import $module » dans la console.';
   }
 
   @override
@@ -1604,7 +1604,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get obPlugBody =>
-      'Sur ordinateur, un câble USB suffit. Sur téléphone, passez par un adaptateur OTG. Android demande alors l’accès à la carte : acceptez, et cochez « toujours » pour ne plus le voir.';
+      'Sur ordinateur, un câble USB suffit. Sur téléphone, passez par un adaptateur OTG. Android demande alors l’accès à la carte : acceptez, et cochez « toujours » pour ne plus le voir.';
 
   @override
   String get obPlugCable =>
@@ -1636,11 +1636,11 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get obFirstBody =>
-      'Onglet Python : touchez « Connecter », tapez print(\"Bonjour\") dans la console, puis « Exécuter ». La carte répond dans le journal.';
+      'Onglet Python : touchez « Connecter », tapez print(\"Bonjour\") dans la console, puis « Exécuter ». La carte répond dans le journal.';
 
   @override
   String get obFirstNoFirmware =>
-      'La carte ne répond pas ? Elle n’a peut-être pas encore MicroPython : onglet Flasher, « Firmware MicroPython officiel ».';
+      'La carte ne répond pas ? Elle n’a peut-être pas encore MicroPython : onglet Flasher, « Firmware MicroPython officiel ».';
 
   @override
   String get settingsTutorial => 'Revoir le tutoriel';
@@ -1810,7 +1810,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get settingsLocalToolchainMissing =>
-      'Non installés. Ils s’installent depuis la feuille de compilation, avec « Sur cet ordinateur ».';
+      'Non installés. Ils s’installent depuis la feuille de compilation, avec « Sur cet ordinateur ».';
 
   @override
   String get settingsLocalToolchainRemove => 'Désinstaller';
@@ -1881,7 +1881,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String ccConsentBody(String project, int files, String size, String host) {
-    return 'Le projet « $project » ($files fichiers, $size) sera envoyé à $host pour être compilé. Le serveur ne garde pas votre code après la compilation ; les binaires restent disponibles 30 minutes.';
+    return 'Le projet « $project » ($files fichiers, $size) sera envoyé à $host pour être compilé. Le serveur ne garde pas votre code après la compilation ; les binaires restent disponibles 30 minutes.';
   }
 
   @override

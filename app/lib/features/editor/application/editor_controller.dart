@@ -184,6 +184,30 @@ class EditorController extends Notifier<EditorState> {
     document.controller.dispose();
   }
 
+  /// Ferme les onglets des fichiers locaux supprimés : un fichier qui n'existe plus ne doit pas
+  /// rester ouvert. Sans [path], tout le projet ; sinon ce fichier, ou le contenu de ce dossier.
+  /// Les modifications non enregistrées sont abandonnées : la suppression a été confirmée.
+  void closeLocal(String project, {String? path}) {
+    for (final document in [...state.documents]) {
+      if (document.localProject != project) continue;
+      final documentPath = document.localPath;
+      if (path != null && documentPath != path && !(documentPath?.startsWith('$path/') ?? false)) continue;
+      close(document);
+    }
+  }
+
+  /// Un projet renommé : ses onglets pointent vers le nouveau nom, sinon un enregistrement
+  /// recréerait l'ancien dossier.
+  void renameLocalProject(String from, String to) {
+    var changed = false;
+    for (final document in state.documents) {
+      if (document.localProject != from) continue;
+      document.localProject = to;
+      changed = true;
+    }
+    if (changed) state = state.copyWith(documents: [...state.documents]);
+  }
+
   // ---------------------------------------------------------------------------
   // Enregistrement
   // ---------------------------------------------------------------------------

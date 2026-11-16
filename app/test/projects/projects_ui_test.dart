@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -144,7 +145,8 @@ void main() {
 
     await tester.tap(find.byTooltip('Fermer'));
     await tester.pumpAndSettle();
-    expect(find.textContaining('Enregistrer « main.py »'), findsOneWidget);
+    // Espaces insécables dans les guillemets : le » ne peut pas passer seul à la ligne.
+    expect(find.textContaining('Enregistrer « main.py »'), findsOneWidget);
 
     await tester.tap(find.widgetWithText(TextButton, 'Ne pas enregistrer'));
     await settle(tester);
@@ -234,6 +236,81 @@ void main() {
     await settle(tester);
 
     expect(File('${storage.path}/projects/p/a.py').existsSync(), isFalse);
+  });
+
+  testWidgets('supprimer un fichier ferme son onglet', (tester) async {
+    await prepare(tester, (store) async {
+      await store.createProject('p');
+      await store.writeText('p', 'a.py', 'a');
+      await store.writeText('p', 'b.py', 'b');
+    });
+    await pumpEditor(tester);
+    await tester.tap(find.text('a.py'));
+    await settle(tester);
+    await tester.tap(find.text('b.py').first);
+    await settle(tester);
+    expect(container.read(editorProvider).documents.map((d) => d.name), ['a.py', 'b.py']);
+
+    await tester.tap(find.byTooltip('Actions').first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Supprimer…'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilledButton, 'Supprimer'));
+    await settle(tester);
+
+    expect(File('${storage.path}/projects/p/a.py').existsSync(), isFalse);
+    expect(container.read(editorProvider).documents.map((d) => d.name), ['b.py']);
+  });
+
+  testWidgets('supprimer un projet ferme les onglets de ses fichiers', (tester) async {
+    await prepare(tester, (store) async {
+      await store.createProject('p');
+      await store.writeText('p', 'a.py', 'a');
+    });
+    await pumpEditor(tester);
+    await tester.tap(find.text('a.py'));
+    await settle(tester);
+    container.read(editorProvider.notifier).newDocument(text: 'libre'); // sans projet : reste ouvert
+    expect(container.read(editorProvider).documents, hasLength(2));
+
+    await tester.tap(find.byTooltip('Actions du projet'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Supprimer le projet…'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilledButton, 'Supprimer'));
+    await settle(tester);
+
+    expect(Directory('${storage.path}/projects/p').existsSync(), isFalse);
+    final documents = container.read(editorProvider).documents;
+    expect(documents, hasLength(1));
+    expect(documents.single.localProject, isNull);
+  });
+
+  testWidgets('renommer un projet garde ses onglets sur le bon dossier', (tester) async {
+    await prepare(tester, (store) async {
+      await store.createProject('p');
+      await store.writeText('p', 'a.py', 'a');
+    });
+    await pumpEditor(tester);
+    await tester.tap(find.text('a.py'));
+    await settle(tester);
+
+    await tester.tap(find.byTooltip('Actions du projet'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Renommer le projet…'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), 'q');
+    await tester.tap(find.widgetWithText(FilledButton, 'Renommer'));
+    await settleUntil(tester, () => container.read(editorProvider).active?.localProject == 'q');
+
+    expect(container.read(projectsProvider).current, 'q');
+    expect(container.read(editorProvider).active!.localProject, 'q');
+    final doc = container.read(editorProvider).active!;
+    doc.controller.text = 'modifié';
+    unawaited(container.read(editorProvider.notifier).saveLocal(doc));
+    await settleUntil(tester, () => !doc.dirty);
+    expect(File('${storage.path}/projects/q/a.py').readAsStringSync(), 'modifié');
+    expect(Directory('${storage.path}/projects/p').existsSync(), isFalse);
   });
 
   testWidgets('un nom invalide affiche un message clair', (tester) async {

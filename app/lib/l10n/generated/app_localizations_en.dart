@@ -1368,7 +1368,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String libVersionLicense(String version, String license) {
-    return 'Version $version · licence $license';
+    return 'Version $version · License: $license';
   }
 
   @override
