@@ -2066,6 +2066,35 @@ class AppLocalizationsFr extends AppLocalizations {
   String get alLoadingVersions => 'Chargement des versions…';
 
   @override
+  String get alExamplesButton => 'Voir les exemples';
+
+  @override
+  String alExamplesTitle(String name) {
+    return 'Exemples de $name';
+  }
+
+  @override
+  String get alExamplesLoading => 'Chargement des exemples…';
+
+  @override
+  String get alExamplesNone => 'Cette bibliothèque ne fournit pas d’exemple.';
+
+  @override
+  String alExamplesHint(String version) {
+    return 'Choisir un exemple crée un nouveau projet : ses fichiers, la carte de l’écran précédent et cette bibliothèque (version $version).';
+  }
+
+  @override
+  String alExampleCreate(String name) {
+    return 'Créer un projet à partir de l’exemple $name';
+  }
+
+  @override
+  String alExampleCreated(String project) {
+    return 'Projet « $project » créé à partir de l’exemple.';
+  }
+
+  @override
   String get alScan => 'Analyser les #include du projet';
 
   @override

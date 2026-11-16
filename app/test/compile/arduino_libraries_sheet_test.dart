@@ -9,6 +9,7 @@ import 'package:nomad_mcu/app/app.dart';
 import 'package:nomad_mcu/app/providers.dart';
 import 'package:nomad_mcu/app/settings.dart';
 import 'package:nomad_mcu/features/compile/application/compile_controller.dart';
+import 'package:nomad_mcu/features/editor/application/editor_controller.dart';
 import 'package:nomad_mcu/features/compile/data/compile_api.dart';
 import 'package:nomad_mcu/features/compile/data/project_config.dart';
 import 'package:nomad_mcu/features/projects/data/project_store.dart';
@@ -250,5 +251,114 @@ void main() {
     );
     await settleUntil(tester, () => find.text('Bibliothèques (1)').evaluate().isNotEmpty);
     expect(find.text('Bibliothèques (1)'), findsOneWidget);
+  });
+
+  group('exemples (H5)', () {
+    const dhtTester = [
+      ExampleFile(name: 'DHTtester.ino', content: '#include <DHT.h>\nvoid setup() {}\nvoid loop() {}\n'),
+      ExampleFile(name: 'helper.h', content: '#pragma once\n'),
+    ];
+
+    /// Ouvre le détail de « DHT sensor library » depuis les résultats de recherche, puis ses exemples.
+    Future<void> openExamples(WidgetTester tester) async {
+      await openCompileSheet(tester);
+      await openLibraries(tester);
+      await tester.enterText(find.widgetWithText(TextField, 'Chercher une bibliothèque'), 'dht');
+      await tester.pump(const Duration(milliseconds: 600));
+      await settleUntil(tester, () => find.text('DHT sensor library 1.4.7').evaluate().isNotEmpty);
+      await tester.tap(find.text('DHT sensor library 1.4.7'));
+      await settle(tester);
+      await tester.tap(find.text('Voir les exemples'));
+      await settle(tester);
+    }
+
+    Future<List<String>> projects(WidgetTester tester) async =>
+        (await tester.runAsync(() => ProjectStore(storage).listProjects()))!;
+
+    testWidgets('la liste des exemples, avec le chemin de ceux qui sont rangés dans un sous-dossier', (tester) async {
+      api.examples['DHT sensor library'] = ['DHTtester', 'Sub/Nested'];
+      await openExamples(tester);
+
+      expect(find.text('Exemples de DHT sensor library'), findsOneWidget);
+      expect(find.text('DHTtester'), findsOneWidget);
+      expect(find.text('Nested'), findsOneWidget);
+      expect(find.text('Sub/Nested'), findsOneWidget);
+      expect(find.textContaining('version 1.4.7'), findsOneWidget);
+    });
+
+    testWidgets('toucher un exemple crée un projet (fichiers, bibliothèque avec dépendances, carte) et l\'ouvre', (tester) async {
+      api
+        ..examples['DHT sensor library'] = ['DHTtester']
+        ..exampleFiles['DHT sensor library:DHTtester'] = dhtTester;
+      await openExamples(tester);
+
+      await tester.tap(find.text('DHTtester'));
+      await settleUntil(tester, () => container.read(editorProvider).active?.name == 'DHTtester.ino');
+      await settle(tester); // laisse les fenêtres se refermer
+
+      expect(await projects(tester), containsAll(['blink', 'DHTtester']));
+      expect(File('${storage.path}/projects/DHTtester/DHTtester.ino').readAsStringSync(), contains('#include <DHT.h>'));
+      expect(File('${storage.path}/projects/DHTtester/helper.h').existsSync(), isTrue);
+      final config = (await tester.runAsync(() => ProjectConfig.read(ProjectStore(storage), 'DHTtester')))!;
+      expect(config.libraries, [
+        const LibraryRef(name: 'DHT sensor library', version: '1.4.7'),
+        const LibraryRef(name: 'Adafruit Unified Sensor', version: '1.1.15'),
+      ]);
+      expect(config.chosenNames, ['DHT sensor library']);
+      expect(config.board, isNotNull);
+      expect(api.exampleRequests, ['DHT sensor library:DHTtester']);
+
+      final active = container.read(editorProvider).active!;
+      expect(active.localProject, 'DHTtester');
+      expect(active.controller.text, contains('#include <DHT.h>'));
+      expect(container.read(homeTabProvider), HomeTab.editor);
+      // Les fenêtres et la feuille sont refermées, un message confirme.
+      expect(find.text('Bibliothèques Arduino'), findsNothing);
+      expect(find.text('Exemples de DHT sensor library'), findsNothing);
+      expect(find.textContaining('créé à partir de l’exemple'), findsOneWidget);
+    });
+
+    testWidgets('un projet du même nom existe déjà : le nouveau prend un numéro, l\'ancien reste intact', (tester) async {
+      api
+        ..examples['DHT sensor library'] = ['DHTtester']
+        ..exampleFiles['DHT sensor library:DHTtester'] = dhtTester;
+      await tester.runAsync(() async {
+        final store = ProjectStore(storage);
+        await store.createProject('DHTtester');
+        await store.writeText('DHTtester', 'mien.ino', '// à moi');
+      });
+      await openExamples(tester);
+
+      await tester.tap(find.text('DHTtester'));
+      await settleUntil(tester, () => container.read(editorProvider).active?.localProject == 'DHTtester 2');
+      await settle(tester);
+
+      expect(await projects(tester), containsAll(['DHTtester', 'DHTtester 2']));
+      expect(File('${storage.path}/projects/DHTtester/mien.ino').readAsStringSync(), '// à moi');
+      expect(File('${storage.path}/projects/DHTtester 2/DHTtester.ino').existsSync(), isTrue);
+    });
+
+    testWidgets('une bibliothèque sans exemple le dit', (tester) async {
+      api.examples['DHT sensor library'] = [];
+      await openExamples(tester);
+
+      expect(find.text('Cette bibliothèque ne fournit pas d’exemple.'), findsOneWidget);
+    });
+
+    testWidgets('service injoignable : le message d\'erreur s\'affiche dans la fenêtre, rien n\'est créé', (tester) async {
+      await openCompileSheet(tester);
+      await openLibraries(tester);
+      await tester.enterText(find.widgetWithText(TextField, 'Chercher une bibliothèque'), 'dht');
+      await tester.pump(const Duration(milliseconds: 600));
+      await settleUntil(tester, () => find.text('DHT sensor library 1.4.7').evaluate().isNotEmpty);
+      await tester.tap(find.text('DHT sensor library 1.4.7'));
+      await settle(tester);
+      api.libraryError = const CompileApiException(CompileErrorKind.unreachable);
+      await tester.tap(find.text('Voir les exemples'));
+      await settle(tester);
+
+      expect(find.textContaining('injoignable'), findsWidgets);
+      expect(await projects(tester), ['blink']);
+    });
   });
 }

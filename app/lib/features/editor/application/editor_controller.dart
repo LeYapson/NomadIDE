@@ -208,6 +208,24 @@ class EditorController extends Notifier<EditorState> {
     if (changed) state = state.copyWith(documents: [...state.documents]);
   }
 
+  /// Un fichier ou un dossier renommé : les onglets ouverts suivent le nouveau chemin, sinon un enregistrement
+  /// recréerait l'ancien fichier.
+  void renameLocalPath(String project, String from, String to) {
+    var changed = false;
+    for (final document in state.documents) {
+      final path = document.localPath;
+      if (document.localProject != project || path == null) continue;
+      final String? moved = path == from ? to : (path.startsWith('$from/') ? '$to${path.substring(from.length)}' : null);
+      if (moved == null) continue;
+      document
+        ..localPath = moved
+        ..name = moved.split('/').last;
+      document.controller.language = CodeLanguage.fromFileName(document.name);
+      changed = true;
+    }
+    if (changed) state = state.copyWith(documents: [...state.documents]);
+  }
+
   // ---------------------------------------------------------------------------
   // Enregistrement
   // ---------------------------------------------------------------------------

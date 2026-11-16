@@ -3405,6 +3405,48 @@ abstract class AppLocalizations {
   /// **'Chargement des versions…'**
   String get alLoadingVersions;
 
+  /// No description provided for @alExamplesButton.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir les exemples'**
+  String get alExamplesButton;
+
+  /// No description provided for @alExamplesTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Exemples de {name}'**
+  String alExamplesTitle(String name);
+
+  /// No description provided for @alExamplesLoading.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chargement des exemples…'**
+  String get alExamplesLoading;
+
+  /// No description provided for @alExamplesNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette bibliothèque ne fournit pas d’exemple.'**
+  String get alExamplesNone;
+
+  /// No description provided for @alExamplesHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisir un exemple crée un nouveau projet : ses fichiers, la carte de l’écran précédent et cette bibliothèque (version {version}).'**
+  String alExamplesHint(String version);
+
+  /// No description provided for @alExampleCreate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Créer un projet à partir de l’exemple {name}'**
+  String alExampleCreate(String name);
+
+  /// No description provided for @alExampleCreated.
+  ///
+  /// In fr, this message translates to:
+  /// **'Projet « {project} » créé à partir de l’exemple.'**
+  String alExampleCreated(String project);
+
   /// No description provided for @alScan.
   ///
   /// In fr, this message translates to:

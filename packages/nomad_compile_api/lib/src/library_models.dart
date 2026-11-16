@@ -183,3 +183,83 @@ class LibraryClosure {
         libraries: [for (final l in (json['libraries'] as List)) LibraryRef.fromJson((l as Map).cast())],
       );
 }
+
+/// Un exemple fourni par une bibliothèque (son dossier `examples/…` : un croquis `.ino` et ses fichiers).
+class LibraryExample {
+  const LibraryExample({required this.path});
+
+  /// Chemin du dossier de l'exemple sous `examples/`, avec des `/` (ex. `Sensors/DHTtester`).
+  final String path;
+
+  /// Nom du croquis : le dernier élément du chemin (ex. `DHTtester`).
+  String get name => path.split('/').last;
+
+  Map<String, Object?> toJson() => {'path': path};
+
+  factory LibraryExample.fromJson(Map<String, Object?> json) => LibraryExample(path: json['path'] as String);
+
+  @override
+  bool operator ==(Object other) => other is LibraryExample && other.path == path;
+
+  @override
+  int get hashCode => path.hashCode;
+}
+
+/// Réponse de `GET /v1/libraries/{name}/examples` : les exemples d'une version de la bibliothèque.
+class LibraryExamples {
+  const LibraryExamples({required this.library, required this.version, required this.examples});
+
+  final String library;
+  final String version;
+  final List<LibraryExample> examples;
+
+  Map<String, Object?> toJson() => {
+        'library': library,
+        'version': version,
+        'examples': [for (final e in examples) e.toJson()],
+      };
+
+  factory LibraryExamples.fromJson(Map<String, Object?> json) => LibraryExamples(
+        library: json['library'] as String,
+        version: json['version'] as String,
+        examples: [for (final e in (json['examples'] as List)) LibraryExample.fromJson((e as Map).cast())],
+      );
+}
+
+/// Un fichier texte d'un exemple.
+class ExampleFile {
+  const ExampleFile({required this.name, required this.content});
+
+  /// Nom du fichier, sans dossier (ex. `DHTtester.ino`).
+  final String name;
+  final String content;
+
+  Map<String, Object?> toJson() => {'name': name, 'content': content};
+
+  factory ExampleFile.fromJson(Map<String, Object?> json) =>
+      ExampleFile(name: json['name'] as String, content: json['content'] as String);
+}
+
+/// Réponse de `GET /v1/libraries/{name}/example?path=` : les fichiers d'un exemple.
+class LibraryExampleFiles {
+  const LibraryExampleFiles({required this.library, required this.version, required this.path, required this.files});
+
+  final String library;
+  final String version;
+  final String path;
+  final List<ExampleFile> files;
+
+  Map<String, Object?> toJson() => {
+        'library': library,
+        'version': version,
+        'path': path,
+        'files': [for (final f in files) f.toJson()],
+      };
+
+  factory LibraryExampleFiles.fromJson(Map<String, Object?> json) => LibraryExampleFiles(
+        library: json['library'] as String,
+        version: json['version'] as String,
+        path: json['path'] as String,
+        files: [for (final f in (json['files'] as List)) ExampleFile.fromJson((f as Map).cast())],
+      );
+}

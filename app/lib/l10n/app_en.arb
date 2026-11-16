@@ -1939,6 +1939,41 @@
     }
   },
   "alLoadingVersions": "Loading versions…",
+  "alExamplesButton": "See examples",
+  "alExamplesTitle": "Examples from {name}",
+  "@alExamplesTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "alExamplesLoading": "Loading examples…",
+  "alExamplesNone": "This library does not provide any example.",
+  "alExamplesHint": "Choosing an example creates a new project: its files, the board selected on the previous screen and this library (version {version}).",
+  "@alExamplesHint": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "alExampleCreate": "Create a project from the example {name}",
+  "@alExampleCreate": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "alExampleCreated": "Project “{project}” created from the example.",
+  "@alExampleCreated": {
+    "placeholders": {
+      "project": {
+        "type": "String"
+      }
+    }
+  },
   "alScan": "Scan the project’s #include lines",
   "alScanning": "Scanning the project…",
   "alSuggestionsTitle": "Libraries to add",

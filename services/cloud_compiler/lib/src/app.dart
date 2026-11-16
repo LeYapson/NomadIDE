@@ -8,6 +8,7 @@ import 'package:shelf_router/shelf_router.dart';
 
 import 'config.dart';
 import 'job_manager.dart';
+import 'libraries/library_cache.dart' show LibraryInstallException;
 import 'libraries/library_service.dart';
 import 'project_archive.dart';
 
@@ -22,6 +23,8 @@ const String serviceVersion = '0.1.0';
 /// * `DELETE /v1/builds/{id}`                    annule (ou supprime) un build
 /// * `GET    /v1/libraries/search?q=&board=`     cherche une bibliothèque Arduino
 /// * `GET    /v1/libraries/{nom}`                versions, licences et dépendances d'une bibliothèque
+/// * `GET    /v1/libraries/{nom}/examples`       exemples d'une version (`?version=&board=`)
+/// * `GET    /v1/libraries/{nom}/example?path=`  fichiers d'un exemple
 /// * `POST   /v1/libraries/resolve`              quelles bibliothèques fournissent ces en-têtes (`#include`)
 /// * `POST   /v1/libraries/closure`              bibliothèques demandées + dépendances, à des versions précises
 Handler buildHandler({required ServerConfig config, required JobManager jobs, LibraryService? libraries}) {
@@ -48,6 +51,39 @@ Handler buildHandler({required ServerConfig config, required JobManager jobs, Li
       if (index == null) return _libraryUnavailable();
       final detail = index.detail(Uri.decodeComponent(name));
       return detail == null ? _error(404, 'not_found', 'Bibliothèque inconnue : $name.') : _json(detail.toJson());
+    })
+    ..get('/v1/libraries/<name>/examples', (Request request, String name) async {
+      final service = libraries;
+      if (service?.index == null) return _libraryUnavailable();
+      final params = request.url.queryParameters;
+      try {
+        final found = await service!.examples(
+          Uri.decodeComponent(name),
+          version: params['version'],
+          architecture: CompileBoard.fromId(params['board'])?.architecture,
+        );
+        return found == null ? _error(404, 'not_found', 'Bibliothèque inconnue : $name.') : _json(found.toJson());
+      } on LibraryInstallException catch (e) {
+        return _error(502, 'library_unavailable', e.message);
+      }
+    })
+    ..get('/v1/libraries/<name>/example', (Request request, String name) async {
+      final service = libraries;
+      if (service?.index == null) return _libraryUnavailable();
+      final params = request.url.queryParameters;
+      final path = params['path'];
+      if (path == null || path.isEmpty) return _error(400, 'bad_request', 'Paramètre « path » attendu.');
+      try {
+        final found = await service!.exampleFiles(
+          Uri.decodeComponent(name),
+          version: params['version'],
+          architecture: CompileBoard.fromId(params['board'])?.architecture,
+          path: path,
+        );
+        return found == null ? _error(404, 'not_found', 'Exemple inconnu : $path.') : _json(found.toJson());
+      } on LibraryInstallException catch (e) {
+        return _error(502, 'library_unavailable', e.message);
+      }
     })
     ..post('/v1/libraries/resolve', (Request request) async {
       final index = libraries?.index;

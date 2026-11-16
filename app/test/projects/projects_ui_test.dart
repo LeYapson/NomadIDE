@@ -313,6 +313,32 @@ void main() {
     expect(Directory('${storage.path}/projects/p').existsSync(), isFalse);
   });
 
+  testWidgets("renommer un fichier ouvert : l'onglet suit, l'enregistrement va dans le nouveau fichier", (tester) async {
+    await prepare(tester, (store) async {
+      await store.createProject('p');
+      await store.writeText('p', 'a.py', 'a');
+    });
+    await pumpEditor(tester);
+    await tester.tap(find.text('a.py'));
+    await settle(tester);
+
+    await tester.tap(find.byTooltip('Actions').first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Renommer…'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), 'z.py');
+    await tester.tap(find.widgetWithText(FilledButton, 'Renommer'));
+    await settleUntil(tester, () => container.read(editorProvider).active?.name == 'z.py');
+
+    final doc = container.read(editorProvider).active!;
+    expect(doc.localPath, 'z.py');
+    doc.controller.text = 'modifié';
+    unawaited(container.read(editorProvider.notifier).saveLocal(doc));
+    await settleUntil(tester, () => !doc.dirty);
+    expect(File('${storage.path}/projects/p/z.py').readAsStringSync(), 'modifié');
+    expect(File('${storage.path}/projects/p/a.py').existsSync(), isFalse); // pas recréé
+  });
+
   testWidgets('un nom invalide affiche un message clair', (tester) async {
     await prepare(tester, (store) => store.createProject('p'));
     await pumpEditor(tester);
