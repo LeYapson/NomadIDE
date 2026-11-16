@@ -23,7 +23,9 @@ jobs:
         include:
           - os: windows-latest
             platform: windows
-          - os: ubuntu-latest
+          # 22.04 plutôt que « latest » : un binaire ne tourne que sur des systèmes dont la glibc est au moins aussi récente
+          # que celle de la machine qui l'a compilé. Avec 22.04, l'AppImage tourne aussi sur Debian 12, Ubuntu 22.04…
+          - os: ubuntu-22.04
             platform: linux
           - os: macos-latest
             platform: macos
@@ -70,6 +72,57 @@ jobs:
       - name: Archive Linux
         if: matrix.platform == 'linux'
         run: tar -czf "NomadIDE-$VERSION-linux-x64.tar.gz" -C app/build/linux/x64/release/bundle .
+
+      # AppImage : un seul fichier, qui se lance sur la plupart des distributions sans installation (chmod +x puis double clic).
+      # GTK 3 et libudev viennent du système, comme pour l'archive ; le reste du dossier « bundle » est dedans.
+      - name: AppImage Linux
+        if: matrix.platform == 'linux'
+        run: |
+          set -euo pipefail
+          APPDIR="$RUNNER_TEMP/NomadIDE.AppDir"
+          mkdir -p "$APPDIR/usr/bin"
+          cp -r app/build/linux/x64/release/bundle/. "$APPDIR/usr/bin/"
+          cp docs/brand/play/icon-512-dark.png "$APPDIR/nomadide.png"
+          cat > "$APPDIR/nomadide.desktop" <<'EOF'
+          [Desktop Entry]
+          Type=Application
+          Name=NomadIDE
+          Comment=Éditeur pour cartes ESP32 et RP2040 (MicroPython, C/C++)
+          Exec=nomad_mcu
+          Icon=nomadide
+          Categories=Development;IDE;Electronics;
+          Terminal=false
+          EOF
+          cat > "$APPDIR/AppRun" <<'EOF'
+          #!/bin/sh
+          HERE="$(dirname "$(readlink -f "$0")")"
+          exec "$HERE/usr/bin/nomad_mcu" "$@"
+          EOF
+          chmod +x "$APPDIR/AppRun"
+          # Outil de packaging épinglé : version et empreinte vérifiées avant de l'exécuter.
+          curl -fsSL -o "$RUNNER_TEMP/appimagetool" "https://github.com/AppImage/appimagetool/releases/download/1.9.1/appimagetool-x86_64.AppImage"
+          echo "ed4ce84f0d9caff66f50bcca6ff6f35aae54ce8135408b3fa33abfc3cb384eb0  $RUNNER_TEMP/appimagetool" | sha256sum -c -
+          chmod +x "$RUNNER_TEMP/appimagetool"
+          # Pas de FUSE sur les machines de CI : l'outil s'extrait lui-même avant de s'exécuter.
+          ARCH=x86_64 "$RUNNER_TEMP/appimagetool" --appimage-extract-and-run "$APPDIR" "NomadIDE-$VERSION-linux-x86_64.AppImage"
+
+      - name: Vérification de l'AppImage
+        if: matrix.platform == 'linux'
+        run: |
+          set -euo pipefail
+          FILE="NomadIDE-$VERSION-linux-x86_64.AppImage"
+          chmod +x "$FILE"
+          "./$FILE" --appimage-extract > /dev/null
+          test -x squashfs-root/AppRun
+          test -x squashfs-root/usr/bin/nomad_mcu
+          test -d squashfs-root/usr/bin/data/flutter_assets
+          test -f squashfs-root/nomadide.desktop
+          # Chaque bibliothèque dont l'exécutable dépend doit se trouver (dans le dossier lib/ de l'app ou sur le système).
+          if LD_LIBRARY_PATH="$PWD/squashfs-root/usr/bin/lib" ldd squashfs-root/usr/bin/nomad_mcu | grep "not found"; then
+            echo "::error::Bibliothèque manquante dans l'AppImage"; exit 1
+          fi
+          rm -rf squashfs-root
+          ls -l "$FILE"
 
       - name: Archive macOS
         if: matrix.platform == 'macos'
