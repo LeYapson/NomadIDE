@@ -1661,6 +1661,7 @@
       }
     }
   },
+  "edLibrariesTooltip": "Arduino libraries",
   "ccTooltip": "Compile in the cloud",
   "ccTitle": "Compile project",
   "ccProject": "Project: {name}",

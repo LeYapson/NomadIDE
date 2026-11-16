@@ -40,6 +40,16 @@ void main() {
       expect(s.monitorTimestamps, isTrue);
     });
 
+    test("compilation locale : par défaut sur ordinateur tant qu'aucun serveur n'est configuré, jamais sur téléphone", () {
+      final desktop = Platform.isWindows || Platform.isMacOS || Platform.isLinux;
+      expect(AppSettings.fromJson({}).compileLocal, desktop);
+      // Un serveur déjà configuré garde son comportement : on ne bascule personne sans qu'il l'ait choisi.
+      expect(AppSettings.fromJson({'compileServerUrl': 'https://c.example.com', 'compileToken': 'x'}).compileLocal, isFalse);
+      // Un choix mémorisé gagne toujours.
+      expect(AppSettings.fromJson({'compileLocal': false}).compileLocal, isFalse);
+      expect(AppSettings.fromJson({'compileLocal': true, 'compileServerUrl': 'https://c.example.com', 'compileToken': 'x'}).compileLocal, isTrue);
+    });
+
     test('valeurs invalides ignorées, une par une', () {
       final s = AppSettings.fromJson({
         'theme': 'fluo',

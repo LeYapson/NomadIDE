@@ -86,7 +86,7 @@ void main() {
     }
   }
 
-  Future<void> openCompileSheet(WidgetTester tester, {String sketch = 'void setup(){}', String? nomadJson}) async {
+  Future<void> openCompileSheet(WidgetTester tester, {String sketch = 'void setup(){}', String? nomadJson, bool compile = true}) async {
     await tester.runAsync(() async {
       final store = ProjectStore(storage);
       await store.createProject('blink');
@@ -100,8 +100,10 @@ void main() {
     await settle(tester);
     container.read(homeTabProvider.notifier).show(HomeTab.editor);
     await settle(tester);
-    await tester.tap(find.byTooltip('Compiler dans le cloud'));
-    await settle(tester);
+    if (compile) {
+      await tester.tap(find.byTooltip('Compiler dans le cloud'));
+      await settle(tester);
+    }
   }
 
   Future<void> openLibraries(WidgetTester tester) async {
@@ -251,6 +253,38 @@ void main() {
     );
     await settleUntil(tester, () => find.text('Bibliothèques (1)').evaluate().isNotEmpty);
     expect(find.text('Bibliothèques (1)'), findsOneWidget);
+  });
+
+  testWidgets("le bouton Bibliothèques de la barre de l'éditeur ouvre la recherche, sans passer par la feuille de compilation", (tester) async {
+    await openCompileSheet(tester, compile: false);
+    expect(find.text('Compiler'), findsNothing);
+
+    await tester.tap(find.byTooltip('Bibliothèques Arduino'));
+    await settle(tester);
+
+    expect(find.text('Bibliothèques Arduino'), findsOneWidget);
+    expect(find.textContaining('Aucune bibliothèque ajoutée'), findsOneWidget);
+    await tester.enterText(find.widgetWithText(TextField, 'Chercher une bibliothèque'), 'dht');
+    await tester.pump(const Duration(milliseconds: 600));
+    await settleUntil(tester, () => find.text('DHT sensor library 1.4.7').evaluate().isNotEmpty);
+    expect(api.searches, ['dht']);
+  });
+
+  testWidgets("le bouton Bibliothèques n'apparaît que pour un projet avec un croquis .ino", (tester) async {
+    await tester.runAsync(() async {
+      final store = ProjectStore(storage);
+      await store.createProject('script');
+      await store.writeText('script', 'main.py', 'print(1)');
+    });
+    tester.view.physicalSize = const Size(1400, 1000);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(UncontrolledProviderScope(container: container, child: const NomadApp()));
+    await settle(tester);
+    container.read(homeTabProvider.notifier).show(HomeTab.editor);
+    await settle(tester);
+
+    expect(find.byTooltip('Bibliothèques Arduino'), findsNothing);
   });
 
   group('exemples (H5)', () {

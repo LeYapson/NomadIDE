@@ -1661,6 +1661,7 @@
       }
     }
   },
+  "edLibrariesTooltip": "Bibliothèques Arduino",
   "ccTooltip": "Compiler dans le cloud",
   "ccTitle": "Compiler le projet",
   "ccProject": "Projet : {name}",

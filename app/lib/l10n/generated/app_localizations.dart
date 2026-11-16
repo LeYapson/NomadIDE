@@ -2871,6 +2871,12 @@ abstract class AppLocalizations {
   /// **'Connexion réussie : service {version}, jeton accepté.'**
   String settingsCompileTestOk(String version);
 
+  /// No description provided for @edLibrariesTooltip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bibliothèques Arduino'**
+  String get edLibrariesTooltip;
+
   /// No description provided for @ccTooltip.
   ///
   /// In fr, this message translates to:

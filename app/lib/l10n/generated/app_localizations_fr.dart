@@ -1732,6 +1732,9 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get edLibrariesTooltip => 'Bibliothèques Arduino';
+
+  @override
   String get ccTooltip => 'Compiler dans le cloud';
 
   @override

@@ -2,11 +2,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nomad_compile_api/nomad_compile_api.dart' show CompileBoard;
 import 'package:nomad_editor/nomad_editor.dart';
 
 import '../../../app/dialogs.dart';
 import '../../../app/providers.dart';
 import '../../../app/settings.dart';
+import '../../compile/application/compile_controller.dart' show compileProvider;
+import '../../compile/data/project_config.dart';
+import '../../compile/presentation/arduino_libraries_sheet.dart';
 import '../../compile/presentation/compile_sheet.dart';
 import '../../micropython/application/micropython_controller.dart';
 import '../../micropython/presentation/widgets/repl_log_view.dart';
@@ -138,6 +142,16 @@ class _EditorPageState extends ConsumerState<EditorPage> {
       }
     }
     return ref.read(editorProvider.notifier).saveLocal(document, project: target.project, path: target.path);
+  }
+
+  /// Ouvre les bibliothèques Arduino du projet, sans passer par la feuille de compilation. La carte est celle déjà
+  /// choisie pour ce projet (ou ESP32 à défaut) : elle filtre la recherche.
+  Future<void> _openLibraries(String project) async {
+    final store = await ref.read(projectStoreProvider.future);
+    final config = await ProjectConfig.read(store, project);
+    if (!mounted) return;
+    final board = ref.read(compileProvider).board ?? config.board ?? CompileBoard.esp32;
+    await showArduinoLibrariesSheet(context, project: project, board: board);
   }
 
   Future<void> _sendToBoard(EditorDocument document) async {
@@ -311,6 +325,12 @@ class _EditorPageState extends ConsumerState<EditorPage> {
                   onPressed: controller.newDocument,
                   icon: const Icon(Icons.note_add_outlined),
                 ),
+                if (canCompile)
+                  IconButton(
+                    tooltip: context.l10n.edLibrariesTooltip,
+                    onPressed: () => _openLibraries(projects.current!),
+                    icon: const Icon(Icons.extension_outlined),
+                  ),
                 if (canCompile)
                   IconButton(
                     tooltip: context.l10n.ccTooltip,
