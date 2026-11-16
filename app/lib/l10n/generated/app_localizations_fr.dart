@@ -1931,6 +1931,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get ccProbBadResponse => 'Réponse inattendue du service.';
 
   @override
+  String get ccProbUnsupported =>
+      'Ce service de compilation ne connaît pas cette fonction : il est probablement plus ancien que l’app. Mettez-le à jour (voir le README du service).';
+
+  @override
   String get ccProbNoSketch =>
       'Ce projet n’a pas de fichier .ino à la racine : le service en a besoin pour compiler.';
 

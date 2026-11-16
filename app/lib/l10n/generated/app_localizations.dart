@@ -3195,6 +3195,12 @@ abstract class AppLocalizations {
   /// **'Réponse inattendue du service.'**
   String get ccProbBadResponse;
 
+  /// No description provided for @ccProbUnsupported.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce service de compilation ne connaît pas cette fonction : il est probablement plus ancien que l’app. Mettez-le à jour (voir le README du service).'**
+  String get ccProbUnsupported;
+
   /// No description provided for @ccProbNoSketch.
   ///
   /// In fr, this message translates to:

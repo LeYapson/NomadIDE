@@ -1824,6 +1824,7 @@
   "ccProbQueueFull": "The service is busy: try again in a moment.",
   "ccProbExpired": "This result is no longer available (binaries are only kept for 30 minutes). Compile again.",
   "ccProbBadResponse": "Unexpected answer from the service.",
+  "ccProbUnsupported": "This compile service does not know this feature: it is probably older than the app. Update it (see the service README).",
   "ccProbNoSketch": "This project has no .ino file at its root: the service needs one to compile.",
   "ccProbSeveralSketches": "Several .ino files at the root ({files}): keep only one.",
   "@ccProbSeveralSketches": {

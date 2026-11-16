@@ -260,6 +260,16 @@ void main() {
       expect(server.requests.single.query, {'path': 'Sub/Nested'});
     });
 
+    test("erreur du service (502) : le message du service accompagne le code HTTP", () async {
+      server.handler = (r) => reply(r, 502, {'error': 'library_unavailable', 'message': 'Téléchargement impossible : DHT.'});
+      await expectLater(
+        api().libraryExample('DHT', path: 'x'),
+        throwsA(isA<CompileApiException>()
+            .having((e) => e.kind, 'kind', CompileErrorKind.badResponse)
+            .having((e) => e.detail, 'detail', 'HTTP 502 : Téléchargement impossible : DHT.')),
+      );
+    });
+
     test("exemple inconnu : l'erreur « introuvable »", () async {
       server.handler = (r) => reply(r, 404, {'error': 'not_found'});
       await expectLater(

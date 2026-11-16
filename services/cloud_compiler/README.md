@@ -68,6 +68,24 @@ NOMAD_RUN_AS=1000:1000
 sudo systemctl daemon-reload && sudo systemctl enable --now nomad-compiler
 ```
 
+### Mettre le service à jour
+
+L'app et le service évoluent ensemble : une app récente demande parfois une route qu'un vieux service n'a pas
+(l'app affiche alors « Ce service de compilation ne connaît pas cette fonction »). Après chaque nouvelle version :
+
+```bash
+cd /opt/nomad && git pull
+cd services/cloud_compiler && dart pub get
+sudo systemctl restart nomad-compiler
+```
+
+L'image Docker de compilation ne change pas, il n'y a rien à reconstruire. Pour vérifier que les exemples sont
+disponibles (`200` avec une liste, `404` sur un ancien service) :
+
+```bash
+curl -H "Authorization: Bearer <le jeton>" "http://127.0.0.1:8787/v1/libraries/DHT%20sensor%20library/examples"
+```
+
 ### Tunnel Cloudflare
 
 Dans `config.yml` de `cloudflared` :
@@ -118,6 +136,8 @@ Le projet doit contenir un croquis `.ino` à la racine. Avec plusieurs `.ino`, `
 |---|---|
 | `GET /v1/libraries/search?q=dht&board=esp32s3&limit=20` | Cherche dans le catalogue officiel (nom, auteur, descriptions) ; `board` écarte les bibliothèques d'une autre architecture |
 | `GET /v1/libraries/{nom}` | Toutes les versions d'une bibliothèque, avec licence et dépendances |
+| `GET /v1/libraries/{nom}/examples?version=&board=` | Les exemples d'une version (dernière par défaut) : les dossiers de `examples/` qui contiennent un croquis du même nom. L'archive est installée dans le cache au besoin ; `502` si elle ne peut pas l'être |
+| `GET /v1/libraries/{nom}/example?path=` | Les fichiers de code d'un exemple (`.ino`, `.h`, `.cpp`…). Le chemin doit être l'un de ceux de la liste |
 | `POST /v1/libraries/resolve` | `{"includes": ["DHT.h"], "board": "esp32"}` : pour chaque en-tête, « fourni par le cœur de la carte » ou les bibliothèques candidates, avec la liste de celles dont l'en-tête est **confirmé** |
 | `POST /v1/libraries/closure` | `{"libraries": [{"name": "DHT sensor library"}], "board": "esp32"}` : la liste complète (dépendances comprises), chaque bibliothèque à une version précise |
 
