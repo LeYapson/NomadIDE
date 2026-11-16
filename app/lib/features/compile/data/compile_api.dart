@@ -312,7 +312,7 @@ class HttpCompileApi implements CompileApi {
       413 => CompileApiException(CompileErrorKind.tooLarge, detail: message),
       429 => CompileApiException(CompileErrorKind.queueFull, detail: message),
       503 => CompileApiException(CompileErrorKind.unavailable, detail: message),
-      _ => CompileApiException(CompileErrorKind.badResponse, detail: 'HTTP ${response.status}'),
+      _ => CompileApiException(CompileErrorKind.badResponse, detail: message == null ? 'HTTP ${response.status}' : 'HTTP ${response.status} : $message'),
     };
   }
 }

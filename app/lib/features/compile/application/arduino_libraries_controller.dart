@@ -229,10 +229,10 @@ class ArduinoLibrariesController extends Notifier<ArduinoLibrariesState> {
     }
   }
 
-  /// Comme [problemFor], mais « introuvable » (un service sans cette route, une bibliothèque sans exemple connu) ne
-  /// doit pas se lire « build expiré » : c'est une réponse inattendue du service.
+  /// Comme [problemFor], mais « introuvable » ne doit pas se lire « build expiré » : pour les exemples, c'est un service
+  /// plus ancien que l'app, qui n'a pas la route.
   static CompileProblem _exampleProblemFor(CompileErrorKind kind) =>
-      kind == CompileErrorKind.notFound ? CompileProblem.badResponse : problemFor(kind);
+      kind == CompileErrorKind.notFound ? CompileProblem.unsupported : problemFor(kind);
 
   /// Un nom de fichier sans dossier ni nom caché : ce que le service renvoie, vérifié ici aussi avant d'écrire.
   static bool _isPlainFileName(String name) =>

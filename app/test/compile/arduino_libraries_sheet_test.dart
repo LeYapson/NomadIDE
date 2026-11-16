@@ -395,12 +395,28 @@ void main() {
       expect(await projects(tester), ['blink']);
     });
 
-    testWidgets("service sans cette route (introuvable) : « réponse inattendue », pas « build expiré »", (tester) async {
+    testWidgets("erreur du service pendant le téléchargement de la bibliothèque : le message du service est affiché", (tester) async {
+      await openCompileSheet(tester);
+      await openLibraries(tester);
+      await tester.enterText(find.widgetWithText(TextField, 'Chercher une bibliothèque'), 'dht');
+      await tester.pump(const Duration(milliseconds: 600));
+      await settleUntil(tester, () => find.text('DHT sensor library 1.4.7').evaluate().isNotEmpty);
+      await tester.tap(find.text('DHT sensor library 1.4.7'));
+      await settle(tester);
+      api.libraryError = const CompileApiException(CompileErrorKind.badResponse, detail: 'HTTP 502 : Téléchargement impossible : DHT sensor library 1.4.7.');
+      await tester.tap(find.text('Voir les exemples'));
+      await settle(tester);
+
+      expect(find.textContaining('Réponse inattendue du service. HTTP 502'), findsWidgets);
+      expect(find.textContaining('Téléchargement impossible'), findsWidgets);
+    });
+
+    testWidgets("service sans cette route (introuvable) : « plus ancien que l'app », pas « build expiré »", (tester) async {
       api.examples.clear(); // le faux service répond « introuvable »
       await openExamples(tester);
 
       expect(find.textContaining('expiré'), findsNothing);
-      expect(find.textContaining('inattendue'), findsWidgets);
+      expect(find.textContaining('plus ancien'), findsWidgets);
     });
   });
 }
