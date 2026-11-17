@@ -1,7 +1,7 @@
 name: nomad_mcu
 description: NomadIDE — IDE embarqué léger (MicroPython & C/C++) pour mobile et desktop.
 publish_to: none
-version: 0.4.1+6
+version: 0.5.0+7
 resolution: workspace
 
 environment:
