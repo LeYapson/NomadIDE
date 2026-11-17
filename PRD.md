@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Produit** | NomadIDE |
-| **Version du document** | 0.30 — H5 validé sur Windows |
+| **Version du document** | 0.31 — R10 : analyse des dumps Windows |
 | **Date** | 2026-10-01 |
 | **Statut du produit** | Étape 1 terminée (HAL USB/série + moniteur série) ; étape 2 en cours |
 | **Documents liés** | [README.md](README.md) · [ADR 0001 — Flutter](docs/adr/0001-stack-flutter.md) · [Politique de confidentialité](docs/privacy.html) |
@@ -379,7 +379,7 @@ L'utilisateur ouvre l'app, voit un bandeau expliquant que l'USB-série n'est pas
 | R6 | **Pilotes Windows** (CH340, CP210x, PL2303 contrefaits). | Support utilisateur | Détection et message dédié avec lien vers le pilote. |
 | R7 | **Brick de carte** lors d'un flash interrompu. | Perte de confiance | Vérifications, avertissements, procédure de récupération documentée. |
 | R9 | **Bibliothèques tierces** (épopée H) : qualité inégale, licences variées, index Arduino volumineux pour un téléphone. | Bibliothèque qui ne compile pas, licence ignorée | Recherche côté serveur (le téléphone ne télécharge pas l'index entier), licence affichée (H7), versions figées par projet (H4), sélection de bibliothèques recommandées pour les capteurs courants. |
-| R10 | **Plantage sous Windows** : l'app peut se fermer brusquement en revenant sur l'onglet Éditeur. Le plantage se produit dans le moteur Flutter et existait avant la 0.4.0 ; sa cause est en cours d'analyse. | Perte du texte non enregistré, perte de confiance | Les brouillons sont écrits automatiquement (B5) et proposés à la réouverture ; analyse en cours ; piste : reproduire avec un moteur Flutter plus récent. |
+| R10 | **Plantage sous Windows** : l'app peut se fermer brusquement en revenant sur l'onglet Éditeur. Analyse des quatre fichiers d'analyse (dumps) conservés par Windows sur le poste de développement, tous du 2026-10-06 (version 0.1.0.1, aucun depuis sur ce poste) : **corruption du tas mémoire** (`0xc0000374` en Release, le même défaut repéré par la bibliothèque C de débogage en Debug). Dans les deux dumps Release, le fil fautif traverse `serialport.dll` (libserialport) aux mêmes adresses (`+0xd910`, `+0x361f`) sous des appels natifs du moteur : le moteur n'est donc pas seul en cause, la bibliothèque des ports série est la piste principale (non prouvée : sans symboles, la corruption a pu avoir lieu plus tôt). | Perte du texte non enregistré, perte de confiance | Les brouillons sont écrits automatiquement (B5) et proposés à la réouverture. Pistes : (1) mesurer sans l'énumération des ports (elle tourne toutes les 1,5 s sur le fil de l'interface et décrit chaque port à chaque passage) ; (2) ne décrire un port que lorsqu'il apparaît ; (3) reproduire avec Application Verifier (PageHeap) pour avoir la pile exacte ; (4) un moteur Flutter plus récent. |
 
 **Décisions de cadrage (2026-10-01)**
 
@@ -459,3 +459,4 @@ Les dates ne sont pas fixées : les jalons avancent par versions publiées (0.1.
 | 0.28 | 2026-11-16 | M4 : fiche Google Play prête (textes, icône, image de présentation, captures FR et EN prises sur téléphone, page d'accueil du site, politique de confidentialité) ; reste le test fermé (12 testeurs, 14 jours). Défauts relevés pendant les captures : onglet resté ouvert après la suppression d'un projet, « » » seul en fin de ligne dans le tutoriel, « licence » en anglais (corrigés dans la PR #71) ; renommer un fichier ou un dossier laisse son onglet sur l'ancien chemin (à traiter) |
 | 0.29 | 2026-11-16 | H5 écrit et testé pour les bibliothèques Arduino (liste des exemples, création d'un projet depuis un exemple, nouvelles routes `/v1/libraries/{nom}/examples` et `/example` du service) ; renommer un fichier ou un dossier met à jour ses onglets ouverts ; essai sur Windows : sur ordinateur, sans serveur configuré, la compilation se fait par défaut sur cette machine et « Sur cet ordinateur » reste proposé dans la feuille de compilation ; bouton « Bibliothèques Arduino » dans la barre de l'éditeur (recherche et exemples sans passer par la feuille de compilation) |
 | 0.30 | 2026-11-16 | H5 validé sur Windows (compilation locale) ; reste à essayer sur Android |
+| 0.31 | 2026-11-17 | R10 : analyse des dumps Windows (corruption du tas, `serialport.dll` dans la pile des deux plantages Release) ; pistes précisées |
