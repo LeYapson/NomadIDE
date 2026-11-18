@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Produit** | NomadIDE |
-| **Version du document** | 0.32 — R10 non reproduit sur la 0.5.0 |
+| **Version du document** | 0.33 — G3 (TalkBack) validé |
 | **Date** | 2026-10-01 |
 | **Statut du produit** | Étape 1 terminée (HAL USB/série + moniteur série) ; étape 2 en cours |
 | **Documents liés** | [README.md](README.md) · [ADR 0001 — Flutter](docs/adr/0001-stack-flutter.md) · [Politique de confidentialité](docs/privacy.html) |
@@ -193,7 +193,7 @@ Référentiels visés : **WCAG 2.2 niveau AA** et **RGAA 4.1**. Méthode : la co
 |---|---|---|---|
 | G1 | Je veux une barre de raccourcis tactile au-dessus du clavier (`Tab`, `:`, `{`, `}` ; `Ctrl+C` et `Ctrl+D` dans la console MicroPython) pour programmer sans chercher les symboles. | M | 🧪 existe déjà (B6) ; reste la mise en conformité : cibles 48 dp, libellés traduits, sémantique |
 | G2 | Je veux que le flash soit un parcours guidé (1. Fichier, 2. Carte, 3. Écriture) lisible sur un écran de 360 dp, sans surcharge. | M | 🧪 trois étapes avec divulgation progressive (étape terminée repliée sur son résumé, options avancées et firmware officiel repliés), testé à 360 dp et à 150 % de taille de texte ; à valider sur téléphone |
-| G3 | Je veux qu'un lecteur d'écran (TalkBack, VoiceOver) annonce l'état de l'app : carte connectée ou déconnectée, flash en cours avec son avancement, erreur. | M | 🧪 état de connexion, progression (par paliers de 25 %) et résultats annoncés, zones sans nom nommées ; testé en simulation, à valider avec TalkBack sur téléphone |
+| G3 | Je veux qu'un lecteur d'écran (TalkBack, VoiceOver) annonce l'état de l'app : carte connectée ou déconnectée, flash en cours avec son avancement, erreur. | M | ✅ état de connexion, progression (par paliers de 25 %) et résultats annoncés, zones sans nom nommées ; testé en simulation, puis validé avec TalkBack sur téléphone (2026-11-18) |
 | G4 | Je veux que toutes les zones tactiles fassent au moins 48 × 48 dp. | M | 🧪 vérifié par test sur les 5 écrans (thèmes sombre et clair, téléphone de 360 dp) ; texte agrandi à 150 % et 200 % sans débordement ; à valider sur téléphone |
 | G5 | Je veux un thème sombre lisible : contraste ≥ 4,5:1 pour le texte et ≥ 3:1 pour les composants et le focus. | M | 🧪 appliqué et testé automatiquement (texte des 5 écrans, thèmes sombre et clair) ; à valider à l'œil sur téléphone |
 | G6 | Je veux une identité visuelle cohérente (palette ci-dessous) appliquée à tous les écrans. | S | 🧪 thème et couleurs de l'éditeur appliqués ; reste la refonte des composants (G7) |
@@ -415,7 +415,7 @@ L'utilisateur ouvre l'app, voit un bandeau expliquant que l'USB-série n'est pas
 | **M1** — Étape 1 | HAL USB/série, moniteur série, carte simulée | A1–A7, E2, E3 | ✅ |
 | **M2** — Étape 2 | Éditeur, projets, raw REPL, explorateur de fichiers de la carte, « Run », internationalisation FR/EN | B1–B6, C1–C5, E6 | ✅ (écrit, testé et validé sur Badger 2040 avec Windows et Android) |
 | **M3a** — Étape 3 | Flash ESP32/ESP32-S et RP2040, firmware MicroPython | D1, D2, D4, D6, D7, C6 | 🧪 D1, D2 (Windows), D4, D6 et D7 (ESP, Badger 2040) validés ; D2 validé aussi sur Android (PICOBOOT) ; reste D7 pour Pico et Pico W (C6 est couvert par D7, validé) |
-| **M3c** — Étape 3 | UX/UI et accessibilité, flash multi-fichiers ESP | G1–G8, D8 | 🧪 G1–G8 et D8 écrits et testés ; thème, barre de raccourcis, parcours Flasher, réglages et tutoriel essayés sur téléphone et PC ; restent à confirmer : les annonces avec TalkBack (G3) et le flash de plusieurs fichiers sur une carte (D8) |
+| **M3c** — Étape 3 | UX/UI et accessibilité, flash multi-fichiers ESP | G1–G8, D8 | 🧪 G1–G8 et D8 écrits et testés ; thème, barre de raccourcis, parcours Flasher, réglages et tutoriel essayés sur téléphone et PC ; G3 (annonces TalkBack) validé sur téléphone ; reste à confirmer : le flash de plusieurs fichiers sur une carte (D8) |
 | **M3d** — Étape 3 | Bibliothèques MicroPython (sans serveur) | H1, H2, H5, H6, H7 | 🧪 H1 et H2 validés sur ESP32 (Android) ; H6 et H7 écrits et testés ; reste H5 (exemples) |
 | **M3b** — Étape 3 | Service de compilation cloud, compte, quotas, abonnement | D5, F1–F4, H3, H4 | 🧪 D5, H3 et H4 validés ; restent F1–F4 (comptes, quotas, abonnement), qui attendent les décisions sur les limites gratuites, le paiement et la licence |
 | Post-v1 | Flash STM32 (AN3155) | D3 | 🔜 |
@@ -461,3 +461,4 @@ Les dates ne sont pas fixées : les jalons avancent par versions publiées (0.1.
 | 0.30 | 2026-11-16 | H5 validé sur Windows (compilation locale) ; reste à essayer sur Android |
 | 0.31 | 2026-11-17 | R10 : analyse des dumps Windows (corruption du tas, `serialport.dll` dans la pile des deux plantages Release) ; pistes précisées |
 | 0.32 | 2026-11-17 | R10 : non reproduit sur la 0.5.0 (essai de tous les scénarios sur le poste de développement) ; attribué à l'autre poste de l'auteur, surveillé, non bloquant |
+| 0.33 | 2026-11-18 | G3 validé : annonces de l'état (connexion, progression, résultats) vérifiées avec TalkBack sur téléphone ; reste D8 dans M3c |
