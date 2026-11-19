@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Produit** | NomadIDE |
-| **Version du document** | 0.34 — D8 (flash multi-fichiers) validé |
+| **Version du document** | 0.35 — G2, G4, G5 validés ; G8 à refaire en visite guidée |
 | **Date** | 2026-10-01 |
 | **Statut du produit** | Étape 1 terminée (HAL USB/série + moniteur série) ; étape 2 en cours |
 | **Documents liés** | [README.md](README.md) · [ADR 0001 — Flutter](docs/adr/0001-stack-flutter.md) · [Politique de confidentialité](docs/privacy.html) |
@@ -192,13 +192,13 @@ Référentiels visés : **WCAG 2.2 niveau AA** et **RGAA 4.1**. Méthode : la co
 | ID | User story | Prio | Statut |
 |---|---|---|---|
 | G1 | Je veux une barre de raccourcis tactile au-dessus du clavier (`Tab`, `:`, `{`, `}` ; `Ctrl+C` et `Ctrl+D` dans la console MicroPython) pour programmer sans chercher les symboles. | M | 🧪 existe déjà (B6) ; reste la mise en conformité : cibles 48 dp, libellés traduits, sémantique |
-| G2 | Je veux que le flash soit un parcours guidé (1. Fichier, 2. Carte, 3. Écriture) lisible sur un écran de 360 dp, sans surcharge. | M | 🧪 trois étapes avec divulgation progressive (étape terminée repliée sur son résumé, options avancées et firmware officiel repliés), testé à 360 dp et à 150 % de taille de texte ; à valider sur téléphone |
+| G2 | Je veux que le flash soit un parcours guidé (1. Fichier, 2. Carte, 3. Écriture) lisible sur un écran de 360 dp, sans surcharge. | M | ✅ trois étapes avec divulgation progressive (étape terminée repliée sur son résumé, options avancées et firmware officiel repliés), testé à 360 dp et à 150 % de taille de texte ; validé sur téléphone (2026-11-19) |
 | G3 | Je veux qu'un lecteur d'écran (TalkBack, VoiceOver) annonce l'état de l'app : carte connectée ou déconnectée, flash en cours avec son avancement, erreur. | M | ✅ état de connexion, progression (par paliers de 25 %) et résultats annoncés, zones sans nom nommées ; testé en simulation, puis validé avec TalkBack sur téléphone (2026-11-18) |
-| G4 | Je veux que toutes les zones tactiles fassent au moins 48 × 48 dp. | M | 🧪 vérifié par test sur les 5 écrans (thèmes sombre et clair, téléphone de 360 dp) ; texte agrandi à 150 % et 200 % sans débordement ; à valider sur téléphone |
-| G5 | Je veux un thème sombre lisible : contraste ≥ 4,5:1 pour le texte et ≥ 3:1 pour les composants et le focus. | M | 🧪 appliqué et testé automatiquement (texte des 5 écrans, thèmes sombre et clair) ; à valider à l'œil sur téléphone |
+| G4 | Je veux que toutes les zones tactiles fassent au moins 48 × 48 dp. | M | ✅ vérifié par test sur les 5 écrans (thèmes sombre et clair, téléphone de 360 dp) ; texte agrandi à 150 % et 200 % sans débordement ; validé sur téléphone (2026-11-19) |
+| G5 | Je veux un thème sombre lisible : contraste ≥ 4,5:1 pour le texte et ≥ 3:1 pour les composants et le focus. | M | ✅ appliqué et testé automatiquement (texte des 5 écrans, thèmes sombre et clair) ; validé à l'œil sur téléphone (2026-11-19) |
 | G6 | Je veux une identité visuelle cohérente (palette ci-dessous) appliquée à tous les écrans. | S | 🧪 thème et couleurs de l'éditeur appliqués ; reste la refonte des composants (G7) |
 | G7 | Je veux une interface construite à partir de composants réutilisables (atomes, molécules, organismes) et de la grille Material 3, pour que chaque écran se comporte de la même façon. | S | 🧪 dossier `app/lib/ui/` (atomes : bouton d'action matérielle, pastille d'étape ; molécules : étape repliable, bannière, section avancée, progression) appliqué à l'écran Flasher ; reste à l'appliquer aux autres écrans |
-| G8 | Je veux une prise en main guidée au premier lancement (ce qu'est l'app, brancher sa carte, les onglets, un premier programme), que je peux passer et revoir. | S | 🧪 quatre étapes au premier lancement, « Passer » à tout moment, « Ouvrir l'onglet Python » à la fin, « Revoir le tutoriel » dans Réglages → Aide ; testé (accessibilité, 360 dp, texte à 200 %), à valider sur téléphone |
+| G8 | Je veux une prise en main guidée au premier lancement (ce qu'est l'app, brancher sa carte, les onglets, un premier programme), que je peux passer et revoir. | S | 🧪 quatre étapes au premier lancement, « Passer » à tout moment, « Ouvrir l'onglet Python » à la fin, « Revoir le tutoriel » dans Réglages → Aide ; testé (accessibilité, 360 dp, texte à 200 %) ; **jugé trop passif par l'auteur après essai sur téléphone** : à remplacer par une visite guidée interactive sur les vrais écrans (une étape par partie de l'app, la zone concernée mise en évidence, l'utilisateur essaie l'élément, texte et progression annoncés au lecteur d'écran, « Passer » à tout moment, « Revoir la visite » dans Réglages → Aide) |
 
 **Critères d'acceptation**
 
@@ -415,7 +415,7 @@ L'utilisateur ouvre l'app, voit un bandeau expliquant que l'USB-série n'est pas
 | **M1** — Étape 1 | HAL USB/série, moniteur série, carte simulée | A1–A7, E2, E3 | ✅ |
 | **M2** — Étape 2 | Éditeur, projets, raw REPL, explorateur de fichiers de la carte, « Run », internationalisation FR/EN | B1–B6, C1–C5, E6 | ✅ (écrit, testé et validé sur Badger 2040 avec Windows et Android) |
 | **M3a** — Étape 3 | Flash ESP32/ESP32-S et RP2040, firmware MicroPython | D1, D2, D4, D6, D7, C6 | 🧪 D1, D2 (Windows), D4, D6 et D7 (ESP, Badger 2040) validés ; D2 validé aussi sur Android (PICOBOOT) ; reste D7 pour Pico et Pico W (C6 est couvert par D7, validé) |
-| **M3c** — Étape 3 | UX/UI et accessibilité, flash multi-fichiers ESP | G1–G8, D8 | 🧪 G1–G8 et D8 écrits et testés ; thème, barre de raccourcis, parcours Flasher, réglages et tutoriel essayés sur téléphone et PC ; G3 (annonces TalkBack) validé sur téléphone ; D8 (flash de plusieurs fichiers) validé sur une carte, sur téléphone et sur PC ; restent les points « à valider sur téléphone » de G2, G4, G5 et G8 |
+| **M3c** — Étape 3 | UX/UI et accessibilité, flash multi-fichiers ESP | G1–G8, D8 | 🧪 G1–G8 et D8 écrits et testés ; thème, barre de raccourcis, parcours Flasher, réglages et tutoriel essayés sur téléphone et PC ; G3 (annonces TalkBack) validé sur téléphone ; D8 (flash de plusieurs fichiers) validé sur une carte, sur téléphone et sur PC ; G2, G4 et G5 validés sur téléphone ; restent G8 (visite guidée interactive à réaliser), G1, G6 et G7 |
 | **M3d** — Étape 3 | Bibliothèques MicroPython (sans serveur) | H1, H2, H5, H6, H7 | 🧪 H1 et H2 validés sur ESP32 (Android) ; H6 et H7 écrits et testés ; reste H5 (exemples) |
 | **M3b** — Étape 3 | Service de compilation cloud, compte, quotas, abonnement | D5, F1–F4, H3, H4 | 🧪 D5, H3 et H4 validés ; restent F1–F4 (comptes, quotas, abonnement), qui attendent les décisions sur les limites gratuites, le paiement et la licence |
 | Post-v1 | Flash STM32 (AN3155) | D3 | 🔜 |
@@ -463,3 +463,4 @@ Les dates ne sont pas fixées : les jalons avancent par versions publiées (0.1.
 | 0.32 | 2026-11-17 | R10 : non reproduit sur la 0.5.0 (essai de tous les scénarios sur le poste de développement) ; attribué à l'autre poste de l'auteur, surveillé, non bloquant |
 | 0.33 | 2026-11-18 | G3 validé : annonces de l'état (connexion, progression, résultats) vérifiées avec TalkBack sur téléphone ; reste D8 dans M3c |
 | 0.34 | 2026-11-19 | D8 validé : bootloader, table de partitions et application d'un projet Arduino écrits en une seule passe sur une carte ESP32, sur téléphone Android et sur PC, aux adresses attendues ; la carte démarre sur le nouveau programme |
+| 0.35 | 2026-11-19 | G2, G4 et G5 validés sur téléphone ; G8 : le tutoriel en quatre pages est jugé trop passif, le critère devient une visite guidée interactive sur les vrais écrans |
