@@ -1574,12 +1574,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get obBack => 'Back';
 
   @override
-  String get obStart => 'Get started';
-
-  @override
-  String get obOpenPython => 'Open the Python tab';
-
-  @override
   String obProgress(int number, int total) {
     return 'Step $number of $total';
   }
@@ -1588,56 +1582,57 @@ class AppLocalizationsEn extends AppLocalizations {
   String get obWelcomeTitle => 'Welcome to NomadIDE';
 
   @override
-  String get obWelcomeBody =>
-      'Program your ESP32 and RP2040 boards (Pico, Badger 2040) in MicroPython, from your phone or your computer, with nothing else to install.';
-
-  @override
   String get obPlugTitle => 'Plug in your board';
 
   @override
-  String get obPlugBody =>
-      'On a computer, a USB cable is enough. On a phone, use an OTG adapter. Android then asks for access to the board: accept, and tick “always” so it does not ask again.';
+  String get tourFinish => 'Finish';
 
   @override
-  String get obPlugCable =>
-      'A charge-only cable carries no data: if the board does not appear, try another one.';
+  String get tourWelcomeBody =>
+      'Program your ESP32 and RP2040 boards (Pico, Badger 2040) in MicroPython, from your phone or your computer, with nothing else to install. This tour shows where each tool is; it takes a minute and you can skip it at any time.';
 
   @override
-  String get obTabsTitle => 'Five tabs';
+  String get tourPlugBody =>
+      'On a computer, a USB cable is enough. On a phone, use an OTG adapter: Android then asks for access to the board, accept and tick “always”. Detected boards appear in this list; the refresh button reads it again. A charge-only cable carries no data: try another one if the board does not appear.';
 
   @override
-  String get obTabMonitor => 'Monitor: read what the board prints.';
+  String get tourMonitorBody =>
+      'Read everything the board writes on its serial line here, and send it text. The best way to see what it is doing.';
 
   @override
-  String get obTabPython => 'Python: the board’s console, files and libraries.';
+  String get tourPythonBody =>
+      'The board’s MicroPython console, its files and its libraries. This is where you send a program and run it.';
 
   @override
-  String get obTabEditor => 'Editor: write and save your programs.';
+  String get tourEditorBody =>
+      'Write and save your programs (MicroPython or Arduino C/C++). Your projects stay on your device.';
 
   @override
-  String get obTabFlash => 'Flash: install MicroPython or a compiled program.';
+  String get tourFlashBody =>
+      'Install MicroPython on the board, or a compiled program. Done once per board, or to switch language.';
 
   @override
-  String get obTabSettings =>
-      'Settings: language, theme, help (this tutorial is there).';
+  String get tourSettingsBody =>
+      'Language, theme, compilation… and “Take the guided tour again” to restart this tour whenever you like.';
+
+  @override
+  String get tourFirstBody =>
+      'Tap “Connect” to talk to the board, then type print(\"Hello\") in the console and tap “Run”: the board answers in the log. No answer? It may not have MicroPython yet: Flash tab, “Official MicroPython firmware”.';
+
+  @override
+  String get tourTapHint => 'Tap the highlighted area to continue.';
+
+  @override
+  String get tourTryHint => 'Try it: this element is live.';
 
   @override
   String get obFirstTitle => 'Your first program';
 
   @override
-  String get obFirstBody =>
-      'Python tab: tap “Connect”, type print(\"Hello\") in the console, then “Run”. The board answers in the log.';
+  String get settingsTutorial => 'Take the guided tour again';
 
   @override
-  String get obFirstNoFirmware =>
-      'The board does not answer? It may not have MicroPython yet: Flash tab, “Official MicroPython firmware”.';
-
-  @override
-  String get settingsTutorial => 'See the tutorial again';
-
-  @override
-  String get settingsTutorialHint =>
-      'The four steps to get started with NomadIDE';
+  String get settingsTutorialHint => 'The parts of the app, step by step';
 
   @override
   String get updTitle => 'Updates';

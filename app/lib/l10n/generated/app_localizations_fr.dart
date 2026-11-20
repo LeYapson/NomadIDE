@@ -1582,12 +1582,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get obBack => 'Précédent';
 
   @override
-  String get obStart => 'Commencer';
-
-  @override
-  String get obOpenPython => 'Ouvrir l’onglet Python';
-
-  @override
   String obProgress(int number, int total) {
     return 'Étape $number sur $total';
   }
@@ -1596,58 +1590,57 @@ class AppLocalizationsFr extends AppLocalizations {
   String get obWelcomeTitle => 'Bienvenue dans NomadIDE';
 
   @override
-  String get obWelcomeBody =>
-      'Programmez vos cartes ESP32 et RP2040 (Pico, Badger 2040) en MicroPython, depuis votre téléphone ou votre ordinateur, sans rien installer d’autre.';
-
-  @override
   String get obPlugTitle => 'Branchez votre carte';
 
   @override
-  String get obPlugBody =>
-      'Sur ordinateur, un câble USB suffit. Sur téléphone, passez par un adaptateur OTG. Android demande alors l’accès à la carte : acceptez, et cochez « toujours » pour ne plus le voir.';
+  String get tourFinish => 'Terminer';
 
   @override
-  String get obPlugCable =>
-      'Un câble qui ne fait que charger ne transmet rien : si la carte n’apparaît pas, essayez-en un autre.';
+  String get tourWelcomeBody =>
+      'Programmez vos cartes ESP32 et RP2040 (Pico, Badger 2040) en MicroPython, depuis votre téléphone ou votre ordinateur, sans rien installer d’autre. Cette visite montre où se trouve chaque outil ; elle dure une minute et vous pouvez la passer à tout moment.';
 
   @override
-  String get obTabsTitle => 'Cinq onglets';
+  String get tourPlugBody =>
+      'Sur ordinateur, un câble USB suffit. Sur téléphone, passez par un adaptateur OTG : Android demande alors l’accès à la carte, acceptez et cochez « toujours ». Les cartes détectées apparaissent dans cette liste ; le bouton d’actualisation la relit. Un câble qui ne fait que charger ne transmet rien : essayez-en un autre si la carte n’apparaît pas.';
 
   @override
-  String get obTabMonitor => 'Moniteur : lire ce que la carte affiche.';
+  String get tourMonitorBody =>
+      'Lisez ici tout ce que la carte écrit sur sa liaison série, et envoyez-lui du texte. Idéal pour comprendre ce qu’elle fait.';
 
   @override
-  String get obTabPython =>
-      'Python : console, fichiers et bibliothèques de la carte.';
+  String get tourPythonBody =>
+      'La console MicroPython de la carte, ses fichiers et ses bibliothèques. C’est ici qu’on envoie un programme et qu’on l’exécute.';
 
   @override
-  String get obTabEditor => 'Éditeur : écrire et enregistrer vos programmes.';
+  String get tourEditorBody =>
+      'Écrivez et enregistrez vos programmes (MicroPython ou Arduino C/C++). Vos projets restent sur votre appareil.';
 
   @override
-  String get obTabFlash =>
-      'Flasher : installer MicroPython ou un programme compilé.';
+  String get tourFlashBody =>
+      'Installez MicroPython sur la carte, ou un programme compilé. À faire une fois par carte, ou pour changer de langage.';
 
   @override
-  String get obTabSettings =>
-      'Réglages : langue, thème, aide (ce tutoriel s’y trouve).';
+  String get tourSettingsBody =>
+      'Langue, thème, compilation… et « Revoir la visite guidée » pour recommencer cette visite quand vous voulez.';
+
+  @override
+  String get tourFirstBody =>
+      'Touchez « Connecter » pour parler à la carte, puis tapez print(\"Bonjour\") dans la console et touchez « Exécuter » : la carte répond dans le journal. Pas de réponse ? Elle n’a peut-être pas encore MicroPython : onglet Flasher, « Firmware MicroPython officiel ».';
+
+  @override
+  String get tourTapHint => 'Touchez la zone éclairée pour continuer.';
+
+  @override
+  String get tourTryHint => 'Essayez : cet élément est actif.';
 
   @override
   String get obFirstTitle => 'Votre premier programme';
 
   @override
-  String get obFirstBody =>
-      'Onglet Python : touchez « Connecter », tapez print(\"Bonjour\") dans la console, puis « Exécuter ». La carte répond dans le journal.';
+  String get settingsTutorial => 'Revoir la visite guidée';
 
   @override
-  String get obFirstNoFirmware =>
-      'La carte ne répond pas ? Elle n’a peut-être pas encore MicroPython : onglet Flasher, « Firmware MicroPython officiel ».';
-
-  @override
-  String get settingsTutorial => 'Revoir le tutoriel';
-
-  @override
-  String get settingsTutorialHint =>
-      'Les quatre étapes de prise en main de NomadIDE';
+  String get settingsTutorialHint => 'Les parties de l’application, pas à pas';
 
   @override
   String get updTitle => 'Mises à jour';

@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Produit** | NomadIDE |
-| **Version du document** | 0.30 — H5 validé sur Windows |
+| **Version du document** | 0.38 — G1, G6 et G7 validés ; M3c terminé |
 | **Date** | 2026-10-01 |
 | **Statut du produit** | Étape 1 terminée (HAL USB/série + moniteur série) ; étape 2 en cours |
 | **Documents liés** | [README.md](README.md) · [ADR 0001 — Flutter](docs/adr/0001-stack-flutter.md) · [Politique de confidentialité](docs/privacy.html) |
@@ -136,7 +136,7 @@ Format des critères : **Étant donné** / **Quand** / **Alors**. Chaque story e
 | D6 | Je veux voir une progression fiable et une vérification du flash. | M | ✅ progression et vérification (MD5 pour l'ESP, redémarrage de la carte pour l'UF2) validées sur matériel ; débranchement en pleine écriture validé sur ESP : message d'erreur avec avertissement « carte possiblement incomplète » et marche à suivre |
 | D7 | Je veux installer le firmware MicroPython adapté à ma carte (ex. firmware Pimoroni pour la Badger 2040). | S | ✅ ESP32 et ESP32-S3 : recherche, téléchargement et flash du firmware officiel validés sur Windows et Android ; ✅ Badger 2040 : firmware Pimoroni téléchargé et flashé depuis l'app Windows, REPL et code exécuté vérifiés ; 🧪 Pico et Pico W (version et téléchargement validés contre micropython.org, flash depuis l'app non essayé), Badger 2040 W |
 | D9 | Sur ordinateur, je veux compiler mon code C/C++ sur ma machine, sans serveur ni compte, et même hors ligne une fois l'outillage installé. | S | ✅ validé sur Windows : installation réelle d'`arduino-cli` et des cœurs, compilation locale puis flash et exécution sur ESP32 et ESP32-S3 ; RP2040 non essayé (la carte de test tourne sous MicroPython) ; macOS et Linux non essayés |
-| D8 | Je veux flasher plusieurs fichiers à des adresses distinctes en une seule passe (ex. bootloader `0x1000`, table de partitions `0x8000`, application `0x10000`), pour les projets Arduino et ESP-IDF. | S | 🧪 écrit et testé avec une fausse ROM : chaque fichier est reconnu par son contenu (image complète, bootloader, table de partitions, données OTA, application), l'adresse vient de la table de partitions quand elle est fournie, chevauchements refusés, un MD5 par fichier, un seul redémarrage ; à valider sur une carte avec un projet Arduino |
+| D8 | Je veux flasher plusieurs fichiers à des adresses distinctes en une seule passe (ex. bootloader `0x1000`, table de partitions `0x8000`, application `0x10000`), pour les projets Arduino et ESP-IDF. | S | ✅ écrit et testé avec une fausse ROM : chaque fichier est reconnu par son contenu (image complète, bootloader, table de partitions, données OTA, application), l'adresse vient de la table de partitions quand elle est fournie, chevauchements refusés, un MD5 par fichier, un seul redémarrage ; validé sur une carte ESP32 avec un projet Arduino (bootloader, table de partitions et application en une passe), sur téléphone Android et sur PC (2026-11-19) |
 
 **Critères d'acceptation**
 
@@ -166,6 +166,28 @@ Le compte n'est exigé **que** pour la compilation cloud. Éditeur, moniteur, Mi
 - **F3** — *Quand* je résilie, *alors* l'abonnement reste actif jusqu'à la fin de la période payée, et mes projets (stockés en local) ne sont pas affectés.
 - **F4** — *Étant donné* l'absence de réseau ou de compte, *alors* aucune fonction locale n'est dégradée.
 
+**Proposition de modèle économique (2026-11-16, ⚠️ à valider : rien n'est décidé)**
+
+Proposée par l'auteur ; elle répond en partie aux questions ouvertes 3, 4 et 5 du §10 et ne devient une décision qu'une fois validée.
+
+| Offre | Prix | Compilations cloud |
+|---|---|---|
+| Gratuite | 0 € | 5 par jour, sans compte (jeton d'appareil) |
+| Pro | 4,99 €/mois ou 39,99 €/an | 150 par jour |
+| Fondateur (à vie) | 79 € une fois | 60 par jour |
+
+- **Pas de compte au lancement** : l'offre gratuite repose sur un jeton propre à l'appareil ; le compte n'est demandé qu'à l'achat d'une offre.
+- **Paiement** : Google Play Billing sur Android ; un prestataire de paiement tiers (Lemon Squeezy ou Paddle) sur ordinateur.
+- **Licence** : client sous MIT ou AGPL ; service sous licence « source disponible » (BSL) ou privé.
+
+*Points à trancher avant de figer la proposition :*
+
+1. **Licence** : garder le moteur de compilation (`services/cloud_compiler`, déjà sous MIT et auto-hébergeable) sous MIT, et ne mettre dans un dépôt privé que le code nouveau (comptes, quotas, facturation). Fermer le moteur après coup serait mal perçu et incohérent avec « le code reste à l'utilisateur ».
+2. **Offre à vie** : un paiement unique finance un coût qui, lui, est récurrent (serveur). La plafonner (nombre de places, quota plus bas) ou y renoncer.
+3. **Prix et quotas** : mesurer d'abord le coût réel d'une compilation (processeur, durée, espace du cache) ; les chiffres ci-dessus n'en sont pas déduits.
+4. **Jeton d'appareil** : ce n'est qu'une limite souple (une réinstallation ou un autre appareil la contourne). Ajouter un plafond global et par adresse réseau, et ne pas présenter « 5 par jour » comme une garantie.
+5. **Conformité** : Google Play Billing est exigé pour un abonnement acheté dans l'app Android (R8) ; la politique de confidentialité, le formulaire « Sécurité des données » et la suppression de compte (exigée par Google Play dès qu'il y a des comptes) sont à mettre à jour avant publication (voir ci-dessous).
+
 **À faire avant de publier une version avec F1** *(rappel : la politique de confidentialité actuelle, [docs/privacy.html](docs/privacy.html), décrit une app sans compte et sans serveur fourni ; elle deviendrait fausse)*
 
 - **Politique de confidentialité** : la réécrire en français et en anglais avant la mise en ligne de la version avec comptes. Elle doit couvrir l'identifiant de compte (e-mail ou autre), le code source envoyé au service, les quotas et l'historique d'usage, le prestataire de paiement et les autres sous-traitants, la durée de conservation, et le fait que le service de compilation devient exploité par NomadIDE (alors qu'elle dit aujourd'hui qu'aucun serveur n'est fourni par défaut).
@@ -191,14 +213,14 @@ Référentiels visés : **WCAG 2.2 niveau AA** et **RGAA 4.1**. Méthode : la co
 
 | ID | User story | Prio | Statut |
 |---|---|---|---|
-| G1 | Je veux une barre de raccourcis tactile au-dessus du clavier (`Tab`, `:`, `{`, `}` ; `Ctrl+C` et `Ctrl+D` dans la console MicroPython) pour programmer sans chercher les symboles. | M | 🧪 existe déjà (B6) ; reste la mise en conformité : cibles 48 dp, libellés traduits, sémantique |
-| G2 | Je veux que le flash soit un parcours guidé (1. Fichier, 2. Carte, 3. Écriture) lisible sur un écran de 360 dp, sans surcharge. | M | 🧪 trois étapes avec divulgation progressive (étape terminée repliée sur son résumé, options avancées et firmware officiel repliés), testé à 360 dp et à 150 % de taille de texte ; à valider sur téléphone |
-| G3 | Je veux qu'un lecteur d'écran (TalkBack, VoiceOver) annonce l'état de l'app : carte connectée ou déconnectée, flash en cours avec son avancement, erreur. | M | 🧪 état de connexion, progression (par paliers de 25 %) et résultats annoncés, zones sans nom nommées ; testé en simulation, à valider avec TalkBack sur téléphone |
-| G4 | Je veux que toutes les zones tactiles fassent au moins 48 × 48 dp. | M | 🧪 vérifié par test sur les 5 écrans (thèmes sombre et clair, téléphone de 360 dp) ; texte agrandi à 150 % et 200 % sans débordement ; à valider sur téléphone |
-| G5 | Je veux un thème sombre lisible : contraste ≥ 4,5:1 pour le texte et ≥ 3:1 pour les composants et le focus. | M | 🧪 appliqué et testé automatiquement (texte des 5 écrans, thèmes sombre et clair) ; à valider à l'œil sur téléphone |
-| G6 | Je veux une identité visuelle cohérente (palette ci-dessous) appliquée à tous les écrans. | S | 🧪 thème et couleurs de l'éditeur appliqués ; reste la refonte des composants (G7) |
-| G7 | Je veux une interface construite à partir de composants réutilisables (atomes, molécules, organismes) et de la grille Material 3, pour que chaque écran se comporte de la même façon. | S | 🧪 dossier `app/lib/ui/` (atomes : bouton d'action matérielle, pastille d'étape ; molécules : étape repliable, bannière, section avancée, progression) appliqué à l'écran Flasher ; reste à l'appliquer aux autres écrans |
-| G8 | Je veux une prise en main guidée au premier lancement (ce qu'est l'app, brancher sa carte, les onglets, un premier programme), que je peux passer et revoir. | S | 🧪 quatre étapes au premier lancement, « Passer » à tout moment, « Ouvrir l'onglet Python » à la fin, « Revoir le tutoriel » dans Réglages → Aide ; testé (accessibilité, 360 dp, texte à 200 %), à valider sur téléphone |
+| G1 | Je veux une barre de raccourcis tactile au-dessus du clavier (`Tab`, `:`, `{`, `}` ; `Ctrl+C` et `Ctrl+D` dans la console MicroPython) pour programmer sans chercher les symboles. | M | ✅ touches de 48 dp, noms parlés des symboles (« Insérer deux-points »), français et anglais, testé automatiquement ; validé sur téléphone (2026-11-20) |
+| G2 | Je veux que le flash soit un parcours guidé (1. Fichier, 2. Carte, 3. Écriture) lisible sur un écran de 360 dp, sans surcharge. | M | ✅ trois étapes avec divulgation progressive (étape terminée repliée sur son résumé, options avancées et firmware officiel repliés), testé à 360 dp et à 150 % de taille de texte ; validé sur téléphone (2026-11-19) |
+| G3 | Je veux qu'un lecteur d'écran (TalkBack, VoiceOver) annonce l'état de l'app : carte connectée ou déconnectée, flash en cours avec son avancement, erreur. | M | ✅ état de connexion, progression (par paliers de 25 %) et résultats annoncés, zones sans nom nommées ; testé en simulation, puis validé avec TalkBack sur téléphone (2026-11-18) |
+| G4 | Je veux que toutes les zones tactiles fassent au moins 48 × 48 dp. | M | ✅ vérifié par test sur les 5 écrans (thèmes sombre et clair, téléphone de 360 dp) ; texte agrandi à 150 % et 200 % sans débordement ; validé sur téléphone (2026-11-19) |
+| G5 | Je veux un thème sombre lisible : contraste ≥ 4,5:1 pour le texte et ≥ 3:1 pour les composants et le focus. | M | ✅ appliqué et testé automatiquement (texte des 5 écrans, thèmes sombre et clair) ; validé à l'œil sur téléphone (2026-11-19) |
+| G6 | Je veux une identité visuelle cohérente (palette ci-dessous) appliquée à tous les écrans. | S | ✅ aucune couleur écrite en dur dans les écrans ni les composants (test automatique) : tout vient du thème clair et sombre ; validé sur téléphone et sur PC (2026-11-20) |
+| G7 | Je veux une interface construite à partir de composants réutilisables (atomes, molécules, organismes) et de la grille Material 3, pour que chaque écran se comporte de la même façon. | S | ✅ dossier `app/lib/ui/` (atomes : bouton d'action matérielle, pastille d'étape, titre de section ; molécules : étape repliable, bannière, section avancée, progression, liste des cartes) appliqué à Flasher, Réglages, Moniteur, MicroPython et aux feuilles de compilation et de bibliothèques ; validé sur téléphone et sur PC (2026-11-20) |
+| G8 | Je veux une prise en main guidée au premier lancement (ce qu'est l'app, brancher sa carte, les onglets, un premier programme), que je peux passer et revoir. | S | ✅ visite guidée interactive en huit étapes sur les vrais écrans (bienvenue, brancher la carte, les cinq onglets, premier programme) : chaque étape affiche son onglet, assombrit le reste et éclaire l'élément concerné ; toucher un onglet éclairé passe à la suite, la liste des cartes et « Connecter » s'essaient ; démarre au premier lancement, « Passer » à tout moment, « Revoir la visite guidée » dans Réglages → Aide, touche « retour » = étape précédente ; le lecteur d'écran ne lit que la carte de la visite ; testé (14 tests, 360 dp, texte à 200 %), validé sur PC et sur téléphone (2026-11-20) |
 
 **Critères d'acceptation**
 
@@ -379,7 +401,7 @@ L'utilisateur ouvre l'app, voit un bandeau expliquant que l'USB-série n'est pas
 | R6 | **Pilotes Windows** (CH340, CP210x, PL2303 contrefaits). | Support utilisateur | Détection et message dédié avec lien vers le pilote. |
 | R7 | **Brick de carte** lors d'un flash interrompu. | Perte de confiance | Vérifications, avertissements, procédure de récupération documentée. |
 | R9 | **Bibliothèques tierces** (épopée H) : qualité inégale, licences variées, index Arduino volumineux pour un téléphone. | Bibliothèque qui ne compile pas, licence ignorée | Recherche côté serveur (le téléphone ne télécharge pas l'index entier), licence affichée (H7), versions figées par projet (H4), sélection de bibliothèques recommandées pour les capteurs courants. |
-| R10 | **Plantage sous Windows** : l'app peut se fermer brusquement en revenant sur l'onglet Éditeur. Le plantage se produit dans le moteur Flutter et existait avant la 0.4.0 ; sa cause est en cours d'analyse. | Perte du texte non enregistré, perte de confiance | Les brouillons sont écrits automatiquement (B5) et proposés à la réouverture ; analyse en cours ; piste : reproduire avec un moteur Flutter plus récent. |
+| R10 | **Plantage sous Windows** : l'app peut se fermer brusquement en revenant sur l'onglet Éditeur. Analyse des quatre fichiers d'analyse (dumps) conservés par Windows sur le poste de développement, tous du 2026-10-06 (version 0.1.0.1, aucun depuis sur ce poste) : **corruption du tas mémoire** (`0xc0000374` en Release, le même défaut repéré par la bibliothèque C de débogage en Debug). Dans les deux dumps Release, le fil fautif traverse `serialport.dll` (libserialport) aux mêmes adresses (`+0xd910`, `+0x361f`) sous des appels natifs du moteur : le moteur n'est donc pas seul en cause, la bibliothèque des ports série est la piste principale (non prouvée : sans symboles, la corruption a pu avoir lieu plus tôt). Le plantage signalé depuis (0.4.0) vient sans doute de l'autre poste de l'auteur, où l'on soupçonne la machine elle-même (pilotes, matériel) : aucune trace de plantage depuis le 2026-10-06 sur le poste de développement, et les dumps de l'autre poste n'ont pas été analysés. **Non reproduit sur la 0.5.0** : l'auteur a rejoué sur le poste de développement, avec la version publiée, tous les scénarios qui plantaient, sans jamais obtenir de plantage (2026-11-17) ; ce n'est pas une preuve de correction, mais le risque est jugé lié à l'autre poste et n'est plus bloquant. | Perte du texte non enregistré, perte de confiance | Les brouillons sont écrits automatiquement (B5) et proposés à la réouverture. Pistes : (1) mesurer sans l'énumération des ports (elle tourne toutes les 1,5 s sur le fil de l'interface et décrit chaque port à chaque passage) ; (2) ne décrire un port que lorsqu'il apparaît ; (3) reproduire avec Application Verifier (PageHeap) pour avoir la pile exacte ; (4) un moteur Flutter plus récent ; avant tout, relever sur l'autre poste le module fautif et le code d'exception (Observateur d'événements, journal Application, source « Application Error ») pour savoir si c'est la même corruption du tas. |
 
 **Décisions de cadrage (2026-10-01)**
 
@@ -394,9 +416,9 @@ L'utilisateur ouvre l'app, voit un bandeau expliquant que l'USB-série n'est pas
 
 1. « ESP32-S » désigne-t-il l'ESP32-S2, l'ESP32-S3, ou les deux ? Et l'ESP32-C3 (USB natif, très répandu) est-il à inclure ?
 2. Quelles chaînes de compilation proposer : Arduino (arduino-cli, core ESP32 et RP2040) pour démarrer, ESP-IDF et Pico SDK ensuite ? Cela fixe le périmètre du service cloud.
-3. Quelle limite pour l'offre gratuite (nombre de compilations par mois, durée de calcul, taille du projet) et quel prix pour l'offre payante ? À fixer avec une estimation du coût d'une compilation.
-4. Où se fait le paiement (site web, boutiques d'applications) ? Voir R8.
-5. Le code du dépôt est sous licence MIT : l'application reste-t-elle open source avec seulement le service cloud payant, ou le service est-il aussi publié ? Cela influence ce qui est protégé.
+3. Quelle limite pour l'offre gratuite (nombre de compilations par mois, durée de calcul, taille du projet) et quel prix pour l'offre payante ? À fixer avec une estimation du coût d'une compilation. *Proposition de l'auteur (2026-11-16) dans l'épopée F, à valider.*
+4. Où se fait le paiement (site web, boutiques d'applications) ? Voir R8. *Proposition : Google Play Billing sur Android, un prestataire tiers sur ordinateur (épopée F).*
+5. Le code du dépôt est sous licence MIT : l'application reste-t-elle open source avec seulement le service cloud payant, ou le service est-il aussi publié ? Cela influence ce qui est protégé. *Proposition : moteur de compilation sous MIT, code des comptes et de la facturation privé (épopée F).*
 
 ## 11. Indicateurs de succès
 
@@ -415,13 +437,13 @@ L'utilisateur ouvre l'app, voit un bandeau expliquant que l'USB-série n'est pas
 | **M1** — Étape 1 | HAL USB/série, moniteur série, carte simulée | A1–A7, E2, E3 | ✅ |
 | **M2** — Étape 2 | Éditeur, projets, raw REPL, explorateur de fichiers de la carte, « Run », internationalisation FR/EN | B1–B6, C1–C5, E6 | ✅ (écrit, testé et validé sur Badger 2040 avec Windows et Android) |
 | **M3a** — Étape 3 | Flash ESP32/ESP32-S et RP2040, firmware MicroPython | D1, D2, D4, D6, D7, C6 | 🧪 D1, D2 (Windows), D4, D6 et D7 (ESP, Badger 2040) validés ; D2 validé aussi sur Android (PICOBOOT) ; reste D7 pour Pico et Pico W (C6 est couvert par D7, validé) |
-| **M3c** — Étape 3 | UX/UI et accessibilité, flash multi-fichiers ESP | G1–G8, D8 | 🧪 G1–G8 et D8 écrits et testés ; thème, barre de raccourcis, parcours Flasher, réglages et tutoriel essayés sur téléphone et PC ; restent à confirmer : les annonces avec TalkBack (G3) et le flash de plusieurs fichiers sur une carte (D8) |
+| **M3c** — Étape 3 | UX/UI et accessibilité, flash multi-fichiers ESP | G1–G8, D8 | ✅ G1–G8 et D8 écrits, testés et validés ; thème, barre de raccourcis, parcours Flasher, réglages et tutoriel essayés sur téléphone et PC ; G3 (annonces TalkBack) validé sur téléphone ; D8 (flash de plusieurs fichiers) validé sur une carte, sur téléphone et sur PC ; G2, G4, G5 et G8 (visite guidée) validés sur téléphone ; G1, G6 et G7 validés sur téléphone et sur PC |
 | **M3d** — Étape 3 | Bibliothèques MicroPython (sans serveur) | H1, H2, H5, H6, H7 | 🧪 H1 et H2 validés sur ESP32 (Android) ; H6 et H7 écrits et testés ; reste H5 (exemples) |
 | **M3b** — Étape 3 | Service de compilation cloud, compte, quotas, abonnement | D5, F1–F4, H3, H4 | 🧪 D5, H3 et H4 validés ; restent F1–F4 (comptes, quotas, abonnement), qui attendent les décisions sur les limites gratuites, le paiement et la licence |
 | Post-v1 | Flash STM32 (AN3155) | D3 | 🔜 |
 | **M4** — Étape 4 | CI/CD, signature et distribution (Play Store, MSIX, notarisation macOS), mises à jour | E1, E4, E5 | 🧪 CI (analyse et tests) ; workflow de release desktop ; releases publiées sur GitHub depuis la 0.1.0 pour Windows, Linux et macOS, et pour Android depuis la 0.1.1 (APK signés avec une clé stable, App Bundle pour le Play Store) ; identifiant Android définitif `dev.nomadide.app` (0.4.1) ; **Play Store : fiche prête** (textes FR/EN, icône 512, image de présentation, 6 captures FR et 6 EN dans `docs/`, politique de confidentialité et page d'accueil en ligne, formulaires de la Play Console remplis) ; restent le **test fermé** (12 testeurs pendant 14 jours avant de pouvoir publier), la signature de l'app Windows, la notarisation macOS et le MSIX |
 
-Les dates ne sont pas fixées : les jalons avancent par versions publiées (0.1.0 à 0.5.0 à ce jour, voir `CHANGELOG.md`).
+Les dates ne sont pas fixées : les jalons avancent par versions publiées (0.1.0 à 0.6.0 à ce jour, voir `CHANGELOG.md`).
 
 ---
 
@@ -459,3 +481,11 @@ Les dates ne sont pas fixées : les jalons avancent par versions publiées (0.1.
 | 0.28 | 2026-11-16 | M4 : fiche Google Play prête (textes, icône, image de présentation, captures FR et EN prises sur téléphone, page d'accueil du site, politique de confidentialité) ; reste le test fermé (12 testeurs, 14 jours). Défauts relevés pendant les captures : onglet resté ouvert après la suppression d'un projet, « » » seul en fin de ligne dans le tutoriel, « licence » en anglais (corrigés dans la PR #71) ; renommer un fichier ou un dossier laisse son onglet sur l'ancien chemin (à traiter) |
 | 0.29 | 2026-11-16 | H5 écrit et testé pour les bibliothèques Arduino (liste des exemples, création d'un projet depuis un exemple, nouvelles routes `/v1/libraries/{nom}/examples` et `/example` du service) ; renommer un fichier ou un dossier met à jour ses onglets ouverts ; essai sur Windows : sur ordinateur, sans serveur configuré, la compilation se fait par défaut sur cette machine et « Sur cet ordinateur » reste proposé dans la feuille de compilation ; bouton « Bibliothèques Arduino » dans la barre de l'éditeur (recherche et exemples sans passer par la feuille de compilation) |
 | 0.30 | 2026-11-16 | H5 validé sur Windows (compilation locale) ; reste à essayer sur Android |
+| 0.31 | 2026-11-17 | R10 : analyse des dumps Windows (corruption du tas, `serialport.dll` dans la pile des deux plantages Release) ; pistes précisées |
+| 0.32 | 2026-11-17 | R10 : non reproduit sur la 0.5.0 (essai de tous les scénarios sur le poste de développement) ; attribué à l'autre poste de l'auteur, surveillé, non bloquant |
+| 0.33 | 2026-11-18 | G3 validé : annonces de l'état (connexion, progression, résultats) vérifiées avec TalkBack sur téléphone ; reste D8 dans M3c |
+| 0.34 | 2026-11-19 | D8 validé : bootloader, table de partitions et application d'un projet Arduino écrits en une seule passe sur une carte ESP32, sur téléphone Android et sur PC, aux adresses attendues ; la carte démarre sur le nouveau programme |
+| 0.35 | 2026-11-19 | G2, G4 et G5 validés sur téléphone ; G8 : le tutoriel en quatre pages est jugé trop passif, le critère devient une visite guidée interactive sur les vrais écrans |
+| 0.36 | 2026-11-20 | G8 validé : le tutoriel en quatre pages est remplacé par une visite guidée interactive sur les vrais écrans (huit étapes, élément éclairé, accessibilité), essayée sur PC et sur téléphone ; reste dans M3c : G1, G6 et G7 |
+| 0.37 | 2026-11-20 | Épopée F : la proposition de modèle économique de l'auteur (offres, quotas, paiement, licence) est inscrite comme proposition à valider, avec cinq points à trancher ; questions ouvertes 3, 4 et 5 renvoyées vers elle. Aucune décision prise |
+| 0.38 | 2026-11-20 | G1 (barre de raccourcis), G6 (identité visuelle) et G7 (composants communs) validés sur téléphone et sur PC : titre de section et liste des cartes communs, bannière de résultat sur les écrans qui écrivaient leur message à la main, test automatique contre les couleurs écrites en dur ; liste des cartes : nom seul dans le champ, port et puce sous le nom dans la liste ouverte. Jalon M3c terminé ; il ne reste que l'épopée F |

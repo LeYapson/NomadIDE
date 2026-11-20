@@ -3,13 +3,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:nomad_hal/nomad_hal.dart';
 import 'package:nomad_protocols/nomad_protocols.dart';
 
 import '../../../app/dialogs.dart';
 import '../../../l10n/l10n.dart';
 import '../../editor/application/editor_controller.dart';
 import '../../libraries/presentation/libraries_panel.dart';
+import '../../../ui/ui.dart';
+import '../../onboarding/tour.dart';
 import '../../projects/application/projects_controller.dart';
 import '../../projects/presentation/project_dialogs.dart';
 import '../application/micropython_controller.dart';
@@ -106,54 +107,34 @@ class _Toolbar extends ConsumerWidget {
         runSpacing: 8,
         crossAxisAlignment: WrapCrossAlignment.center,
         children: [
-          SizedBox(
-            width: (MediaQuery.sizeOf(context).width - 32).clamp(200.0, 380.0).toDouble(),
-            child: InputDecorator(
-              decoration: InputDecoration(
-                labelText: l10n.monBoardLabel,
-                border: const OutlineInputBorder(),
-                isDense: true,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-              ),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<SerialDeviceInfo>(
-                  isExpanded: true,
-                  value: state.devices.contains(state.selectedDevice) ? state.selectedDevice : null,
-                  hint: Text(state.devices.isEmpty ? l10n.monNoBoardDetected : l10n.monChooseBoard),
-                  items: [
-                    for (final d in state.devices)
-                      DropdownMenuItem(
-                        value: d,
-                        child: Text('${d.displayName}  ${d.details}', maxLines: 1, overflow: TextOverflow.ellipsis),
-                      ),
-                  ],
-                  onChanged: idle
-                      ? (d) {
-                          if (d != null) controller.selectDevice(d);
-                        }
-                      : null,
-                ),
-              ),
-            ),
+          BoardDropdown(
+            key: ref.read(tourTargetsProvider).keyOf(TourTarget.board),
+            devices: state.devices,
+            selected: state.selectedDevice,
+            enabled: idle,
+            onSelected: controller.selectDevice,
           ),
           IconButton(
             tooltip: l10n.monRefreshList,
             onPressed: idle ? controller.refreshDevices : null,
             icon: const Icon(Icons.refresh),
           ),
-          switch (state.status) {
-            ReplStatus.disconnected => FilledButton.icon(
-                onPressed: state.selectedDevice == null ? null : controller.connect,
-                icon: const Icon(Icons.usb),
-                label: Text(l10n.mpConnectRawRepl),
-              ),
-            ReplStatus.connecting => FilledButton(onPressed: null, child: Text(l10n.monConnecting)),
-            ReplStatus.ready => FilledButton.tonalIcon(
-                onPressed: state.busy ? null : controller.disconnect,
-                icon: const Icon(Icons.usb_off),
-                label: Text(l10n.monDisconnect),
-              ),
-          },
+          KeyedSubtree(
+            key: ref.read(tourTargetsProvider).keyOf(TourTarget.connect),
+            child: switch (state.status) {
+              ReplStatus.disconnected => FilledButton.icon(
+                  onPressed: state.selectedDevice == null ? null : controller.connect,
+                  icon: const Icon(Icons.usb),
+                  label: Text(l10n.mpConnectRawRepl),
+                ),
+              ReplStatus.connecting => FilledButton(onPressed: null, child: Text(l10n.monConnecting)),
+              ReplStatus.ready => FilledButton.tonalIcon(
+                  onPressed: state.busy ? null : controller.disconnect,
+                  icon: const Icon(Icons.usb_off),
+                  label: Text(l10n.monDisconnect),
+                ),
+            },
+          ),
           if (state.busy) const SizedBox.square(dimension: 18, child: CircularProgressIndicator(strokeWidth: 2)),
         ],
       ),
