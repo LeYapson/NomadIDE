@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nomad_hal/nomad_hal.dart';
 
 import '../../../../l10n/l10n.dart';
+import '../../../../ui/ui.dart';
 import '../../application/serial_monitor_controller.dart';
 import '../../application/serial_monitor_state.dart';
 
@@ -23,7 +24,6 @@ class ConnectionToolbar extends ConsumerWidget {
     final state = ref.watch(serialMonitorProvider);
     final controller = ref.read(serialMonitorProvider.notifier);
     final idle = state.status == ConnectionStatus.disconnected;
-    final deviceFieldWidth = (MediaQuery.sizeOf(context).width - 32).clamp(200.0, 380.0).toDouble();
 
     return Padding(
       padding: const EdgeInsets.all(8),
@@ -32,29 +32,7 @@ class ConnectionToolbar extends ConsumerWidget {
         runSpacing: 8,
         crossAxisAlignment: WrapCrossAlignment.center,
         children: [
-          SizedBox(
-            width: deviceFieldWidth,
-            child: InputDecorator(
-              decoration: _fieldDecoration.copyWith(labelText: l10n.monBoardLabel),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<SerialDeviceInfo>(
-                  isExpanded: true,
-                  // DropdownButton exige que la valeur figure dans la liste.
-                  value: state.devices.contains(state.selectedDevice) ? state.selectedDevice : null,
-                  hint: Text(state.devices.isEmpty ? l10n.monNoBoardDetected : l10n.monChooseBoard),
-                  items: [
-                    for (final device in state.devices)
-                      DropdownMenuItem(value: device, child: _DeviceLabel(device: device)),
-                  ],
-                  onChanged: idle
-                      ? (device) {
-                          if (device != null) controller.selectDevice(device);
-                        }
-                      : null,
-                ),
-              ),
-            ),
-          ),
+          BoardDropdown(devices: state.devices, selected: state.selectedDevice, enabled: idle, onSelected: controller.selectDevice),
           IconButton(
             tooltip: l10n.monRefreshList,
             onPressed: idle ? controller.refreshDevices : null,
@@ -100,29 +78,6 @@ class ConnectionToolbar extends ConsumerWidget {
           },
         ],
       ),
-    );
-  }
-}
-
-class _DeviceLabel extends StatelessWidget {
-  const _DeviceLabel({required this.device});
-
-  final SerialDeviceInfo device;
-
-  @override
-  Widget build(BuildContext context) {
-    final details = device.details;
-    return Text.rich(
-      TextSpan(children: [
-        TextSpan(text: device.displayName),
-        if (details.isNotEmpty)
-          TextSpan(
-            text: '   $details',
-            style: TextStyle(color: Theme.of(context).colorScheme.outline),
-          ),
-      ]),
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
     );
   }
 }

@@ -10,6 +10,7 @@ import '../../../app/settings.dart';
 import '../../../app/theme.dart';
 import '../../../l10n/error_messages.dart';
 import '../../../l10n/l10n.dart';
+import '../../../ui/ui.dart';
 import '../../flash/application/flash_controller.dart' show flashSizeLabel;
 import '../../onboarding/tour.dart';
 import '../../serial_monitor/application/serial_monitor_state.dart' show LineEnding;
@@ -91,12 +92,12 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
         child: ListView(
           padding: const EdgeInsets.only(bottom: 24),
           children: [
-            _SectionHeader(l10n.settingsLanguage),
+            SectionHeader(l10n.settingsLanguage),
             _ChoiceTile(label: l10n.languageSystem, selected: chosen == null, onTap: () => chooseLocale(null)),
             _ChoiceTile(label: l10n.languageFrench, selected: chosen == 'fr', onTap: () => chooseLocale('fr')),
             _ChoiceTile(label: l10n.languageEnglish, selected: chosen == 'en', onTap: () => chooseLocale('en')),
 
-            _SectionHeader(l10n.settingsAppearance),
+            SectionHeader(l10n.settingsAppearance),
             for (final (mode, label) in [
               (ThemeMode.system, l10n.themeSystem),
               (ThemeMode.light, l10n.themeLight),
@@ -104,7 +105,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
             ])
               _ChoiceTile(label: label, selected: settings.themeMode == mode, onTap: () => controller.setThemeMode(mode)),
 
-            _SectionHeader(l10n.settingsEditor),
+            SectionHeader(l10n.settingsEditor),
             ListTile(
               title: Text(l10n.settingsFontSize(settings.editorFontSize.round())),
               subtitle: Column(
@@ -137,7 +138,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
               onChanged: controller.setEditorWordWrap,
             ),
 
-            _SectionHeader(l10n.settingsMonitor),
+            SectionHeader(l10n.settingsMonitor),
             _DropdownTile<int>(
               label: l10n.settingsDefaultBaud,
               value: settings.monitorBaud,
@@ -156,11 +157,11 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
               onChanged: controller.setMonitorTimestamps,
             ),
 
-            _SectionHeader(l10n.settingsCompile),
+            SectionHeader(l10n.settingsCompile),
             const _CompileSettings(),
             if (localCompileAvailable) const _LocalToolchainTile(),
 
-            _SectionHeader(l10n.settingsHelp),
+            SectionHeader(l10n.settingsHelp),
             ListTile(
               leading: const Icon(Icons.school_outlined),
               title: Text(l10n.settingsTutorial),
@@ -174,7 +175,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
               onTap: _exportDiagnostic,
             ),
 
-            _SectionHeader(l10n.settingsData),
+            SectionHeader(l10n.settingsData),
             ref.watch(storageRootProvider).when(
                   data: (dir) => ListTile(
                     leading: const Icon(Icons.folder_outlined),
@@ -203,7 +204,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
               },
             ),
 
-            _SectionHeader(l10n.settingsAbout),
+            SectionHeader(l10n.settingsAbout),
             ListTile(
               leading: const NomadLogo(size: 40),
               title: Text(l10n.settingsVersion),
@@ -308,23 +309,6 @@ class _LocalToolchainTile extends ConsumerWidget {
       title: Text(l10n.settingsLocalToolchain),
       subtitle: Text(ready ? l10n.settingsLocalToolchainReady : l10n.settingsLocalToolchainMissing),
       trailing: ready ? OutlinedButton(onPressed: confirmRemove, child: Text(l10n.settingsLocalToolchainRemove)) : null,
-    );
-  }
-}
-
-class _SectionHeader extends StatelessWidget {
-  const _SectionHeader(this.text);
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 20, 16, 4),
-      child: Semantics(
-        header: true,
-        child: Text(text, style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Theme.of(context).colorScheme.primary)),
-      ),
     );
   }
 }
@@ -514,13 +498,7 @@ class _CompileSettingsState extends ConsumerState<_CompileSettings> {
           if (_result != null)
             Padding(
               padding: const EdgeInsets.only(top: 8),
-              child: Semantics(
-                liveRegion: true,
-                child: Text(
-                  _result!,
-                  style: TextStyle(color: _resultOk ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.error),
-                ),
-              ),
+              child: StatusBanner(message: _result!, kind: _resultOk ? StatusKind.success : StatusKind.error),
             ),
         ],
       ),
