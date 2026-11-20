@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Produit** | NomadIDE |
-| **Version du document** | 0.38 — G1, G6 et G7 validés ; M3c terminé |
+| **Version du document** | 0.39 — F1–F4 : licence et offre Fondateur décidées |
 | **Date** | 2026-10-01 |
 | **Statut du produit** | Étape 1 terminée (HAL USB/série + moniteur série) ; étape 2 en cours |
 | **Documents liés** | [README.md](README.md) · [ADR 0001 — Flutter](docs/adr/0001-stack-flutter.md) · [Politique de confidentialité](docs/privacy.html) |
@@ -166,24 +166,25 @@ Le compte n'est exigé **que** pour la compilation cloud. Éditeur, moniteur, Mi
 - **F3** — *Quand* je résilie, *alors* l'abonnement reste actif jusqu'à la fin de la période payée, et mes projets (stockés en local) ne sont pas affectés.
 - **F4** — *Étant donné* l'absence de réseau ou de compte, *alors* aucune fonction locale n'est dégradée.
 
-**Proposition de modèle économique (2026-11-16, ⚠️ à valider : rien n'est décidé)**
+**Proposition de modèle économique (2026-11-16) — licence et offre Fondateur décidées le 2026-11-20 ; prix, quotas, paiement et jeton d'appareil restent à valider**
 
-Proposée par l'auteur ; elle répond en partie aux questions ouvertes 3, 4 et 5 du §10 et ne devient une décision qu'une fois validée.
+Proposée par l'auteur ; elle répond en partie aux questions ouvertes 3, 4 et 5 du §10. Seuls la licence et le cadre de l'offre Fondateur sont décidés (points 1 et 2 ci-dessous) ; le reste ne devient une décision qu'une fois validé.
 
 | Offre | Prix | Compilations cloud |
 |---|---|---|
 | Gratuite | 0 € | 5 par jour, sans compte (jeton d'appareil) |
 | Pro | 4,99 €/mois ou 39,99 €/an | 150 par jour |
-| Fondateur (à vie) | 79 € une fois | 60 par jour |
+| Fondateur (à vie) | 79 € une fois, **100 places** | 60 par jour |
 
 - **Pas de compte au lancement** : l'offre gratuite repose sur un jeton propre à l'appareil ; le compte n'est demandé qu'à l'achat d'une offre.
 - **Paiement** : Google Play Billing sur Android ; un prestataire de paiement tiers (Lemon Squeezy ou Paddle) sur ordinateur.
-- **Licence** : client sous MIT ou AGPL ; service sous licence « source disponible » (BSL) ou privé.
+- **Licence (décidé)** : tout ce qui existe reste sous MIT, y compris le moteur de compilation ; seul le code nouveau (comptes, quotas, facturation) est privé. Voir le point 1.
+- **Offre Fondateur (décidé)** : conservée pour remercier les soutiens de la première heure, mais limitée à 100 places. Voir le point 2.
 
 *Points à trancher avant de figer la proposition :*
 
-1. **Licence** : garder le moteur de compilation (`services/cloud_compiler`, déjà sous MIT et auto-hébergeable) sous MIT, et ne mettre dans un dépôt privé que le code nouveau (comptes, quotas, facturation). Fermer le moteur après coup serait mal perçu et incohérent avec « le code reste à l'utilisateur ».
-2. **Offre à vie** : un paiement unique finance un coût qui, lui, est récurrent (serveur). La plafonner (nombre de places, quota plus bas) ou y renoncer.
+1. **Licence — ✅ décidé le 2026-11-20** : garder le moteur de compilation (`services/cloud_compiler`, déjà sous MIT et auto-hébergeable) sous MIT, et ne mettre dans un dépôt privé que le code nouveau (comptes, quotas, facturation). Fermer le moteur après coup serait mal perçu et incohérent avec « le code reste à l'utilisateur ». Le client reste en MIT (pas d'AGPL) : le revenu vient du service hébergé et de ses quotas, pas du code ; à reconsidérer seulement si un acteur reprend le code pour le revendre fermé. Le code déjà publié sous MIT le reste.
+2. **Offre à vie — ✅ décidé le 2026-11-20** : un paiement unique finance un coût qui, lui, est récurrent (serveur). L'offre est conservée mais plafonnée : **100 places** ; « à vie » signifie « tant que le service existe » ; le quota reste de 60 compilations par jour ; le statut Fondateur est mentionné dans l'app et sur la page du projet.
 3. **Prix et quotas** : mesurer d'abord le coût réel d'une compilation (processeur, durée, espace du cache) ; les chiffres ci-dessus n'en sont pas déduits.
 4. **Jeton d'appareil** : ce n'est qu'une limite souple (une réinstallation ou un autre appareil la contourne). Ajouter un plafond global et par adresse réseau, et ne pas présenter « 5 par jour » comme une garantie.
 5. **Conformité** : Google Play Billing est exigé pour un abonnement acheté dans l'app Android (R8) ; la politique de confidentialité, le formulaire « Sécurité des données » et la suppression de compte (exigée par Google Play dès qu'il y a des comptes) sont à mettre à jour avant publication (voir ci-dessous).
@@ -418,7 +419,7 @@ L'utilisateur ouvre l'app, voit un bandeau expliquant que l'USB-série n'est pas
 2. Quelles chaînes de compilation proposer : Arduino (arduino-cli, core ESP32 et RP2040) pour démarrer, ESP-IDF et Pico SDK ensuite ? Cela fixe le périmètre du service cloud.
 3. Quelle limite pour l'offre gratuite (nombre de compilations par mois, durée de calcul, taille du projet) et quel prix pour l'offre payante ? À fixer avec une estimation du coût d'une compilation. *Proposition de l'auteur (2026-11-16) dans l'épopée F, à valider.*
 4. Où se fait le paiement (site web, boutiques d'applications) ? Voir R8. *Proposition : Google Play Billing sur Android, un prestataire tiers sur ordinateur (épopée F).*
-5. Le code du dépôt est sous licence MIT : l'application reste-t-elle open source avec seulement le service cloud payant, ou le service est-il aussi publié ? Cela influence ce qui est protégé. *Proposition : moteur de compilation sous MIT, code des comptes et de la facturation privé (épopée F).*
+5. Le code du dépôt est sous licence MIT : l'application reste-t-elle open source avec seulement le service cloud payant, ou le service est-il aussi publié ? Cela influence ce qui est protégé. *Décidé le 2026-11-20 : moteur de compilation et code existant sous MIT, code des comptes et de la facturation privé (épopée F).*
 
 ## 11. Indicateurs de succès
 
@@ -439,7 +440,7 @@ L'utilisateur ouvre l'app, voit un bandeau expliquant que l'USB-série n'est pas
 | **M3a** — Étape 3 | Flash ESP32/ESP32-S et RP2040, firmware MicroPython | D1, D2, D4, D6, D7, C6 | 🧪 D1, D2 (Windows), D4, D6 et D7 (ESP, Badger 2040) validés ; D2 validé aussi sur Android (PICOBOOT) ; reste D7 pour Pico et Pico W (C6 est couvert par D7, validé) |
 | **M3c** — Étape 3 | UX/UI et accessibilité, flash multi-fichiers ESP | G1–G8, D8 | ✅ G1–G8 et D8 écrits, testés et validés ; thème, barre de raccourcis, parcours Flasher, réglages et tutoriel essayés sur téléphone et PC ; G3 (annonces TalkBack) validé sur téléphone ; D8 (flash de plusieurs fichiers) validé sur une carte, sur téléphone et sur PC ; G2, G4, G5 et G8 (visite guidée) validés sur téléphone ; G1, G6 et G7 validés sur téléphone et sur PC |
 | **M3d** — Étape 3 | Bibliothèques MicroPython (sans serveur) | H1, H2, H5, H6, H7 | 🧪 H1 et H2 validés sur ESP32 (Android) ; H6 et H7 écrits et testés ; reste H5 (exemples) |
-| **M3b** — Étape 3 | Service de compilation cloud, compte, quotas, abonnement | D5, F1–F4, H3, H4 | 🧪 D5, H3 et H4 validés ; restent F1–F4 (comptes, quotas, abonnement), qui attendent les décisions sur les limites gratuites, le paiement et la licence |
+| **M3b** — Étape 3 | Service de compilation cloud, compte, quotas, abonnement | D5, F1–F4, H3, H4 | 🧪 D5, H3 et H4 validés ; restent F1–F4 (comptes, quotas, abonnement), qui attendent les décisions sur les limites gratuites, les prix et le paiement (licence et offre Fondateur décidées) |
 | Post-v1 | Flash STM32 (AN3155) | D3 | 🔜 |
 | **M4** — Étape 4 | CI/CD, signature et distribution (Play Store, MSIX, notarisation macOS), mises à jour | E1, E4, E5 | 🧪 CI (analyse et tests) ; workflow de release desktop ; releases publiées sur GitHub depuis la 0.1.0 pour Windows, Linux et macOS, et pour Android depuis la 0.1.1 (APK signés avec une clé stable, App Bundle pour le Play Store) ; identifiant Android définitif `dev.nomadide.app` (0.4.1) ; **Play Store : fiche prête** (textes FR/EN, icône 512, image de présentation, 6 captures FR et 6 EN dans `docs/`, politique de confidentialité et page d'accueil en ligne, formulaires de la Play Console remplis) ; restent le **test fermé** (12 testeurs pendant 14 jours avant de pouvoir publier), la signature de l'app Windows, la notarisation macOS et le MSIX |
 
@@ -489,3 +490,4 @@ Les dates ne sont pas fixées : les jalons avancent par versions publiées (0.1.
 | 0.36 | 2026-11-20 | G8 validé : le tutoriel en quatre pages est remplacé par une visite guidée interactive sur les vrais écrans (huit étapes, élément éclairé, accessibilité), essayée sur PC et sur téléphone ; reste dans M3c : G1, G6 et G7 |
 | 0.37 | 2026-11-20 | Épopée F : la proposition de modèle économique de l'auteur (offres, quotas, paiement, licence) est inscrite comme proposition à valider, avec cinq points à trancher ; questions ouvertes 3, 4 et 5 renvoyées vers elle. Aucune décision prise |
 | 0.38 | 2026-11-20 | G1 (barre de raccourcis), G6 (identité visuelle) et G7 (composants communs) validés sur téléphone et sur PC : titre de section et liste des cartes communs, bannière de résultat sur les écrans qui écrivaient leur message à la main, test automatique contre les couleurs écrites en dur ; liste des cartes : nom seul dans le champ, port et puce sous le nom dans la liste ouverte. Jalon M3c terminé ; il ne reste que l'épopée F |
+| 0.39 | 2026-11-20 | Épopée F : deux points tranchés — licence (tout ce qui existe reste en MIT, y compris le moteur de compilation ; seul le code des comptes, quotas et facturation est privé) et offre Fondateur (conservée, limitée à 100 places, « à vie » = tant que le service existe, 60 compilations par jour). Restent à valider : prix et quotas (après mesure du coût réel), jeton d'appareil, paiement, conformité |
