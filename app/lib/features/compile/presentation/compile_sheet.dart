@@ -5,6 +5,7 @@ import 'package:nomad_compile_api/nomad_compile_api.dart';
 import '../../../app/providers.dart';
 import '../../../app/settings.dart';
 import '../../../l10n/l10n.dart';
+import '../../../ui/ui.dart';
 import '../../flash/application/flash_controller.dart' show flashSizeLabel;
 import '../../projects/application/projects_controller.dart';
 import '../application/arduino_libraries_controller.dart';
@@ -297,10 +298,7 @@ class _LocalSetup extends ConsumerWidget {
             if (state.phase == ToolchainPhase.failed)
               Padding(
                 padding: const EdgeInsets.only(bottom: 8),
-                child: Semantics(
-                  liveRegion: true,
-                  child: Text(l10n.ccLocalFailed(state.error ?? ''), style: TextStyle(color: Theme.of(context).colorScheme.error)),
-                ),
+                child: StatusBanner(message: l10n.ccLocalFailed(state.error ?? ''), kind: StatusKind.error),
               ),
             FilledButton.icon(
               onPressed: state.phase == ToolchainPhase.checking ? null : controller.install,
@@ -351,8 +349,9 @@ class _Result extends ConsumerWidget {
     final children = <Widget>[];
 
     String? statusText;
-    IconData? icon;
-    Color? color;
+
+    // Résultat final (réussi, échoué, annulé) : bannière ; en cours : simple texte sous la barre de progression.
+    StatusKind? outcome;
     switch (state.phase) {
       case CompilePhase.idle:
         break;
@@ -366,30 +365,22 @@ class _Result extends ConsumerWidget {
         statusText = l10n.ccPhaseRunning;
       case CompilePhase.succeeded:
         statusText = l10n.ccSucceeded(((status?.durationMs ?? 0) / 1000).round());
-        icon = Icons.check_circle_outline;
-        color = theme.colorScheme.primary;
+        outcome = StatusKind.success;
       case CompilePhase.failed:
         statusText = l10n.ccFailed;
-        icon = Icons.error_outline;
-        color = theme.colorScheme.error;
+        outcome = StatusKind.error;
       case CompilePhase.cancelled:
         statusText = l10n.ccCancelled;
-        icon = Icons.cancel_outlined;
+        outcome = StatusKind.info;
     }
 
     if (state.working) children.add(const LinearProgressIndicator());
     if (statusText != null) {
       children.add(Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Semantics(
-          liveRegion: true,
-          child: Row(
-            children: [
-              if (icon != null) ...[Icon(icon, color: color), const SizedBox(width: 8)],
-              Expanded(child: Text(statusText, style: theme.textTheme.titleMedium?.copyWith(color: color))),
-            ],
-          ),
-        ),
+        child: outcome != null
+            ? StatusBanner(message: statusText, kind: outcome)
+            : Semantics(liveRegion: true, child: Text(statusText, style: theme.textTheme.titleMedium)),
       ));
     }
 
@@ -397,7 +388,7 @@ class _Result extends ConsumerWidget {
     if (problem != null) {
       children.add(Padding(
         padding: const EdgeInsets.only(bottom: 8),
-        child: Semantics(liveRegion: true, child: Text(compileProblemMessage(l10n, problem, state.detail), style: TextStyle(color: theme.colorScheme.error))),
+        child: StatusBanner(message: compileProblemMessage(l10n, problem, state.detail), kind: StatusKind.error),
       ));
     } else if (state.phase == CompilePhase.failed && state.detail != null) {
       // Échec qui ne vient pas du code (délai dépassé, aucun binaire) : le service l'explique.

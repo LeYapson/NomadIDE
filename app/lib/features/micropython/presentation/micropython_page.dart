@@ -3,13 +3,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:nomad_hal/nomad_hal.dart';
 import 'package:nomad_protocols/nomad_protocols.dart';
 
 import '../../../app/dialogs.dart';
 import '../../../l10n/l10n.dart';
 import '../../editor/application/editor_controller.dart';
 import '../../libraries/presentation/libraries_panel.dart';
+import '../../../ui/ui.dart';
 import '../../onboarding/tour.dart';
 import '../../projects/application/projects_controller.dart';
 import '../../projects/presentation/project_dialogs.dart';
@@ -107,36 +107,12 @@ class _Toolbar extends ConsumerWidget {
         runSpacing: 8,
         crossAxisAlignment: WrapCrossAlignment.center,
         children: [
-          SizedBox(
+          BoardDropdown(
             key: ref.read(tourTargetsProvider).keyOf(TourTarget.board),
-            width: (MediaQuery.sizeOf(context).width - 32).clamp(200.0, 380.0).toDouble(),
-            child: InputDecorator(
-              decoration: InputDecoration(
-                labelText: l10n.monBoardLabel,
-                border: const OutlineInputBorder(),
-                isDense: true,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-              ),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<SerialDeviceInfo>(
-                  isExpanded: true,
-                  value: state.devices.contains(state.selectedDevice) ? state.selectedDevice : null,
-                  hint: Text(state.devices.isEmpty ? l10n.monNoBoardDetected : l10n.monChooseBoard),
-                  items: [
-                    for (final d in state.devices)
-                      DropdownMenuItem(
-                        value: d,
-                        child: Text('${d.displayName}  ${d.details}', maxLines: 1, overflow: TextOverflow.ellipsis),
-                      ),
-                  ],
-                  onChanged: idle
-                      ? (d) {
-                          if (d != null) controller.selectDevice(d);
-                        }
-                      : null,
-                ),
-              ),
-            ),
+            devices: state.devices,
+            selected: state.selectedDevice,
+            enabled: idle,
+            onSelected: controller.selectDevice,
           ),
           IconButton(
             tooltip: l10n.monRefreshList,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nomad_hal/nomad_hal.dart' show SerialDeviceInfo;
 import 'package:nomad_mcu/app/theme.dart';
 import 'package:nomad_mcu/l10n/l10n.dart';
 import 'package:nomad_mcu/ui/ui.dart';
@@ -143,6 +144,77 @@ void main() {
       final data = tester.getSemantics(find.bySemanticsLabel('Écriture… 25 %')).getSemanticsData();
       expect(data.flagsCollection.isLiveRegion, isTrue);
       handle.dispose();
+    });
+  });
+
+  group('SectionHeader', () {
+    testWidgets('déclaré comme titre au lecteur d\'écran, en couleur de marque', (tester) async {
+      final handle = tester.ensureSemantics();
+      await tester.pumpWidget(_host(const SectionHeader('Apparence')));
+      expect(tester.getSemantics(find.text('Apparence')).getSemanticsData().flagsCollection.isHeader, isTrue);
+      final style = tester.widget<Text>(find.text('Apparence')).style!;
+      expect(style.color, Theme.of(tester.element(find.text('Apparence'))).colorScheme.primary);
+      handle.dispose();
+    });
+
+    testWidgets('marge réglable : celle d\'une liste pleine largeur par défaut', (tester) async {
+      await tester.pumpWidget(_host(const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [SectionHeader('A'), SectionHeader('B', padding: EdgeInsets.zero)])));
+      expect(tester.getTopLeft(find.text('A')).dx, 16);
+      expect(tester.getTopLeft(find.text('B')).dx, 0);
+    });
+  });
+
+  group('BoardDropdown', () {
+    const badger = SerialDeviceInfo(id: 'COM5', displayName: 'Badger 2040', systemPath: 'COM5', vendorId: 0x2E8A, productId: 0x0005);
+    const esp = SerialDeviceInfo(id: 'COM7', displayName: 'ESP32', systemPath: 'COM7');
+
+    Widget dropdown({List<SerialDeviceInfo> devices = const [badger, esp], SerialDeviceInfo? selected, bool enabled = true, ValueChanged<SerialDeviceInfo>? onSelected}) =>
+        _host(BoardDropdown(devices: devices, selected: selected, enabled: enabled, onSelected: onSelected ?? (_) {}));
+
+    testWidgets('sans carte : le dit ; avec des cartes mais aucune choisie : invite à choisir', (tester) async {
+      await tester.pumpWidget(dropdown(devices: const []));
+      expect(find.text('Aucune carte détectée'), findsOneWidget);
+      await tester.pumpWidget(dropdown());
+      expect(find.text('Choisir une carte'), findsOneWidget);
+      expect(find.text('Carte'), findsOneWidget);
+    });
+
+    testWidgets('choisir une carte dans la liste appelle onSelected', (tester) async {
+      SerialDeviceInfo? chosen;
+      await tester.pumpWidget(dropdown(onSelected: (d) => chosen = d));
+      await tester.tap(find.byType(DropdownButton<SerialDeviceInfo>));
+      await tester.pumpAndSettle();
+      await tester.tap(find.textContaining('ESP32').last);
+      await tester.pumpAndSettle();
+      expect(chosen, esp);
+    });
+
+    testWidgets('carte choisie affichée ; une carte absente de la liste est ignorée plutôt que de planter', (tester) async {
+      await tester.pumpWidget(dropdown(selected: badger));
+      expect(find.textContaining('Badger 2040'), findsOneWidget);
+      await tester.pumpWidget(dropdown(selected: const SerialDeviceInfo(id: 'COM9', displayName: 'Inconnue')));
+      expect(tester.takeException(), isNull);
+      expect(find.text('Choisir une carte'), findsOneWidget);
+    });
+
+    testWidgets('liste figée (carte connectée) : elle ne s\'ouvre pas', (tester) async {
+      await tester.pumpWidget(dropdown(selected: badger, enabled: false));
+      await tester.tap(find.byType(DropdownButton<SerialDeviceInfo>), warnIfMissed: false);
+      await tester.pumpAndSettle();
+      expect(find.textContaining('ESP32'), findsNothing);
+    });
+
+    testWidgets('largeur : écran moins les marges, plafonnée à 380 dp', (tester) async {
+      Future<double> widthAt(double screen) async {
+        tester.view.physicalSize = Size(screen, 800);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.reset);
+        await tester.pumpWidget(dropdown());
+        return tester.getSize(find.byType(BoardDropdown)).width;
+      }
+
+      expect(await widthAt(360), 328);
+      expect(await widthAt(1200), 380);
     });
   });
 

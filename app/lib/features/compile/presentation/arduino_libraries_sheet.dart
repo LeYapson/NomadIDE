@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nomad_compile_api/nomad_compile_api.dart';
 
 import '../../../l10n/l10n.dart';
+import '../../../ui/ui.dart';
 import '../application/arduino_libraries_controller.dart';
 import 'compile_messages.dart';
 
@@ -84,15 +85,12 @@ class _ArduinoLibrariesSheetState extends ConsumerState<ArduinoLibrariesSheet> {
       if (state.problem != null)
         Padding(
           padding: const EdgeInsets.only(bottom: 8),
-          child: Semantics(
-            liveRegion: true,
-            child: Text(compileProblemMessage(l10n, state.problem!, state.detail), style: TextStyle(color: theme.colorScheme.error)),
-          ),
+          child: StatusBanner(message: compileProblemMessage(l10n, state.problem!, state.detail), kind: StatusKind.error),
         ),
       if (state.working) const LinearProgressIndicator(),
 
       // --- Dans ce projet
-      _SectionTitle(l10n.alProjectSection),
+      SectionHeader(l10n.alProjectSection, padding: _sectionPadding),
       if (state.chosen.isEmpty)
         Padding(padding: const EdgeInsets.symmetric(vertical: 8), child: Text(l10n.alNoneYet))
       else
@@ -118,7 +116,7 @@ class _ArduinoLibrariesSheetState extends ConsumerState<ArduinoLibrariesSheet> {
         ),
 
       // --- #include sans bibliothèque
-      _SectionTitle(l10n.alSuggestionsTitle),
+      SectionHeader(l10n.alSuggestionsTitle, padding: _sectionPadding),
       Align(
         alignment: AlignmentDirectional.centerStart,
         child: OutlinedButton.icon(
@@ -134,7 +132,7 @@ class _ArduinoLibrariesSheetState extends ConsumerState<ArduinoLibrariesSheet> {
       for (final resolution in state.suggestions) _Suggestion(resolution: resolution, working: state.working),
 
       // --- Recherche
-      _SectionTitle(l10n.alSearchLabel),
+      SectionHeader(l10n.alSearchLabel, padding: _sectionPadding),
       TextField(
         controller: _search,
         autocorrect: false,
@@ -182,17 +180,8 @@ class _ArduinoLibrariesSheetState extends ConsumerState<ArduinoLibrariesSheet> {
   }
 }
 
-class _SectionTitle extends StatelessWidget {
-  const _SectionTitle(this.text);
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(top: 16, bottom: 4),
-        child: Semantics(header: true, child: Text(text, style: Theme.of(context).textTheme.titleMedium)),
-      );
-}
+/// Marge des titres de section dans la feuille (elle a déjà ses propres marges latérales).
+const _sectionPadding = EdgeInsets.only(top: 16, bottom: 4);
 
 class _ResultTile extends ConsumerWidget {
   const _ResultTile({required this.library, required this.added, required this.working, required this.onOpen});
@@ -413,9 +402,9 @@ class _ExamplesDialogState extends ConsumerState<_ExamplesDialog> {
         width: double.maxFinite,
         child: examples == null
             ? (_failed
-                ? Text(
-                    state.problem == null ? '' : compileProblemMessage(l10n, state.problem!, state.detail),
-                    style: TextStyle(color: Theme.of(context).colorScheme.error),
+                ? StatusBanner(
+                    message: state.problem == null ? '' : compileProblemMessage(l10n, state.problem!, state.detail),
+                    kind: StatusKind.error,
                   )
                 : Semantics(liveRegion: true, child: Text(l10n.alExamplesLoading)))
             : examples.examples.isEmpty
@@ -428,13 +417,7 @@ class _ExamplesDialogState extends ConsumerState<_ExamplesDialog> {
                       if (state.problem != null)
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: Semantics(
-                            liveRegion: true,
-                            child: Text(
-                              compileProblemMessage(l10n, state.problem!, state.detail),
-                              style: TextStyle(color: Theme.of(context).colorScheme.error),
-                            ),
-                          ),
+                          child: StatusBanner(message: compileProblemMessage(l10n, state.problem!, state.detail), kind: StatusKind.error),
                         ),
                       Text(l10n.alExamplesHint(examples.version), style: Theme.of(context).textTheme.bodySmall),
                       const SizedBox(height: 8),
