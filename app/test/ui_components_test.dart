@@ -197,6 +197,19 @@ void main() {
       expect(find.text('Choisir une carte'), findsOneWidget);
     });
 
+    testWidgets('champ fermé : le nom seul ; liste ouverte : le détail sous le nom', (tester) async {
+      final details = badger.details;
+      expect(details, isNotEmpty);
+      await tester.pumpWidget(dropdown(selected: badger));
+      expect(find.textContaining('Badger 2040'), findsOneWidget);
+      expect(find.text(details), findsNothing);
+
+      await tester.tap(find.byType(DropdownButton<SerialDeviceInfo>));
+      await tester.pumpAndSettle();
+      expect(find.text(details), findsOneWidget);
+      expect(tester.getTopLeft(find.text(details).last).dy, greaterThan(tester.getTopLeft(find.text('Badger 2040').last).dy));
+    });
+
     testWidgets('liste figée (carte connectée) : elle ne s\'ouvre pas', (tester) async {
       await tester.pumpWidget(dropdown(selected: badger, enabled: false));
       await tester.tap(find.byType(DropdownButton<SerialDeviceInfo>), warnIfMissed: false);

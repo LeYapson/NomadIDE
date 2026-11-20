@@ -32,6 +32,11 @@ class BoardDropdown extends StatelessWidget {
             // DropdownButton exige que la valeur figure dans la liste.
             value: devices.contains(selected) ? selected : null,
             hint: Text(devices.isEmpty ? l10n.monNoBoardDetected : l10n.monChooseBoard),
+            // Champ fermé : le nom seul, qui tient sur une ligne. Liste ouverte : le nom et, dessous, le détail (port, puce),
+            // qui distingue deux cartes identiques.
+            selectedItemBuilder: (context) => [
+              for (final device in devices) Align(alignment: AlignmentDirectional.centerStart, child: Text(device.displayName, maxLines: 1, overflow: TextOverflow.ellipsis)),
+            ],
             items: [
               for (final device in devices) DropdownMenuItem(value: device, child: _DeviceLabel(device: device)),
             ],
@@ -55,13 +60,15 @@ class _DeviceLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final details = device.details;
-    return Text.rich(
-      TextSpan(children: [
-        TextSpan(text: device.displayName),
-        if (details.isNotEmpty) TextSpan(text: '   $details', style: TextStyle(color: Theme.of(context).colorScheme.outline)),
-      ]),
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
+    final theme = Theme.of(context);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(device.displayName, maxLines: 1, overflow: TextOverflow.ellipsis),
+        if (details.isNotEmpty)
+          Text(details, maxLines: 1, overflow: TextOverflow.ellipsis, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.outline)),
+      ],
     );
   }
 }
