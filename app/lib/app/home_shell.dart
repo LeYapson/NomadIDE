@@ -5,7 +5,8 @@ import '../features/editor/application/editor_controller.dart';
 import '../features/editor/presentation/editor_page.dart';
 import '../features/flash/presentation/flash_page.dart';
 import '../features/micropython/presentation/micropython_page.dart';
-import '../features/onboarding/onboarding_page.dart';
+import '../features/onboarding/tour.dart';
+import '../features/onboarding/tour_overlay.dart';
 import '../features/settings/application/update_checker.dart';
 import '../features/serial_monitor/presentation/serial_monitor_page.dart';
 import '../features/settings/presentation/settings_page.dart';
@@ -26,15 +27,15 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   late final AppLifecycleListener _lifecycle;
   bool _onboardingShown = false;
 
-  /// Premier lancement : le tutoriel s'ouvre une fois les réglages lus (jamais avant, pour ne pas
-  /// l'afficher une fraction de seconde à quelqu'un qui l'a déjà suivi).
+  /// Premier lancement : la visite guidée démarre une fois les réglages lus (jamais avant, pour ne pas
+  /// l'afficher une fraction de seconde à quelqu'un qui l'a déjà suivie).
   void _maybeShowOnboarding(AppSettings settings) {
     // Réglages lus : on peut chercher une mise à jour (si le réglage l'autorise).
     if (settings.loaded) ref.read(updateProvider.notifier).checkAtStartup();
     if (debugSkipOnboarding || _onboardingShown || !settings.loaded || settings.onboardingDone) return;
     _onboardingShown = true;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) showOnboarding(context);
+      if (mounted) ref.read(tourProvider.notifier).start();
     });
   }
 
@@ -66,6 +67,8 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   @override
   Widget build(BuildContext context) {
     final tab = ref.watch(homeTabProvider);
+    final touring = ref.watch(tourProvider) != null;
+    final targets = ref.watch(tourTargetsProvider);
     ref.listen(settingsProvider, (_, next) => _maybeShowOnboarding(next));
     // Une version plus récente : un message discret, une fois, avec un lien vers sa page.
     ref.listen(updateProvider, (previous, next) {
@@ -85,7 +88,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     // et décale toute la barre. Le nom court suffit là ; le nom complet reste dans l'info-bulle.
     final narrow = MediaQuery.sizeOf(context).width < 480;
 
-    return Scaffold(
+    final shell = Scaffold(
       body: IndexedStack(
         index: tab.index,
         children: const [SerialMonitorPage(), MicroPythonPage(), EditorPage(), FlashPage(), SettingsPage()],
@@ -96,17 +99,33 @@ class _HomeShellState extends ConsumerState<HomeShell> {
               selectedIndex: tab.index,
               onDestinationSelected: (i) => ref.read(homeTabProvider.notifier).show(HomeTab.values[i]),
               destinations: [
-                NavigationDestination(icon: const Icon(Icons.terminal), label: context.l10n.navMonitor),
+                NavigationDestination(key: targets.keyOf(TourTarget.navMonitor), icon: const Icon(Icons.terminal), label: context.l10n.navMonitor),
                 NavigationDestination(
+                  key: targets.keyOf(TourTarget.navPython),
                   icon: const Icon(Icons.memory),
                   label: narrow ? context.l10n.navMicroPythonShort : context.l10n.navMicroPython,
                   tooltip: context.l10n.navMicroPython,
                 ),
-                NavigationDestination(icon: const Icon(Icons.code), label: context.l10n.navEditor),
-                NavigationDestination(icon: const Icon(Icons.bolt), label: context.l10n.navFlash),
-                NavigationDestination(icon: const Icon(Icons.settings_outlined), label: context.l10n.navSettings),
+                NavigationDestination(key: targets.keyOf(TourTarget.navEditor), icon: const Icon(Icons.code), label: context.l10n.navEditor),
+                NavigationDestination(key: targets.keyOf(TourTarget.navFlash), icon: const Icon(Icons.bolt), label: context.l10n.navFlash),
+                NavigationDestination(key: targets.keyOf(TourTarget.navSettings), icon: const Icon(Icons.settings_outlined), label: context.l10n.navSettings),
               ],
             ),
+    );
+
+    // Visite guidée : par-dessus l'app (qui n'est plus lue par le lecteur d'écran, la carte de la visite seule l'est),
+    // et la touche « retour » recule d'une étape au lieu de quitter l'app.
+    return PopScope(
+      canPop: !touring,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) ref.read(tourProvider.notifier).back();
+      },
+      child: Stack(
+        children: [
+          ExcludeSemantics(excluding: touring, child: shell),
+          if (touring) const Positioned.fill(child: TourOverlay()),
+        ],
+      ),
     );
   }
 }

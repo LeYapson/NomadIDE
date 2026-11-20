@@ -11,7 +11,7 @@ import '../../../app/theme.dart';
 import '../../../l10n/error_messages.dart';
 import '../../../l10n/l10n.dart';
 import '../../flash/application/flash_controller.dart' show flashSizeLabel;
-import '../../onboarding/onboarding_page.dart';
+import '../../onboarding/tour.dart';
 import '../../serial_monitor/application/serial_monitor_state.dart' show LineEnding;
 import '../../compile/application/compile_controller.dart' show compileApiProvider;
 import '../../compile/application/local_toolchain_controller.dart';
@@ -165,7 +165,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
               leading: const Icon(Icons.school_outlined),
               title: Text(l10n.settingsTutorial),
               subtitle: Text(l10n.settingsTutorialHint),
-              onTap: () => showOnboarding(context),
+              onTap: () => ref.read(tourProvider.notifier).start(),
             ),
             ListTile(
               leading: const Icon(Icons.bug_report_outlined),

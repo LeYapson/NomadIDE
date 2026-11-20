@@ -10,6 +10,7 @@ import '../../../app/dialogs.dart';
 import '../../../l10n/l10n.dart';
 import '../../editor/application/editor_controller.dart';
 import '../../libraries/presentation/libraries_panel.dart';
+import '../../onboarding/tour.dart';
 import '../../projects/application/projects_controller.dart';
 import '../../projects/presentation/project_dialogs.dart';
 import '../application/micropython_controller.dart';
@@ -107,6 +108,7 @@ class _Toolbar extends ConsumerWidget {
         crossAxisAlignment: WrapCrossAlignment.center,
         children: [
           SizedBox(
+            key: ref.read(tourTargetsProvider).keyOf(TourTarget.board),
             width: (MediaQuery.sizeOf(context).width - 32).clamp(200.0, 380.0).toDouble(),
             child: InputDecorator(
               decoration: InputDecoration(
@@ -141,19 +143,22 @@ class _Toolbar extends ConsumerWidget {
             onPressed: idle ? controller.refreshDevices : null,
             icon: const Icon(Icons.refresh),
           ),
-          switch (state.status) {
-            ReplStatus.disconnected => FilledButton.icon(
-                onPressed: state.selectedDevice == null ? null : controller.connect,
-                icon: const Icon(Icons.usb),
-                label: Text(l10n.mpConnectRawRepl),
-              ),
-            ReplStatus.connecting => FilledButton(onPressed: null, child: Text(l10n.monConnecting)),
-            ReplStatus.ready => FilledButton.tonalIcon(
-                onPressed: state.busy ? null : controller.disconnect,
-                icon: const Icon(Icons.usb_off),
-                label: Text(l10n.monDisconnect),
-              ),
-          },
+          KeyedSubtree(
+            key: ref.read(tourTargetsProvider).keyOf(TourTarget.connect),
+            child: switch (state.status) {
+              ReplStatus.disconnected => FilledButton.icon(
+                  onPressed: state.selectedDevice == null ? null : controller.connect,
+                  icon: const Icon(Icons.usb),
+                  label: Text(l10n.mpConnectRawRepl),
+                ),
+              ReplStatus.connecting => FilledButton(onPressed: null, child: Text(l10n.monConnecting)),
+              ReplStatus.ready => FilledButton.tonalIcon(
+                  onPressed: state.busy ? null : controller.disconnect,
+                  icon: const Icon(Icons.usb_off),
+                  label: Text(l10n.monDisconnect),
+                ),
+            },
+          ),
           if (state.busy) const SizedBox.square(dimension: 18, child: CircularProgressIndicator(strokeWidth: 2)),
         ],
       ),
