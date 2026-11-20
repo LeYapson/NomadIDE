@@ -443,7 +443,7 @@ L'utilisateur ouvre l'app, voit un bandeau expliquant que l'USB-série n'est pas
 | Post-v1 | Flash STM32 (AN3155) | D3 | 🔜 |
 | **M4** — Étape 4 | CI/CD, signature et distribution (Play Store, MSIX, notarisation macOS), mises à jour | E1, E4, E5 | 🧪 CI (analyse et tests) ; workflow de release desktop ; releases publiées sur GitHub depuis la 0.1.0 pour Windows, Linux et macOS, et pour Android depuis la 0.1.1 (APK signés avec une clé stable, App Bundle pour le Play Store) ; identifiant Android définitif `dev.nomadide.app` (0.4.1) ; **Play Store : fiche prête** (textes FR/EN, icône 512, image de présentation, 6 captures FR et 6 EN dans `docs/`, politique de confidentialité et page d'accueil en ligne, formulaires de la Play Console remplis) ; restent le **test fermé** (12 testeurs pendant 14 jours avant de pouvoir publier), la signature de l'app Windows, la notarisation macOS et le MSIX |
 
-Les dates ne sont pas fixées : les jalons avancent par versions publiées (0.1.0 à 0.5.0 à ce jour, voir `CHANGELOG.md`).
+Les dates ne sont pas fixées : les jalons avancent par versions publiées (0.1.0 à 0.6.0 à ce jour, voir `CHANGELOG.md`).
 
 ---
 

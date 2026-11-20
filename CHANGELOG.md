@@ -2,6 +2,24 @@
 
 Les notes de chaque version sont reprises telles quelles dans la release GitHub.
 
+## [0.6.0] — Visite guidée
+
+- **Visite guidée** : le tutoriel en quatre pages laisse place à une visite interactive sur les vrais écrans, en huit
+  étapes. Chaque étape éclaire l'élément dont elle parle (la liste des cartes, le bouton de connexion, chaque onglet
+  de la barre) et le reste de l'app est inerte ; deux étapes invitent à essayer (brancher une carte, lancer un
+  premier programme). « Passer » et la touche retour fonctionnent ; avec un lecteur d'écran, seule la carte de la
+  visite est lue. Réglages → « Revoir la visite guidée » la relance.
+- **Liste des cartes** : la même dans le Moniteur et dans l'onglet MicroPython. Le champ fermé n'affiche que le nom
+  de la carte ; le port et la puce apparaissent sous le nom dans la liste ouverte, ce qui distingue deux cartes
+  identiques.
+- **Messages de résultat** : le résultat d'une compilation (réussi, échoué, annulé), les erreurs du service de
+  compilation et des bibliothèques, l'échec de l'installation locale et le résultat du test du serveur (Réglages)
+  s'affichent dans un encadré avec une icône, en plus de la couleur, et sont annoncés au lecteur d'écran.
+- **Titres de section** des Réglages et des bibliothèques Arduino : même style partout, déclarés comme titres au
+  lecteur d'écran.
+- **Éditeur** : l'écran sans fichier ouvert ne déborde plus quand la taille du texte est très grande.
+- **En interne** : un test vérifie qu'aucun écran n'écrit de couleur en dur (tout vient du thème clair et sombre).
+
 ## [0.5.0] — Exemples des bibliothèques Arduino
 
 - **Exemples des bibliothèques** : dans le détail d'une bibliothèque Arduino, « Voir les exemples » liste ceux qu'elle
