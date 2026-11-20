@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Produit** | NomadIDE |
-| **Version du document** | 0.36 — G8 (visite guidée) validé |
+| **Version du document** | 0.37 — F1–F4, proposition de modèle économique |
 | **Date** | 2026-10-01 |
 | **Statut du produit** | Étape 1 terminée (HAL USB/série + moniteur série) ; étape 2 en cours |
 | **Documents liés** | [README.md](README.md) · [ADR 0001 — Flutter](docs/adr/0001-stack-flutter.md) · [Politique de confidentialité](docs/privacy.html) |
@@ -165,6 +165,28 @@ Le compte n'est exigé **que** pour la compilation cloud. Éditeur, moniteur, Mi
 - **F1/F2** — *Étant donné* un compte gratuit, *quand* j'atteins le quota, *alors* la compilation est refusée avec un message qui indique la date de renouvellement du quota, l'offre payante, et le rappel que l'import d'un binaire déjà compilé fonctionne toujours.
 - **F3** — *Quand* je résilie, *alors* l'abonnement reste actif jusqu'à la fin de la période payée, et mes projets (stockés en local) ne sont pas affectés.
 - **F4** — *Étant donné* l'absence de réseau ou de compte, *alors* aucune fonction locale n'est dégradée.
+
+**Proposition de modèle économique (2026-11-16, ⚠️ à valider : rien n'est décidé)**
+
+Proposée par l'auteur ; elle répond en partie aux questions ouvertes 3, 4 et 5 du §10 et ne devient une décision qu'une fois validée.
+
+| Offre | Prix | Compilations cloud |
+|---|---|---|
+| Gratuite | 0 € | 5 par jour, sans compte (jeton d'appareil) |
+| Pro | 4,99 €/mois ou 39,99 €/an | 150 par jour |
+| Fondateur (à vie) | 79 € une fois | 60 par jour |
+
+- **Pas de compte au lancement** : l'offre gratuite repose sur un jeton propre à l'appareil ; le compte n'est demandé qu'à l'achat d'une offre.
+- **Paiement** : Google Play Billing sur Android ; un prestataire de paiement tiers (Lemon Squeezy ou Paddle) sur ordinateur.
+- **Licence** : client sous MIT ou AGPL ; service sous licence « source disponible » (BSL) ou privé.
+
+*Points à trancher avant de figer la proposition :*
+
+1. **Licence** : garder le moteur de compilation (`services/cloud_compiler`, déjà sous MIT et auto-hébergeable) sous MIT, et ne mettre dans un dépôt privé que le code nouveau (comptes, quotas, facturation). Fermer le moteur après coup serait mal perçu et incohérent avec « le code reste à l'utilisateur ».
+2. **Offre à vie** : un paiement unique finance un coût qui, lui, est récurrent (serveur). La plafonner (nombre de places, quota plus bas) ou y renoncer.
+3. **Prix et quotas** : mesurer d'abord le coût réel d'une compilation (processeur, durée, espace du cache) ; les chiffres ci-dessus n'en sont pas déduits.
+4. **Jeton d'appareil** : ce n'est qu'une limite souple (une réinstallation ou un autre appareil la contourne). Ajouter un plafond global et par adresse réseau, et ne pas présenter « 5 par jour » comme une garantie.
+5. **Conformité** : Google Play Billing est exigé pour un abonnement acheté dans l'app Android (R8) ; la politique de confidentialité, le formulaire « Sécurité des données » et la suppression de compte (exigée par Google Play dès qu'il y a des comptes) sont à mettre à jour avant publication (voir ci-dessous).
 
 **À faire avant de publier une version avec F1** *(rappel : la politique de confidentialité actuelle, [docs/privacy.html](docs/privacy.html), décrit une app sans compte et sans serveur fourni ; elle deviendrait fausse)*
 
@@ -394,9 +416,9 @@ L'utilisateur ouvre l'app, voit un bandeau expliquant que l'USB-série n'est pas
 
 1. « ESP32-S » désigne-t-il l'ESP32-S2, l'ESP32-S3, ou les deux ? Et l'ESP32-C3 (USB natif, très répandu) est-il à inclure ?
 2. Quelles chaînes de compilation proposer : Arduino (arduino-cli, core ESP32 et RP2040) pour démarrer, ESP-IDF et Pico SDK ensuite ? Cela fixe le périmètre du service cloud.
-3. Quelle limite pour l'offre gratuite (nombre de compilations par mois, durée de calcul, taille du projet) et quel prix pour l'offre payante ? À fixer avec une estimation du coût d'une compilation.
-4. Où se fait le paiement (site web, boutiques d'applications) ? Voir R8.
-5. Le code du dépôt est sous licence MIT : l'application reste-t-elle open source avec seulement le service cloud payant, ou le service est-il aussi publié ? Cela influence ce qui est protégé.
+3. Quelle limite pour l'offre gratuite (nombre de compilations par mois, durée de calcul, taille du projet) et quel prix pour l'offre payante ? À fixer avec une estimation du coût d'une compilation. *Proposition de l'auteur (2026-11-16) dans l'épopée F, à valider.*
+4. Où se fait le paiement (site web, boutiques d'applications) ? Voir R8. *Proposition : Google Play Billing sur Android, un prestataire tiers sur ordinateur (épopée F).*
+5. Le code du dépôt est sous licence MIT : l'application reste-t-elle open source avec seulement le service cloud payant, ou le service est-il aussi publié ? Cela influence ce qui est protégé. *Proposition : moteur de compilation sous MIT, code des comptes et de la facturation privé (épopée F).*
 
 ## 11. Indicateurs de succès
 
@@ -465,3 +487,4 @@ Les dates ne sont pas fixées : les jalons avancent par versions publiées (0.1.
 | 0.34 | 2026-11-19 | D8 validé : bootloader, table de partitions et application d'un projet Arduino écrits en une seule passe sur une carte ESP32, sur téléphone Android et sur PC, aux adresses attendues ; la carte démarre sur le nouveau programme |
 | 0.35 | 2026-11-19 | G2, G4 et G5 validés sur téléphone ; G8 : le tutoriel en quatre pages est jugé trop passif, le critère devient une visite guidée interactive sur les vrais écrans |
 | 0.36 | 2026-11-20 | G8 validé : le tutoriel en quatre pages est remplacé par une visite guidée interactive sur les vrais écrans (huit étapes, élément éclairé, accessibilité), essayée sur PC et sur téléphone ; reste dans M3c : G1, G6 et G7 |
+| 0.37 | 2026-11-20 | Épopée F : la proposition de modèle économique de l'auteur (offres, quotas, paiement, licence) est inscrite comme proposition à valider, avec cinq points à trancher ; questions ouvertes 3, 4 et 5 renvoyées vers elle. Aucune décision prise |
